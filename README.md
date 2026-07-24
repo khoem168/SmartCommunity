@@ -33,6 +33,24 @@ npm install
 npm run dev
 ```
 
+## Vercel deployment
+
+The repository-level `vercel.json` builds the Vite application from
+`frontend_user/`, publishes `frontend_user/dist`, and rewrites browser routes
+to `index.html` so React Router deep links work.
+
+Connect this repository to Vercel with the repository root selected. Add the
+production backend values under **Project Settings → Environment Variables**:
+
+```text
+VITE_API_URL=https://your-api-domain.example/api
+VITE_SOCKET_URL=https://your-api-domain.example
+```
+
+The frontend can be deployed independently, but authentication and data
+features require a publicly reachable backend and database. A Docker service
+running only on a development computer cannot be reached from Vercel.
+
 ## Backend setup
 
 ```bash
