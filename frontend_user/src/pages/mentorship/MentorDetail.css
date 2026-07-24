@@ -1,0 +1,153 @@
+.mentor-detail-page {
+  min-height: 70vh;
+  padding-bottom: 60px;
+  background: #f8fafc;
+}
+
+.mentor-detail-page .mentor-hero {
+  padding: 58px 0;
+  background: radial-gradient(circle at top right, rgba(20, 184, 166, 0.16), transparent 42%);
+}
+
+.mentor-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.75fr);
+  gap: 26px;
+  align-items: start;
+}
+
+.mentor-summary h1 {
+  margin: 10px 0;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+}
+
+.mentor-summary > p:not(.eyebrow):not(.mentor-title) {
+  color: #475569;
+  line-height: 1.75;
+}
+
+.mentor-info,
+.mentor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  margin-top: 19px;
+}
+
+.mentor-info span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 8px 11px;
+  color: #0f766e;
+  background: #ecfdf5;
+  font-weight: 700;
+}
+
+.mentor-profile-card,
+.mentor-booking-form {
+  display: grid;
+  gap: 17px;
+  padding: 23px;
+  border: 1px solid #e2e8f0;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.07);
+}
+
+.mentor-card-section {
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.mentor-card-section h2 {
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+}
+
+.mentor-card-section p {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #475569;
+}
+
+.mentor-booking-form {
+  margin-top: 22px;
+}
+
+.mentor-booking-form label {
+  display: grid;
+  gap: 7px;
+  color: #334155;
+  font-weight: 700;
+}
+
+.mentor-booking-form input,
+.mentor-booking-form textarea,
+.mentor-booking-form select {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  padding: 11px 12px;
+  color: #0f172a;
+  background: #fff;
+  font: inherit;
+}
+
+.mentor-booking-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.mentor-booking-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.mentor-review-section {
+  padding-top: 40px;
+}
+
+.mentor-review-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.mentor-review-list article {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.mentor-review-list article > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mentor-review-list span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #a16207;
+  font-weight: 800;
+}
+
+.mentor-review-list p,
+.mentor-review-list small {
+  color: #64748b;
+}
+
+@media (max-width: 900px) {
+  .mentor-detail-layout,
+  .mentor-booking-grid {
+    grid-template-columns: 1fr;
+  }
+}

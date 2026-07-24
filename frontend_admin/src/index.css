@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-primary: #1e293b; /* Deep Navy */
+  --color-secondary: #0ea5e9; /* Vibrant Teal */
+  --color-success: #10b981; /* Growth Emerald */
+  --color-accent: #f59e0b; /* Energy Amber */
+  --color-bg: #f8fafc; /* Clean Slate */
+  --color-surface: #ffffff; /* White Card Background */
+
+  /* Text Colors */
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+}
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-bg);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+.btn-tag {
+  background-color: var(--color-surface);
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-tag:hover,
+.btn-tag.active {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}

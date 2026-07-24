@@ -1,0 +1,42 @@
+.jobs-page { min-height: 70vh; padding-bottom: 64px; background: linear-gradient(180deg, #eff6ff 0, #f8fafc 360px, #fff 100%); }
+.jobs-hero { padding: 64px 20px 54px; }
+.jobs-hero .hero-content { max-width: 780px; margin: 0 auto; text-align: center; }
+.jobs-hero h1 { margin: 12px 0 16px; font-size: clamp(2.1rem, 5vw, 3.7rem); line-height: 1.05; }
+.jobs-hero p { color: #64748b; line-height: 1.7; }
+.jobs-hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.jobs-content { display: grid; gap: 24px; }
+.internship-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+.internship-stats article { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 3px 10px; padding: 17px; border: 1px solid #dbeafe; border-radius: 12px; background: #fff; }
+.internship-stats svg { grid-row: span 2; color: #2563eb; font-size: 1.45rem; }
+.internship-stats strong { color: #1d4ed8; font-size: 1.35rem; }
+.internship-stats span { color: #64748b; }
+.internship-search-panel { display: grid; grid-template-columns: minmax(0, 1fr) 220px auto; gap: 11px; padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; }
+.internship-search-panel > label:first-child { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 8px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 9px; }
+.internship-search-panel input[type="text"], .internship-search-panel input:not([type]), .internship-search-panel select { width: 100%; min-height: 46px; border: 0; outline: 0; background: #fff; color: #0f172a; font: inherit; }
+.internship-search-panel select { padding: 0 11px; border: 1px solid #cbd5e1; border-radius: 9px; }
+.remote-filter { display: inline-flex; align-items: center; gap: 8px; color: #334155; font-weight: 700; }
+.jobs-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 17px; }
+.job-card { display: grid; align-content: start; gap: 15px; padding: 21px; border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; box-shadow: 0 14px 30px rgba(15, 23, 42, .06); }
+.internship-company-heading { display: grid; grid-template-columns: 54px 1fr; align-items: start; gap: 12px; }
+.internship-company-heading > img, .internship-company-heading > span { width: 54px; height: 54px; border-radius: 10px; }
+.internship-company-heading > img { object-fit: cover; }
+.internship-company-heading > span { display: grid; place-items: center; background: #dbeafe; color: #1d4ed8; font-size: 1.35rem; font-weight: 800; }
+.job-type { display: inline-flex; padding: 5px 9px; border-radius: 999px; background: #ecfdf5; color: #0f766e; font-size: .8rem; font-weight: 700; }
+.job-card h3 { margin: 6px 0 2px; }
+.company-name, .internship-description { color: #64748b; }
+.internship-description { line-height: 1.65; }
+.job-meta { display: flex; flex-wrap: wrap; gap: 9px 13px; color: #475569; font-size: .9rem; }
+.job-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.internship-requirements { display: flex; flex-wrap: wrap; gap: 7px; }
+.internship-requirements span { padding: 6px 9px; border-radius: 999px; background: #eff6ff; color: #1d4ed8; font-size: .82rem; font-weight: 700; }
+.internship-card-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 11px; }
+.internship-card-footer small { color: #64748b; }
+.internship-application-form { display: grid; gap: 13px; margin-top: 4px; padding: 17px; border: 1px solid #bfdbfe; border-radius: 11px; background: #f8fbff; }
+.application-form-heading { display: flex; justify-content: space-between; gap: 12px; }
+.application-form-heading p { color: #64748b; font-size: .88rem; }
+.application-form-heading button { width: 32px; height: 32px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; cursor: pointer; }
+.internship-application-form label { display: grid; gap: 7px; color: #334155; font-weight: 700; }
+.internship-application-form input, .internship-application-form textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 11px; background: #fff; color: #0f172a; font: inherit; }
+.internship-application-form textarea { min-height: 95px; resize: vertical; }
+.internship-empty { padding: 18px; border: 1px dashed #cbd5e1; border-radius: 10px; background: #f8fafc; color: #64748b; }
+@media (max-width: 760px) { .internship-stats, .internship-search-panel { grid-template-columns: 1fr; } .jobs-list { grid-template-columns: 1fr; } }

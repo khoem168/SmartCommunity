@@ -1,0 +1,24 @@
+services:
+  database:
+    image: mariadb:10.11.18
+    container_name: smart-community-db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: final_pro
+      MARIADB_USER: smart_community
+      MARIADB_PASSWORD: change_me
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - smart-community-db-data:/var/lib/mysql
+      - ./final_pro.sql:/docker-entrypoint-initdb.d/001-final_pro.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+volumes:
+  smart-community-db-data:

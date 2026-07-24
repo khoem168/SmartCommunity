@@ -1,0 +1,87 @@
+/* Course detail page styles */
+.course-detail-page {
+  padding: 28px 0 60px;
+}
+
+.course-detail-hero {
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(56, 189, 248, 0.12),
+      transparent 40%
+    ),
+    #f8fafc;
+  padding: 54px 0;
+}
+
+.detail-header {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.detail-header h1 {
+  font-size: 2.4rem;
+  margin-bottom: 16px;
+}
+
+.course-meta-card {
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+  padding: 24px;
+  display: grid;
+  gap: 12px;
+}
+
+.course-category {
+  display: inline-flex;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #ecfdf5;
+  color: #0f766e;
+  font-weight: 700;
+}
+
+.detail-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 24px;
+}
+
+.detail-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+}
+
+.detail-card h2 {
+  margin-bottom: 16px;
+}
+
+.detail-card ul {
+  display: grid;
+  gap: 12px;
+  padding-left: 18px;
+}
+
+.detail-card li {
+  list-style-type: disc;
+  color: #475569;
+}
+
+.detail-back {
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .detail-header,
+  .detail-section {
+    grid-template-columns: 1fr;
+  }
+}
