@@ -940,4 +940,8 @@
   .request-learning-stats {
     grid-template-columns: 1fr;
   }
+
+  .discover-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

@@ -36,10 +36,17 @@ export const apiFetch = async (path, options = {}) => {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers,
-  });
+  let response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      headers,
+    });
+  } catch {
+    throw new Error(
+      "Cannot connect to the server. Check your internet connection and try again.",
+    );
+  }
 
   const isJson = response.headers
     .get("content-type")

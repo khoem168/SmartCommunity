@@ -940,6 +940,226 @@ const run = async () => {
       ('internship', 'Internship', 'Applications, CVs, workplace learning, and internship experience.', '#ea580c')
   `);
 
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS courses (
+      id int(11) NOT NULL AUTO_INCREMENT,
+      slug varchar(160) NOT NULL,
+      title varchar(220) NOT NULL,
+      description text NOT NULL,
+      category varchar(100) NOT NULL DEFAULT 'General',
+      level enum('beginner','intermediate','advanced','all') NOT NULL DEFAULT 'all',
+      instructor_name varchar(160) NOT NULL,
+      thumbnail_url varchar(700) DEFAULT NULL,
+      highlights longtext DEFAULT NULL,
+      price decimal(12,2) NOT NULL DEFAULT 0.00,
+      currency enum('USD','KHR') NOT NULL DEFAULT 'USD',
+      duration_text varchar(80) DEFAULT NULL,
+      sort_order smallint unsigned NOT NULL DEFAULT 0,
+      is_published tinyint(1) NOT NULL DEFAULT 1,
+      created_at timestamp NOT NULL DEFAULT current_timestamp(),
+      updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+      PRIMARY KEY (id),
+      UNIQUE KEY uq_courses_slug (slug),
+      KEY idx_courses_published (is_published, sort_order)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  `);
+
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS course_lessons (
+      id int(11) NOT NULL AUTO_INCREMENT,
+      course_id int(11) NOT NULL,
+      position smallint unsigned NOT NULL,
+      title varchar(220) NOT NULL,
+      description text DEFAULT NULL,
+      video_url varchar(700) DEFAULT NULL,
+      pdf_url varchar(700) DEFAULT NULL,
+      duration_minutes smallint unsigned NOT NULL DEFAULT 0,
+      is_preview tinyint(1) NOT NULL DEFAULT 0,
+      created_at timestamp NOT NULL DEFAULT current_timestamp(),
+      updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+      PRIMARY KEY (id),
+      UNIQUE KEY uq_course_lesson_position (course_id, position),
+      KEY idx_course_lessons_course (course_id, position),
+      CONSTRAINT fk_course_lessons_course FOREIGN KEY (course_id)
+        REFERENCES courses (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  `);
+
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS course_payments (
+      id bigint unsigned NOT NULL AUTO_INCREMENT,
+      user_id int(11) NOT NULL,
+      course_id int(11) NOT NULL,
+      amount decimal(12,2) NOT NULL,
+      currency enum('USD','KHR') NOT NULL,
+      status enum('pending','paid','expired','cancelled','failed') NOT NULL DEFAULT 'pending',
+      payment_method enum('khqr') NOT NULL DEFAULT 'khqr',
+      qr_code longtext DEFAULT NULL,
+      qr_md5 varchar(255) DEFAULT NULL,
+      qr_expires_at datetime DEFAULT NULL,
+      transaction_id varchar(255) DEFAULT NULL,
+      bakong_hash varchar(255) DEFAULT NULL,
+      from_account_id varchar(255) DEFAULT NULL,
+      to_account_id varchar(255) DEFAULT NULL,
+      paid_at datetime DEFAULT NULL,
+      created_at timestamp NOT NULL DEFAULT current_timestamp(),
+      updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+      PRIMARY KEY (id),
+      UNIQUE KEY uq_course_payment_transaction (transaction_id),
+      KEY idx_course_payments_user (user_id, status, created_at),
+      KEY idx_course_payments_course (course_id, status),
+      KEY idx_course_payments_qr_md5 (qr_md5),
+      CONSTRAINT fk_course_payments_user FOREIGN KEY (user_id)
+        REFERENCES users (id) ON DELETE CASCADE,
+      CONSTRAINT fk_course_payments_course FOREIGN KEY (course_id)
+        REFERENCES courses (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  `);
+
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS course_enrollments (
+      id bigint unsigned NOT NULL AUTO_INCREMENT,
+      user_id int(11) NOT NULL,
+      course_id int(11) NOT NULL,
+      payment_id bigint unsigned DEFAULT NULL,
+      progress_percent tinyint unsigned NOT NULL DEFAULT 0,
+      last_lesson_id int(11) DEFAULT NULL,
+      enrolled_at timestamp NOT NULL DEFAULT current_timestamp(),
+      updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+      PRIMARY KEY (id),
+      UNIQUE KEY uq_course_enrollment (user_id, course_id),
+      KEY idx_course_enrollments_course (course_id),
+      KEY idx_course_enrollments_payment (payment_id),
+      CONSTRAINT fk_course_enrollments_user FOREIGN KEY (user_id)
+        REFERENCES users (id) ON DELETE CASCADE,
+      CONSTRAINT fk_course_enrollments_course FOREIGN KEY (course_id)
+        REFERENCES courses (id) ON DELETE CASCADE,
+      CONSTRAINT fk_course_enrollments_payment FOREIGN KEY (payment_id)
+        REFERENCES course_payments (id) ON DELETE SET NULL,
+      CONSTRAINT fk_course_enrollments_lesson FOREIGN KEY (last_lesson_id)
+        REFERENCES course_lessons (id) ON DELETE SET NULL,
+      CONSTRAINT chk_course_progress CHECK (progress_percent BETWEEN 0 AND 100)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  `);
+
+  await db.query(`
+    INSERT IGNORE INTO courses
+      (slug, title, description, category, level, instructor_name,
+       thumbnail_url, highlights, price, currency, duration_text, sort_order)
+    VALUES
+      ('react-modern-web', 'React for Modern Web',
+       'Build polished, component-driven web applications with modern React, hooks, routing, and API integration.',
+       'Frontend', 'beginner', 'Smart Community Academy',
+       'https://i.ytimg.com/vi/bMknfKXIFA8/hqdefault.jpg',
+       '["Reusable components","Hooks and state","React Router","API integration"]',
+       1.00, 'USD', '6 hours', 1),
+      ('node-api-development', 'Node.js API Development',
+       'Create secure REST APIs with Express, authentication, database access, validation, and production practices.',
+       'Backend', 'intermediate', 'Smart Community Academy',
+       'https://i.ytimg.com/vi/Oe421EPjeBE/hqdefault.jpg',
+       '["Express routing","JWT authentication","MySQL integration","API security"]',
+       2.00, 'USD', '5 hours', 2),
+      ('ui-ux-design-essentials', 'UI/UX Design Essentials',
+       'Learn user-centered design, wireframing, visual hierarchy, prototyping, and practical usability testing.',
+       'Design', 'beginner', 'Smart Community Academy',
+       'https://i.ytimg.com/vi/c9Wg6Cb_YlU/hqdefault.jpg',
+       '["Design thinking","Wireframes","Visual hierarchy","Usability testing"]',
+       1.50, 'USD', '4 hours', 3)
+  `);
+
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 1, 'Welcome and course roadmap',
+           'Preview the learning outcomes, tools, and project you will build.',
+           'https://www.youtube.com/watch?v=bMknfKXIFA8',
+           'https://eloquentjavascript.net/Eloquent_JavaScript_small.pdf',
+           18, 1 FROM courses WHERE slug = 'react-modern-web'
+  `);
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 2, 'Components, props, and composition',
+           'Turn a design into reusable React components and compose a complete screen.',
+           'https://www.youtube.com/watch?v=bMknfKXIFA8',
+           'https://eloquentjavascript.net/Eloquent_JavaScript_small.pdf',
+           54, 0 FROM courses WHERE slug = 'react-modern-web'
+  `);
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 3, 'State, effects, and API data',
+           'Manage UI state and connect components to real backend data safely.',
+           'https://www.youtube.com/watch?v=bMknfKXIFA8',
+           'https://eloquentjavascript.net/Eloquent_JavaScript_small.pdf',
+           66, 0 FROM courses WHERE slug = 'react-modern-web'
+  `);
+
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 1, 'Node and Express foundations',
+           'Preview how an Express application receives requests and returns JSON.',
+           'https://www.youtube.com/watch?v=Oe421EPjeBE',
+           'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+           22, 1 FROM courses WHERE slug = 'node-api-development'
+  `);
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 2, 'REST routes and controllers',
+           'Organize a maintainable API using routes, controllers, and services.',
+           'https://www.youtube.com/watch?v=Oe421EPjeBE',
+           'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+           48, 0 FROM courses WHERE slug = 'node-api-development'
+  `);
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 3, 'Authentication and database security',
+           'Protect endpoints and avoid common authentication and SQL mistakes.',
+           'https://www.youtube.com/watch?v=Oe421EPjeBE',
+           'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+           61, 0 FROM courses WHERE slug = 'node-api-development'
+  `);
+
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 1, 'Design thinking introduction',
+           'Preview the user-centered process used throughout the course.',
+           'https://www.youtube.com/watch?v=c9Wg6Cb_YlU',
+           'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+           16, 1 FROM courses WHERE slug = 'ui-ux-design-essentials'
+  `);
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 2, 'Wireframes and visual hierarchy',
+           'Create clear low-fidelity layouts before spending time on visual polish.',
+           'https://www.youtube.com/watch?v=c9Wg6Cb_YlU',
+           'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+           44, 0 FROM courses WHERE slug = 'ui-ux-design-essentials'
+  `);
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 3, 'Prototype and usability test',
+           'Turn a flow into a prototype and collect useful feedback from users.',
+           'https://www.youtube.com/watch?v=c9Wg6Cb_YlU',
+           'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+           52, 0 FROM courses WHERE slug = 'ui-ux-design-essentials'
+  `);
+
   console.log("Database migration completed.");
   await db.end();
 };

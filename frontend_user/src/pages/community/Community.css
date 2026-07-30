@@ -594,6 +594,11 @@
 }
 
 @media (max-width: 600px) {
+  .community-grid,
+  .skill-match-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .skill-progress-stats,
   .skill-match-directions {
     grid-template-columns: 1fr;
@@ -609,5 +614,14 @@
 
   .skill-match-person > strong {
     grid-column: 2;
+  }
+
+  .exchange-card,
+  .mentor-card,
+  .skill-match-card,
+  .community-empty-card,
+  .learning-history-panel,
+  .exchange-progress-panel {
+    padding: 18px;
   }
 }

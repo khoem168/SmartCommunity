@@ -23,6 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Local reference projects
+/bakong-main/
+
 # Editor and operating-system files
 .vscode/*
 !.vscode/extensions.json

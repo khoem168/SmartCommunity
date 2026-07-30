@@ -7,8 +7,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import {
-  Courses,
-  CourseDetail,
   Dashboard,
   Discover,
   DiscoverProfile,
@@ -37,6 +35,8 @@ import RootLayout from "./layouts/RootLayout";
 const CareerDevelopment = lazy(
   () => import("./pages/career/CareerDevelopment"),
 );
+const Courses = lazy(() => import("./pages/courses/Courses"));
+const CourseDetail = lazy(() => import("./pages/courses/CourseDetail"));
 const Forum = lazy(() => import("./pages/forum/Forum"));
 const ForumDetail = lazy(() => import("./pages/forum/ForumDetail"));
 const Notifications = lazy(
@@ -52,8 +52,22 @@ const routes = createBrowserRouter(
     <Route path="/" element={<RootLayout />} errorElement={<h1>Error page</h1>}>
       <Route index element={<Home />} />
       <Route path="dashboard" element={<Dashboard />} />
-      <Route path="courses" element={<Courses />} />
-      <Route path="courses/:courseId" element={<CourseDetail />} />
+      <Route
+        path="courses"
+        element={
+          <Suspense fallback={<main className="section container">Loading courses…</main>}>
+            <Courses />
+          </Suspense>
+        }
+      />
+      <Route
+        path="courses/:courseId"
+        element={
+          <Suspense fallback={<main className="section container">Preparing classroom…</main>}>
+            <CourseDetail />
+          </Suspense>
+        }
+      />
       <Route path="sessions" element={<LearningSessions />} />
       <Route path="sessions/:sessionId" element={<LearningSessions />} />
       <Route path="sessions/:sessionId/room" element={<SessionRoom />} />

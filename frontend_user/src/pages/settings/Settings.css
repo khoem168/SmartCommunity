@@ -1,7 +1,14 @@
 .settings-page {
   padding: 48px 24px;
   min-height: calc(100vh - 96px);
+  min-height: calc(100dvh - 96px);
   background: #f3f7fb;
+}
+
+@media (max-width: 600px) {
+  .settings-page {
+    padding: 36px 14px 52px;
+  }
 }
 
 .settings-header {

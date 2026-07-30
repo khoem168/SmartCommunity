@@ -514,6 +514,7 @@
 
 .session-room-page {
   min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   grid-template-rows: auto 1fr;
   background: #020617;
@@ -548,6 +549,7 @@
 .jitsi-frame {
   width: 100%;
   height: calc(100vh - 68px);
+  height: calc(100dvh - 68px);
   border: 0;
 }
 

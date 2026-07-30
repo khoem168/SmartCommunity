@@ -343,6 +343,11 @@
 }
 
 @media (max-width: 760px) {
+  .mentor-grid,
+  .mentorship-booking-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .mentor-form-grid,
   .mentor-search-panel,
   .mentor-application-card {

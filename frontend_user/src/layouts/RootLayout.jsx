@@ -32,8 +32,11 @@ const RootLayout = () => {
 
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
       <Navbar />
-      <div className="app-content">
+      <div className="app-content" id="main-content">
         <Outlet />
       </div>
       <Footer />

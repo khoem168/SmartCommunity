@@ -210,5 +210,27 @@ users receive notifications, and every successful management action is logged.
 Run `npm run test:admin` with the API running to validate authorization, user
 management, approvals, moderation, CSV export, and the audit trail.
 
+Course learning and Bakong KHQR endpoints:
+
+- `GET /api/courses` - public catalog with current-user enrollment state
+- `GET /api/courses/:courseSlug` - course outline and locked lesson metadata
+- `GET /api/courses/:courseSlug/lessons/:lessonId` - protected video/PDF content
+- `POST /api/courses/:courseId/payments/khqr` - authenticated KHQR generation
+- `POST /api/course-payments/:paymentId/verify` - authenticated Bakong verification
+
+The first lesson of every published course is a public preview. Premium lesson
+URLs are returned only after a confirmed enrollment. Course price and currency
+always come from MariaDB, never from the browser request. Configure the
+`BAKONG_*` values in `backend/.env`; local development can reuse the existing
+`bakong-main/bakong-main/backend/.env` file when those values are absent.
+
+Run the migration to create/seed the course tables, then validate the complete
+access and payment-generation flow:
+
+```bash
+npm run migrate-db
+npm run test:courses
+```
+
 - `GET /health` — basic health check
 - `GET /db-check` — returns number of users in `users` table

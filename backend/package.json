@@ -12,9 +12,11 @@
     "test:sessions": "node src/scripts/testLearningSessions.js",
     "test:notifications": "node src/scripts/testNotifications.js",
     "test:analytics": "node src/scripts/testAnalytics.js",
-    "test:admin": "node src/scripts/testAdmin.js"
+    "test:admin": "node src/scripts/testAdmin.js",
+    "test:courses": "node src/scripts/testCourses.js"
   },
   "dependencies": {
+    "bakong-khqr": "^1.0.20",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",
     "dotenv": "^16.0.3",
@@ -30,5 +32,8 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
+  },
+  "overrides": {
+    "axios": "1.19.0"
   }
 }

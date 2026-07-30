@@ -93,6 +93,13 @@ const {
   unregisterPushToken,
   updateNotificationPreferences,
 } = require("../controllers/notificationController");
+const {
+  createCoursePayment,
+  getCourseDetail,
+  getCourseLesson,
+  getCourses,
+  verifyCoursePayment,
+} = require("../controllers/courseController");
 
 const router = express.Router();
 
@@ -112,6 +119,13 @@ router.get("/forum/posts", optionalAuth, getForumPosts);
 router.get("/forum/posts/:postId", optionalAuth, getForumPost);
 router.get("/learning-sessions", optionalAuth, listLearningSessions);
 router.get("/learning-sessions/:sessionId", optionalAuth, getLearningSession);
+router.get("/courses", optionalAuth, getCourses);
+router.get("/courses/:courseSlug", optionalAuth, getCourseDetail);
+router.get(
+  "/courses/:courseSlug/lessons/:lessonId",
+  optionalAuth,
+  getCourseLesson,
+);
 router.get("/skill-exchanges/community", getCommunitySkillExchanges);
 router.get("/skill-exchanges", requireAuth, getSkillExchanges);
 router.get("/skill-matches", requireAuth, getSkillMatches);
@@ -119,6 +133,16 @@ router.get("/skill-exchanges/history", requireAuth, getSkillLearningHistory);
 router.get("/skill-exchanges/:exchangeId", requireAuth, getSkillExchangeDetail);
 
 router.get("/dashboard", requireAuth, getDashboard);
+router.post(
+  "/courses/:courseId/payments/khqr",
+  requireAuth,
+  createCoursePayment,
+);
+router.post(
+  "/course-payments/:paymentId/verify",
+  requireAuth,
+  verifyCoursePayment,
+);
 router.get("/career/overview", requireAuth, getCareerOverview);
 router.post("/career/roadmaps", requireAuth, startCareerRoadmap);
 router.patch(

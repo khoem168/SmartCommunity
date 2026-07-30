@@ -1,5 +1,6 @@
 .post-job-page {
   min-height: calc(100vh - 76px);
+  min-height: calc(100dvh - 76px);
 }
 
 .post-job-hero {

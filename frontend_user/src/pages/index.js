@@ -1,6 +1,4 @@
 export { default as Home } from "./home/Home";
-export { default as Courses } from "./courses/Courses";
-export { default as CourseDetail } from "./courses/CourseDetail";
 export { default as Dashboard } from "./dashboard/Dashboard";
 export { default as Discover } from "./discover/Discover";
 export { default as DiscoverProfile } from "./discover/DiscoverProfile";

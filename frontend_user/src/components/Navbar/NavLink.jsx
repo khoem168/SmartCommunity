@@ -83,7 +83,10 @@ const Navlink = () => {
         const Icon = navIcons[icon];
 
         return (
-          <li key={link}>
+          <li
+            className={iconOnly ? `nav-icon-item nav-icon-item-${icon}` : undefined}
+            key={link}
+          >
             {link.includes("#") ? (
               <a href={link}>{label}</a>
             ) : (

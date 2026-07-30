@@ -1,16 +1,42 @@
-# React + Vite
+# Smart Community User Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React user application for the Smart Community Skill & Career Development
+Platform.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+The default frontend URL is `http://localhost:5173`. Configure the backend API
+in `.env`:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```env
+VITE_API_URL=http://localhost:4000/api
+```
 
-## Expanding the ESLint configuration
+## Course learning and KHQR
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The `/courses` experience loads its catalog from MariaDB and includes:
+
+- Searchable, responsive course cards
+- A free first lesson preview
+- Embedded YouTube lesson videos
+- Attached PDF learning resources
+- Server-enforced premium lesson locks
+- Bakong KHQR generation and automatic payment polling
+- Enrollment unlock after backend payment confirmation
+
+The user must be logged in before purchasing. The login page safely returns the
+user to the requested course after authentication. Course amounts are not sent
+by the frontend; the backend reads the trusted price and currency from the
+course record.
+
+## Validation
+
+```bash
+npm run lint
+npm run build
+```

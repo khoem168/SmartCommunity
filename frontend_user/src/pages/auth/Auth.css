@@ -1,6 +1,7 @@
 /* Shared auth page styles */
 .auth-page {
   min-height: calc(100vh - 76px);
+  min-height: calc(100dvh - 76px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -175,6 +176,16 @@
 }
 
 @media (max-width: 520px) {
+  .auth-page {
+    align-items: flex-start;
+    padding: 26px 14px 40px;
+  }
+
+  .auth-card {
+    padding: 26px 20px;
+    border-radius: 20px;
+  }
+
   .custom-skill-row,
   .skill-select-row {
     grid-template-columns: 1fr;

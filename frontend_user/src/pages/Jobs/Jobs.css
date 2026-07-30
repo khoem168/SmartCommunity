@@ -39,4 +39,30 @@
 .internship-application-form input, .internship-application-form textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 11px; background: #fff; color: #0f172a; font: inherit; }
 .internship-application-form textarea { min-height: 95px; resize: vertical; }
 .internship-empty { padding: 18px; border: 1px dashed #cbd5e1; border-radius: 10px; background: #f8fafc; color: #64748b; }
-@media (max-width: 760px) { .internship-stats, .internship-search-panel { grid-template-columns: 1fr; } .jobs-list { grid-template-columns: 1fr; } }
+@media (max-width: 760px) {
+  .jobs-hero {
+    padding: 50px 14px 42px;
+  }
+
+  .internship-stats,
+  .internship-search-panel,
+  .jobs-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .job-card {
+    padding: 18px;
+  }
+
+  .internship-company-heading {
+    grid-template-columns: 46px minmax(0, 1fr);
+  }
+
+  .internship-company-heading > img,
+  .internship-company-heading > span {
+    width: 46px;
+    height: 46px;
+  }
+}

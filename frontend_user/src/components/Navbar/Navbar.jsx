@@ -19,6 +19,28 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    const closeOnDesktop = () => {
+      if (window.innerWidth > 1120) setMenuOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("resize", closeOnDesktop);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("resize", closeOnDesktop);
+    };
+  }, [menuOpen]);
+
   return (
     <header className={`navbar ${scrolled ? "scrolled" : ""}`}>
       <div className="navbar-inner">
@@ -33,6 +55,7 @@ const Navbar = () => {
           className={`nav-toggle ${menuOpen ? "open" : ""}`}
           aria-label="Toggle navigation"
           aria-expanded={menuOpen}
+          aria-controls="primary-navigation"
           onClick={() => setMenuOpen((prev) => !prev)}
         >
           <span />
@@ -41,6 +64,7 @@ const Navbar = () => {
         </button>
 
         <div
+          id="primary-navigation"
           className={`nav-content ${menuOpen ? "open" : ""}`}
           onClick={(event) => {
             if (event.target.closest("a")) setMenuOpen(false);

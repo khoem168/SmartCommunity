@@ -6,6 +6,7 @@
   border-bottom: 1px solid rgba(226, 232, 240, 0.78);
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   transition: box-shadow 0.25s ease, background 0.25s ease;
 }
 
@@ -22,6 +23,7 @@
   justify-content: space-between;
   gap: 24px;
   margin-inline: auto;
+  padding-top: env(safe-area-inset-top);
 }
 
 .navbar-logo {
@@ -284,7 +286,14 @@
     right: 0;
     display: grid;
     gap: 16px;
-    padding: 16px max(14px, calc((100vw - 900px) / 2));
+    max-height: calc(100vh - 76px);
+    max-height: calc(100dvh - 76px - env(safe-area-inset-top));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding:
+      16px
+      max(14px, calc((100vw - 900px) / 2))
+      max(16px, env(safe-area-inset-bottom));
     border-bottom: 1px solid #e2e8f0;
     background: rgba(255, 255, 255, 0.99);
     box-shadow: 0 20px 40px rgba(15, 23, 42, 0.1);
@@ -320,11 +329,11 @@
     font-size: 0.82rem;
   }
 
-  .navlink li:has(a[aria-label="Messages"]) a::after {
+  .navlink .nav-icon-item-messages a::after {
     content: "Messages";
   }
 
-  .navlink li:has(a[aria-label="Notifications"]) a::after {
+  .navlink .nav-icon-item-notifications a::after {
     content: "Notifications";
   }
 
@@ -346,7 +355,7 @@
 
   .nav-content {
     max-height: calc(100vh - 68px);
-    overflow-y: auto;
+    max-height: calc(100dvh - 68px - env(safe-area-inset-top));
   }
 
   .navlink {
@@ -377,5 +386,25 @@
     width: 100%;
     margin-top: 8px;
     box-shadow: none;
+  }
+}
+
+@media (max-width: 390px) {
+  .navbar-inner {
+    width: calc(100% - 24px);
+  }
+
+  .navbar-logo img {
+    width: 132px;
+  }
+
+  .navlink {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .nav-content {
+    max-height: calc(100dvh - 68px - env(safe-area-inset-top));
   }
 }

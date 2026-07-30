@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import GoogleLoginButton from "../../components/auth/GoogleLoginButton";
 import { useGlobleContext } from "../../context/GlobleContext";
 import "./Auth.css";
@@ -12,7 +12,13 @@ const Login = () => {
   const [needsVerification, setNeedsVerification] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { googleLogin, loginUser } = useGlobleContext();
+  const requestedRedirect = searchParams.get("redirect") || "";
+  const redirectTo =
+    requestedRedirect.startsWith("/") && !requestedRedirect.startsWith("//")
+      ? requestedRedirect
+      : "/dashboard";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -25,7 +31,7 @@ const Login = () => {
     setLoading(true);
     try {
       await loginUser({ email: email.toLowerCase(), password, rememberMe: remember });
-      navigate("/dashboard");
+      navigate(redirectTo);
     } catch (err) {
       setError(err.message || "Unable to login. Please try again.");
       setNeedsVerification(err.code === "EMAIL_NOT_VERIFIED");
@@ -39,7 +45,7 @@ const Login = () => {
     setLoading(true);
     try {
       await googleLogin({ credential, rememberMe: remember });
-      navigate("/dashboard");
+      navigate(redirectTo);
     } catch (err) {
       setError(err.message || "Unable to continue with Google.");
     } finally {
