@@ -1,11 +1,18 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useLocation, useOutlet } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer";
 import { FaChevronUp } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { useLanguage } from "../context/LanguageContext";
+import ScrollEngagementPopup from "../components/ScrollEngagementPopup";
+import RealtimeToastHub from "../components/ui/RealtimeToastHub";
 
 const RootLayout = () => {
   const location = useLocation();
+  const outlet = useOutlet();
+  const reduceMotion = useReducedMotion();
+  const { t } = useLanguage();
   const scrollUpPage = () => {
     window.scrollTo({
       top: 0,
@@ -33,19 +40,36 @@ const RootLayout = () => {
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">
-        Skip to main content
+        {t("common.skipContent")}
       </a>
       <Navbar />
       <div className="app-content" id="main-content">
-        <Outlet />
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={location.pathname}
+            className="route-transition"
+            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
+            transition={
+              reduceMotion
+                ? { duration: 0 }
+                : { duration: 0.3, ease: "easeOut" }
+            }
+          >
+            {outlet}
+          </motion.div>
+        </AnimatePresence>
       </div>
       <Footer />
+      <RealtimeToastHub />
+      <ScrollEngagementPopup />
       {showButton && (
         <button
           type="button"
           className="scroll-up"
           onClick={scrollUpPage}
-          aria-label="Scroll to top"
+          aria-label={t("common.scrollTop")}
         >
           <FaChevronUp size={17} />
         </button>

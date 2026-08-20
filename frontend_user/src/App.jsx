@@ -31,6 +31,7 @@ import {
   Settings,
 } from "./pages";
 import RootLayout from "./layouts/RootLayout";
+import RequireAuth from "./components/auth/RequireAuth";
 
 const CareerDevelopment = lazy(
   () => import("./pages/career/CareerDevelopment"),
@@ -47,15 +48,17 @@ const AnalyticsDashboard = lazy(
 );
 const AdminPanel = lazy(() => import("./pages/admin/AdminPanel"));
 
+const protectedElement = (element) => <RequireAuth>{element}</RequireAuth>;
+
 const routes = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />} errorElement={<h1>Error page</h1>}>
       <Route index element={<Home />} />
-      <Route path="dashboard" element={<Dashboard />} />
+      <Route path="dashboard" element={protectedElement(<Dashboard />)} />
       <Route
         path="courses"
         element={
-          <Suspense fallback={<main className="section container">Loading courses…</main>}>
+          <Suspense fallback={<main className="section container">Loading courses...</main>}>
             <Courses />
           </Suspense>
         }
@@ -63,16 +66,16 @@ const routes = createBrowserRouter(
       <Route
         path="courses/:courseId"
         element={
-          <Suspense fallback={<main className="section container">Preparing classroom…</main>}>
+          <Suspense fallback={<main className="section container">Preparing classroom...</main>}>
             <CourseDetail />
           </Suspense>
         }
       />
       <Route path="sessions" element={<LearningSessions />} />
       <Route path="sessions/:sessionId" element={<LearningSessions />} />
-      <Route path="sessions/:sessionId/room" element={<SessionRoom />} />
-      <Route path="discover" element={<Discover />} />
-      <Route path="discover/:memberId" element={<DiscoverProfile />} />
+      <Route path="sessions/:sessionId/room" element={protectedElement(<SessionRoom />)} />
+      <Route path="discover" element={protectedElement(<Discover />)} />
+      <Route path="discover/:memberId" element={protectedElement(<DiscoverProfile />)} />
       <Route path="jobs" element={<Jobs />} />
       <Route
         path="career"
@@ -82,51 +85,65 @@ const routes = createBrowserRouter(
           </Suspense>
         }
       />
-      <Route path="applications" element={<InternshipDashboard />} />
-      <Route path="my-posts" element={<InternshipDashboard />} />
+      <Route path="applications" element={protectedElement(<InternshipDashboard />)} />
+      <Route path="my-posts" element={protectedElement(<InternshipDashboard />)} />
       <Route path="mentorship" element={<Mentorship />} />
       <Route path="mentorship/:mentorId" element={<MentorDetail />} />
       <Route path="community" element={<Community />} />
-      <Route path="forum" element={<Suspense fallback={<main className="section container">Loading community forum...</main>}><Forum /></Suspense>} />
-      <Route path="forum/:postId" element={<Suspense fallback={<main className="section container">Loading discussion...</main>}><ForumDetail /></Suspense>} />
+      <Route
+        path="forum"
+        element={
+          <Suspense fallback={<main className="section container">Loading community forum...</main>}>
+            <Forum />
+          </Suspense>
+        }
+      />
+      <Route
+        path="forum/:postId"
+        element={
+          <Suspense fallback={<main className="section container">Loading discussion...</main>}>
+            <ForumDetail />
+          </Suspense>
+        }
+      />
       <Route
         path="community/skill-exchange/:exchangeId"
-        element={<SkillExchangeDetail />}
+        element={protectedElement(<SkillExchangeDetail />)}
       />
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="forgot-password" element={<ForgotPassword />} />
       <Route path="reset-password" element={<ResetPassword />} />
       <Route path="verify-email" element={<VerifyEmail />} />
-      <Route path="post-job" element={<PostJob />} />
-      <Route path="profile" element={<Profile />} />
-      <Route path="settings" element={<Settings />} />
-      <Route path="skill-requests" element={<SkillRequests />} />
-      <Route path="messages" element={<Messages />} />
-      <Route path="messages/:conversationId" element={<Messages />} />
+      <Route path="post-job" element={protectedElement(<PostJob />)} />
+      <Route path="profile" element={protectedElement(<Profile />)} />
+      <Route path="settings" element={protectedElement(<Settings />)} />
+      <Route path="skill-requests" element={protectedElement(<SkillRequests />)} />
+      <Route path="messages" element={protectedElement(<Messages />)} />
+      <Route path="messages/:conversationId" element={protectedElement(<Messages />)} />
       <Route
         path="notifications"
-        element={
-          <Suspense fallback={<main className="section container">Loading notifications…</main>}>
+        element={protectedElement(
+          <Suspense fallback={<main className="section container">Loading notifications...</main>}>
             <Notifications />
-          </Suspense>
-        }
+          </Suspense>,
+        )}
       />
       <Route
         path="analytics"
-        element={
-          <Suspense fallback={<main className="section container">Loading analytics…</main>}>
+        element={protectedElement(
+          <Suspense fallback={<main className="section container">Loading analytics...</main>}>
             <AnalyticsDashboard />
-          </Suspense>
-        }
+          </Suspense>,
+        )}
       />
       <Route
         path="admin"
-        element={
-          <Suspense fallback={<main className="section container">Loading administration…</main>}>
+        element={protectedElement(
+          <Suspense fallback={<main className="section container">Loading administration...</main>}>
             <AdminPanel />
-          </Suspense>
-        }
+          </Suspense>,
+        )}
       />
     </Route>,
   ),

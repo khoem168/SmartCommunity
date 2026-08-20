@@ -54,6 +54,7 @@ const Messages = () => {
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
   const [typingUser, setTypingUser] = useState("");
+  const [liveMessageIds, setLiveMessageIds] = useState(() => new Set());
   const [groupOpen, setGroupOpen] = useState(false);
   const [availableMembers, setAvailableMembers] = useState([]);
   const [groupMembers, setGroupMembers] = useState([]);
@@ -144,6 +145,9 @@ const Messages = () => {
     const roomId = activeId;
     const handleNewMessage = (payload) => {
       if (String(payload.conversationId) === String(roomId)) {
+        if (Number(payload.senderId) !== Number(user.id)) {
+          setLiveMessageIds((current) => new Set(current).add(payload.id));
+        }
         setMessages((current) =>
           current.some((message) => message.id === payload.id)
             ? current
@@ -445,6 +449,11 @@ const Messages = () => {
                         Number(message.senderId) === Number(user.id)
                           ? "sent"
                           : "received"
+                      } ${
+                        liveMessageIds.has(message.id) &&
+                        Number(message.senderId) !== Number(user.id)
+                          ? "message-row-live"
+                          : ""
                       }`}
                     >
                       <div className="message-bubble">

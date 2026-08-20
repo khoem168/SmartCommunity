@@ -9,17 +9,22 @@ import {
   FiPlayCircle,
   FiSearch,
 } from "react-icons/fi";
+import { SkeletonGrid } from "../../components/ui/LoadingStates";
+import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import { fetchCourses } from "../../services/courseService";
 import "./Courses.css";
 
-const money = (amount, currency) =>
-  new Intl.NumberFormat("en-US", {
+const money = (amount, currency, locale = "en-US") =>
+  new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
     maximumFractionDigits: currency === "KHR" ? 0 : 2,
   }).format(Number(amount || 0));
 
 const Courses = () => {
+  const { language, t } = useLanguage();
+  const { user } = useGlobleContext();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -55,27 +60,26 @@ const Courses = () => {
         <div className="container courses-hero-inner">
           <div>
             <p className="courses-kicker">Smart Community Academy</p>
-            <h1>Learn practical skills. Build a career that moves forward.</h1>
+            <h1>{t("coursesPage.heroTitle")}</h1>
             <p>
-              Preview the first lesson free, then unlock the complete course
-              securely with Bakong KHQR.
+              {t("coursesPage.heroDescription")}
             </p>
             <div className="courses-trust-row">
               <span>
-                <FiPlayCircle /> Free lesson previews
+                <FiPlayCircle /> {t("coursesPage.freePreviews")}
               </span>
               <span>
-                <FiCheckCircle /> Lifetime course access
+                <FiCheckCircle /> {t("coursesPage.lifetimeAccess")}
               </span>
               <span>
-                <FiBookOpen /> Video and PDF resources
+                <FiBookOpen /> {t("coursesPage.resources")}
               </span>
             </div>
           </div>
           <div className="courses-hero-stat">
             <strong>{courses.length || 3}</strong>
-            <span>Career-ready learning paths</span>
-            <small>Learn at your own pace on any device.</small>
+            <span>{t("coursesPage.paths")}</span>
+            <small>{t("coursesPage.anyDevice")}</small>
           </div>
         </div>
       </section>
@@ -83,20 +87,20 @@ const Courses = () => {
       <section className="container courses-library">
         <header className="courses-library-header">
           <div>
-            <p className="courses-kicker">Course library</p>
-            <h2>Choose your next skill</h2>
+            <p className="courses-kicker">{t("coursesPage.library")}</p>
+            <h2>{t("coursesPage.chooseSkill")}</h2>
           </div>
           <label className="course-search">
             <FiSearch />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search courses"
+              placeholder={t("coursesPage.searchPlaceholder")}
             />
           </label>
         </header>
 
-        <div className="course-filters" aria-label="Course categories">
+        <div className="course-filters" aria-label={t("coursesPage.categoriesLabel")}>
           {categories.map((item) => (
             <button
               type="button"
@@ -104,29 +108,37 @@ const Courses = () => {
               className={category === item ? "active" : ""}
               onClick={() => setCategory(item)}
             >
-              {item}
+              {item === "All" ? t("coursesPage.all") : item}
             </button>
           ))}
         </div>
 
         {loading ? (
-          <div className="course-state">
-            <span className="course-loader" />
-            <strong>Loading live courses…</strong>
-          </div>
+          <SkeletonGrid
+            className="courses-grid"
+            count={3}
+            label={t("coursesPage.loading")}
+            variant="course"
+          />
         ) : error ? (
           <div className="course-state error">
-            <strong>Courses could not be loaded</strong>
+            <strong>{t("coursesPage.loadErrorTitle")}</strong>
             <p>{error}</p>
           </div>
         ) : visibleCourses.length ? (
           <div className="courses-grid">
-            {visibleCourses.map((course) => (
+            {visibleCourses.map((course) => {
+              const coursePath = `/courses/${course.slug}`;
+              const accessPath = user
+                ? coursePath
+                : `/register?redirect=${encodeURIComponent(coursePath)}`;
+
+              return (
               <article key={course.id} className="course-card">
                 <Link
-                  to={`/courses/${course.slug}`}
+                  to={accessPath}
                   className="course-cover"
-                  aria-label={`View ${course.title}`}
+                  aria-label={t("coursesPage.viewCourse", { title: course.title })}
                 >
                   <img src={course.thumbnailUrl} alt="" />
                   <span className="course-level">{course.level}</span>
@@ -139,17 +151,17 @@ const Courses = () => {
                     <span className="course-category">{course.category}</span>
                     {course.isEnrolled && (
                       <span className="course-owned">
-                        <FiCheckCircle /> Enrolled
+                        <FiCheckCircle /> {t("coursesPage.enrolled")}
                       </span>
                     )}
                   </div>
                   <h3>
-                    <Link to={`/courses/${course.slug}`}>{course.title}</Link>
+                    <Link to={accessPath}>{course.title}</Link>
                   </h3>
                   <p>{course.description}</p>
                   <div className="course-meta">
                     <span>
-                      <FiBookOpen /> {course.lessonCount} lessons
+                      <FiBookOpen /> {t("coursesPage.lessons", { count: course.lessonCount })}
                     </span>
                     <span>
                       <FiClock /> {course.duration}
@@ -160,34 +172,37 @@ const Courses = () => {
                       <div>
                         <span style={{ width: `${course.progress}%` }} />
                       </div>
-                      <small>{course.progress}% complete</small>
+                      <small>{t("coursesPage.complete", { percent: course.progress })}</small>
                     </div>
                   ) : (
                     <div className="course-preview-note">
-                      <FiPlayCircle /> {course.previewCount} free preview
+                      {user ? <FiPlayCircle /> : <FiLock />} {user ? t("coursesPage.freePreview", { count: course.previewCount }) : t("coursesPage.accountRequired")}
                     </div>
                   )}
                   <footer>
                     <div>
-                      <small>{course.isEnrolled ? "Your course" : "Full access"}</small>
+                      <small>{course.isEnrolled ? t("coursesPage.yourCourse") : t("coursesPage.fullAccess")}</small>
                       <strong>
                         {course.isEnrolled
-                          ? "Continue learning"
-                          : money(course.price, course.currency)}
+                          ? t("coursesPage.continueLearning")
+                          : user
+                            ? money(course.price, course.currency, language === "km" ? "km-KH" : "en-US")
+                            : t("coursesPage.createToView")}
                       </strong>
                     </div>
-                    <Link to={`/courses/${course.slug}`} className="course-arrow">
+                    <Link to={accessPath} className="course-arrow">
                       {course.isEnrolled ? <FiArrowRight /> : <FiLock />}
                     </Link>
                   </footer>
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="course-state">
-            <strong>No courses match your search</strong>
-            <p>Try another title or category.</p>
+            <strong>{t("coursesPage.noMatchTitle")}</strong>
+            <p>{t("coursesPage.noMatchDescription")}</p>
           </div>
         )}
       </section>

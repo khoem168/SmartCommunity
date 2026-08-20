@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+﻿import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   IoCheckmarkCircleOutline,
@@ -28,10 +28,13 @@ import {
   submitCareerAssessmentRequest,
   updateCareerRoadmapStepRequest,
 } from "../../services/careerService";
+import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
+import { useLanguage } from "../../context/LanguageContext";
 import "./CareerDevelopment.css";
 
 const CareerDevelopment = () => {
   const { user } = useGlobleContext();
+  const { t } = useLanguage();
   const [paths, setPaths] = useState([]);
   const [articles, setArticles] = useState([]);
   const [assessments, setAssessments] = useState([]);
@@ -183,34 +186,32 @@ const CareerDevelopment = () => {
     <main className="career-page">
       <section className="career-hero">
         <div className="container career-hero-inner">
-          <div><p className="eyebrow">Career Development</p><h1>Turn your career goal into a measurable learning plan.</h1><p>Choose a roadmap, assess your readiness, complete focused steps, and use practical advice to prepare for projects, interviews, and internships.</p></div>
-          <div className="career-hero-actions">{user ? <Link className="btn primary" to="/profile">Update career goal</Link> : <Link className="btn primary" to="/login">Login to track progress</Link>}<a className="btn outline" href="#assessment">Take assessment</a></div>
+          <div><p className="eyebrow">{t("careerPage.eyebrow")}</p><h1>{t("careerPage.heroTitle")}</h1><p>{t("careerPage.heroDescription")}</p></div>
+          <div className="career-hero-actions">{user ? <Link className="btn primary" to="/profile">{t("careerPage.updateGoal")}</Link> : <Link className="btn primary" to="/login">{t("careerPage.loginTrack")}</Link>}<a className="btn outline" href="#assessment">{t("careerPage.takeAssessment")}</a></div>
         </div>
       </section>
 
       <section className="section container career-content">
         {error && <div className="auth-error">{error}</div>}
         {message && <div className="profile-success">{message}</div>}
-        {loading && <p className="career-empty">Loading career resources...</p>}
-
         {user && (
           <div className="career-stats">
-            <article><IoTrendingUpOutline /><strong>{overview?.stats?.roadmapProgress || 0}%</strong><span>Roadmap progress</span></article>
-            <article><IoCheckmarkCircleOutline /><strong>{overview?.stats?.completedSteps || 0}</strong><span>Steps completed</span></article>
-            <article><IoClipboardOutline /><strong>{overview?.stats?.assessmentAttempts || 0}</strong><span>Assessments</span></article>
-            <article><IoFlagOutline /><strong>{overview?.stats?.latestScore || 0}%</strong><span>Readiness score</span></article>
+            <article><IoTrendingUpOutline /><strong>{overview?.stats?.roadmapProgress || 0}%</strong><span>{t("careerPage.roadmapProgress")}</span></article>
+            <article><IoCheckmarkCircleOutline /><strong>{overview?.stats?.completedSteps || 0}</strong><span>{t("careerPage.stepsCompleted")}</span></article>
+            <article><IoClipboardOutline /><strong>{overview?.stats?.assessmentAttempts || 0}</strong><span>{t("careerPage.assessments")}</span></article>
+            <article><IoFlagOutline /><strong>{overview?.stats?.latestScore || 0}%</strong><span>{t("careerPage.readinessScore")}</span></article>
           </div>
         )}
 
         {overview?.roadmap && (
           <section className="active-roadmap-panel">
-            <div className="career-section-header"><div><p className="eyebrow">Current roadmap</p><h2>{overview.roadmap.path.title}</h2><p>{overview.roadmap.path.description}</p></div><strong>{overview.roadmap.progressPercent}%</strong></div>
+            <div className="career-section-header"><div><p className="eyebrow">{t("careerPage.currentRoadmap")}</p><h2>{overview.roadmap.path.title}</h2><p>{overview.roadmap.path.description}</p></div><strong>{overview.roadmap.progressPercent}%</strong></div>
             <div className="career-progress-track"><span style={{ width: `${overview.roadmap.progressPercent}%` }} /></div>
             <div className="roadmap-timeline">
               {overview.roadmap.steps.map((step) => (
                 <article className={step.completed ? "completed" : ""} key={step.id}>
                   <button type="button" disabled={busy === `step-${step.id}`} onClick={() => toggleStep(step)} aria-label={`${step.completed ? "Reopen" : "Complete"} ${step.title}`}>{step.completed ? <IoCheckmarkCircleOutline /> : step.position}</button>
-                  <div><div className="roadmap-step-heading"><h3>{step.title}</h3><span>{step.skill} · {step.estimatedHours} hours</span></div><p>{step.description}</p><div className="roadmap-resources">{step.resources.map((resource) => <span key={resource}>{resource}</span>)}</div></div>
+                  <div><div className="roadmap-step-heading"><h3>{step.title}</h3><span>{step.skill} Â· {step.estimatedHours} hours</span></div><p>{step.description}</p><div className="roadmap-resources">{step.resources.map((resource) => <span key={resource}>{resource}</span>)}</div></div>
                 </article>
               ))}
             </div>
@@ -218,37 +219,56 @@ const CareerDevelopment = () => {
         )}
 
         <section>
-          <div className="career-section-header"><div><h2>{overview?.roadmap ? "Explore another path" : "Choose your career roadmap"}</h2><p>Each roadmap turns a target role into ordered, trackable milestones.</p></div></div>
-          <div className="career-path-grid">
-            {paths.map((path) => <article className="career-path-card" key={path.id}><div className="career-path-heading"><span>{path.level}</span>{recommendedMap.has(path.id) && <strong>{recommendedMap.get(path.id)}% profile match</strong>}</div><h3>{path.title}</h3><p>{path.description}</p><div className="career-skill-list">{path.skills.map((skill) => <span key={skill}>{skill}</span>)}</div><div className="career-path-meta"><span><IoTimeOutline /> {path.durationWeeks} weeks</span><span>{path.stepCount} milestones</span></div><button type="button" className="btn primary small" disabled={busy === `path-${path.id}` || overview?.roadmap?.path?.id === path.id} onClick={() => startRoadmap(path)}>{overview?.roadmap?.path?.id === path.id ? "Current roadmap" : "Select roadmap"}</button></article>)}
-          </div>
+          <div className="career-section-header"><div><h2>{overview?.roadmap ? t("careerPage.exploreAnother") : t("careerPage.chooseRoadmap")}</h2><p>{t("careerPage.roadmapDescription")}</p></div></div>
+          {loading ? (
+            <SkeletonGrid
+              className="career-path-grid"
+              count={3}
+              label={t("careerPage.loadingRoadmaps")}
+              variant="career"
+            />
+          ) : (
+            <div className="career-path-grid">
+              {paths.map((path) => <article className="career-path-card" key={path.id}><div className="career-path-heading"><span>{path.level}</span>{recommendedMap.has(path.id) && <strong>{t("careerPage.profileMatch", { score: recommendedMap.get(path.id) })}</strong>}</div><h3>{path.title}</h3><p>{path.description}</p><div className="career-skill-list">{path.skills.map((skill) => <span key={skill}>{skill}</span>)}</div><div className="career-path-meta"><span><IoTimeOutline /> {t("careerPage.weeks", { count: path.durationWeeks })}</span><span>{t("careerPage.milestones", { count: path.stepCount })}</span></div><button type="button" className="btn primary small" disabled={busy === `path-${path.id}` || overview?.roadmap?.path?.id === path.id} onClick={() => startRoadmap(path)}>{busy === `path-${path.id}` ? <ButtonLoader>{t("careerPage.selecting")}</ButtonLoader> : overview?.roadmap?.path?.id === path.id ? t("careerPage.currentRoadmap") : t("careerPage.selectRoadmap")}</button></article>)}
+            </div>
+          )}
         </section>
 
         <section id="assessment" className="career-assessment-section">
-          <div className="career-section-header"><div><h2>Skill readiness assessment</h2><p>Self-evaluate four competencies and receive focused recommendations.</p></div></div>
+          <div className="career-section-header"><div><h2>{t("careerPage.skillAssessment")}</h2><p>{t("careerPage.assessmentDescription")}</p></div></div>
           <div className="assessment-layout">
-            <div className="assessment-list">{assessments.map((assessment) => <article key={assessment.id}><IoClipboardOutline /><div><h3>{assessment.title}</h3><p>{assessment.description}</p><span>{assessment.questionCount} questions</span></div><button className="btn primary small" type="button" disabled={busy === `assessment-${assessment.id}`} onClick={() => openAssessment(assessment.id)}>Start assessment</button></article>)}</div>
-            {latestAssessment && <div className="assessment-result-panel"><div className="assessment-score"><span>Latest score</span><strong>{latestAssessment.scorePercent}%</strong></div><div className="career-radar-chart"><ResponsiveContainer width="100%" height="100%"><RadarChart data={chartData} outerRadius="70%"><PolarGrid /><PolarAngleAxis dataKey="competency" tick={{ fontSize: 11 }} /><PolarRadiusAxis domain={[0, 100]} tickCount={5} /><Radar name="Readiness" dataKey="score" stroke="#2563eb" fill="#3b82f6" fillOpacity={0.35} /><Tooltip /></RadarChart></ResponsiveContainer></div><div className="assessment-recommendations"><h3>Recommended next actions</h3>{latestAssessment.recommendations.map((item) => <p key={item}>{item}</p>)}</div></div>}
+            <div className="assessment-list">{assessments.map((assessment) => <article key={assessment.id}><IoClipboardOutline /><div><h3>{assessment.title}</h3><p>{assessment.description}</p><span>{t("careerPage.questions", { count: assessment.questionCount })}</span></div><button className="btn primary small" type="button" disabled={busy === `assessment-${assessment.id}`} onClick={() => openAssessment(assessment.id)}>{busy === `assessment-${assessment.id}` ? <ButtonLoader>{t("careerPage.opening")}</ButtonLoader> : t("careerPage.startAssessment")}</button></article>)}</div>
+            {latestAssessment && <div className="assessment-result-panel"><div className="assessment-score"><span>{t("careerPage.latestScore")}</span><strong>{latestAssessment.scorePercent}%</strong></div><div className="career-radar-chart"><ResponsiveContainer width="100%" height="100%"><RadarChart data={chartData} outerRadius="70%"><PolarGrid /><PolarAngleAxis dataKey="competency" tick={{ fontSize: 11 }} /><PolarRadiusAxis domain={[0, 100]} tickCount={5} /><Radar name="Readiness" dataKey="score" stroke="#2563eb" fill="#3b82f6" fillOpacity={0.35} /><Tooltip /></RadarChart></ResponsiveContainer></div><div className="assessment-recommendations"><h3>{t("careerPage.recommendedActions")}</h3>{latestAssessment.recommendations.map((item) => <p key={item}>{item}</p>)}</div></div>}
           </div>
         </section>
 
         {activeAssessment && (
           <form className="assessment-form" onSubmit={submitAssessment}>
-            <div className="career-section-header"><div><h2>{activeAssessment.assessment.title}</h2><p>{activeAssessment.assessment.description}</p></div><button type="button" className="btn outline" onClick={() => setActiveAssessment(null)}>Close</button></div>
+            <div className="career-section-header"><div><h2>{activeAssessment.assessment.title}</h2><p>{activeAssessment.assessment.description}</p></div><button type="button" className="btn outline" onClick={() => setActiveAssessment(null)}>{t("careerPage.close")}</button></div>
             {activeAssessment.questions.map((question) => <fieldset key={question.id}><legend>{question.position}. {question.question}</legend><small>{question.competency}</small><div>{question.options.map((option, optionIndex) => <label key={option}><input type="radio" name={`question-${question.id}`} checked={Number(answers[question.id]) === optionIndex} onChange={() => setAnswers((current) => ({ ...current, [question.id]: optionIndex }))} />{option}</label>)}</div></fieldset>)}
-            <button className="btn primary" disabled={busy === "assessment-submit" || Object.keys(answers).length !== activeAssessment.questions.length}>{busy === "assessment-submit" ? "Scoring..." : "Complete assessment"}</button>
+            <button className="btn primary" disabled={busy === "assessment-submit" || Object.keys(answers).length !== activeAssessment.questions.length}>{busy === "assessment-submit" ? <ButtonLoader>{t("careerPage.scoring")}</ButtonLoader> : t("careerPage.completeAssessment")}</button>
           </form>
         )}
 
         <section className="career-advice-section">
-          <div className="career-section-header"><div><h2>Career advice</h2><p>Short, practical guidance for your next decision or application.</p></div><select value={articleCategory} onChange={(event) => setArticleCategory(event.target.value)}><option value="">All categories</option>{categories.map((category) => <option value={category} key={category}>{category}</option>)}</select></div>
-          <div className="career-article-grid">{visibleArticles.map((article) => <article key={article.id}><span>{article.category}</span><h3>{article.title}</h3><p>{article.excerpt}</p><div><small>{article.readingMinutes} min read</small><button type="button" disabled={busy === `article-${article.slug}`} onClick={() => openArticle(article.slug)}>Read article</button></div></article>)}</div>
+          <div className="career-section-header"><div><h2>{t("careerPage.careerAdvice")}</h2><p>{t("careerPage.adviceDescription")}</p></div><select value={articleCategory} onChange={(event) => setArticleCategory(event.target.value)}><option value="">{t("careerPage.allCategories")}</option>{categories.map((category) => <option value={category} key={category}>{category}</option>)}</select></div>
+          {loading ? (
+            <SkeletonGrid
+              className="career-article-grid"
+              count={3}
+              label={t("careerPage.loadingAdvice")}
+              variant="career"
+            />
+          ) : (
+            <div className="career-article-grid">{visibleArticles.map((article) => <article key={article.id}><span>{article.category}</span><h3>{article.title}</h3><p>{article.excerpt}</p><div><small>{t("careerPage.minRead", { count: article.readingMinutes })}</small><button type="button" disabled={busy === `article-${article.slug}`} onClick={() => openArticle(article.slug)}>{busy === `article-${article.slug}` ? <ButtonLoader>{t("careerPage.opening")}</ButtonLoader> : t("careerPage.readArticle")}</button></div></article>)}</div>
+          )}
         </section>
 
-        {activeArticle && <div className="career-article-reader"><div className="career-section-header"><div><span>{activeArticle.category} · {activeArticle.readingMinutes} min read</span><h2>{activeArticle.title}</h2></div><button className="btn outline" type="button" onClick={() => setActiveArticle(null)}>Close</button></div><p>{activeArticle.content}</p></div>}
+        {activeArticle && <div className="career-article-reader"><div className="career-section-header"><div><span>{activeArticle.category} · {t("careerPage.minRead", { count: activeArticle.readingMinutes })}</span><h2>{activeArticle.title}</h2></div><button className="btn outline" type="button" onClick={() => setActiveArticle(null)}>{t("careerPage.close")}</button></div><p>{activeArticle.content}</p></div>}
       </section>
     </main>
   );
 };
 
 export default CareerDevelopment;
+

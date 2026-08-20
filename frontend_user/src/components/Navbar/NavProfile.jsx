@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchSkillExchanges } from "../../services/platformService";
 import { getSocket } from "../../services/realtimeService";
+import { useLanguage } from "../../context/LanguageContext";
 
 const getInitials = (name) => {
   return (name || "")
@@ -17,6 +18,8 @@ export const NavProfile = ({ user = {}, onLogout }) => {
   const [pendingSkillRequests, setPendingSkillRequests] = useState(0);
   const initials = getInitials(user.fullName || user.email || "User");
   const role = user.role || "member";
+  const { t } = useLanguage();
+  const roleLabel = t(`profile.${role}`);
 
   const refreshPendingSkillRequests = useCallback(async () => {
     if (!user?.id) {
@@ -86,7 +89,7 @@ export const NavProfile = ({ user = {}, onLogout }) => {
         )}
         <div className="profile-text">
           <strong>{user.fullName || user.email}</strong>
-          <small>{role}</small>
+          <small>{roleLabel}</small>
         </div>
       </button>
 
@@ -97,21 +100,21 @@ export const NavProfile = ({ user = {}, onLogout }) => {
             className="profile-menu-item"
             onClick={() => setOpen(false)}
           >
-            Profile
+            {t("profile.profile")}
           </Link>
           <Link
             to="/settings"
             className="profile-menu-item"
             onClick={() => setOpen(false)}
           >
-            Settings
+            {t("profile.settings")}
           </Link>
           <Link
             to="/skill-requests"
             className="profile-menu-item"
             onClick={() => setOpen(false)}
           >
-            <span>Skill exchange requests</span>
+            <span>{t("profile.skillRequests")}</span>
             {pendingSkillRequests > 0 && (
               <span className="profile-menu-badge">
                 {pendingSkillRequests}
@@ -126,14 +129,14 @@ export const NavProfile = ({ user = {}, onLogout }) => {
                 className="profile-menu-item"
                 onClick={() => setOpen(false)}
               >
-                Post a job
+                {t("profile.postJob")}
               </Link>
               <Link
                 to="/my-posts"
                 className="profile-menu-item"
                 onClick={() => setOpen(false)}
               >
-                Internship dashboard
+                {t("profile.internshipDashboard")}
               </Link>
             </>
           )}
@@ -144,7 +147,7 @@ export const NavProfile = ({ user = {}, onLogout }) => {
               className="profile-menu-item"
               onClick={() => setOpen(false)}
             >
-              My mentorships
+              {t("profile.myMentorships")}
             </Link>
           )}
 
@@ -155,14 +158,14 @@ export const NavProfile = ({ user = {}, onLogout }) => {
                 className="profile-menu-item"
                 onClick={() => setOpen(false)}
               >
-                Admin panel
+                {t("profile.adminPanel")}
               </Link>
               <Link
                 to="/analytics"
                 className="profile-menu-item"
                 onClick={() => setOpen(false)}
               >
-                Analytics dashboard
+                {t("profile.analyticsDashboard")}
               </Link>
             </>
           )}
@@ -174,14 +177,14 @@ export const NavProfile = ({ user = {}, onLogout }) => {
                 to="/jobs"
                 onClick={() => setOpen(false)}
               >
-                Explore internships
+                {t("profile.exploreInternships")}
               </Link>
               <Link
                 to="/courses"
                 className="profile-menu-item"
                 onClick={() => setOpen(false)}
               >
-                My courses
+                {t("profile.myCourses")}
               </Link>
 
               <Link
@@ -189,7 +192,7 @@ export const NavProfile = ({ user = {}, onLogout }) => {
                 className="profile-menu-item"
                 onClick={() => setOpen(false)}
               >
-                My applications
+                {t("profile.myApplications")}
               </Link>
             </>
           )}
@@ -199,7 +202,7 @@ export const NavProfile = ({ user = {}, onLogout }) => {
             className="profile-menu-item"
             onClick={() => setOpen(false)}
           >
-            Community forum
+            {t("profile.communityForum")}
           </Link>
 
           <button
@@ -207,7 +210,7 @@ export const NavProfile = ({ user = {}, onLogout }) => {
             type="button"
             onClick={handleLogout}
           >
-            Logout
+            {t("profile.logout")}
           </button>
         </div>
       )}

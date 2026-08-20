@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+﻿import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   IoCalendarOutline,
@@ -20,6 +20,8 @@ import {
   updateMentorshipStatusRequest,
 } from "../../services/platformService";
 import { getSocket } from "../../services/realtimeService";
+import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
+import { useLanguage } from "../../context/LanguageContext";
 import "./Mentorship.css";
 
 const formatDate = (value) =>
@@ -40,6 +42,7 @@ const initials = (name = "") =>
 
 const Mentorship = () => {
   const { user } = useGlobleContext();
+  const { t } = useLanguage();
   const [mentors, setMentors] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [application, setApplication] = useState(null);
@@ -206,11 +209,10 @@ const Mentorship = () => {
     <main className="mentorship-page">
       <section className="page-hero mentorship-hero">
         <div className="hero-content">
-          <p className="eyebrow">Verified Mentorship</p>
-          <h1>Find an experienced guide for your next career step.</h1>
+          <p className="eyebrow">{t("mentorshipPage.eyebrow")}</p>
+          <h1>{t("mentorshipPage.heroTitle")}</h1>
           <p>
-            Search verified mentors, request a session, meet through Jitsi, and
-            share feedback after completing your appointment.
+            {t("mentorshipPage.heroDescription")}
           </p>
           <div className="mentorship-hero-actions">
             {user &&
@@ -218,12 +220,12 @@ const Mentorship = () => {
               user.role !== "admin" &&
               (!application || application.status === "rejected") && (
               <button className="btn primary" type="button" onClick={() => setShowApplication(true)}>
-                {application?.status === "rejected" ? "Apply again" : "Become a mentor"}
+                {application?.status === "rejected" ? t("mentorshipPage.applyAgain") : t("mentorshipPage.becomeMentor")}
               </button>
             )}
             {application && (
               <span className={`mentor-application-status ${application.status}`}>
-                Mentor application: {application.status}
+                {t("mentorshipPage.applicationStatus", { status: application.status })}
               </span>
             )}
           </div>
@@ -237,51 +239,51 @@ const Mentorship = () => {
         {showApplication && (
           <form className="mentor-application-form" onSubmit={submitApplication}>
             <div className="section-header">
-              <div><h2>Apply to become a mentor</h2><p>An administrator will verify your experience before publishing your profile.</p></div>
-              <button className="btn outline" type="button" onClick={() => setShowApplication(false)}>Close</button>
+              <div><h2>{t("mentorshipPage.applyTitle")}</h2><p>{t("mentorshipPage.applyDescription")}</p></div>
+              <button className="btn outline" type="button" onClick={() => setShowApplication(false)}>{t("mentorshipPage.close")}</button>
             </div>
             <div className="mentor-form-grid">
-              <label>Professional title<input required value={applicationForm.professionalTitle} onChange={(event) => setApplicationForm((current) => ({ ...current, professionalTitle: event.target.value }))} /></label>
-              <label>Company<input value={applicationForm.company} onChange={(event) => setApplicationForm((current) => ({ ...current, company: event.target.value }))} /></label>
-              <label>Years of experience<input required type="number" min="0" max="80" value={applicationForm.experienceYears} onChange={(event) => setApplicationForm((current) => ({ ...current, experienceYears: event.target.value }))} /></label>
-              <label>Availability<input value={applicationForm.availability} onChange={(event) => setApplicationForm((current) => ({ ...current, availability: event.target.value }))} /></label>
-              <label className="wide">Expertise, separated by commas<input required placeholder="React, Career coaching, UI/UX" value={applicationForm.expertise} onChange={(event) => setApplicationForm((current) => ({ ...current, expertise: event.target.value }))} /></label>
-              <label className="wide">LinkedIn URL<input type="url" value={applicationForm.linkedinUrl} onChange={(event) => setApplicationForm((current) => ({ ...current, linkedinUrl: event.target.value }))} /></label>
-              <label className="wide">Why do you want to mentor?<textarea required value={applicationForm.motivation} onChange={(event) => setApplicationForm((current) => ({ ...current, motivation: event.target.value }))} /></label>
+              <label>{t("mentorshipPage.professionalTitle")}<input required value={applicationForm.professionalTitle} onChange={(event) => setApplicationForm((current) => ({ ...current, professionalTitle: event.target.value }))} /></label>
+              <label>{t("mentorshipPage.company")}<input value={applicationForm.company} onChange={(event) => setApplicationForm((current) => ({ ...current, company: event.target.value }))} /></label>
+              <label>{t("mentorshipPage.years")}<input required type="number" min="0" max="80" value={applicationForm.experienceYears} onChange={(event) => setApplicationForm((current) => ({ ...current, experienceYears: event.target.value }))} /></label>
+              <label>{t("mentorshipPage.availability")}<input value={applicationForm.availability} onChange={(event) => setApplicationForm((current) => ({ ...current, availability: event.target.value }))} /></label>
+              <label className="wide">{t("mentorshipPage.expertise")}<input required placeholder="React, Career coaching, UI/UX" value={applicationForm.expertise} onChange={(event) => setApplicationForm((current) => ({ ...current, expertise: event.target.value }))} /></label>
+              <label className="wide">{t("mentorshipPage.linkedin")}<input type="url" value={applicationForm.linkedinUrl} onChange={(event) => setApplicationForm((current) => ({ ...current, linkedinUrl: event.target.value }))} /></label>
+              <label className="wide">{t("mentorshipPage.motivation")}<textarea required value={applicationForm.motivation} onChange={(event) => setApplicationForm((current) => ({ ...current, motivation: event.target.value }))} /></label>
             </div>
-            <button className="btn primary" disabled={busyId === "application"}>{busyId === "application" ? "Submitting..." : "Submit application"}</button>
+            <button className="btn primary" disabled={busyId === "application"}>{busyId === "application" ? <ButtonLoader>{t("mentorshipPage.submitting")}</ButtonLoader> : t("mentorshipPage.submitApplication")}</button>
           </form>
         )}
 
         {user?.role === "admin" && (
           <section className="mentor-admin-panel">
-            <div className="section-header"><div><h2>Mentor verification</h2><p>Review pending mentor applications.</p></div><span>{adminApplications.length} pending</span></div>
+            <div className="section-header"><div><h2>{t("mentorshipPage.verificationTitle")}</h2><p>{t("mentorshipPage.verificationDescription")}</p></div><span>{t("mentorshipPage.pending", { count: adminApplications.length })}</span></div>
             {adminApplications.length ? adminApplications.map((item) => (
               <article key={item.id} className="mentor-application-card">
-                <div><h3>{item.userName}</h3><p>{item.professionalTitle}{item.company ? ` at ${item.company}` : ""} · {item.experienceYears} years</p><div className="mentor-skills">{item.expertise.map((entry) => <span className="skill-pill" key={entry}>{entry}</span>)}</div><p>{item.motivation}</p></div>
-                <label>Rejection reason<textarea value={reasonById[`application-${item.id}`] || ""} onChange={(event) => setReasonById((current) => ({ ...current, [`application-${item.id}`]: event.target.value }))} /></label>
-                <div className="mentor-card-actions"><button className="btn primary small" type="button" disabled={busyId === `application-${item.id}`} onClick={() => reviewApplication(item.id, "approved")}>Approve</button><button className="btn outline small" type="button" disabled={!reasonById[`application-${item.id}`]?.trim() || busyId === `application-${item.id}`} onClick={() => reviewApplication(item.id, "rejected")}>Reject</button></div>
+                <div><h3>{item.userName}</h3><p>{t("mentorshipPage.experienceLine", { title: item.professionalTitle, company: item.company ? ` - ${item.company}` : "", years: item.experienceYears })}</p><div className="mentor-skills">{item.expertise.map((entry) => <span className="skill-pill" key={entry}>{entry}</span>)}</div><p>{item.motivation}</p></div>
+                <label>{t("mentorshipPage.rejectionReason")}<textarea value={reasonById[`application-${item.id}`] || ""} onChange={(event) => setReasonById((current) => ({ ...current, [`application-${item.id}`]: event.target.value }))} /></label>
+                <div className="mentor-card-actions"><button className="btn primary small" type="button" disabled={busyId === `application-${item.id}`} onClick={() => reviewApplication(item.id, "approved")}>{busyId === `application-${item.id}` ? <ButtonLoader>{t("mentorshipPage.approving")}</ButtonLoader> : t("mentorshipPage.approve")}</button><button className="btn outline small" type="button" disabled={!reasonById[`application-${item.id}`]?.trim() || busyId === `application-${item.id}`} onClick={() => reviewApplication(item.id, "rejected")}>{busyId === `application-${item.id}` ? <ButtonLoader>{t("mentorshipPage.rejecting")}</ButtonLoader> : t("mentorshipPage.reject")}</button></div>
               </article>
-            )) : <p className="mentorship-empty">No pending applications.</p>}
+            )) : <p className="mentorship-empty">{t("mentorshipPage.noPending")}</p>}
           </section>
         )}
 
         {user && bookings.length > 0 && (
           <section className="my-mentorships">
-            <div className="section-header"><div><h2>My mentorship bookings</h2><p>Manage approvals, meetings, completion, and reviews.</p></div></div>
+            <div className="section-header"><div><h2>{t("mentorshipPage.myBookings")}</h2><p>{t("mentorshipPage.bookingsDescription")}</p></div></div>
             <div className="mentorship-booking-grid">
               {bookings.map((booking) => (
                 <article className="mentorship-booking-card" key={booking.id}>
-                  <div className="booking-heading"><div><h3>{booking.topic}</h3><p>{booking.currentUserRole === "mentor" ? `Student: ${booking.studentName}` : `Mentor: ${booking.mentorName}`}</p></div><span className={`booking-status ${booking.status}`}>{booking.status}</span></div>
+                  <div className="booking-heading"><div><h3>{booking.topic}</h3><p>{booking.currentUserRole === "mentor" ? t("mentorshipPage.studentName", { name: booking.studentName }) : t("mentorshipPage.mentorName", { name: booking.mentorName })}</p></div><span className={`booking-status ${booking.status}`}>{booking.status}</span></div>
                   <p>{booking.description}</p>
-                  <div className="booking-meta"><span><IoCalendarOutline /> {formatDate(booking.requestedTime)}</span><span>{booking.durationMinutes} minutes</span><span>{booking.meetingFrequency}</span></div>
-                  {booking.rejectionReason && <p className="booking-rejection">Reason: {booking.rejectionReason}</p>}
-                  {booking.meetingLink && booking.status === "active" && <a className="btn primary small" href={booking.meetingLink} target="_blank" rel="noreferrer"><IoVideocamOutline /> Join Jitsi meeting</a>}
-                  {booking.currentUserRole === "mentor" && booking.status === "pending" && <><label>Reason if declining<textarea value={reasonById[booking.id] || ""} onChange={(event) => setReasonById((current) => ({ ...current, [booking.id]: event.target.value }))} /></label><div className="mentor-card-actions"><button className="btn primary small" type="button" disabled={busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "active")}>Approve appointment</button><button className="btn outline small" type="button" disabled={!reasonById[booking.id]?.trim() || busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "rejected")}>Decline</button></div></>}
-                  {booking.status === "active" && <div className="mentor-card-actions"><button className="btn outline small" type="button" disabled={busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "completed")}><IoCheckmarkCircleOutline /> Mark completed</button><button className="btn outline small" type="button" disabled={busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "cancelled")}>Cancel</button></div>}
-                  {booking.currentUserRole === "student" && booking.status === "pending" && <button className="btn outline small" type="button" disabled={busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "cancelled")}>Cancel request</button>}
-                  {booking.currentUserRole === "student" && booking.status === "completed" && !booking.review && <div className="booking-review-form"><label>Rating<select value={reviewById[booking.id]?.rating || 5} onChange={(event) => setReviewById((current) => ({ ...current, [booking.id]: { ...current[booking.id], rating: Number(event.target.value) } }))}>{[5, 4, 3, 2, 1].map((value) => <option key={value} value={value}>{value} stars</option>)}</select></label><label>Review<textarea value={reviewById[booking.id]?.review || ""} onChange={(event) => setReviewById((current) => ({ ...current, [booking.id]: { rating: current[booking.id]?.rating || 5, review: event.target.value } }))} /></label><button className="btn primary small" type="button" disabled={!reviewById[booking.id]?.review?.trim() || busyId === `review-${booking.id}`} onClick={() => submitReview(booking.id)}>Submit review</button></div>}
-                  {booking.review && <p className="booking-review"><IoStar /> {booking.review.rating}/5 · {booking.review.review}</p>}
+                  <div className="booking-meta"><span><IoCalendarOutline /> {formatDate(booking.requestedTime)}</span><span>{t("mentorshipPage.minutes", { count: booking.durationMinutes })}</span><span>{booking.meetingFrequency}</span></div>
+                  {booking.rejectionReason && <p className="booking-rejection">{t("mentorshipPage.reason", { reason: booking.rejectionReason })}</p>}
+                  {booking.meetingLink && booking.status === "active" && <a className="btn primary small" href={booking.meetingLink} target="_blank" rel="noreferrer"><IoVideocamOutline /> {t("mentorshipPage.joinMeeting")}</a>}
+                  {booking.currentUserRole === "mentor" && booking.status === "pending" && <><label>{t("mentorshipPage.reasonDeclining")}<textarea value={reasonById[booking.id] || ""} onChange={(event) => setReasonById((current) => ({ ...current, [booking.id]: event.target.value }))} /></label><div className="mentor-card-actions"><button className="btn primary small" type="button" disabled={busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "active")}>{busyId === `booking-${booking.id}` ? <ButtonLoader>{t("mentorshipPage.updating")}</ButtonLoader> : t("mentorshipPage.approveAppointment")}</button><button className="btn outline small" type="button" disabled={!reasonById[booking.id]?.trim() || busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "rejected")}>{busyId === `booking-${booking.id}` ? <ButtonLoader>{t("mentorshipPage.updating")}</ButtonLoader> : t("mentorshipPage.decline")}</button></div></>}
+                  {booking.status === "active" && <div className="mentor-card-actions"><button className="btn outline small" type="button" disabled={busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "completed")}>{busyId === `booking-${booking.id}` ? <ButtonLoader>{t("mentorshipPage.updating")}</ButtonLoader> : <><IoCheckmarkCircleOutline /> {t("mentorshipPage.markCompleted")}</>}</button><button className="btn outline small" type="button" disabled={busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "cancelled")}>{busyId === `booking-${booking.id}` ? <ButtonLoader>{t("mentorshipPage.updating")}</ButtonLoader> : t("mentorshipPage.cancel")}</button></div>}
+                  {booking.currentUserRole === "student" && booking.status === "pending" && <button className="btn outline small" type="button" disabled={busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "cancelled")}>{busyId === `booking-${booking.id}` ? <ButtonLoader>{t("mentorshipPage.updating")}</ButtonLoader> : t("mentorshipPage.cancelRequest")}</button>}
+                  {booking.currentUserRole === "student" && booking.status === "completed" && !booking.review && <div className="booking-review-form"><label>{t("mentorshipPage.rating")}<select value={reviewById[booking.id]?.rating || 5} onChange={(event) => setReviewById((current) => ({ ...current, [booking.id]: { ...current[booking.id], rating: Number(event.target.value) } }))}>{[5, 4, 3, 2, 1].map((value) => <option key={value} value={value}>{t("mentorshipPage.stars", { count: value })}</option>)}</select></label><label>{t("mentorshipPage.review")}<textarea value={reviewById[booking.id]?.review || ""} onChange={(event) => setReviewById((current) => ({ ...current, [booking.id]: { rating: current[booking.id]?.rating || 5, review: event.target.value } }))} /></label><button className="btn primary small" type="button" disabled={!reviewById[booking.id]?.review?.trim() || busyId === `review-${booking.id}`} onClick={() => submitReview(booking.id)}>{busyId === `review-${booking.id}` ? <ButtonLoader>{t("mentorshipPage.submitting")}</ButtonLoader> : t("mentorshipPage.submitReview")}</button></div>}
+                  {booking.review && <p className="booking-review"><IoStar /> {booking.review.rating}/5 Â· {booking.review.review}</p>}
                 </article>
               ))}
             </div>
@@ -289,12 +291,19 @@ const Mentorship = () => {
         )}
 
         <section>
-          <div className="section-header"><div><h2>Verified mentors</h2><p>Search by name, career field, or mentoring skill.</p></div><span>{filteredMentors.length} mentors</span></div>
+          <div className="section-header"><div><h2>{t("mentorshipPage.verifiedMentors")}</h2><p>{t("mentorshipPage.searchDescription")}</p></div><span>{t("mentorshipPage.mentorCount", { count: filteredMentors.length })}</span></div>
           <div className="mentor-search-panel">
-            <label><IoSearchOutline /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search mentors or careers" /></label>
-            <select value={skill} onChange={(event) => setSkill(event.target.value)}><option value="">All skills</option>{skills.map((item) => <option key={item} value={item}>{item}</option>)}</select>
+            <label><IoSearchOutline /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("mentorshipPage.searchPlaceholder")} /></label>
+            <select value={skill} onChange={(event) => setSkill(event.target.value)}><option value="">{t("mentorshipPage.allSkills")}</option>{skills.map((item) => <option key={item} value={item}>{item}</option>)}</select>
           </div>
-          {isLoading ? <div className="mentorship-empty">Loading verified mentors...</div> : filteredMentors.length ? (
+          {isLoading ? (
+            <SkeletonGrid
+              className="mentor-grid"
+              count={3}
+              label={t("mentorshipPage.loading")}
+              variant="mentor"
+            />
+          ) : filteredMentors.length ? (
             <div className="mentor-grid">
               {filteredMentors.map((mentor) => (
                 <article className="mentor-card" key={mentor.id}>
@@ -302,11 +311,11 @@ const Mentorship = () => {
                   <p className="mentor-card-bio">{mentor.bio}</p>
                   <div className="mentor-skills">{(mentor.skills || []).slice(0, 5).map((item) => <span className="skill-pill" key={item}>{item}</span>)}</div>
                   <div className="mentor-meta"><span><IoStar /> {mentor.rating || "New"} {mentor.reviewCount ? `(${mentor.reviewCount})` : ""}</span><span><IoPeopleOutline /> {mentor.sessions} sessions</span><span>{mentor.location}</span></div>
-                  <Link to={`/mentorship/${mentor.id}`} className="btn primary small">View and book</Link>
+                  <Link to={`/mentorship/${mentor.id}`} className="btn primary small">{t("mentorshipPage.viewBook")}</Link>
                 </article>
               ))}
             </div>
-          ) : <div className="mentorship-empty">No verified mentors match these filters.</div>}
+          ) : <div className="mentorship-empty">{t("mentorshipPage.noMentors")}</div>}
         </section>
       </section>
     </main>
@@ -314,3 +323,4 @@ const Mentorship = () => {
 };
 
 export default Mentorship;
+

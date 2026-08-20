@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import "./Auth.css";
 import {
   roleOptions,
@@ -11,6 +11,40 @@ import {
   hiringTimelineOptions,
 } from "../../data/registerData";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
+import { ButtonLoader } from "../../components/ui/LoadingStates";
+
+const categoryTranslationKeys = {
+  "Technology & Programming": "categoryTechnology",
+  "Design & Creative": "categoryDesign",
+  "Data & Cloud": "categoryData",
+  "Business & Marketing": "categoryBusiness",
+  "Career & Soft Skills": "categoryCareer",
+};
+
+const availabilityTranslationKeys = {
+  "Weekdays morning": "weekdaysMorning",
+  "Weekdays evening": "weekdaysEvening",
+  Weekends: "weekends",
+  "Flexible schedule": "flexibleSchedule",
+  "By appointment": "byAppointment",
+};
+
+const hiringTranslationKeys = {
+  ASAP: "asap",
+  "Within 2 weeks": "withinTwoWeeks",
+  "Within 1 month": "withinOneMonth",
+  Flexible: "flexible",
+  "Looking ahead": "lookingAhead",
+};
+
+const jobTypeTranslationKeys = {
+  "Full-time": "fullTime",
+  "Part-time": "partTime",
+  Contract: "contract",
+  Internship: "internship",
+  Freelance: "freelance",
+};
 
 const initialForm = {
   fullName: "",
@@ -38,6 +72,9 @@ const SkillCategoryPicker = ({ title, field, selectedSkills, onToggle }) => {
     skillCategories.find((category) => category.name === selectedCategory) ||
     null;
   const availableSkills = activeCategory ? activeCategory.skills : [];
+  const { t } = useLanguage();
+  const getCategoryLabel = (categoryName) =>
+    t(`auth.${categoryTranslationKeys[categoryName]}`);
 
   const handleAddCustomSkill = () => {
     const skill = customSkill.trim();
@@ -51,17 +88,17 @@ const SkillCategoryPicker = ({ title, field, selectedSkills, onToggle }) => {
       <div className="section-label">{title}</div>
 
       <label className="skill-category-select">
-        Select category
+        {t("auth.selectCategory")}
         <select
           value={selectedCategory}
           onChange={(event) => {
             setSelectedCategory(event.target.value);
           }}
         >
-          <option value="">Select category</option>
+          <option value="">{t("auth.selectCategory")}</option>
           {skillCategories.map((category) => (
             <option key={`${field}-${category.name}`} value={category.name}>
-              {category.name}
+              {getCategoryLabel(category.name)}
             </option>
           ))}
         </select>
@@ -69,7 +106,7 @@ const SkillCategoryPicker = ({ title, field, selectedSkills, onToggle }) => {
 
       {activeCategory && (
         <section className="skill-category">
-          <h3>{activeCategory.name}</h3>
+          <h3>{getCategoryLabel(activeCategory.name)}</h3>
           <div className="skill-grid">
             {availableSkills.map((skill) => (
               <button
@@ -98,7 +135,7 @@ const SkillCategoryPicker = ({ title, field, selectedSkills, onToggle }) => {
                   handleAddCustomSkill();
                 }
               }}
-              placeholder="Add custom skill"
+              placeholder={t("auth.addCustomSkill")}
             />
             <button
               type="button"
@@ -106,7 +143,7 @@ const SkillCategoryPicker = ({ title, field, selectedSkills, onToggle }) => {
               onClick={handleAddCustomSkill}
               disabled={!customSkill.trim()}
             >
-              Add
+              {t("common.add")}
             </button>
           </div>
         </section>
@@ -128,8 +165,8 @@ const SkillCategoryPicker = ({ title, field, selectedSkills, onToggle }) => {
       ) : (
         <div className="empty-skill-message">
           {activeCategory
-            ? "No skills added yet. Add your first skill above!"
-            : "Select a category to choose related skills."}
+            ? t("auth.noSkills")
+            : t("auth.chooseCategory")}
         </div>
       )}
     </div>
@@ -140,8 +177,22 @@ const Register = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState(initialForm);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { registerUser } = useGlobleContext();
+  const { t } = useLanguage();
+  const requestedRedirect = searchParams.get("redirect") || "";
+  const redirectTo =
+    requestedRedirect.startsWith("/") && !requestedRedirect.startsWith("//")
+      ? requestedRedirect
+      : "";
+  const redirectQuery = redirectTo
+    ? `&redirect=${encodeURIComponent(redirectTo)}`
+    : "";
+  const loginPath = redirectTo
+    ? `/login?redirect=${encodeURIComponent(redirectTo)}`
+    : "/login";
   const isRecruiter = formData.role === "recruiter";
 
   const updateField = (field, value) => {
@@ -168,19 +219,19 @@ const Register = () => {
         !formData.password ||
         !formData.confirmPassword
       ) {
-        setError("Please complete all required fields in step 1.");
+        setError(t("auth.validationRequired"));
         return false;
       }
       if (!formData.email.includes("@")) {
-        setError("Please enter a valid email address.");
+        setError(t("auth.invalidEmail"));
         return false;
       }
       if (formData.password !== formData.confirmPassword) {
-        setError("Passwords do not match.");
+        setError(t("auth.passwordsMismatch"));
         return false;
       }
       if (formData.password.length < 8) {
-        setError("Password must be at least 8 characters.");
+        setError(t("auth.validationPasswordLength"));
         return false;
       }
       if (
@@ -188,7 +239,7 @@ const Register = () => {
         !/[A-Z]/.test(formData.password) ||
         !/\d/.test(formData.password)
       ) {
-        setError("Password must include uppercase, lowercase, and a number.");
+        setError(t("auth.validationPasswordStrength"));
         return false;
       }
     }
@@ -196,20 +247,18 @@ const Register = () => {
     if (step === 2) {
       if (formData.role === "recruiter") {
         if (!formData.jobTitle.trim()) {
-          setError("Please provide a job title for the role you are posting.");
+          setError(t("auth.validationJobTitle"));
           return false;
         }
         if (!formData.candidateSkills.length) {
-          setError(
-            "Please select the skills you are looking for in candidates.",
-          );
+          setError(t("auth.validationCandidateSkills"));
           return false;
         }
       } else if (
         !formData.skillsToTeach.length &&
         !formData.skillsToLearn.length
       ) {
-        setError("Please choose at least one skill to teach or learn.");
+        setError(t("auth.validationSkills"));
         return false;
       }
     }
@@ -217,19 +266,15 @@ const Register = () => {
     if (step === 3) {
       if (formData.role === "recruiter") {
         if (!formData.recruiterCompany.trim()) {
-          setError("Please enter your company or organization.");
+          setError(t("auth.validationCompany"));
           return false;
         }
         if (!formData.jobDescription.trim()) {
-          setError(
-            "Please add a short description of the role you are hiring for.",
-          );
+          setError(t("auth.validationJobDescription"));
           return false;
         }
       } else if (!formData.bio.trim()) {
-        setError(
-          "Tell us a little about yourself so mentors and peers can connect.",
-        );
+        setError(t("auth.validationBio"));
         return false;
       }
     }
@@ -269,15 +314,18 @@ const Register = () => {
     };
 
     try {
+      setSubmitting(true);
       const response = await registerUser(registerPayload);
       if (response.devVerificationUrl) {
         const verificationUrl = new URL(response.devVerificationUrl);
-        navigate(`${verificationUrl.pathname}${verificationUrl.search}`);
+        navigate(`${verificationUrl.pathname}${verificationUrl.search}${redirectQuery}`);
       } else {
-        navigate(`/verify-email?email=${encodeURIComponent(registerPayload.email)}&sent=1`);
+        navigate(`/verify-email?email=${encodeURIComponent(registerPayload.email)}&sent=1${redirectQuery}`);
       }
     } catch (err) {
-      setError(err.message || "Unable to register. Please try again.");
+      setError(err.message || t("auth.registerError"));
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -285,8 +333,8 @@ const Register = () => {
     <main className="auth-page">
       <section className="auth-card auth-wizard-card">
         <div className="auth-header">
-          <h1>Create your account</h1>
-          <p>Complete your profile in a few steps and join your community.</p>
+          <h1>{t("auth.registerTitle")}</h1>
+          <p>{t("auth.registerDescription")}</p>
         </div>
 
         <div className="step-indicator">
@@ -308,58 +356,58 @@ const Register = () => {
           {step === 1 && (
             <>
               <label>
-                Full name
+                {t("auth.fullName")}
                 <input
                   type="text"
                   value={formData.fullName}
                   onChange={(e) => updateField("fullName", e.target.value)}
-                  placeholder="Enter your name"
+                  placeholder={t("auth.fullNamePlaceholder")}
                 />
               </label>
 
               <label>
-                Email
+                {t("auth.email")}
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => updateField("email", e.target.value)}
-                  placeholder="you@example.com"
+                  placeholder={t("auth.emailPlaceholder")}
                 />
               </label>
 
               <label>
-                Role
+                {t("auth.role")}
                 <select
                   value={formData.role}
                   onChange={(e) => updateField("role", e.target.value)}
                 >
                   {roleOptions.map((option) => (
                     <option key={option.value} value={option.value}>
-                      {option.label}
+                      {t(`auth.${option.value}`)}
                     </option>
                   ))}
                 </select>
               </label>
 
               <label>
-                Password
+                {t("auth.password")}
                 <input
                   type="password"
                   value={formData.password}
                   onChange={(e) => updateField("password", e.target.value)}
-                  placeholder="Create a password"
+                  placeholder={t("auth.createPassword")}
                 />
               </label>
 
               <label>
-                Confirm password
+                {t("auth.confirmPassword")}
                 <input
                   type="password"
                   value={formData.confirmPassword}
                   onChange={(e) =>
                     updateField("confirmPassword", e.target.value)
                   }
-                  placeholder="Repeat your password"
+                  placeholder={t("auth.repeatPassword")}
                 />
               </label>
             </>
@@ -370,31 +418,31 @@ const Register = () => {
               {formData.role === "recruiter" ? (
                 <>
                   <label>
-                    Job title
+                    {t("auth.jobTitle")}
                     <input
                       type="text"
                       value={formData.jobTitle}
                       onChange={(e) => updateField("jobTitle", e.target.value)}
-                      placeholder="e.g. Frontend Developer"
+                      placeholder={t("auth.jobTitlePlaceholder")}
                     />
                   </label>
 
                   <label>
-                    Job type
+                    {t("auth.jobType")}
                     <select
                       value={formData.jobType}
                       onChange={(e) => updateField("jobType", e.target.value)}
                     >
                       {jobTypes.map((option) => (
                         <option key={option} value={option}>
-                          {option}
+                          {t(`auth.${jobTypeTranslationKeys[option]}`)}
                         </option>
                       ))}
                     </select>
                   </label>
 
                   <label>
-                    Candidate seniority
+                    {t("auth.candidateSeniority")}
                     <select
                       value={formData.experienceLevel}
                       onChange={(e) =>
@@ -403,14 +451,14 @@ const Register = () => {
                     >
                       {experienceLevels.map((option) => (
                         <option key={option.value} value={option.value}>
-                          {option.label}
+                          {t(`auth.${option.value}`)}
                         </option>
                       ))}
                     </select>
                   </label>
 
                   <div className="section-label">
-                    Skills you are looking for in candidates
+                    {t("auth.candidateSkills")}
                   </div>
                   <div className="skill-grid">
                     {learnSkills.map((skill) => (
@@ -430,7 +478,7 @@ const Register = () => {
                   </div>
 
                   <label>
-                    Hiring timeline
+                    {t("auth.hiringTimeline")}
                     <select
                       value={formData.hiringTimeline}
                       onChange={(e) =>
@@ -439,7 +487,7 @@ const Register = () => {
                     >
                       {hiringTimelineOptions.map((option) => (
                         <option key={option} value={option}>
-                          {option}
+                          {t(`auth.${hiringTranslationKeys[option]}`)}
                         </option>
                       ))}
                     </select>
@@ -448,21 +496,21 @@ const Register = () => {
               ) : (
                 <>
                   <SkillCategoryPicker
-                    title="What skills can you teach?"
+                    title={t("auth.teachSkills")}
                     field="skillsToTeach"
                     selectedSkills={formData.skillsToTeach}
                     onToggle={toggleSkill}
                   />
 
                   <SkillCategoryPicker
-                    title="What skills do you want to learn?"
+                    title={t("auth.learnSkills")}
                     field="skillsToLearn"
                     selectedSkills={formData.skillsToLearn}
                     onToggle={toggleSkill}
                   />
 
                   <label>
-                    Experience level
+                    {t("auth.experienceLevel")}
                     <select
                       value={formData.experienceLevel}
                       onChange={(e) =>
@@ -471,7 +519,7 @@ const Register = () => {
                     >
                       {experienceLevels.map((option) => (
                         <option key={option.value} value={option.value}>
-                          {option.label}
+                          {t(`auth.${option.value}`)}
                         </option>
                       ))}
                     </select>
@@ -486,55 +534,63 @@ const Register = () => {
               {formData.role === "recruiter" ? (
                 <>
                   <label>
-                    Company or organization
+                    {t("auth.company")}
                     <input
                       type="text"
                       value={formData.recruiterCompany}
                       onChange={(e) =>
                         updateField("recruiterCompany", e.target.value)
                       }
-                      placeholder="Enter your company name"
+                      placeholder={t("auth.companyPlaceholder")}
                     />
                   </label>
 
                   <label>
-                    About the role
+                    {t("auth.aboutRole")}
                     <textarea
                       value={formData.jobDescription}
                       onChange={(e) =>
                         updateField("jobDescription", e.target.value)
                       }
-                      placeholder="Describe what makes this role a great opportunity."
+                      placeholder={t("auth.aboutRolePlaceholder")}
                     />
                   </label>
 
                   <div className="review-box">
-                    <h3>Review</h3>
+                    <h3>{t("common.review")}</h3>
                     <p>
-                      Role: <strong>{formData.role}</strong>
+                      {t("auth.role")}:{" "}
+                      <strong>{t(`auth.${formData.role}`)}</strong>
                     </p>
                     <p>
-                      Job title: <strong>{formData.jobTitle}</strong>
+                      {t("auth.jobTitle")}: <strong>{formData.jobTitle}</strong>
                     </p>
                     <p>
-                      Job type: <strong>{formData.jobType}</strong>
-                    </p>
-                    <p>
-                      Candidate skills:{" "}
+                      {t("auth.jobType")}:{" "}
                       <strong>
-                        {formData.candidateSkills.join(", ") || "None"}
+                        {t(`auth.${jobTypeTranslationKeys[formData.jobType]}`)}
                       </strong>
                     </p>
                     <p>
-                      Hiring timeline:{" "}
-                      <strong>{formData.hiringTimeline}</strong>
+                      {t("auth.candidateSkills")}:{" "}
+                      <strong>
+                        {formData.candidateSkills.join(", ") || t("common.none")}
+                      </strong>
+                    </p>
+                    <p>
+                      {t("auth.hiringTimeline")}:{" "}
+                      <strong>
+                        {t(
+                          `auth.${hiringTranslationKeys[formData.hiringTimeline]}`,
+                        )}
+                      </strong>
                     </p>
                   </div>
                 </>
               ) : (
                 <>
                   <label>
-                    Availability
+                    {t("auth.availability")}
                     <select
                       value={formData.availability}
                       onChange={(e) =>
@@ -543,39 +599,45 @@ const Register = () => {
                     >
                       {availabilityOptions.map((option) => (
                         <option key={option} value={option}>
-                          {option}
+                          {t(`auth.${availabilityTranslationKeys[option]}`)}
                         </option>
                       ))}
                     </select>
                   </label>
 
                   <label>
-                    About you
+                    {t("auth.aboutYou")}
                     <textarea
                       value={formData.bio}
                       onChange={(e) => updateField("bio", e.target.value)}
-                      placeholder="Share your goals, background, or what you want from the community."
+                      placeholder={t("auth.aboutYouPlaceholder")}
                     />
                   </label>
 
                   <div className="review-box">
-                    <h3>Review</h3>
+                    <h3>{t("common.review")}</h3>
                     <p>
-                      Role: <strong>{formData.role}</strong>
+                      {t("auth.role")}:{" "}
+                      <strong>{t(`auth.${formData.role}`)}</strong>
                     </p>
                     <p>
-                      Availability: <strong>{formData.availability}</strong>
-                    </p>
-                    <p>
-                      Skills to teach:{" "}
+                      {t("auth.availability")}:{" "}
                       <strong>
-                        {formData.skillsToTeach.join(", ") || "None"}
+                        {t(
+                          `auth.${availabilityTranslationKeys[formData.availability]}`,
+                        )}
                       </strong>
                     </p>
                     <p>
-                      Skills to learn:{" "}
+                      {t("auth.skillsToTeach")}:{" "}
                       <strong>
-                        {formData.skillsToLearn.join(", ") || "None"}
+                        {formData.skillsToTeach.join(", ") || t("common.none")}
+                      </strong>
+                    </p>
+                    <p>
+                      {t("auth.skillsToLearn")}:{" "}
+                      <strong>
+                        {formData.skillsToLearn.join(", ") || t("common.none")}
                       </strong>
                     </p>
                   </div>
@@ -591,23 +653,32 @@ const Register = () => {
                 className="btn secondary"
                 onClick={handleBack}
               >
-                Back
+                {t("common.back")}
               </button>
             ) : (
               <div />
             )}
 
-            <button type="submit" className="btn primary auth-submit">
-              {isRecruiter
-                ? "Create account"
+            <button
+              type="submit"
+              className="btn primary auth-submit"
+              disabled={submitting}
+            >
+              {submitting ? (
+                <ButtonLoader>
+                  {isRecruiter ? t("auth.createAccount") : t("auth.completeRegistration")}
+                </ButtonLoader>
+              ) : isRecruiter
+                ? t("auth.createAccount")
                 : step === 3
-                  ? "Complete registration"
-                  : "Next step"}
+                  ? t("auth.completeRegistration")
+                  : t("common.next")}
             </button>
           </div>
 
           <p className="auth-footer">
-            Already have an account? <Link to="/login">Login</Link>
+            {t("auth.alreadyAccount")}{" "}
+            <Link to={loginPath}>{t("auth.login")}</Link>
           </p>
         </form>
       </section>

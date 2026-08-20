@@ -4,12 +4,16 @@ import Navlink from "./NavLink";
 import logo from "../../assets/logo/logo1.png";
 import "./navbar.css";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
+import LanguageSwitcher from "../LanguageSwitcher";
 import { NavProfile } from "./NavProfile";
+import { FiLogIn } from "react-icons/fi";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, logout } = useGlobleContext();
+  const { t } = useLanguage();
   const isAuthenticated = Boolean(user);
 
   useEffect(() => {
@@ -27,7 +31,7 @@ const Navbar = () => {
       if (event.key === "Escape") setMenuOpen(false);
     };
     const closeOnDesktop = () => {
-      if (window.innerWidth > 1120) setMenuOpen(false);
+      if (window.innerWidth > 1240) setMenuOpen(false);
     };
 
     document.body.style.overflow = "hidden";
@@ -45,7 +49,7 @@ const Navbar = () => {
     <header className={`navbar ${scrolled ? "scrolled" : ""}`}>
       <div className="navbar-inner">
         <div className="navbar-logo">
-          <Link to="/" aria-label="Smart Community home">
+          <Link to="/" aria-label={t("nav.homeLabel")}>
             <img src={logo} alt="Smart Community logo" />
           </Link>
         </div>
@@ -53,7 +57,7 @@ const Navbar = () => {
         <button
           type="button"
           className={`nav-toggle ${menuOpen ? "open" : ""}`}
-          aria-label="Toggle navigation"
+          aria-label={menuOpen ? t("nav.closeMenu") : t("nav.openMenu")}
           aria-expanded={menuOpen}
           aria-controls="primary-navigation"
           onClick={() => setMenuOpen((prev) => !prev)}
@@ -72,15 +76,14 @@ const Navbar = () => {
         >
           <Navlink />
           <div className="auth-actions">
+            <LanguageSwitcher />
             {isAuthenticated ? (
               <NavProfile user={user} onLogout={logout} />
             ) : (
               <>
-                <Link className="btn nav-btn outline" to="/login">
-                  Log in
-                </Link>
-                <Link className="btn nav-btn primary" to="/register">
-                  Get started
+                <Link className="nav-signin-button" to="/login">
+                  <FiLogIn aria-hidden="true" />
+                  <span>{t("nav.signIn")}</span>
                 </Link>
               </>
             )}

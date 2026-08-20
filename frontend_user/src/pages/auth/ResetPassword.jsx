@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { resetPasswordRequest } from "../../services/authService";
+import { useLanguage } from "../../context/LanguageContext";
+import { ButtonLoader } from "../../components/ui/LoadingStates";
 import "./Auth.css";
 
 const ResetPassword = () => {
@@ -11,12 +13,13 @@ const ResetPassword = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
-    if (!token) return setError("This reset link is missing its token.");
-    if (password !== confirmPassword) return setError("Passwords do not match.");
+    if (!token) return setError(t("auth.missingToken"));
+    if (password !== confirmPassword) return setError(t("auth.passwordsMismatch"));
     setLoading(true);
     try {
       const response = await resetPasswordRequest(token, password);
@@ -24,7 +27,7 @@ const ResetPassword = () => {
       setPassword("");
       setConfirmPassword("");
     } catch (err) {
-      setError(err.message || "Unable to reset your password.");
+      setError(err.message || t("auth.resetError"));
     } finally {
       setLoading(false);
     }
@@ -34,14 +37,14 @@ const ResetPassword = () => {
     <main className="auth-page">
       <section className="auth-card">
         <div className="auth-header">
-          <h1>Set a new password</h1>
-          <p>Use at least 8 characters with uppercase, lowercase, and a number.</p>
+          <h1>{t("auth.resetTitle")}</h1>
+          <p>{t("auth.resetDescription")}</p>
         </div>
         <form className="auth-form" onSubmit={handleSubmit}>
           {error && <div className="auth-error">{error}</div>}
           {message && <div className="auth-success">{message}</div>}
           <label>
-            New password
+            {t("auth.newPassword")}
             <input
               type="password"
               value={password}
@@ -51,7 +54,7 @@ const ResetPassword = () => {
             />
           </label>
           <label>
-            Confirm password
+            {t("auth.confirmPassword")}
             <input
               type="password"
               value={confirmPassword}
@@ -61,10 +64,10 @@ const ResetPassword = () => {
             />
           </label>
           <button className="btn primary auth-submit" disabled={loading || !token}>
-            {loading ? "Updating..." : "Reset password"}
+            {loading ? <ButtonLoader>{t("auth.updating")}</ButtonLoader> : t("auth.resetPassword")}
           </button>
           <p className="auth-footer">
-            <Link to="/login">Return to login</Link>
+            <Link to="/login">{t("auth.returnLogin")}</Link>
           </p>
         </form>
       </section>

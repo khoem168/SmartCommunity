@@ -22,6 +22,7 @@ import {
   submitLearningSessionFeedback,
   updateLearningSessionStatus,
 } from "../../services/learningSessionService";
+import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
 import "./LearningSessions.css";
 
 const emptyForm = {
@@ -70,6 +71,7 @@ const LearningSessions = () => {
   const [feedback, setFeedback] = useState({ rating: 5, feedback: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState("");
   const canCreate = ["mentor", "admin"].includes(user?.role);
 
   const loadSessions = useCallback(async () => {
@@ -136,6 +138,7 @@ const LearningSessions = () => {
       return;
     }
     try {
+      setBusy(`registration-${session.id}`);
       setError("");
       if (session.isRegistered) {
         await cancelLearningSessionRegistration(session.id);
@@ -145,12 +148,15 @@ const LearningSessions = () => {
       await refreshSelected(selected?.id === session.id ? session.id : null);
     } catch (err) {
       setError(err.message || "Unable to update registration.");
+    } finally {
+      setBusy("");
     }
   };
 
   const handleCreate = async (event) => {
     event.preventDefault();
     try {
+      setBusy("create");
       const materials = form.materialsText
         .split("\n")
         .map((url) => url.trim())
@@ -164,6 +170,8 @@ const LearningSessions = () => {
       navigate(`/sessions/${result.sessionId}`);
     } catch (err) {
       setError(err.message || "Unable to create the session.");
+    } finally {
+      setBusy("");
     }
   };
 
@@ -174,21 +182,27 @@ const LearningSessions = () => {
         ? window.prompt("Why is this session being cancelled?") || ""
         : "";
     try {
+      setBusy(`status-${status}`);
       await updateLearningSessionStatus(selected.id, { status, cancelReason });
       await refreshSelected(selected.id);
     } catch (err) {
       setError(err.message || "Unable to update session status.");
+    } finally {
+      setBusy("");
     }
   };
 
   const submitFeedback = async (event) => {
     event.preventDefault();
     try {
+      setBusy("feedback");
       await submitLearningSessionFeedback(selected.id, feedback);
       setFeedback({ rating: 5, feedback: "" });
       await refreshSelected(selected.id);
     } catch (err) {
       setError(err.message || "Unable to save feedback.");
+    } finally {
+      setBusy("");
     }
   };
 
@@ -225,7 +239,7 @@ const LearningSessions = () => {
           <div className="sessions-stats">
             <div><strong>{stats.upcoming}</strong><span>Upcoming</span></div>
             <div><strong>{stats.registered}</strong><span>Registered</span></div>
-            <div><strong>{stats.live}</strong><span>Live now</span></div>
+            <div className={stats.live > 0 ? "sessions-live-stat" : ""}><strong>{stats.live}</strong><span>Live now</span></div>
           </div>
         </div>
       </section>
@@ -260,7 +274,12 @@ const LearningSessions = () => {
         </div>
 
         {loading ? (
-          <div className="sessions-empty">Loading learning sessions…</div>
+          <SkeletonGrid
+            className="sessions-grid"
+            count={3}
+            label="Loading learning sessions"
+            variant="session"
+          />
         ) : sessions.length ? (
           <div className="sessions-grid">
             {sessions.map((session) => {
@@ -268,7 +287,7 @@ const LearningSessions = () => {
               return (
                 <article className="session-card" key={session.id}>
                   <div className="session-card-top">
-                    <span className={`session-status ${session.status}`}>
+                    <span className={`session-status ${session.status} ${session.status === "ongoing" ? "realtime-live-pill" : ""}`}>
                       {session.status}
                     </span>
                     <span className="session-level">{session.level}</span>
@@ -305,9 +324,9 @@ const LearningSessions = () => {
                         type="button"
                         className={`btn small ${session.isRegistered ? "outline" : "primary"}`}
                         onClick={() => handleRegistration(session)}
-                        disabled={full && !session.isRegistered}
+                        disabled={(full && !session.isRegistered) || busy === `registration-${session.id}`}
                       >
-                        {session.isRegistered ? "Cancel registration" : full ? "Session full" : "Register"}
+                        {busy === `registration-${session.id}` ? <ButtonLoader>Updating...</ButtonLoader> : session.isRegistered ? "Cancel registration" : full ? "Session full" : "Register"}
                       </button>
                     ) : null}
                   </div>
@@ -335,7 +354,7 @@ const LearningSessions = () => {
             >
               <IoCloseOutline />
             </button>
-            <span className={`session-status ${selected.status}`}>{selected.status}</span>
+            <span className={`session-status ${selected.status} ${selected.status === "ongoing" ? "realtime-live-pill" : ""}`}>{selected.status}</span>
             <h2>{selected.title}</h2>
             <p>{selected.description || "A live community learning session."}</p>
             <div className="detail-session-meta">
@@ -363,18 +382,18 @@ const LearningSessions = () => {
                 </Link>
               )}
               {!selected.isHost && selected.status === "scheduled" && (
-                <button className="btn outline" type="button" onClick={() => handleRegistration(selected)}>
-                  {selected.isRegistered ? "Cancel registration" : "Register for session"}
+                <button className="btn outline" type="button" onClick={() => handleRegistration(selected)} disabled={busy === `registration-${selected.id}`}>
+                  {busy === `registration-${selected.id}` ? <ButtonLoader>Updating...</ButtonLoader> : selected.isRegistered ? "Cancel registration" : "Register for session"}
                 </button>
               )}
               {selected.isHost && selected.status === "scheduled" && (
                 <>
-                  <button className="btn primary" type="button" onClick={() => changeStatus("ongoing")}>Start session</button>
-                  <button className="btn outline" type="button" onClick={() => changeStatus("cancelled")}>Cancel session</button>
+                  <button className="btn primary" type="button" onClick={() => changeStatus("ongoing")} disabled={busy === "status-ongoing"}>{busy === "status-ongoing" ? <ButtonLoader>Starting...</ButtonLoader> : "Start session"}</button>
+                  <button className="btn outline" type="button" onClick={() => changeStatus("cancelled")} disabled={busy === "status-cancelled"}>{busy === "status-cancelled" ? <ButtonLoader>Cancelling...</ButtonLoader> : "Cancel session"}</button>
                 </>
               )}
               {selected.isHost && selected.status === "ongoing" && (
-                <button className="btn primary" type="button" onClick={() => changeStatus("completed")}>Complete session</button>
+                <button className="btn primary" type="button" onClick={() => changeStatus("completed")} disabled={busy === "status-completed"}>{busy === "status-completed" ? <ButtonLoader>Completing...</ButtonLoader> : "Complete session"}</button>
               )}
             </div>
 
@@ -416,7 +435,7 @@ const LearningSessions = () => {
                     onChange={(event) => setFeedback((current) => ({ ...current, feedback: event.target.value }))}
                     placeholder="What was useful?"
                   />
-                  <button className="btn primary small" type="submit"><IoStar /> Submit feedback</button>
+                  <button className="btn primary small" type="submit" disabled={busy === "feedback"}>{busy === "feedback" ? <ButtonLoader>Submitting...</ButtonLoader> : <><IoStar /> Submit feedback</>}</button>
                 </form>
               )}
             {selected.myRating && (
@@ -446,7 +465,7 @@ const LearningSessions = () => {
             </div>
             <div className="create-session-actions">
               <button type="button" className="btn outline" onClick={() => setCreateOpen(false)}>Cancel</button>
-              <button type="submit" className="btn primary"><IoCalendarOutline /> Schedule session</button>
+              <button type="submit" className="btn primary" disabled={busy === "create"}>{busy === "create" ? <ButtonLoader>Scheduling...</ButtonLoader> : <><IoCalendarOutline /> Schedule session</>}</button>
             </div>
           </form>
         </div>

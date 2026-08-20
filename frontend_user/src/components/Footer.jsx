@@ -6,95 +6,88 @@ import {
   FiGithub,
   FiHeart,
   FiMapPin,
-  FiMessageCircle,
   FiUsers,
 } from "react-icons/fi";
 import logo from "../assets/logo/logo1.png";
+import { useLanguage } from "../context/LanguageContext";
 
 const footerGroups = [
   {
-    title: "Learn",
+    titleKey: "learn",
     icon: FiBookOpen,
     links: [
-      ["Courses", "/courses"],
-      ["Live sessions", "/sessions"],
-      ["Career roadmap", "/career"],
+      ["courses", "/courses"],
+      ["liveSessions", "/sessions"],
+      ["careerRoadmap", "/career"],
     ],
   },
   {
-    title: "Connect",
+    titleKey: "connect",
     icon: FiUsers,
     links: [
-      ["Find mentors", "/mentorship"],
-      ["Skill exchange", "/community"],
-      ["Community forum", "/forum"],
+      ["findMentors", "/mentorship"],
+      ["skillExchange", "/community"],
+      ["communityForum", "/forum"],
     ],
   },
   {
-    title: "Opportunities",
+    titleKey: "opportunities",
     icon: FiBriefcase,
     links: [
-      ["Internships", "/jobs"],
-      ["Discover members", "/discover"],
-      ["Messages", "/messages"],
+      ["internships", "/jobs"],
+      ["discoverMembers", "/discover"],
+      ["messages", "/messages"],
     ],
   },
 ];
 
 const Footer = () => {
+  const { t } = useLanguage();
+
   return (
-    <footer className="site-footer">
-      <div className="footer-orb footer-orb-one" />
-      <div className="footer-orb footer-orb-two" />
+    <footer
+      className="site-footer site-footer-no-cta"
+      id="site-footer"
+    >
+      <div className="footer-orb footer-orb-one" aria-hidden="true" />
+      <div className="footer-orb footer-orb-two" aria-hidden="true" />
 
       <div className="site-footer-inner">
-        <section className="footer-cta">
-          <div className="footer-cta-icon">
-            <FiMessageCircle />
-          </div>
-          <div>
-            <p>Build your next opportunity</p>
-            <h2>Learn, connect, and grow with your community.</h2>
-          </div>
-          <div className="footer-cta-actions">
-            <Link to="/courses" className="footer-button secondary">
-              Explore courses
-            </Link>
-            <Link to="/register" className="footer-button primary">
-              Join for free <FiArrowRight />
-            </Link>
-          </div>
-        </section>
-
         <div className="footer-main">
           <div className="footer-identity">
-            <Link to="/" className="footer-logo" aria-label="Smart Community home">
-              <img src={logo} alt="Smart Community Skill and Career" />
-            </Link>
-            <p>
-              A trusted space to build practical skills, learn from mentors,
-              exchange knowledge, and move confidently toward a meaningful
-              career.
-            </p>
+            <div className="footer-brand-lockup">
+              <Link
+                to="/"
+                className="footer-logo"
+                aria-label={t("nav.homeLabel")}
+              >
+                <img src={logo} alt="Smart Community Skill and Career" />
+              </Link>
+              <div className="footer-brand-name">
+                <strong>{t("footer.brand")}</strong>
+                <span>{t("footer.brandTagline")}</span>
+              </div>
+            </div>
+            <p>{t("footer.description")}</p>
             <div className="footer-location">
               <span>
-                <FiMapPin /> Cambodia
+                <FiMapPin /> {t("footer.cambodia")}
               </span>
               <span>
-                <FiHeart /> Built for learners
+                <FiHeart /> {t("footer.builtForLearners")}
               </span>
             </div>
           </div>
 
-          <nav className="footer-nav-grid" aria-label="Footer navigation">
-            {footerGroups.map(({ title, icon: Icon, links }) => (
-              <div className="footer-column" key={title}>
+          <nav className="footer-nav-grid" aria-label={t("footer.navigation")}>
+            {footerGroups.map(({ titleKey, icon: Icon, links }) => (
+              <div className="footer-column" key={titleKey}>
                 <h3>
-                  <Icon /> {title}
+                  <Icon /> {t(`footer.${titleKey}`)}
                 </h3>
-                {links.map(([label, to]) => (
+                {links.map(([labelKey, to]) => (
                   <Link to={to} key={to}>
-                    {label}
+                    {t(`footer.${labelKey}`)}
                     <FiArrowRight />
                   </Link>
                 ))}
@@ -105,16 +98,15 @@ const Footer = () => {
 
         <div className="site-footer-bottom">
           <span>
-            © {new Date().getFullYear()} Smart Community Skill &amp; Career
-            Development Platform
+            © {new Date().getFullYear()} {t("footer.copyright")}
           </span>
           <div>
-            <span>Learning · Connection · Career growth</span>
+            <span>{t("footer.closing")}</span>
             <a
               href="https://github.com/khoem168/Smart_Community_Skill_Career_Development_Platform"
               target="_blank"
               rel="noreferrer"
-              aria-label="View project on GitHub"
+              aria-label={t("footer.githubLabel")}
             >
               <FiGithub /> GitHub
             </a>

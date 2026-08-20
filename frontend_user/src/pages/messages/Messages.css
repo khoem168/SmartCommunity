@@ -301,9 +301,25 @@
   max-width: min(76%, 680px);
 }
 
+.message-row-live .message-bubble {
+  animation: message-live-arrival 200ms ease-out both;
+}
+
 .message-row.sent {
   margin-left: auto;
   justify-content: flex-end;
+}
+
+@keyframes message-live-arrival {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .message-bubble {
@@ -622,5 +638,11 @@
 
   .group-dialog {
     padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .message-row-live .message-bubble {
+    animation: none !important;
   }
 }

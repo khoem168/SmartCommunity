@@ -23,6 +23,8 @@ import {
   fetchCourseLesson,
   verifyKhqrCoursePayment,
 } from "../../services/courseService";
+import { ButtonLoader, CardSkeleton } from "../../components/ui/LoadingStates";
+import { useLanguage } from "../../context/LanguageContext";
 import "./CourseDetail.css";
 
 const PAYMENT_POLL_MS = 3000;
@@ -59,6 +61,7 @@ const CourseDetail = () => {
   const { courseId: courseSlug } = useParams();
   const navigate = useNavigate();
   const { user, isLoading: userLoading } = useGlobleContext();
+  const { t } = useLanguage();
   const [course, setCourse] = useState(null);
   const [lesson, setLesson] = useState(null);
   const [selectedLessonId, setSelectedLessonId] = useState(null);
@@ -72,6 +75,9 @@ const CourseDetail = () => {
   const pollRef = useRef(null);
 
   const loadCourse = useCallback(async () => {
+    if (!user) {
+      return null;
+    }
     setLoading(true);
     setError("");
     try {
@@ -84,7 +90,7 @@ const CourseDetail = () => {
     } finally {
       setLoading(false);
     }
-  }, [courseSlug]);
+  }, [courseSlug, user]);
 
   const selectLesson = useCallback(
     async (item) => {
@@ -109,6 +115,10 @@ const CourseDetail = () => {
   );
 
   useEffect(() => {
+    if (userLoading) return undefined;
+    if (!user) {
+      return undefined;
+    }
     let active = true;
     Promise.resolve()
       .then(loadCourse)
@@ -119,7 +129,7 @@ const CourseDetail = () => {
     return () => {
       active = false;
     };
-  }, [loadCourse, selectLesson, user?.id]);
+  }, [loadCourse, selectLesson, user, userLoading]);
 
   const selectedMeta = useMemo(
     () => course?.lessons?.find((item) => item.id === selectedLessonId),
@@ -228,12 +238,52 @@ const CourseDetail = () => {
 
   useEffect(() => clearPolling, [clearPolling]);
 
-  if (loading || userLoading) {
+  if (userLoading) {
+    return (
+      <main className="course-detail-page">
+        <div className="container course-detail-state">
+          <CardSkeleton variant="detail" />
+        </div>
+      </main>
+    );
+  }
+
+  if (!user) {
+    const redirectPath = `/courses/${courseSlug}`;
+    const encodedRedirect = encodeURIComponent(redirectPath);
+
     return (
       <main className="course-detail-page">
         <div className="course-detail-state">
-          <span className="course-loader" />
-          <strong>Preparing your classroom…</strong>
+          <strong>{t("courseDetailPage.accountTitle")}</strong>
+          <p>{t("courseDetailPage.accountDescription")}</p>
+          <div className="course-detail-actions">
+            <Link
+              to={`/register?redirect=${encodedRedirect}`}
+              className="learning-button primary"
+            >
+              {t("courseDetailPage.createAccount")}
+            </Link>
+            <Link
+              to={`/login?redirect=${encodedRedirect}`}
+              className="learning-button secondary"
+            >
+              {t("courseDetailPage.signIn")}
+            </Link>
+          </div>
+          <Link to="/courses" className="course-back">
+            <FiArrowLeft /> {t("courseDetailPage.backCourses")}
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  if (loading) {
+    return (
+      <main className="course-detail-page">
+        <div className="container course-detail-state">
+          <CardSkeleton variant="detail" />
         </div>
       </main>
     );
@@ -295,7 +345,7 @@ const CourseDetail = () => {
                   disabled={paymentState === "creating"}
                 >
                   {paymentState === "creating"
-                    ? "Creating KHQR…"
+                    ? <ButtonLoader>Creating KHQR…</ButtonLoader>
                     : user
                       ? "Pay with Bakong KHQR"
                       : "Login to purchase"}
@@ -353,8 +403,7 @@ const CourseDetail = () => {
         <div className="lesson-workspace">
           {lessonLoading ? (
             <div className="lesson-placeholder">
-              <span className="course-loader" />
-              <strong>Loading lesson…</strong>
+              <ButtonLoader>Loading lesson…</ButtonLoader>
             </div>
           ) : selectedMeta?.isLocked ? (
             <div className="lesson-lock-screen">
@@ -475,8 +524,7 @@ const CourseDetail = () => {
 
             {paymentState === "creating" ? (
               <div className="payment-message">
-                <span className="course-loader" />
-                <h2>Creating secure KHQR…</h2>
+                <h2><ButtonLoader>Creating secure KHQR…</ButtonLoader></h2>
                 <p>The course price is being verified by the server.</p>
               </div>
             ) : paymentState === "success" ? (

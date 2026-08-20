@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 const SCRIPT_ID = "google-identity-services";
 
@@ -7,6 +8,7 @@ const GoogleLoginButton = ({ onCredential, onError }) => {
   const credentialHandler = useRef(onCredential);
   const errorHandler = useRef(onError);
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const { language, t } = useLanguage();
 
   useEffect(() => {
     credentialHandler.current = onCredential;
@@ -29,6 +31,7 @@ const GoogleLoginButton = ({ onCredential, onError }) => {
         size: "large",
         width: Math.min(containerRef.current.clientWidth || 400, 400),
         text: "continue_with",
+        locale: language === "km" ? "km" : "en",
       });
     };
 
@@ -47,17 +50,17 @@ const GoogleLoginButton = ({ onCredential, onError }) => {
     script.addEventListener("load", renderButton, { once: true });
     script.addEventListener(
       "error",
-      () => errorHandler.current("Unable to load Google Login."),
+      () => errorHandler.current(t("auth.googleLoadError")),
       { once: true },
     );
     document.head.appendChild(script);
     return undefined;
-  }, [clientId]);
+  }, [clientId, language, t]);
 
   if (!clientId) {
     return (
       <button type="button" className="btn outline auth-google" disabled>
-        Google Login requires configuration
+        {t("auth.googleRequires")}
       </button>
     );
   }

@@ -1,14 +1,18 @@
 .sessions-page {
   min-height: 100vh;
-  background: #f8fafc;
+  background: #fff;
 }
 
 .sessions-hero {
-  padding: 72px 0;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(66px, 8vw, 104px) 0 clamp(62px, 7vw, 92px);
   background:
-    radial-gradient(circle at 85% 10%, rgba(45, 212, 191, 0.28), transparent 28%),
-    linear-gradient(135deg, #0f172a 0%, #134e4a 100%);
-  color: #fff;
+    radial-gradient(circle at 8% 12%, rgba(45, 212, 191, 0.2), transparent 25%),
+    radial-gradient(circle at 92% 22%, rgba(37, 99, 235, 0.13), transparent 28%),
+    linear-gradient(180deg, #f7fffd 0%, #f7f9fc 100%);
+  color: #0f172a;
 }
 
 .sessions-hero-inner {
@@ -19,7 +23,7 @@
 }
 
 .sessions-hero .eyebrow {
-  color: #5eead4;
+  color: #0f766e;
 }
 
 .sessions-hero h1 {
@@ -28,12 +32,12 @@
   font-size: clamp(2.4rem, 5vw, 4.4rem);
   line-height: 1.04;
   letter-spacing: -0.055em;
-  color: #fff;
+  color: #0f172a;
 }
 
 .sessions-hero p {
   max-width: 700px;
-  color: #cbd5e1;
+  color: #526178;
   font-size: 1.06rem;
   line-height: 1.7;
 }
@@ -46,8 +50,8 @@
 }
 
 .sessions-hero .btn.outline {
-  border-color: #fff;
-  background: #fff;
+  border-color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.82);
   color: #0f172a;
 }
 
@@ -55,9 +59,10 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid #e2e8f0;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
   backdrop-filter: blur(14px);
 }
 
@@ -66,7 +71,7 @@
   justify-items: center;
   gap: 4px;
   padding: 28px 10px;
-  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  border-right: 1px solid #e2e8f0;
 }
 
 .sessions-stats div:last-child {
@@ -74,13 +79,34 @@
 }
 
 .sessions-stats strong {
-  color: #fff;
+  color: #0f766e;
   font-size: 2rem;
 }
 
 .sessions-stats span {
-  color: #cbd5e1;
+  color: #64748b;
   font-size: 0.8rem;
+}
+
+.sessions-live-stat {
+  position: relative;
+}
+
+.sessions-live-stat::before,
+.sessions-live-stat::after {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 0.52rem;
+  height: 0.52rem;
+  border-radius: 999px;
+  background: #34d399;
+  content: "";
+}
+
+.sessions-live-stat::after {
+  opacity: 0.45;
+  animation: realtime-pulse-ring 2s ease-out infinite;
 }
 
 .sessions-content {
@@ -641,5 +667,11 @@
   .create-session-panel {
     padding: 20px;
     border-radius: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sessions-live-stat::after {
+    animation: none !important;
   }
 }

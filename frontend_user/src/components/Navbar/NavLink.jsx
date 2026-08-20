@@ -6,6 +6,7 @@ import {
 } from "react-icons/io5";
 import { privateNavLinks, publicNavLinks } from "../../data/navLink";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import { listConversations } from "../../services/messageService";
 import { fetchNotifications } from "../../services/notificationService";
 import { getSocket } from "../../services/realtimeService";
@@ -17,6 +18,7 @@ const navIcons = {
 
 const Navlink = () => {
   const { user } = useGlobleContext();
+  const { t } = useLanguage();
   const [badgeCounts, setBadgeCounts] = useState({
     messages: 0,
     notifications: 0,
@@ -79,8 +81,9 @@ const Navlink = () => {
 
   return (
     <ul className="navlink">
-      {links.map(({ label, link, icon, iconOnly }) => {
+      {links.map(({ label, labelKey, link, icon, iconOnly }) => {
         const Icon = navIcons[icon];
+        const localizedLabel = labelKey ? t(`nav.${labelKey}`) : label;
 
         return (
           <li
@@ -88,13 +91,13 @@ const Navlink = () => {
             key={link}
           >
             {link.includes("#") ? (
-              <a href={link}>{label}</a>
+              <a href={link}>{localizedLabel}</a>
             ) : (
               <NavLink
                 to={link}
                 end
-                aria-label={iconOnly ? label : undefined}
-                title={iconOnly ? label : undefined}
+                aria-label={iconOnly ? localizedLabel : undefined}
+                title={iconOnly ? localizedLabel : undefined}
                 className={({ isActive }) =>
                   `${isActive ? "active" : ""} ${
                     iconOnly ? "nav-icon-link" : ""
@@ -105,11 +108,14 @@ const Navlink = () => {
                   <span className="nav-icon">
                     <Icon aria-hidden="true" />
                     {badgeCounts[icon] > 0 ? (
-                      <span className="nav-badge">{badgeCounts[icon]}</span>
+                      <span className="nav-badge realtime-pulse-dot">{badgeCounts[icon]}</span>
                     ) : null}
                   </span>
                 ) : null}
-                {!iconOnly && label}
+                {!iconOnly && localizedLabel}
+                {iconOnly && (
+                  <span className="nav-icon-label">{localizedLabel}</span>
+                )}
               </NavLink>
             )}
           </li>

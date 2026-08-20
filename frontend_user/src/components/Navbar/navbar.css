@@ -1,29 +1,61 @@
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  right: 0;
+  left: 0;
   z-index: 100;
   width: 100%;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.78);
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  transition: box-shadow 0.25s ease, background 0.25s ease;
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-left: env(safe-area-inset-left);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.72);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.9)),
+    rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(22px) saturate(1.18);
+  -webkit-backdrop-filter: blur(22px) saturate(1.18);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.navbar::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(20, 184, 166, 0.7),
+    rgba(37, 99, 235, 0.42),
+    transparent
+  );
+  opacity: 0;
+  content: "";
+  transition: opacity 0.25s ease;
 }
 
 .navbar.scrolled {
   background: rgba(255, 255, 255, 0.97);
-  box-shadow: 0 10px 34px rgba(15, 23, 42, 0.08);
+  border-color: rgba(20, 184, 166, 0.18);
+  box-shadow: 0 16px 45px rgba(15, 23, 42, 0.1);
+}
+
+.navbar.scrolled::after {
+  opacity: 1;
 }
 
 .navbar-inner {
   width: min(1280px, calc(100% - 40px));
-  min-height: 76px;
+  min-height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 22px;
   margin-inline: auto;
-  padding-top: env(safe-area-inset-top);
 }
 
 .navbar-logo {
@@ -36,7 +68,7 @@
 }
 
 .navbar-logo img {
-  width: 164px;
+  width: 156px;
   height: auto;
   display: block;
 }
@@ -46,34 +78,59 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 14px;
+  gap: 16px;
 }
 
 .navlink {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 }
 
 .navlink a {
-  min-height: 42px;
+  min-height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 11px;
-  border-radius: 11px;
+  padding: 0 12px;
+  border-radius: 13px;
   color: #475569;
   font-size: 0.86rem;
   font-weight: 650;
+  line-height: 1.25;
   white-space: nowrap;
-  transition: color 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.18s ease,
+    color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+html[data-language="km"] .navlink a {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 760;
+  letter-spacing: -0.015em;
+  line-height: 1.45;
+}
+
+html[data-language="km"] .nav-signin-button,
+html[data-language="km"] .profile-menu-item,
+html[data-language="km"] .nav-icon-label {
+  font-family: var(--font-display);
+  line-height: 1.45;
 }
 
 .navlink a:hover,
 .navlink a.active {
-  background: #ecfdf5;
+  background: rgba(236, 253, 245, 0.95);
   color: #0f766e;
+  box-shadow: inset 0 0 0 1px rgba(20, 184, 166, 0.08);
+}
+
+.navlink a:hover {
+  transform: translateY(-1px);
 }
 
 .navlink a.nav-icon-link {
@@ -85,6 +142,20 @@
 .nav-icon {
   position: relative;
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 180ms ease, color 180ms ease;
+}
+
+.nav-icon svg {
+  width: 1.22em;
+  height: 1.22em;
+  stroke-width: 2.2;
+}
+
+.navlink a.nav-icon-link:hover .nav-icon,
+.navlink a.nav-icon-link.active .nav-icon {
+  transform: translateY(-1px) scale(1.04);
 }
 
 .nav-badge {
@@ -104,13 +175,140 @@
   font-size: 0.62rem;
   font-weight: 800;
   line-height: 1;
+  box-shadow: 0 8px 18px rgba(220, 38, 38, 0.22);
 }
 
 .auth-actions {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+}
+
+.language-switcher {
+  min-height: 46px;
+  display: inline-grid;
+  grid-template-columns: repeat(2, 62px);
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(248, 250, 252, 0.96), rgba(241, 245, 249, 0.82)),
+    #f8fafc;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 10px 28px rgba(15, 23, 42, 0.045);
+}
+
+.language-switcher button {
+  min-width: 0;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  color: #64748b;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.language-switcher button:last-child .language-label {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.language-switcher button:hover {
+  transform: translateY(-1px);
+  color: #0f766e;
+}
+
+.language-switcher button.active {
+  background: linear-gradient(135deg, #ffffff, #fafffd);
+  color: #0f766e;
+  box-shadow:
+    0 10px 22px rgba(15, 23, 42, 0.105),
+    inset 0 0 0 1px rgba(20, 184, 166, 0.08);
+}
+
+.language-flag {
+  width: 22px;
+  height: 22px;
+  display: block;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  object-fit: cover;
+  object-position: center;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.32),
+    0 2px 6px rgba(15, 23, 42, 0.08);
+}
+
+.language-label {
+  transform: translateY(1px);
+  letter-spacing: -0.01em;
+}
+
+.nav-signin-button {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 20px;
+  border: 1px solid rgba(15, 118, 110, 0.32);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, #ffffff, #f6fffc),
+    #fff;
+  color: #0f172a;
+  font-size: 0.9rem;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.07);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.nav-signin-button svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  color: #0f766e;
+  transition: transform 180ms ease;
+}
+
+.nav-signin-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.58);
+  background: linear-gradient(135deg, #ecfdf5, #ffffff);
+  color: #0f766e;
+  box-shadow: 0 18px 38px rgba(15, 118, 110, 0.14);
+}
+
+.nav-signin-button:hover svg {
+  transform: translateX(2px);
+}
+
+.nav-icon-label {
+  display: none;
 }
 
 .btn.nav-btn {
@@ -177,6 +375,17 @@
   color: #0f172a;
   cursor: pointer;
   box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.profile-pill:hover {
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.22);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.09);
 }
 
 .profile-avatar {
@@ -256,6 +465,11 @@
   color: #0f766e;
 }
 
+.profile-menu-item:focus-visible {
+  outline: 3px solid rgba(15, 118, 110, 0.18);
+  outline-offset: 2px;
+}
+
 .profile-menu-badge {
   min-width: 21px;
   height: 21px;
@@ -270,7 +484,7 @@
   font-weight: 800;
 }
 
-@media (max-width: 1120px) {
+@media (max-width: 1240px) {
   .navbar-inner {
     width: min(calc(100% - 28px), 1280px);
   }
@@ -324,17 +538,10 @@
     padding-inline: 13px;
   }
 
-  .navlink a.nav-icon-link::after {
+  .nav-icon-label {
+    display: inline;
     margin-left: 8px;
     font-size: 0.82rem;
-  }
-
-  .navlink .nav-icon-item-messages a::after {
-    content: "Messages";
-  }
-
-  .navlink .nav-icon-item-notifications a::after {
-    content: "Notifications";
   }
 
   .auth-actions {
@@ -367,7 +574,17 @@
     flex-direction: column;
   }
 
+  .language-switcher,
+  .nav-signin-button {
+    width: 100%;
+  }
+
+  .language-switcher {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .btn.nav-btn,
+  .nav-signin-button,
   .nav-profile,
   .profile-pill {
     width: 100%;

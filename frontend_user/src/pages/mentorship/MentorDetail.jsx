@@ -11,6 +11,7 @@ import {
   fetchMentorDetail,
 } from "../../services/platformService";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { ButtonLoader, CardSkeleton } from "../../components/ui/LoadingStates";
 import "./MentorDetail.css";
 
 const tomorrow = () => {
@@ -85,7 +86,13 @@ const MentorDetail = () => {
   };
 
   if (isLoading) {
-    return <main className="mentor-detail-page"><section className="section container">Loading mentor profile...</section></main>;
+    return (
+      <main className="mentor-detail-page">
+        <section className="section container">
+          <CardSkeleton variant="detail" />
+        </section>
+      </main>
+    );
   }
 
   if (!mentor) {
@@ -131,7 +138,7 @@ const MentorDetail = () => {
                   <label>Duration<select value={booking.durationMinutes} onChange={(event) => setBooking((current) => ({ ...current, durationMinutes: event.target.value }))}>{[30, 45, 60, 90, 120].map((minutes) => <option value={minutes} key={minutes}>{minutes} minutes</option>)}</select></label>
                   <label>Meeting frequency<select value={booking.meetingFrequency} onChange={(event) => setBooking((current) => ({ ...current, meetingFrequency: event.target.value }))}><option value="weekly">Weekly</option><option value="biweekly">Every two weeks</option><option value="monthly">Monthly</option></select></label>
                 </div>
-                <button className="btn primary" disabled={isSubmitting}>{isSubmitting ? "Sending..." : "Send booking request"}</button>
+                <button className="btn primary" disabled={isSubmitting}>{isSubmitting ? <ButtonLoader>Sending...</ButtonLoader> : "Send booking request"}</button>
               </form>
             )}
           </div>

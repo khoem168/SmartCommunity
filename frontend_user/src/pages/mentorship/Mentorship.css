@@ -1,11 +1,18 @@
 .mentorship-page {
   min-height: 70vh;
   padding-bottom: 64px;
-  background: linear-gradient(180deg, #effcf9 0, #f8fafc 360px, #fff 100%);
+  background: #fff;
 }
 
 .mentorship-hero {
-  padding: 64px 20px 54px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(66px, 8vw, 104px) 20px clamp(62px, 7vw, 92px);
+  background:
+    radial-gradient(circle at 8% 12%, rgba(45, 212, 191, 0.2), transparent 25%),
+    radial-gradient(circle at 92% 22%, rgba(37, 99, 235, 0.13), transparent 28%),
+    linear-gradient(180deg, #f7fffd 0%, #f7f9fc 100%);
 }
 
 .mentorship-hero .hero-content {
@@ -21,7 +28,7 @@
 }
 
 .mentorship-hero p {
-  color: #64748b;
+  color: #526178;
   line-height: 1.7;
 }
 
@@ -209,7 +216,6 @@
 }
 
 .mentorship-page .mentor-card .btn {
-  width: 100%;
   margin-top: auto;
 }
 

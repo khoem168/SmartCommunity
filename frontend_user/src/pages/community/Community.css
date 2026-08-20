@@ -1,15 +1,41 @@
 /* Community page styles */
 .community-page {
   padding: 0 0 60px;
-  background: #f7f9fc;
+  background: #fff;
 }
 
 .community-hero {
-  padding: 74px 0;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(66px, 8vw, 104px) 0 clamp(62px, 7vw, 92px);
   background:
-    radial-gradient(circle at 16% 10%, rgba(45, 212, 191, 0.23), transparent 30%),
-    radial-gradient(circle at 88% 80%, rgba(37, 99, 235, 0.2), transparent 28%),
-    linear-gradient(125deg, #0f172a, #123b4a);
+    radial-gradient(circle at 8% 12%, rgba(45, 212, 191, 0.2), transparent 25%),
+    radial-gradient(circle at 92% 22%, rgba(37, 99, 235, 0.13), transparent 28%),
+    linear-gradient(180deg, #f7fffd 0%, #f7f9fc 100%);
+}
+
+.community-hero::before,
+.community-hero::after {
+  position: absolute;
+  z-index: -1;
+  border: 1px solid rgba(15, 118, 110, 0.08);
+  border-radius: 50%;
+  content: "";
+}
+
+.community-hero::before {
+  top: -250px;
+  right: -150px;
+  width: 580px;
+  height: 580px;
+}
+
+.community-hero::after {
+  bottom: -330px;
+  left: -200px;
+  width: 650px;
+  height: 650px;
 }
 
 .community-hero .hero-content {
@@ -19,29 +45,22 @@
 }
 
 .community-hero h1 {
-  color: #fff;
+  color: #0f172a;
   font-size: clamp(2.3rem, 4vw, 3.7rem);
   margin-bottom: 16px;
   letter-spacing: -0.05em;
 }
 
 .community-hero .hero-content > p:last-of-type {
-  color: #dbeafe;
+  color: #526178;
   font-size: 1.02rem;
   line-height: 1.75;
 }
 
 .community-hero .eyebrow {
-  color: #5eead4;
+  color: #0f766e;
 }
 
-.community-hero .btn.outline {
-  border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
-}
-
-.community-hero-actions,
 .skill-match-actions,
 .request-form-actions,
 .exchange-detail-actions,
@@ -49,11 +68,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-}
-
-.community-hero-actions {
-  justify-content: center;
-  margin-top: 22px;
 }
 
 .community-content {

@@ -1,226 +1,1103 @@
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   IoArrowForward,
   IoBriefcaseOutline,
-  IoChatbubblesOutline,
   IoCheckmarkCircle,
   IoFlashOutline,
   IoPeopleOutline,
   IoSchoolOutline,
   IoSparklesOutline,
   IoTrendingUpOutline,
+  IoSearchOutline,
+  IoShieldCheckmarkOutline,
+  IoStar,
+  IoSwapHorizontalOutline,
+  IoPlayCircleOutline,
+  IoChevronDownOutline,
+  IoRibbonOutline,
+  IoFlameOutline,
+  IoCodeSlashOutline,
+  IoHardwareChipOutline,
+  IoColorPaletteOutline,
+  IoAnalyticsOutline,
+  IoCheckmark,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import "./Home.css";
 
 const heroImage =
-  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80";
+  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80";
 
-const mentorImage =
-  "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=80";
+const personaData = {
+  student: {
+    key: "student",
+    image:
+      "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=80",
+    titleKey: "personaStudentTitle",
+    descKey: "personaStudentDesc",
+    points: [
+      "personaStudentPoint1",
+      "personaStudentPoint2",
+      "personaStudentPoint3",
+    ],
+    ctaKey: "personaStudentCta",
+    link: "/courses",
+    badge: "100% Free Starter",
+  },
+  switcher: {
+    key: "switcher",
+    image:
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80",
+    titleKey: "personaSwitcherTitle",
+    descKey: "personaSwitcherDesc",
+    points: [
+      "personaSwitcherPoint1",
+      "personaSwitcherPoint2",
+      "personaSwitcherPoint3",
+    ],
+    ctaKey: "personaSwitcherCta",
+    link: "/mentorship",
+    badge: "Fast-Track Mentorship",
+  },
+  seeker: {
+    key: "seeker",
+    image:
+      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=80",
+    titleKey: "personaSeekerTitle",
+    descKey: "personaSeekerDesc",
+    points: [
+      "personaSeekerPoint1",
+      "personaSeekerPoint2",
+      "personaSeekerPoint3",
+    ],
+    ctaKey: "personaSeekerCta",
+    link: "/jobs",
+    badge: "Direct Hiring",
+  },
+  mentor: {
+    key: "mentor",
+    image:
+      "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80",
+    titleKey: "personaMentorTitle",
+    descKey: "personaMentorDesc",
+    points: [
+      "personaMentorPoint1",
+      "personaMentorPoint2",
+      "personaMentorPoint3",
+    ],
+    ctaKey: "personaMentorCta",
+    link: "/register",
+    badge: "Earn & Mentor",
+  },
+};
 
-const careerImage =
-  "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80";
-
-const features = [
+const tracksList = [
   {
-    icon: <IoPeopleOutline />,
-    title: "Community learning",
-    desc: "Learn with peers, ask questions, and build useful connections around shared goals.",
+    id: "frontend",
+    title: "Frontend & Web Apps",
+    titleKey: "frontend",
+    icon: <IoCodeSlashOutline />,
+    color: "#0f766e",
+    bg: "#ecfdf5",
+    courses: 28,
+    jobs: 19,
+    skills: ["React", "Next.js", "TypeScript", "Tailwind"],
+    trending: true,
+    link: "/courses",
   },
   {
-    icon: <IoChatbubblesOutline />,
-    title: "Skill exchange",
-    desc: "Offer what you know, request help where you need it, and grow through practical exchange.",
+    id: "backend",
+    title: "Backend & Cloud Architecture",
+    titleKey: "backend",
+    icon: <IoHardwareChipOutline />,
+    color: "#2563eb",
+    bg: "#eff6ff",
+    courses: 24,
+    jobs: 26,
+    skills: ["Node.js", "Go", "Docker", "PostgreSQL", "AWS"],
+    trending: true,
+    link: "/courses",
   },
   {
-    icon: <IoSchoolOutline />,
-    title: "Guided courses",
-    desc: "Follow focused learning paths for technical, creative, and career-ready skills.",
+    id: "uiux",
+    title: "UI/UX & Product Design",
+    titleKey: "uiux",
+    icon: <IoColorPaletteOutline />,
+    color: "#7c3aed",
+    bg: "#f5f3ff",
+    courses: 18,
+    jobs: 14,
+    skills: ["Figma", "Design Systems", "User Research", "Wireframing"],
+    trending: false,
+    link: "/courses",
   },
   {
-    icon: <IoBriefcaseOutline />,
-    title: "Career support",
-    desc: "Find internships, job opportunities, and mentor advice aligned with your profile.",
+    id: "dataSkills",
+    title: "AI, ML & Data Analytics",
+    titleKey: "dataSkills",
+    icon: <IoAnalyticsOutline />,
+    color: "#ea580c",
+    bg: "#fff7ed",
+    courses: 20,
+    jobs: 16,
+    skills: ["Python", "Pandas", "LLM APIs", "SQL", "Tableau"],
+    trending: true,
+    link: "/courses",
+  },
+  {
+    id: "cyberSecurity",
+    title: "Cybersecurity & Defense",
+    titleKey: "cyberSecurity",
+    icon: <IoShieldCheckmarkOutline />,
+    color: "#0284c7",
+    bg: "#f0f9ff",
+    courses: 14,
+    jobs: 11,
+    skills: ["Network Security", "SOC", "Ethical Hacking", "DevSecOps"],
+    trending: false,
+    link: "/courses",
+  },
+  {
+    id: "marketing",
+    title: "Digital Growth & Marketing",
+    titleKey: "marketing",
+    icon: <IoTrendingUpOutline />,
+    color: "#db2777",
+    bg: "#fdf2f8",
+    courses: 16,
+    jobs: 15,
+    skills: ["SEO", "Performance Ads", "Analytics", "Content"],
+    trending: false,
+    link: "/courses",
   },
 ];
 
-const stats = [
-  { value: "12", label: "Connected modules" },
-  { value: "Real-time", label: "Chat & notifications" },
-  { value: "1:1", label: "Mentor guidance" },
-  { value: "End-to-end", label: "Career journey" },
+const featuredMentors = [
+  {
+    id: "mentor-1",
+    name: "Sokha Chen",
+    role: "Staff Software Architect",
+    company: "ABA Bank / Tech Lead",
+    avatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80",
+    rating: "4.98",
+    sessions: 142,
+    years: "12",
+    badgeKey: "mentorBadgeLead",
+    tags: ["System Design", "Cloud", "Microservices", "Career Guidance"],
+  },
+  {
+    id: "mentor-2",
+    name: "Chanthou Rath",
+    role: "Lead Product Designer",
+    company: "Smart Axiata Digital Lab",
+    avatar:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=500&q=80",
+    rating: "4.95",
+    sessions: 98,
+    years: "8",
+    badgeKey: "mentorBadgeDesign",
+    tags: ["Figma", "Design Systems", "Portfolio Review", "UX Research"],
+  },
+  {
+    id: "mentor-3",
+    name: "Vireak Sambath",
+    role: "Principal AI & Data Engineer",
+    company: "Fintech Innovation Center",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80",
+    rating: "4.99",
+    sessions: 116,
+    years: "9",
+    badgeKey: "mentorBadgeData",
+    tags: ["Python", "Machine Learning", "Data Pipelines", "AI Apps"],
+  },
+  {
+    id: "mentor-4",
+    name: "Monineath Sin",
+    role: "Senior Security Specialist",
+    company: "Cyber Defense Hub",
+    avatar:
+      "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=500&q=80",
+    rating: "4.94",
+    sessions: 84,
+    years: "7",
+    badgeKey: "mentorBadgeArch",
+    tags: ["Cloud Security", "DevSecOps", "Penetration Testing"],
+  },
 ];
 
-const categories = [
-  "Frontend",
-  "Backend",
-  "UI/UX",
-  "Marketing",
-  "Cyber Security",
-  "Data Skills",
+const testimonials = [
+  {
+    quoteKey: "story1Quote",
+    authorKey: "story1Author",
+    roleKey: "story1Role",
+    avatar:
+      "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80",
+    badge: "Hired at Startup",
+    stars: 5,
+  },
+  {
+    quoteKey: "story2Quote",
+    authorKey: "story2Author",
+    roleKey: "story2Role",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
+    badge: "15+ Skills Swapped",
+    stars: 5,
+  },
+  {
+    quoteKey: "story3Quote",
+    authorKey: "story3Author",
+    roleKey: "story3Role",
+    avatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+    badge: "Bakong KHQR Learner",
+    stars: 5,
+  },
 ];
 
-const steps = [
-  "Create your profile and highlight the skills you want to build.",
-  "Join courses, exchange sessions, or mentorship that matches your goal.",
-  "Apply your progress to internships, jobs, and community projects.",
+const faqItems = [
+  { qKey: "faq1Q", aKey: "faq1A" },
+  { qKey: "faq2Q", aKey: "faq2A" },
+  { qKey: "faq3Q", aKey: "faq3A" },
+  { qKey: "faq4Q", aKey: "faq4A" },
 ];
+
+const splitHeroLines = (value) =>
+  String(value)
+    .split("\n")
+    .flatMap((segment) => segment.match(/[^។.]+[។.]?/g) || [segment])
+    .map((line) => line.trim())
+    .filter(Boolean);
 
 const Home = () => {
   const { user } = useGlobleContext();
+  const { language, t } = useLanguage();
+  const navigate = useNavigate();
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activePersona, setActivePersona] = useState("student");
+  const [activeTrackFilter] = useState("all");
+  const [openFaq, setOpenFaq] = useState(0);
+
+  const heroTitleLines = splitHeroLines(t("home.heroTitle"));
+  const heroAccentLines = splitHeroLines(t("home.heroAccent"));
+
+  const handleSearchSubmit = (e) => {
+    e?.preventDefault();
+    const query = searchQuery.trim();
+    if (!query) {
+      navigate("/courses");
+      return;
+    }
+    navigate(`/courses?search=${encodeURIComponent(query)}`);
+  };
+
+  const handleTagClick = (tag) => {
+    navigate(`/courses?search=${encodeURIComponent(tag)}`);
+  };
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const revealElements = document.querySelectorAll(".home-page .reveal");
+    const navbar = document.querySelector(".navbar");
+
+    const updateHeaderState = () => {
+      navbar?.classList.toggle("landing-header-scrolled", window.scrollY > 8);
+    };
+
+    updateHeaderState();
+    window.addEventListener("scroll", updateHeaderState, { passive: true });
+
+    if (reduceMotion) {
+      revealElements.forEach((element) => element.classList.add("in-view"));
+      return () => {
+        window.removeEventListener("scroll", updateHeaderState);
+        navbar?.classList.remove("landing-header-scrolled");
+      };
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("in-view");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -40px 0px",
+      },
+    );
+
+    revealElements.forEach((element) => observer.observe(element));
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", updateHeaderState);
+      navbar?.classList.remove("landing-header-scrolled");
+    };
+  }, [language]);
+
+  const filteredTracks =
+    activeTrackFilter === "all"
+      ? tracksList
+      : tracksList.filter((track) => track.id === activeTrackFilter);
+
+  const currentPersona = personaData[activePersona] || personaData.student;
 
   return (
     <main className="home-page">
+      {/* 1. HERO SECTION */}
       <section className="home-hero">
+        <div className="hero-glow-sphere hero-glow-1" aria-hidden="true" />
+        <div className="hero-glow-sphere hero-glow-2" aria-hidden="true" />
+
         <div className="home-container hero-grid">
           <div className="hero-copy">
-            <span className="eyebrow">
-              <IoSparklesOutline />
-              One community. Every career step.
-            </span>
-            <h1>
-              Build skills. Share knowledge.
-              <span> Launch your career.</span>
-            </h1>
-            <p>
-              A connected digital community where students learn practical
-              skills, meet trusted mentors, exchange knowledge, and move from
-              learning to real opportunities.
-            </p>
+            <div className="hero-badge-pill">
+              <span className="live-ping" />
+              <span className="hero-badge-text">
+                {t("home.heroBadge") || t("home.eyebrow")}
+              </span>
+            </div>
 
+            <h1>
+              {heroTitleLines.map((line, index) => (
+                <span
+                  className={`hero-line-mask hero-line-delay-${index + 1}`}
+                  key={line}
+                >
+                  <span className="hero-line-inner">{line}</span>
+                </span>
+              ))}
+              {heroAccentLines.map((line) => (
+                <span
+                  className="hero-line-mask hero-line-accent hero-line-delay-3"
+                  key={line}
+                >
+                  <span className="hero-line-inner">{line}</span>
+                </span>
+              ))}
+            </h1>
+
+            <p>{t("home.heroDescription")}</p>
+
+            {/* Interactive Search Bar */}
+            <form className="hero-search-bar" onSubmit={handleSearchSubmit}>
+              <div className="search-input-wrap">
+                <IoSearchOutline className="search-icon" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={t("home.searchPlaceholder")}
+                  aria-label={t("home.searchPlaceholder")}
+                />
+              </div>
+              <button type="submit" className="search-submit-btn">
+                {t("home.searchButton")}
+                <IoArrowForward />
+              </button>
+            </form>
+
+            {/* Trending Quick Tags */}
+            <div className="hero-trending-tags">
+              <span className="trending-label">
+                <IoFlameOutline /> {t("home.trendingSearches")}
+              </span>
+              <button
+                type="button"
+                className="trending-tag"
+                onClick={() => handleTagClick("React")}
+              >
+                {t("home.tagReact")}
+              </button>
+              <button
+                type="button"
+                className="trending-tag"
+                onClick={() => handleTagClick("UI/UX")}
+              >
+                {t("home.tagUiUx")}
+              </button>
+              <button
+                type="button"
+                className="trending-tag"
+                onClick={() => handleTagClick("Python")}
+              >
+                {t("home.tagPython")}
+              </button>
+              <button
+                type="button"
+                className="trending-tag"
+                onClick={() => handleTagClick("Cloud")}
+              >
+                {t("home.tagCloud")}
+              </button>
+            </div>
+
+            {/* Action Buttons */}
             <div className="hero-actions">
-              <Link to={user ? "/dashboard" : "/register"} className="home-btn primary">
-                {user ? "Open my dashboard" : "Start learning free"}
+              <Link
+                to={user ? "/dashboard" : "/register"}
+                className="home-btn primary"
+              >
+                {user ? t("home.openDashboard") : t("home.startFree")}
                 <IoArrowForward />
               </Link>
-              <Link to="/jobs" className="home-btn secondary">
-                Explore internships
+              <Link to="/career" className="home-btn secondary">
+                {t("home.exploreRoadmap")}
+              </Link>
+              <Link to="/jobs" className="home-btn tertiary">
+                {t("home.exploreInternships")}
               </Link>
             </div>
 
-            <div className="hero-proof" aria-label="Platform highlights">
+            {/* Trust Proof Badges */}
+            <div className="hero-proof" aria-label={t("home.highlightsLabel")}>
               <span>
                 <IoCheckmarkCircle />
-                Guided mentorship
+                {t("home.guidedMentorship")}
               </span>
               <span>
                 <IoCheckmarkCircle />
-                Skill exchange
+                {t("home.skillExchange")}
               </span>
               <span>
                 <IoCheckmarkCircle />
-                Verified opportunities
+                {t("home.verifiedOpportunities")}
+              </span>
+              <span>
+                <IoShieldCheckmarkOutline />
+                {t("home.khqrSecure")}
               </span>
             </div>
           </div>
 
+          {/* Interactive Hero Visual with Floating Live Cards */}
           <div className="hero-visual">
-            <img src={heroImage} alt="Students working together in a learning community" />
-            <div className="hero-floating-label">
-              <IoFlashOutline />
-              <span><strong>12 modules</strong> working as one platform</span>
-            </div>
-            <div className="hero-panel">
-              <IoTrendingUpOutline />
-              <div>
-                <strong>Live progress</strong>
-                <span>Track skills, sessions, and applications</span>
+            <div className="hero-visual-card">
+              <img
+                src={heroImage}
+                alt={t("home.heroImageAlt")}
+                className="hero-main-img"
+              />
+
+              {/* Floating Widget 1: Top Verified Mentor */}
+              <div className="hero-float-widget mentor-widget">
+                <img
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+                  alt="Mentor"
+                  className="widget-avatar"
+                />
+                <div className="widget-info">
+                  <div className="widget-title-row">
+                    <strong>{t("home.mentorCardTitle")}</strong>
+                    <span className="live-status-dot" title={t("home.mentorAvailable")} />
+                  </div>
+                  <span className="widget-sub">{t("home.mentorCardRole")}</span>
+                  <div className="widget-meta">
+                    <span className="rating-tag">{t("home.mentorCardRating")}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Widget 2: Career Readiness Radar */}
+              <div className="hero-float-widget progress-widget">
+                <div className="widget-icon-box">
+                  <IoTrendingUpOutline />
+                </div>
+                <div>
+                  <div className="widget-score-row">
+                    <strong>{t("home.careerMatchScore")}</strong>
+                    <span className="pulse-pill">Active</span>
+                  </div>
+                  <span className="widget-sub">{t("home.careerMatchLabel")}</span>
+                  <div className="widget-progress-bar">
+                    <div className="bar-fill" style={{ width: "94%" }} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Widget 3: 12 Modules Unified */}
+              <div className="hero-float-widget modules-widget">
+                <div className="widget-icon-box flash">
+                  <IoFlashOutline />
+                </div>
+                <div>
+                  <strong>{t("home.modulesStrong")}</strong>
+                  <span>{t("home.modulesText")}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="home-section">
-        <div className="home-container section-heading">
-          <span className="section-kicker">Platform tools</span>
-          <h2>Everything learners need to move from skill-building to opportunity</h2>
+      {/* 2. STATS & LIVE PLATFORM METRICS */}
+      <section
+        className="home-container stats-strip reveal"
+        aria-label={t("home.statsLabel")}
+      >
+        <div className="stat-card">
+          <div className="stat-icon-wrapper">
+            <IoPeopleOutline />
+          </div>
+          <div className="stat-content">
+            <strong>{t("home.statsLearners")}</strong>
+            <span>{t("home.statsLearnersLabel")}</span>
+          </div>
         </div>
 
-        <div className="home-container feature-grid">
-          {features.map((feature, index) => (
-            <article className="feature-card" key={feature.title}>
-              <div className="feature-card-top">
-                <div className="feature-icon">{feature.icon}</div>
-                <span>0{index + 1}</span>
+        <div className="stat-card">
+          <div className="stat-icon-wrapper">
+            <IoRibbonOutline />
+          </div>
+          <div className="stat-content">
+            <strong>{t("home.statsMentors")}</strong>
+            <span>{t("home.statsMentorsLabel")}</span>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-icon-wrapper">
+            <IoSchoolOutline />
+          </div>
+          <div className="stat-content">
+            <strong>{t("home.statsCourses")}</strong>
+            <span>{t("home.statsCoursesLabel")}</span>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-icon-wrapper">
+            <IoBriefcaseOutline />
+          </div>
+          <div className="stat-content">
+            <strong>{t("home.statsPlacement")}</strong>
+            <span>{t("home.statsPlacementLabel")}</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. INTERACTIVE PERSONA PATH SWITCHER */}
+      <section className="home-section persona-section">
+        <div className="home-container">
+          <div className="section-heading text-center reveal">
+            <span className="section-kicker">{t("home.personaKicker")}</span>
+            <h2>{t("home.personaTitle")}</h2>
+            <p className="section-desc">{t("home.personaSubtitle")}</p>
+          </div>
+
+          <div className="persona-tabs-nav reveal">
+            <button
+              type="button"
+              className={`persona-tab-btn ${activePersona === "student" ? "active" : ""}`}
+              onClick={() => setActivePersona("student")}
+            >
+              {t("home.personaTabStudent")}
+            </button>
+            <button
+              type="button"
+              className={`persona-tab-btn ${activePersona === "switcher" ? "active" : ""}`}
+              onClick={() => setActivePersona("switcher")}
+            >
+              {t("home.personaTabSwitcher")}
+            </button>
+            <button
+              type="button"
+              className={`persona-tab-btn ${activePersona === "seeker" ? "active" : ""}`}
+              onClick={() => setActivePersona("seeker")}
+            >
+              {t("home.personaTabSeeker")}
+            </button>
+            <button
+              type="button"
+              className={`persona-tab-btn ${activePersona === "mentor" ? "active" : ""}`}
+              onClick={() => setActivePersona("mentor")}
+            >
+              {t("home.personaTabMentor")}
+            </button>
+          </div>
+
+          <div className="persona-display-card reveal">
+            <div className="persona-content-col">
+              <div className="persona-badge-tag">{currentPersona.badge}</div>
+              <h3>{t(`home.${currentPersona.titleKey}`)}</h3>
+              <p>{t(`home.${currentPersona.descKey}`)}</p>
+
+              <ul className="persona-points-list">
+                {currentPersona.points.map((ptKey) => (
+                  <li key={ptKey}>
+                    <div className="check-bullet">
+                      <IoCheckmark />
+                    </div>
+                    <span>{t(`home.${ptKey}`)}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="persona-cta-wrap">
+                <Link to={currentPersona.link} className="home-btn primary">
+                  {t(`home.${currentPersona.ctaKey}`)}
+                  <IoArrowForward />
+                </Link>
+                <Link to="/career" className="text-link">
+                  {t("home.exploreRoadmap")}
+                  <IoArrowForward />
+                </Link>
               </div>
-              <h3>{feature.title}</h3>
-              <p>{feature.desc}</p>
+            </div>
+
+            <div className="persona-visual-col">
+              <div className="persona-img-frame">
+                <img
+                  src={currentPersona.image}
+                  alt={t(`home.${currentPersona.titleKey}`)}
+                />
+                <div className="persona-img-overlay-card">
+                  <IoSparklesOutline />
+                  <div>
+                    <strong>Smart Community Ecosystem</strong>
+                    <span>Personalized learning & mentoring</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. CORE ECOSYSTEM BENTO GRID */}
+      <section className="home-section bento-section">
+        <div className="home-container">
+          <div className="section-heading text-center reveal">
+            <span className="section-kicker">{t("home.toolsKicker")}</span>
+            <h2>{t("home.toolsTitle")}</h2>
+            <p className="section-desc">{t("home.toolsSubtitle")}</p>
+          </div>
+
+          <div className="bento-grid">
+            {/* Bento Card 1: Courses & Academy */}
+            <article className="bento-card card-large reveal reveal-card">
+              <div className="bento-card-header">
+                <span className="bento-badge academy">
+                  <IoSchoolOutline /> {t("home.pillarCoursesBadge")}
+                </span>
+                <span className="bento-number">01</span>
+              </div>
+              <div className="bento-body">
+                <h3>{t("home.pillarCoursesTitle")}</h3>
+                <p>{t("home.pillarCoursesDesc")}</p>
+
+                <div className="bento-preview-chips">
+                  <span className="preview-chip">
+                    <IoPlayCircleOutline /> Free Lesson Previews
+                  </span>
+                  <span className="preview-chip">
+                    <IoShieldCheckmarkOutline /> Bakong KHQR
+                  </span>
+                  <span className="preview-chip">
+                    <IoRibbonOutline /> Verified Certificate
+                  </span>
+                </div>
+              </div>
+              <div className="bento-footer">
+                <Link to="/courses" className="bento-action-link">
+                  {t("home.pillarCoursesAction")}
+                  <IoArrowForward />
+                </Link>
+              </div>
             </article>
-          ))}
+
+            {/* Bento Card 2: 1:1 Mentorship */}
+            <article className="bento-card reveal reveal-card">
+              <div className="bento-card-header">
+                <span className="bento-badge mentorship">
+                  <IoPeopleOutline /> {t("home.pillarMentorsBadge")}
+                </span>
+                <span className="bento-number">02</span>
+              </div>
+              <div className="bento-body">
+                <h3>{t("home.pillarMentorsTitle")}</h3>
+                <p>{t("home.pillarMentorsDesc")}</p>
+                <div className="mentor-avatars-preview">
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
+                    alt="Mentor"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80"
+                    alt="Mentor"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80"
+                    alt="Mentor"
+                  />
+                  <span className="more-mentors">+150</span>
+                </div>
+              </div>
+              <div className="bento-footer">
+                <Link to="/mentorship" className="bento-action-link">
+                  {t("home.pillarMentorsAction")}
+                  <IoArrowForward />
+                </Link>
+              </div>
+            </article>
+
+            {/* Bento Card 3: Skill Exchange */}
+            <article className="bento-card reveal reveal-card">
+              <div className="bento-card-header">
+                <span className="bento-badge exchange">
+                  <IoSwapHorizontalOutline /> {t("home.pillarExchangeBadge")}
+                </span>
+                <span className="bento-number">03</span>
+              </div>
+              <div className="bento-body">
+                <h3>{t("home.pillarExchangeTitle")}</h3>
+                <p>{t("home.pillarExchangeDesc")}</p>
+                <div className="exchange-swap-visual">
+                  <span className="skill-pill offer">Python / JS</span>
+                  <div className="swap-icon">
+                    <IoSwapHorizontalOutline />
+                  </div>
+                  <span className="skill-pill need">UI/UX Design</span>
+                </div>
+              </div>
+              <div className="bento-footer">
+                <Link to="/community" className="bento-action-link">
+                  {t("home.pillarExchangeAction")}
+                  <IoArrowForward />
+                </Link>
+              </div>
+            </article>
+
+            {/* Bento Card 4: Verified Careers & Jobs */}
+            <article className="bento-card card-large reveal reveal-card">
+              <div className="bento-card-header">
+                <span className="bento-badge jobs">
+                  <IoBriefcaseOutline /> {t("home.pillarJobsBadge")}
+                </span>
+                <span className="bento-number">04</span>
+              </div>
+              <div className="bento-body">
+                <h3>{t("home.pillarJobsTitle")}</h3>
+                <p>{t("home.pillarJobsDesc")}</p>
+
+                <div className="bento-preview-chips">
+                  <span className="preview-chip">
+                    <IoCheckmarkCircle /> Direct Employer Apply
+                  </span>
+                  <span className="preview-chip">
+                    <IoFlashOutline /> Fast-Track Internships
+                  </span>
+                  <span className="preview-chip">
+                    <IoTrendingUpOutline /> Career Readiness Match
+                  </span>
+                </div>
+              </div>
+              <div className="bento-footer">
+                <Link to="/jobs" className="bento-action-link">
+                  {t("home.pillarJobsAction")}
+                  <IoArrowForward />
+                </Link>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
 
-      <section className="home-section spotlight-section">
-        <div className="home-container spotlight-grid">
-          <div className="spotlight-image">
-            <img src={mentorImage} alt="Mentor guiding a learner during a session" />
-          </div>
-          <div className="spotlight-copy">
-            <span className="section-kicker">Mentorship</span>
-            <h2>Get guidance from people who understand the path</h2>
-            <p>
-              Book sessions, review mentor profiles, and turn broad career goals
-              into clear next steps with support from experienced professionals.
-            </p>
-            <Link to="/mentorship" className="text-link">
-              Meet mentors
+      {/* 5. IN-DEMAND SKILL TRACKS EXPLORER */}
+      <section className="home-section tracks-section">
+        <div className="home-container">
+          <div className="section-heading-split reveal">
+            <div>
+              <span className="section-kicker">{t("home.tracksKicker")}</span>
+              <h2>{t("home.tracksTitle")}</h2>
+              <p className="section-desc">{t("home.tracksSubtitle")}</p>
+            </div>
+            <Link to="/discover" className="home-btn secondary">
+              {t("home.allTracks")}
               <IoArrowForward />
             </Link>
           </div>
+
+          <div className="tracks-grid reveal">
+            {filteredTracks.map((track) => (
+              <div className="track-card" key={track.id}>
+                <div
+                  className="track-icon-badge"
+                  style={{ background: track.bg, color: track.color }}
+                >
+                  {track.icon}
+                </div>
+
+                <div className="track-card-header">
+                  <h3>{t(`home.${track.titleKey}`) || track.title}</h3>
+                  {track.trending && (
+                    <span className="trending-chip">
+                      <IoFlameOutline /> Hot
+                    </span>
+                  )}
+                </div>
+
+                <div className="track-stats-row">
+                  <span>{track.courses} Courses</span>
+                  <span>•</span>
+                  <span>{track.jobs} Openings</span>
+                </div>
+
+                <div className="track-tags-list">
+                  {track.skills.map((skill) => (
+                    <span className="track-tag" key={skill}>
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+
+                <Link to={track.link} className="track-card-btn">
+                  {t("home.viewTrackDetails")}
+                  <IoArrowForward />
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="home-container stats-strip" aria-label="Platform stats">
-        {stats.map((stat) => (
-          <div className="stat" key={stat.label}>
-            <strong>{stat.value}</strong>
-            <span>{stat.label}</span>
+      {/* 6. FEATURED MENTORS SPOTLIGHT */}
+      <section className="home-section mentors-spotlight-section">
+        <div className="home-container">
+          <div className="section-heading-split reveal">
+            <div>
+              <span className="section-kicker">
+                {t("home.featuredMentorsKicker")}
+              </span>
+              <h2>{t("home.featuredMentorsTitle")}</h2>
+              <p className="section-desc">{t("home.featuredMentorsDesc")}</p>
+            </div>
+            <Link to="/mentorship" className="home-btn primary">
+              {t("home.viewAllMentors")}
+              <IoArrowForward />
+            </Link>
           </div>
-        ))}
+
+          <div className="mentors-grid reveal">
+            {featuredMentors.map((mentor) => (
+              <article className="mentor-card-modern" key={mentor.id}>
+                <div className="mentor-card-top-bar">
+                  <div className="mentor-avatar-wrap">
+                    <img src={mentor.avatar} alt={mentor.name} />
+                    <span className="verified-shield-icon" title="Verified Mentor">
+                      <IoShieldCheckmarkOutline />
+                    </span>
+                  </div>
+                  <div className="mentor-rating-pill">
+                    <IoStar />
+                    <span>{mentor.rating}</span>
+                  </div>
+                </div>
+
+                <div className="mentor-card-body">
+                  <h4>{mentor.name}</h4>
+                  <p className="mentor-company">{mentor.company}</p>
+                  <span className="mentor-exp">
+                    {t("home.mentorExperience", { years: mentor.years })}
+                  </span>
+
+                  <div className="mentor-skills-tags">
+                    {mentor.tags.map((tag) => (
+                      <span className="mentor-tag" key={tag}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mentor-card-actions">
+                  <Link
+                    to={`/mentorship/${mentor.id}`}
+                    className="mentor-book-btn"
+                  >
+                    {t("home.bookSessionBtn")}
+                    <IoArrowForward />
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
 
-      <section className="home-section">
-        <div className="home-container split-panel">
-          <div className="path-copy">
-            <span className="section-kicker">How it works</span>
-            <h2>A clean path from learning to career action</h2>
-            <div className="step-list">
-              {steps.map((step, index) => (
-                <div className="step-item" key={step}>
-                  <span>{index + 1}</span>
-                  <p>{step}</p>
-                </div>
-              ))}
-            </div>
+      {/* 7. 4-STEP SEAMLESS JOURNEY */}
+      <section className="home-section journey-section">
+        <div className="home-container">
+          <div className="section-heading text-center reveal">
+            <span className="section-kicker">{t("home.howItWorks")}</span>
+            <h2>{t("home.pathTitle")}</h2>
           </div>
 
-          <div className="career-card">
-            <img src={careerImage} alt="Team discussing career project work" />
-            <div>
-              <h3>Popular categories</h3>
-              <div className="category-list">
-                {categories.map((category) => (
-                  <Link to="/discover" className="category-chip" key={category}>
-                    {category}
-                  </Link>
-                ))}
+          <div className="journey-grid reveal">
+            <div className="journey-step-card">
+              <div className="step-badge">1</div>
+              <h4>{t("home.step1Title")}</h4>
+              <p>{t("home.step1Desc")}</p>
+            </div>
+
+            <div className="journey-step-card">
+              <div className="step-badge">2</div>
+              <h4>{t("home.step2Title")}</h4>
+              <p>{t("home.step2Desc")}</p>
+            </div>
+
+            <div className="journey-step-card">
+              <div className="step-badge">3</div>
+              <h4>{t("home.step3Title")}</h4>
+              <p>{t("home.step3Desc")}</p>
+            </div>
+
+            <div className="journey-step-card">
+              <div className="step-badge">4</div>
+              <h4>{t("home.step4Title")}</h4>
+              <p>{t("home.step4Desc")}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. TESTIMONIALS & SUCCESS STORIES */}
+      <section className="home-section testimonials-section">
+        <div className="home-container">
+          <div className="section-heading text-center reveal">
+            <span className="section-kicker">{t("home.storiesKicker")}</span>
+            <h2>{t("home.storiesTitle")}</h2>
+            <p className="section-desc">{t("home.storiesSubtitle")}</p>
+          </div>
+
+          <div className="testimonials-grid reveal">
+            {testimonials.map((story, i) => (
+              <div className="testimonial-card" key={i}>
+                <div className="stars-row">
+                  {[...Array(story.stars)].map((_, idx) => (
+                    <IoStar key={idx} className="star-icon" />
+                  ))}
+                  <span className="badge-story-pill">{story.badge}</span>
+                </div>
+
+                <p className="story-quote">"{t(`home.${story.quoteKey}`)}"</p>
+
+                <div className="story-author-row">
+                  <img
+                    src={story.avatar}
+                    alt={t(`home.${story.authorKey}`)}
+                    className="author-avatar"
+                  />
+                  <div>
+                    <strong>{t(`home.${story.authorKey}`)}</strong>
+                    <span>{t(`home.${story.roleKey}`)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 9. INTERACTIVE FAQ ACCORDION */}
+      <section className="home-section faq-section">
+        <div className="home-container faq-container">
+          <div className="section-heading text-center reveal">
+            <span className="section-kicker">{t("home.faqKicker")}</span>
+            <h2>{t("home.faqTitle")}</h2>
+            <p className="section-desc">{t("home.faqSubtitle")}</p>
+          </div>
+
+          <div className="faq-accordion-list reveal">
+            {faqItems.map((item, index) => {
+              const isOpen = openFaq === index;
+              return (
+                <div
+                  className={`faq-accordion-item ${isOpen ? "open" : ""}`}
+                  key={index}
+                >
+                  <button
+                    type="button"
+                    className="faq-question-btn"
+                    onClick={() => setOpenFaq(isOpen ? -1 : index)}
+                    aria-expanded={isOpen}
+                  >
+                    <span>{t(`home.${item.qKey}`)}</span>
+                    <span className="faq-toggle-icon">
+                      <IoChevronDownOutline />
+                    </span>
+                  </button>
+                  {isOpen && (
+                    <div className="faq-answer-pane">
+                      <p>{t(`home.${item.aKey}`)}</p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 10. HIGH-IMPACT FINAL CTA BANNER */}
+      <section className="home-section cta-banner-section">
+        <div className="home-container">
+          <div className="cta-banner-card reveal">
+            <div className="cta-banner-mesh" aria-hidden="true" />
+            <div className="cta-banner-content">
+              <span className="cta-eyebrow">
+                <IoSparklesOutline /> {t("home.ctaKicker")}
+              </span>
+              <h2>{t("home.ctaTitle")}</h2>
+              <p>{t("home.ctaDesc")}</p>
+
+              <div className="cta-actions-row">
+                <Link
+                  to={user ? "/dashboard" : "/register"}
+                  className="home-btn primary"
+                >
+                  {user ? t("home.goDashboard") : t("home.ctaPrimary")}
+                  <IoArrowForward />
+                </Link>
+                <Link to="/jobs" className="home-btn secondary">
+                  {t("home.ctaSecondary")}
+                </Link>
+              </div>
+
+              <div className="cta-avatar-stack-row">
+                <div className="avatar-stack">
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
+                    alt="Member"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80"
+                    alt="Member"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80"
+                    alt="Member"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=100&q=80"
+                    alt="Member"
+                  />
+                </div>
+                <span>{t("home.ctaCommunityCount")}</span>
               </div>
             </div>
           </div>
         </div>
-      </section>
-
-      <section className="home-container final-cta">
-        <div>
-          <span className="section-kicker">Your next step</span>
-          <h2>Turn your learning goals into visible progress.</h2>
-        </div>
-        <Link to={user ? "/dashboard" : "/register"} className="home-btn primary">
-          {user ? "Go to dashboard" : "Create free account"}
-          <IoArrowForward />
-        </Link>
       </section>
     </main>
   );

@@ -25,6 +25,7 @@ pnpm-debug.log*
 
 # Local reference projects
 /bakong-main/
+/Fone Khmer/
 
 # Editor and operating-system files
 .vscode/*
