@@ -64,7 +64,10 @@
 }
 
 .discover-card {
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .discover-card:hover {
@@ -663,7 +666,7 @@
   gap: 10px;
   flex-wrap: wrap;
 }
-.discover-actions >button{
+.discover-actions > button {
   cursor: pointer;
 }
 .discover-actions button:disabled {

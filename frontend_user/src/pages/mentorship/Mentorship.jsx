@@ -211,21 +211,29 @@ const Mentorship = () => {
         <div className="hero-content">
           <p className="eyebrow">{t("mentorshipPage.eyebrow")}</p>
           <h1>{t("mentorshipPage.heroTitle")}</h1>
-          <p>
-            {t("mentorshipPage.heroDescription")}
-          </p>
+          <p>{t("mentorshipPage.heroDescription")}</p>
           <div className="mentorship-hero-actions">
             {user &&
               user.role !== "mentor" &&
               user.role !== "admin" &&
               (!application || application.status === "rejected") && (
-              <button className="btn primary" type="button" onClick={() => setShowApplication(true)}>
-                {application?.status === "rejected" ? t("mentorshipPage.applyAgain") : t("mentorshipPage.becomeMentor")}
-              </button>
-            )}
+                <button
+                  className="btn primary"
+                  type="button"
+                  onClick={() => setShowApplication(true)}
+                >
+                  {application?.status === "rejected"
+                    ? t("mentorshipPage.applyAgain")
+                    : t("mentorshipPage.becomeMentor")}
+                </button>
+              )}
             {application && (
-              <span className={`mentor-application-status ${application.status}`}>
-                {t("mentorshipPage.applicationStatus", { status: application.status })}
+              <span
+                className={`mentor-application-status ${application.status}`}
+              >
+                {t("mentorshipPage.applicationStatus", {
+                  status: application.status,
+                })}
               </span>
             )}
           </div>
@@ -237,53 +245,443 @@ const Mentorship = () => {
         {message && <div className="profile-success">{message}</div>}
 
         {showApplication && (
-          <form className="mentor-application-form" onSubmit={submitApplication}>
+          <form
+            className="mentor-application-form"
+            onSubmit={submitApplication}
+          >
             <div className="section-header">
-              <div><h2>{t("mentorshipPage.applyTitle")}</h2><p>{t("mentorshipPage.applyDescription")}</p></div>
-              <button className="btn outline" type="button" onClick={() => setShowApplication(false)}>{t("mentorshipPage.close")}</button>
+              <div>
+                <h2>{t("mentorshipPage.applyTitle")}</h2>
+                <p>{t("mentorshipPage.applyDescription")}</p>
+              </div>
+              <button
+                className="btn outline"
+                type="button"
+                onClick={() => setShowApplication(false)}
+              >
+                {t("mentorshipPage.close")}
+              </button>
             </div>
             <div className="mentor-form-grid">
-              <label>{t("mentorshipPage.professionalTitle")}<input required value={applicationForm.professionalTitle} onChange={(event) => setApplicationForm((current) => ({ ...current, professionalTitle: event.target.value }))} /></label>
-              <label>{t("mentorshipPage.company")}<input value={applicationForm.company} onChange={(event) => setApplicationForm((current) => ({ ...current, company: event.target.value }))} /></label>
-              <label>{t("mentorshipPage.years")}<input required type="number" min="0" max="80" value={applicationForm.experienceYears} onChange={(event) => setApplicationForm((current) => ({ ...current, experienceYears: event.target.value }))} /></label>
-              <label>{t("mentorshipPage.availability")}<input value={applicationForm.availability} onChange={(event) => setApplicationForm((current) => ({ ...current, availability: event.target.value }))} /></label>
-              <label className="wide">{t("mentorshipPage.expertise")}<input required placeholder="React, Career coaching, UI/UX" value={applicationForm.expertise} onChange={(event) => setApplicationForm((current) => ({ ...current, expertise: event.target.value }))} /></label>
-              <label className="wide">{t("mentorshipPage.linkedin")}<input type="url" value={applicationForm.linkedinUrl} onChange={(event) => setApplicationForm((current) => ({ ...current, linkedinUrl: event.target.value }))} /></label>
-              <label className="wide">{t("mentorshipPage.motivation")}<textarea required value={applicationForm.motivation} onChange={(event) => setApplicationForm((current) => ({ ...current, motivation: event.target.value }))} /></label>
+              <label>
+                {t("mentorshipPage.professionalTitle")}
+                <input
+                  required
+                  value={applicationForm.professionalTitle}
+                  onChange={(event) =>
+                    setApplicationForm((current) => ({
+                      ...current,
+                      professionalTitle: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+              <label>
+                {t("mentorshipPage.company")}
+                <input
+                  value={applicationForm.company}
+                  onChange={(event) =>
+                    setApplicationForm((current) => ({
+                      ...current,
+                      company: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+              <label>
+                {t("mentorshipPage.years")}
+                <input
+                  required
+                  type="number"
+                  min="0"
+                  max="80"
+                  value={applicationForm.experienceYears}
+                  onChange={(event) =>
+                    setApplicationForm((current) => ({
+                      ...current,
+                      experienceYears: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+              <label>
+                {t("mentorshipPage.availability")}
+                <input
+                  value={applicationForm.availability}
+                  onChange={(event) =>
+                    setApplicationForm((current) => ({
+                      ...current,
+                      availability: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+              <label className="wide">
+                {t("mentorshipPage.expertise")}
+                <input
+                  required
+                  placeholder="React, Career coaching, UI/UX"
+                  value={applicationForm.expertise}
+                  onChange={(event) =>
+                    setApplicationForm((current) => ({
+                      ...current,
+                      expertise: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+              <label className="wide">
+                {t("mentorshipPage.linkedin")}
+                <input
+                  type="url"
+                  value={applicationForm.linkedinUrl}
+                  onChange={(event) =>
+                    setApplicationForm((current) => ({
+                      ...current,
+                      linkedinUrl: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+              <label className="wide">
+                {t("mentorshipPage.motivation")}
+                <textarea
+                  required
+                  value={applicationForm.motivation}
+                  onChange={(event) =>
+                    setApplicationForm((current) => ({
+                      ...current,
+                      motivation: event.target.value,
+                    }))
+                  }
+                />
+              </label>
             </div>
-            <button className="btn primary" disabled={busyId === "application"}>{busyId === "application" ? <ButtonLoader>{t("mentorshipPage.submitting")}</ButtonLoader> : t("mentorshipPage.submitApplication")}</button>
+            <button className="btn primary" disabled={busyId === "application"}>
+              {busyId === "application" ? (
+                <ButtonLoader>{t("mentorshipPage.submitting")}</ButtonLoader>
+              ) : (
+                t("mentorshipPage.submitApplication")
+              )}
+            </button>
           </form>
         )}
 
         {user?.role === "admin" && (
           <section className="mentor-admin-panel">
-            <div className="section-header"><div><h2>{t("mentorshipPage.verificationTitle")}</h2><p>{t("mentorshipPage.verificationDescription")}</p></div><span>{t("mentorshipPage.pending", { count: adminApplications.length })}</span></div>
-            {adminApplications.length ? adminApplications.map((item) => (
-              <article key={item.id} className="mentor-application-card">
-                <div><h3>{item.userName}</h3><p>{t("mentorshipPage.experienceLine", { title: item.professionalTitle, company: item.company ? ` - ${item.company}` : "", years: item.experienceYears })}</p><div className="mentor-skills">{item.expertise.map((entry) => <span className="skill-pill" key={entry}>{entry}</span>)}</div><p>{item.motivation}</p></div>
-                <label>{t("mentorshipPage.rejectionReason")}<textarea value={reasonById[`application-${item.id}`] || ""} onChange={(event) => setReasonById((current) => ({ ...current, [`application-${item.id}`]: event.target.value }))} /></label>
-                <div className="mentor-card-actions"><button className="btn primary small" type="button" disabled={busyId === `application-${item.id}`} onClick={() => reviewApplication(item.id, "approved")}>{busyId === `application-${item.id}` ? <ButtonLoader>{t("mentorshipPage.approving")}</ButtonLoader> : t("mentorshipPage.approve")}</button><button className="btn outline small" type="button" disabled={!reasonById[`application-${item.id}`]?.trim() || busyId === `application-${item.id}`} onClick={() => reviewApplication(item.id, "rejected")}>{busyId === `application-${item.id}` ? <ButtonLoader>{t("mentorshipPage.rejecting")}</ButtonLoader> : t("mentorshipPage.reject")}</button></div>
-              </article>
-            )) : <p className="mentorship-empty">{t("mentorshipPage.noPending")}</p>}
+            <div className="section-header">
+              <div>
+                <h2>{t("mentorshipPage.verificationTitle")}</h2>
+                <p>{t("mentorshipPage.verificationDescription")}</p>
+              </div>
+              <span>
+                {t("mentorshipPage.pending", {
+                  count: adminApplications.length,
+                })}
+              </span>
+            </div>
+            {adminApplications.length ? (
+              adminApplications.map((item) => (
+                <article key={item.id} className="mentor-application-card">
+                  <div>
+                    <h3>{item.userName}</h3>
+                    <p>
+                      {t("mentorshipPage.experienceLine", {
+                        title: item.professionalTitle,
+                        company: item.company ? ` - ${item.company}` : "",
+                        years: item.experienceYears,
+                      })}
+                    </p>
+                    <div className="mentor-skills">
+                      {item.expertise.map((entry) => (
+                        <span className="skill-pill" key={entry}>
+                          {entry}
+                        </span>
+                      ))}
+                    </div>
+                    <p>{item.motivation}</p>
+                  </div>
+                  <label>
+                    {t("mentorshipPage.rejectionReason")}
+                    <textarea
+                      value={reasonById[`application-${item.id}`] || ""}
+                      onChange={(event) =>
+                        setReasonById((current) => ({
+                          ...current,
+                          [`application-${item.id}`]: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <div className="mentor-card-actions">
+                    <button
+                      className="btn primary small"
+                      type="button"
+                      disabled={busyId === `application-${item.id}`}
+                      onClick={() => reviewApplication(item.id, "approved")}
+                    >
+                      {busyId === `application-${item.id}` ? (
+                        <ButtonLoader>
+                          {t("mentorshipPage.approving")}
+                        </ButtonLoader>
+                      ) : (
+                        t("mentorshipPage.approve")
+                      )}
+                    </button>
+                    <button
+                      className="btn outline small"
+                      type="button"
+                      disabled={
+                        !reasonById[`application-${item.id}`]?.trim() ||
+                        busyId === `application-${item.id}`
+                      }
+                      onClick={() => reviewApplication(item.id, "rejected")}
+                    >
+                      {busyId === `application-${item.id}` ? (
+                        <ButtonLoader>
+                          {t("mentorshipPage.rejecting")}
+                        </ButtonLoader>
+                      ) : (
+                        t("mentorshipPage.reject")
+                      )}
+                    </button>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <p className="mentorship-empty">
+                {t("mentorshipPage.noPending")}
+              </p>
+            )}
           </section>
         )}
 
         {user && bookings.length > 0 && (
           <section className="my-mentorships">
-            <div className="section-header"><div><h2>{t("mentorshipPage.myBookings")}</h2><p>{t("mentorshipPage.bookingsDescription")}</p></div></div>
+            <div className="section-header">
+              <div>
+                <h2>{t("mentorshipPage.myBookings")}</h2>
+                <p>{t("mentorshipPage.bookingsDescription")}</p>
+              </div>
+            </div>
             <div className="mentorship-booking-grid">
               {bookings.map((booking) => (
                 <article className="mentorship-booking-card" key={booking.id}>
-                  <div className="booking-heading"><div><h3>{booking.topic}</h3><p>{booking.currentUserRole === "mentor" ? t("mentorshipPage.studentName", { name: booking.studentName }) : t("mentorshipPage.mentorName", { name: booking.mentorName })}</p></div><span className={`booking-status ${booking.status}`}>{booking.status}</span></div>
+                  <div className="booking-heading">
+                    <div>
+                      <h3>{booking.topic}</h3>
+                      <p>
+                        {booking.currentUserRole === "mentor"
+                          ? t("mentorshipPage.studentName", {
+                              name: booking.studentName,
+                            })
+                          : t("mentorshipPage.mentorName", {
+                              name: booking.mentorName,
+                            })}
+                      </p>
+                    </div>
+                    <span className={`booking-status ${booking.status}`}>
+                      {booking.status}
+                    </span>
+                  </div>
                   <p>{booking.description}</p>
-                  <div className="booking-meta"><span><IoCalendarOutline /> {formatDate(booking.requestedTime)}</span><span>{t("mentorshipPage.minutes", { count: booking.durationMinutes })}</span><span>{booking.meetingFrequency}</span></div>
-                  {booking.rejectionReason && <p className="booking-rejection">{t("mentorshipPage.reason", { reason: booking.rejectionReason })}</p>}
-                  {booking.meetingLink && booking.status === "active" && <a className="btn primary small" href={booking.meetingLink} target="_blank" rel="noreferrer"><IoVideocamOutline /> {t("mentorshipPage.joinMeeting")}</a>}
-                  {booking.currentUserRole === "mentor" && booking.status === "pending" && <><label>{t("mentorshipPage.reasonDeclining")}<textarea value={reasonById[booking.id] || ""} onChange={(event) => setReasonById((current) => ({ ...current, [booking.id]: event.target.value }))} /></label><div className="mentor-card-actions"><button className="btn primary small" type="button" disabled={busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "active")}>{busyId === `booking-${booking.id}` ? <ButtonLoader>{t("mentorshipPage.updating")}</ButtonLoader> : t("mentorshipPage.approveAppointment")}</button><button className="btn outline small" type="button" disabled={!reasonById[booking.id]?.trim() || busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "rejected")}>{busyId === `booking-${booking.id}` ? <ButtonLoader>{t("mentorshipPage.updating")}</ButtonLoader> : t("mentorshipPage.decline")}</button></div></>}
-                  {booking.status === "active" && <div className="mentor-card-actions"><button className="btn outline small" type="button" disabled={busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "completed")}>{busyId === `booking-${booking.id}` ? <ButtonLoader>{t("mentorshipPage.updating")}</ButtonLoader> : <><IoCheckmarkCircleOutline /> {t("mentorshipPage.markCompleted")}</>}</button><button className="btn outline small" type="button" disabled={busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "cancelled")}>{busyId === `booking-${booking.id}` ? <ButtonLoader>{t("mentorshipPage.updating")}</ButtonLoader> : t("mentorshipPage.cancel")}</button></div>}
-                  {booking.currentUserRole === "student" && booking.status === "pending" && <button className="btn outline small" type="button" disabled={busyId === `booking-${booking.id}`} onClick={() => updateBooking(booking.id, "cancelled")}>{busyId === `booking-${booking.id}` ? <ButtonLoader>{t("mentorshipPage.updating")}</ButtonLoader> : t("mentorshipPage.cancelRequest")}</button>}
-                  {booking.currentUserRole === "student" && booking.status === "completed" && !booking.review && <div className="booking-review-form"><label>{t("mentorshipPage.rating")}<select value={reviewById[booking.id]?.rating || 5} onChange={(event) => setReviewById((current) => ({ ...current, [booking.id]: { ...current[booking.id], rating: Number(event.target.value) } }))}>{[5, 4, 3, 2, 1].map((value) => <option key={value} value={value}>{t("mentorshipPage.stars", { count: value })}</option>)}</select></label><label>{t("mentorshipPage.review")}<textarea value={reviewById[booking.id]?.review || ""} onChange={(event) => setReviewById((current) => ({ ...current, [booking.id]: { rating: current[booking.id]?.rating || 5, review: event.target.value } }))} /></label><button className="btn primary small" type="button" disabled={!reviewById[booking.id]?.review?.trim() || busyId === `review-${booking.id}`} onClick={() => submitReview(booking.id)}>{busyId === `review-${booking.id}` ? <ButtonLoader>{t("mentorshipPage.submitting")}</ButtonLoader> : t("mentorshipPage.submitReview")}</button></div>}
-                  {booking.review && <p className="booking-review"><IoStar /> {booking.review.rating}/5 Â· {booking.review.review}</p>}
+                  <div className="booking-meta">
+                    <span>
+                      <IoCalendarOutline /> {formatDate(booking.requestedTime)}
+                    </span>
+                    <span>
+                      {t("mentorshipPage.minutes", {
+                        count: booking.durationMinutes,
+                      })}
+                    </span>
+                    <span>{booking.meetingFrequency}</span>
+                  </div>
+                  {booking.rejectionReason && (
+                    <p className="booking-rejection">
+                      {t("mentorshipPage.reason", {
+                        reason: booking.rejectionReason,
+                      })}
+                    </p>
+                  )}
+                  {booking.meetingLink && booking.status === "active" && (
+                    <a
+                      className="btn primary small"
+                      href={booking.meetingLink}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <IoVideocamOutline /> {t("mentorshipPage.joinMeeting")}
+                    </a>
+                  )}
+                  {booking.currentUserRole === "mentor" &&
+                    booking.status === "pending" && (
+                      <>
+                        <label>
+                          {t("mentorshipPage.reasonDeclining")}
+                          <textarea
+                            value={reasonById[booking.id] || ""}
+                            onChange={(event) =>
+                              setReasonById((current) => ({
+                                ...current,
+                                [booking.id]: event.target.value,
+                              }))
+                            }
+                          />
+                        </label>
+                        <div className="mentor-card-actions">
+                          <button
+                            className="btn primary small"
+                            type="button"
+                            disabled={busyId === `booking-${booking.id}`}
+                            onClick={() => updateBooking(booking.id, "active")}
+                          >
+                            {busyId === `booking-${booking.id}` ? (
+                              <ButtonLoader>
+                                {t("mentorshipPage.updating")}
+                              </ButtonLoader>
+                            ) : (
+                              t("mentorshipPage.approveAppointment")
+                            )}
+                          </button>
+                          <button
+                            className="btn outline small"
+                            type="button"
+                            disabled={
+                              !reasonById[booking.id]?.trim() ||
+                              busyId === `booking-${booking.id}`
+                            }
+                            onClick={() =>
+                              updateBooking(booking.id, "rejected")
+                            }
+                          >
+                            {busyId === `booking-${booking.id}` ? (
+                              <ButtonLoader>
+                                {t("mentorshipPage.updating")}
+                              </ButtonLoader>
+                            ) : (
+                              t("mentorshipPage.decline")
+                            )}
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  {booking.status === "active" && (
+                    <div className="mentor-card-actions">
+                      <button
+                        className="btn outline small"
+                        type="button"
+                        disabled={busyId === `booking-${booking.id}`}
+                        onClick={() => updateBooking(booking.id, "completed")}
+                      >
+                        {busyId === `booking-${booking.id}` ? (
+                          <ButtonLoader>
+                            {t("mentorshipPage.updating")}
+                          </ButtonLoader>
+                        ) : (
+                          <>
+                            <IoCheckmarkCircleOutline />{" "}
+                            {t("mentorshipPage.markCompleted")}
+                          </>
+                        )}
+                      </button>
+                      <button
+                        className="btn outline small"
+                        type="button"
+                        disabled={busyId === `booking-${booking.id}`}
+                        onClick={() => updateBooking(booking.id, "cancelled")}
+                      >
+                        {busyId === `booking-${booking.id}` ? (
+                          <ButtonLoader>
+                            {t("mentorshipPage.updating")}
+                          </ButtonLoader>
+                        ) : (
+                          t("mentorshipPage.cancel")
+                        )}
+                      </button>
+                    </div>
+                  )}
+                  {booking.currentUserRole === "student" &&
+                    booking.status === "pending" && (
+                      <button
+                        className="btn outline small"
+                        type="button"
+                        disabled={busyId === `booking-${booking.id}`}
+                        onClick={() => updateBooking(booking.id, "cancelled")}
+                      >
+                        {busyId === `booking-${booking.id}` ? (
+                          <ButtonLoader>
+                            {t("mentorshipPage.updating")}
+                          </ButtonLoader>
+                        ) : (
+                          t("mentorshipPage.cancelRequest")
+                        )}
+                      </button>
+                    )}
+                  {booking.currentUserRole === "student" &&
+                    booking.status === "completed" &&
+                    !booking.review && (
+                      <div className="booking-review-form">
+                        <label>
+                          {t("mentorshipPage.rating")}
+                          <select
+                            value={reviewById[booking.id]?.rating || 5}
+                            onChange={(event) =>
+                              setReviewById((current) => ({
+                                ...current,
+                                [booking.id]: {
+                                  ...current[booking.id],
+                                  rating: Number(event.target.value),
+                                },
+                              }))
+                            }
+                          >
+                            {[5, 4, 3, 2, 1].map((value) => (
+                              <option key={value} value={value}>
+                                {t("mentorshipPage.stars", { count: value })}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <label>
+                          {t("mentorshipPage.review")}
+                          <textarea
+                            value={reviewById[booking.id]?.review || ""}
+                            onChange={(event) =>
+                              setReviewById((current) => ({
+                                ...current,
+                                [booking.id]: {
+                                  rating: current[booking.id]?.rating || 5,
+                                  review: event.target.value,
+                                },
+                              }))
+                            }
+                          />
+                        </label>
+                        <button
+                          className="btn primary small"
+                          type="button"
+                          disabled={
+                            !reviewById[booking.id]?.review?.trim() ||
+                            busyId === `review-${booking.id}`
+                          }
+                          onClick={() => submitReview(booking.id)}
+                        >
+                          {busyId === `review-${booking.id}` ? (
+                            <ButtonLoader>
+                              {t("mentorshipPage.submitting")}
+                            </ButtonLoader>
+                          ) : (
+                            t("mentorshipPage.submitReview")
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  {booking.review && (
+                    <p className="booking-review">
+                      <IoStar /> {booking.review.rating}/5 Â·{" "}
+                      {booking.review.review}
+                    </p>
+                  )}
                 </article>
               ))}
             </div>
@@ -291,10 +689,37 @@ const Mentorship = () => {
         )}
 
         <section>
-          <div className="section-header"><div><h2>{t("mentorshipPage.verifiedMentors")}</h2><p>{t("mentorshipPage.searchDescription")}</p></div><span>{t("mentorshipPage.mentorCount", { count: filteredMentors.length })}</span></div>
+          <div className="section-header">
+            <div>
+              <h2>{t("mentorshipPage.verifiedMentors")}</h2>
+              <p>{t("mentorshipPage.searchDescription")}</p>
+            </div>
+            <span>
+              {t("mentorshipPage.mentorCount", {
+                count: filteredMentors.length,
+              })}
+            </span>
+          </div>
           <div className="mentor-search-panel">
-            <label><IoSearchOutline /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("mentorshipPage.searchPlaceholder")} /></label>
-            <select value={skill} onChange={(event) => setSkill(event.target.value)}><option value="">{t("mentorshipPage.allSkills")}</option>{skills.map((item) => <option key={item} value={item}>{item}</option>)}</select>
+            <label>
+              <IoSearchOutline />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder={t("mentorshipPage.searchPlaceholder")}
+              />
+            </label>
+            <select
+              value={skill}
+              onChange={(event) => setSkill(event.target.value)}
+            >
+              <option value="">{t("mentorshipPage.allSkills")}</option>
+              {skills.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
           </div>
           {isLoading ? (
             <SkeletonGrid
@@ -307,15 +732,52 @@ const Mentorship = () => {
             <div className="mentor-grid">
               {filteredMentors.map((mentor) => (
                 <article className="mentor-card" key={mentor.id}>
-                  <div className="mentor-card-person">{mentor.avatarUrl ? <img src={mentor.avatarUrl} alt="" /> : <span>{initials(mentor.name)}</span>}<div><h3>{mentor.name}</h3><p className="mentor-title">{mentor.title}{mentor.company ? ` at ${mentor.company}` : ""}</p></div></div>
+                  <div className="mentor-card-person">
+                    {mentor.avatarUrl ? (
+                      <img src={mentor.avatarUrl} alt="" />
+                    ) : (
+                      <span>{initials(mentor.name)}</span>
+                    )}
+                    <div>
+                      <h3>{mentor.name}</h3>
+                      <p className="mentor-title">
+                        {mentor.title}
+                        {mentor.company ? ` at ${mentor.company}` : ""}
+                      </p>
+                    </div>
+                  </div>
                   <p className="mentor-card-bio">{mentor.bio}</p>
-                  <div className="mentor-skills">{(mentor.skills || []).slice(0, 5).map((item) => <span className="skill-pill" key={item}>{item}</span>)}</div>
-                  <div className="mentor-meta"><span><IoStar /> {mentor.rating || "New"} {mentor.reviewCount ? `(${mentor.reviewCount})` : ""}</span><span><IoPeopleOutline /> {mentor.sessions} sessions</span><span>{mentor.location}</span></div>
-                  <Link to={`/mentorship/${mentor.id}`} className="btn primary small">{t("mentorshipPage.viewBook")}</Link>
+                  <div className="mentor-skills">
+                    {(mentor.skills || []).slice(0, 5).map((item) => (
+                      <span className="skill-pill" key={item}>
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mentor-meta">
+                    <span>
+                      <IoStar /> {mentor.rating || "New"}{" "}
+                      {mentor.reviewCount ? `(${mentor.reviewCount})` : ""}
+                    </span>
+                    <span>
+                      <IoPeopleOutline /> {mentor.sessions} sessions
+                    </span>
+                    <span>{mentor.location}</span>
+                  </div>
+                  <Link
+                    to={`/mentorship/${mentor.id}`}
+                    className="btn primary small"
+                  >
+                    {t("mentorshipPage.viewBook")}
+                  </Link>
                 </article>
               ))}
             </div>
-          ) : <div className="mentorship-empty">{t("mentorshipPage.noMentors")}</div>}
+          ) : (
+            <div className="mentorship-empty">
+              {t("mentorshipPage.noMentors")}
+            </div>
+          )}
         </section>
       </section>
     </main>
@@ -323,4 +785,3 @@ const Mentorship = () => {
 };
 
 export default Mentorship;
-

@@ -3,7 +3,11 @@
   min-height: 100dvh;
   padding: 32px 0 64px;
   background:
-    radial-gradient(circle at 10% 0%, rgba(20, 184, 166, 0.12), transparent 30%),
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(20, 184, 166, 0.12),
+      transparent 30%
+    ),
     #f8fafc;
 }
 
@@ -266,7 +270,9 @@
   background:
     linear-gradient(rgba(248, 250, 252, 0.94), rgba(255, 255, 255, 0.96)),
     radial-gradient(circle, #cbd5e1 1px, transparent 1px);
-  background-size: auto, 18px 18px;
+  background-size:
+    auto,
+    18px 18px;
 }
 
 .message-empty,

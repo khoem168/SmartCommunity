@@ -39,7 +39,11 @@ const notificationTypes = [
   { value: "", label: "All", icon: IoNotificationsOutline },
   { value: "message", label: "Messages", icon: IoChatbubbleEllipsesOutline },
   { value: "mentorship", label: "Mentorship", icon: IoPeopleOutline },
-  { value: "skill_exchange", label: "Skill requests", icon: IoSwapHorizontalOutline },
+  {
+    value: "skill_exchange",
+    label: "Skill requests",
+    icon: IoSwapHorizontalOutline,
+  },
   { value: "internship", label: "Internships", icon: IoBriefcaseOutline },
   { value: "session", label: "Sessions", icon: IoVideocamOutline },
   { value: "system", label: "System", icon: IoShieldCheckmarkOutline },
@@ -69,7 +73,8 @@ const Notifications = () => {
   const [unreadOnly, setUnreadOnly] = useState(false);
   const [page, setPage] = useState(1);
   const [preferences, setPreferences] = useState(null);
-  const [firebaseServerConfigured, setFirebaseServerConfigured] = useState(false);
+  const [firebaseServerConfigured, setFirebaseServerConfigured] =
+    useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -212,7 +217,9 @@ const Notifications = () => {
           <IoNotificationsOutline size={52} />
           <h1>Login to view notifications</h1>
           <p>Your real-time alerts and account updates will appear here.</p>
-          <Link className="btn primary" to="/login">Login</Link>
+          <Link className="btn primary" to="/login">
+            Login
+          </Link>
         </section>
       </main>
     );
@@ -225,11 +232,20 @@ const Notifications = () => {
           <div>
             <p className="eyebrow">Activity center</p>
             <h1>Stay connected to every opportunity.</h1>
-            <p>Messages, mentoring, skill requests, internships, and live sessions—updated in real time.</p>
+            <p>
+              Messages, mentoring, skill requests, internships, and live
+              sessions—updated in real time.
+            </p>
           </div>
           <div className="notification-summary">
-            <div><strong>{stats.unread}</strong><span>Unread</span></div>
-            <div><strong>{stats.total}</strong><span>Total alerts</span></div>
+            <div>
+              <strong>{stats.unread}</strong>
+              <span>Unread</span>
+            </div>
+            <div>
+              <strong>{stats.total}</strong>
+              <span>Total alerts</span>
+            </div>
           </div>
         </div>
       </section>
@@ -238,7 +254,12 @@ const Notifications = () => {
         <aside className="notification-sidebar">
           <div className="notification-sidebar-heading">
             <h2>Categories</h2>
-            <button type="button" className="icon-button" onClick={() => setSettingsOpen(true)} aria-label="Notification settings">
+            <button
+              type="button"
+              className="icon-button"
+              onClick={() => setSettingsOpen(true)}
+              aria-label="Notification settings"
+            >
               <IoSettingsOutline />
             </button>
           </div>
@@ -265,7 +286,11 @@ const Notifications = () => {
               );
             })}
           </nav>
-          <button type="button" className="clear-read-button" onClick={handleClearRead}>
+          <button
+            type="button"
+            className="clear-read-button"
+            onClick={handleClearRead}
+          >
             <IoTrashOutline /> Clear read alerts
           </button>
         </aside>
@@ -273,8 +298,14 @@ const Notifications = () => {
         <div className="notification-main">
           <header className="notifications-header">
             <div>
-              <h2>{notificationTypes.find((item) => item.value === type)?.label || "All"} notifications</h2>
-              <p>{selectedUnread} unread update{selectedUnread === 1 ? "" : "s"}</p>
+              <h2>
+                {notificationTypes.find((item) => item.value === type)?.label ||
+                  "All"}{" "}
+                notifications
+              </h2>
+              <p>
+                {selectedUnread} unread update{selectedUnread === 1 ? "" : "s"}
+              </p>
             </div>
             <div className="notification-header-actions">
               <label className="unread-toggle">
@@ -288,7 +319,12 @@ const Notifications = () => {
                 />
                 Unread only
               </label>
-              <button className="btn outline small" type="button" onClick={handleMarkAll} disabled={!selectedUnread}>
+              <button
+                className="btn outline small"
+                type="button"
+                onClick={handleMarkAll}
+                disabled={!selectedUnread}
+              >
                 <IoCheckmarkDoneOutline /> Mark all read
               </button>
             </div>
@@ -297,7 +333,9 @@ const Notifications = () => {
           {error && <div className="notifications-error">{error}</div>}
 
           {loading ? (
-            <div className="notifications-empty-state">Loading notifications…</div>
+            <div className="notifications-empty-state">
+              Loading notifications…
+            </div>
           ) : notifications.length === 0 ? (
             <div className="notifications-empty-state">
               <IoNotificationsOutline size={44} />
@@ -315,22 +353,31 @@ const Notifications = () => {
                       className={`notification-card ${notification.isRead ? "read" : "unread"}`}
                       onClick={() => openNotification(notification)}
                     >
-                      <span className={`notification-icon ${notification.type}`}><Icon /></span>
+                      <span
+                        className={`notification-icon ${notification.type}`}
+                      >
+                        <Icon />
+                      </span>
                       <span className="notification-content">
                         <span className="notification-title-line">
                           <strong>{notification.title}</strong>
                           {!notification.isRead && <i>New</i>}
                         </span>
                         <span>{notification.message}</span>
-                        <small>{new Date(notification.createdAt).toLocaleString()}</small>
+                        <small>
+                          {new Date(notification.createdAt).toLocaleString()}
+                        </small>
                       </span>
                       <span
                         role="button"
                         tabIndex={0}
                         className="notification-delete"
-                        onClick={(event) => handleDelete(event, notification.id)}
+                        onClick={(event) =>
+                          handleDelete(event, notification.id)
+                        }
                         onKeyDown={(event) => {
-                          if (event.key === "Enter") handleDelete(event, notification.id);
+                          if (event.key === "Enter")
+                            handleDelete(event, notification.id);
                         }}
                         aria-label="Delete notification"
                       >
@@ -345,9 +392,25 @@ const Notifications = () => {
 
           {pagination.pages > 1 && (
             <div className="notification-pagination">
-              <button type="button" className="btn outline small" disabled={page <= 1} onClick={() => setPage((value) => value - 1)}>Previous</button>
-              <span>Page {pagination.page} of {pagination.pages}</span>
-              <button type="button" className="btn outline small" disabled={page >= pagination.pages} onClick={() => setPage((value) => value + 1)}>Next</button>
+              <button
+                type="button"
+                className="btn outline small"
+                disabled={page <= 1}
+                onClick={() => setPage((value) => value - 1)}
+              >
+                Previous
+              </button>
+              <span>
+                Page {pagination.page} of {pagination.pages}
+              </span>
+              <button
+                type="button"
+                className="btn outline small"
+                disabled={page >= pagination.pages}
+                onClick={() => setPage((value) => value + 1)}
+              >
+                Next
+              </button>
             </div>
           )}
         </div>
@@ -355,16 +418,33 @@ const Notifications = () => {
 
       {settingsOpen && preferences && (
         <div className="notification-settings-backdrop" role="presentation">
-          <aside className="notification-settings-panel" role="dialog" aria-modal="true">
+          <aside
+            className="notification-settings-panel"
+            role="dialog"
+            aria-modal="true"
+          >
             <div className="settings-panel-header">
-              <div><h2>Notification settings</h2><p>Choose which updates you want to receive.</p></div>
-              <button type="button" className="icon-button" onClick={() => setSettingsOpen(false)}><IoCloseOutline /></button>
+              <div>
+                <h2>Notification settings</h2>
+                <p>Choose which updates you want to receive.</p>
+              </div>
+              <button
+                type="button"
+                className="icon-button"
+                onClick={() => setSettingsOpen(false)}
+              >
+                <IoCloseOutline />
+              </button>
             </div>
             <div className="preference-list">
               {preferenceOptions.map(([key, label]) => (
                 <label className="preference-row" key={key}>
                   <span>{label}</span>
-                  <input type="checkbox" checked={preferences[key]} onChange={() => togglePreference(key)} />
+                  <input
+                    type="checkbox"
+                    checked={preferences[key]}
+                    onChange={() => togglePreference(key)}
+                  />
                 </label>
               ))}
             </div>
@@ -377,12 +457,23 @@ const Notifications = () => {
                 className={`btn small ${preferences.pushEnabled ? "outline" : "primary"}`}
                 type="button"
                 onClick={togglePush}
-                disabled={pushBusy || !isFirebaseClientConfigured() || !firebaseServerConfigured}
+                disabled={
+                  pushBusy ||
+                  !isFirebaseClientConfigured() ||
+                  !firebaseServerConfigured
+                }
               >
-                {pushBusy ? "Updating…" : preferences.pushEnabled ? "Disable push" : "Enable push"}
+                {pushBusy
+                  ? "Updating…"
+                  : preferences.pushEnabled
+                    ? "Disable push"
+                    : "Enable push"}
               </button>
               {(!isFirebaseClientConfigured() || !firebaseServerConfigured) && (
-                <small>Add Firebase credentials to the frontend and backend environment files to enable push.</small>
+                <small>
+                  Add Firebase credentials to the frontend and backend
+                  environment files to enable push.
+                </small>
               )}
             </div>
           </aside>

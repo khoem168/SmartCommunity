@@ -45,7 +45,9 @@ const SessionRoom = () => {
       <main className="session-room-state">
         <IoVideocamOutline size={54} />
         <h1>Login to join this session</h1>
-        <Link className="btn primary" to="/login">Login</Link>
+        <Link className="btn primary" to="/login">
+          Login
+        </Link>
       </main>
     );
   }
@@ -54,7 +56,9 @@ const SessionRoom = () => {
     return (
       <main className="session-room-state">
         <IoVideocamOutline size={54} />
-        <h1>{loading ? "Preparing your Jitsi room…" : "Meeting unavailable"}</h1>
+        <h1>
+          {loading ? "Preparing your Jitsi room…" : "Meeting unavailable"}
+        </h1>
         {error && <p>{error}</p>}
         <Link className="btn outline" to={`/sessions/${sessionId}`}>
           <IoArrowBackOutline /> Back to session
@@ -71,10 +75,19 @@ const SessionRoom = () => {
           <span>Jitsi provides video, audio, chat, and screen sharing.</span>
         </div>
         <div>
-          <a className="btn outline small" href={meetingLink} target="_blank" rel="noreferrer">
+          <a
+            className="btn outline small"
+            href={meetingLink}
+            target="_blank"
+            rel="noreferrer"
+          >
             <IoOpenOutline /> Open in new tab
           </a>
-          <Link className="btn primary small" to={`/sessions/${sessionId}`} onClick={saveLeave}>
+          <Link
+            className="btn primary small"
+            to={`/sessions/${sessionId}`}
+            onClick={saveLeave}
+          >
             Leave session
           </Link>
         </div>

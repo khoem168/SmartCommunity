@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { IoChatbubbleEllipsesOutline, IoNotificationsOutline } from "react-icons/io5";
+import {
+  IoChatbubbleEllipsesOutline,
+  IoNotificationsOutline,
+} from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { getSocket } from "../../services/realtimeService";
 import "./RealtimeToastHub.css";
@@ -37,7 +40,10 @@ const RealtimeToastHub = () => {
         userId: user.id,
       };
       setToasts((current) => [...current, nextToast].slice(-MAX_TOASTS));
-      const timer = window.setTimeout(() => removeToast(nextToast.id), TOAST_LIFETIME);
+      const timer = window.setTimeout(
+        () => removeToast(nextToast.id),
+        TOAST_LIFETIME,
+      );
       timers.current.push(timer);
     };
     const handleMessage = (payload = {}) => {
@@ -76,10 +82,16 @@ const RealtimeToastHub = () => {
   if (!user || visibleToasts.length === 0) return null;
 
   return (
-    <div className="realtime-toast-stack" aria-live="polite" aria-atomic="false">
+    <div
+      className="realtime-toast-stack"
+      aria-live="polite"
+      aria-atomic="false"
+    >
       {visibleToasts.map((toast) => {
         const Icon =
-          toast.type === "message" ? IoChatbubbleEllipsesOutline : IoNotificationsOutline;
+          toast.type === "message"
+            ? IoChatbubbleEllipsesOutline
+            : IoNotificationsOutline;
 
         return (
           <section className="realtime-toast" key={toast.id}>

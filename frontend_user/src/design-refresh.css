@@ -1,0 +1,1129 @@
+/*
+ * CodeKhmer-inspired presentation refresh
+ * Visual-only overrides: no routes, data flow, or component behaviour changed.
+ */
+
+:root {
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+  --color-primary-light: #dbeafe;
+  --color-secondary: #0ea5e9;
+  --color-bg: #f6f8fc;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f8fafc;
+  --text-main: #0f172a;
+  --text-body: #334155;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.035);
+  --shadow-sm: 0 6px 20px rgba(15, 23, 42, 0.055);
+  --shadow-md: 0 14px 36px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 24px 58px rgba(15, 23, 42, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --container: 1180px;
+  --presentation-max-width: 1180px;
+  --presentation-card-radius: 16px;
+  --ck-blue: #2563eb;
+  --ck-blue-dark: #1d4ed8;
+  --ck-blue-soft: #eff6ff;
+  --ck-blue-border: #bfdbfe;
+  --ck-canvas: #f6f8fc;
+  --ck-panel: #ffffff;
+  --ck-line: #e2e8f0;
+  --ck-ink: #0f172a;
+  --ck-muted: #64748b;
+}
+
+html {
+  background: var(--ck-canvas);
+}
+
+body {
+  background: var(--ck-canvas);
+  color: var(--text-body);
+}
+
+::selection {
+  background: #bfdbfe;
+  color: #172554;
+}
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.2);
+  outline-offset: 2px;
+}
+
+.container,
+.home-container,
+.site-footer-inner,
+.navbar-inner {
+  width: min(var(--container), calc(100% - 40px));
+}
+
+/* Navigation: compact, quiet, and easy to scan. */
+.navbar {
+  border-bottom-color: rgba(226, 232, 240, 0.92);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px) saturate(1.08);
+  -webkit-backdrop-filter: blur(16px) saturate(1.08);
+}
+
+.navbar::after {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(37, 99, 235, 0.5),
+    transparent
+  );
+}
+
+.navbar.scrolled {
+  border-color: rgba(203, 213, 225, 0.8);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 8px 26px rgba(15, 23, 42, 0.07);
+}
+
+.navbar-inner {
+  min-height: 68px;
+  gap: 18px;
+}
+
+.navbar-logo img {
+  width: 140px;
+}
+
+.nav-content {
+  gap: 12px;
+}
+
+.navlink {
+  gap: 2px;
+}
+
+.navlink a {
+  min-height: 38px;
+  padding-inline: 11px;
+  border-radius: 10px;
+  color: #475569;
+  font-weight: 650;
+}
+
+.navlink a:hover,
+.navlink a.active {
+  background: var(--ck-blue-soft);
+  color: var(--ck-blue-dark);
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+}
+
+.language-switcher {
+  min-height: 42px;
+  grid-template-columns: repeat(2, 54px);
+  border-color: var(--ck-line);
+  border-radius: 12px;
+  background: #f8fafc;
+  box-shadow: none;
+}
+
+.language-switcher button {
+  min-height: 32px;
+  border-radius: 8px;
+}
+
+.language-switcher button:hover,
+.language-switcher button.active {
+  color: var(--ck-blue-dark);
+}
+
+.language-switcher button.active {
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
+}
+
+.nav-signin-button,
+.profile-pill {
+  min-height: 42px;
+  border-color: var(--ck-blue-border);
+  border-radius: 12px;
+  color: var(--ck-blue-dark);
+  box-shadow: none;
+}
+
+.nav-signin-button:hover,
+.profile-pill:hover {
+  border-color: #93c5fd;
+  background: var(--ck-blue-soft);
+  color: var(--ck-blue-dark);
+}
+
+/* Shared controls and forms. */
+.btn,
+.home-btn,
+.learning-button,
+.scroll-popup-button,
+.nav-signin-button {
+  border-radius: 10px;
+  box-shadow: none;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+:where(.btn.primary, .home-btn.primary, .learning-button.primary),
+.auth-submit,
+.search-submit-btn,
+.persona-tab-btn.active,
+.track-card-btn:hover,
+.mentor-book-btn:hover {
+  border-color: var(--ck-blue) !important;
+  background: var(--ck-blue) !important;
+  color: #fff !important;
+  box-shadow: 0 7px 18px rgba(37, 99, 235, 0.18) !important;
+}
+
+:where(.btn.primary, .home-btn.primary, .learning-button.primary):hover,
+.auth-submit:hover,
+.search-submit-btn:hover {
+  border-color: var(--ck-blue-dark) !important;
+  background: var(--ck-blue-dark) !important;
+  box-shadow: 0 9px 22px rgba(37, 99, 235, 0.22) !important;
+  transform: translateY(-1px);
+}
+
+:where(.btn.outline, .btn.secondary, .home-btn.secondary, .home-btn.tertiary) {
+  border-color: #cbd5e1 !important;
+  background: #fff !important;
+  color: #334155 !important;
+  box-shadow: none !important;
+}
+
+:where(.btn.outline, .btn.secondary, .home-btn.secondary, .home-btn.tertiary):hover {
+  border-color: #93c5fd !important;
+  background: var(--ck-blue-soft) !important;
+  color: var(--ck-blue-dark) !important;
+  transform: translateY(-1px);
+}
+
+:where(input, select, textarea) {
+  border-color: #d6dee9;
+  border-radius: 10px;
+  background: #fff;
+}
+
+:where(input, select, textarea):hover {
+  border-color: #b8c5d6;
+}
+
+:where(input, select, textarea):focus {
+  border-color: var(--ck-blue) !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1) !important;
+}
+
+:where(.eyebrow, .section-kicker, .courses-kicker, .dashboard-kicker) {
+  color: var(--ck-blue) !important;
+}
+
+/* Landing page: fewer effects, one palette, clearer hierarchy. */
+.home-page {
+  background: #fff;
+}
+
+.home-hero {
+  padding-block: clamp(64px, 7vw, 88px);
+  border-bottom-color: var(--ck-line);
+  background:
+    radial-gradient(circle at 8% 14%, rgba(219, 234, 254, 0.9), transparent 31%),
+    radial-gradient(circle at 92% 18%, rgba(224, 242, 254, 0.72), transparent 29%),
+    linear-gradient(180deg, #ffffff 0%, #f7faff 100%);
+}
+
+.hero-glow-sphere {
+  opacity: 0.2;
+  filter: blur(100px);
+}
+
+.hero-glow-1,
+.hero-glow-2 {
+  background: rgba(96, 165, 250, 0.25);
+}
+
+.hero-grid {
+  grid-template-columns: minmax(0, 1.08fr) minmax(390px, 0.92fr);
+  gap: clamp(44px, 6vw, 76px);
+}
+
+.hero-copy h1 {
+  max-width: 11ch;
+  margin-bottom: 20px;
+  color: var(--ck-ink);
+  font-size: clamp(2.8rem, 5vw, 4.35rem);
+  line-height: 1.06;
+  letter-spacing: -0.05em;
+}
+
+.hero-line-accent .hero-line-inner {
+  background: linear-gradient(105deg, #1d4ed8 0%, #2563eb 50%, #0284c7 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.hero-copy > p {
+  max-width: 58ch;
+  color: #526176;
+  font-size: 1rem;
+}
+
+.hero-badge-pill {
+  border-color: var(--ck-blue-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--ck-blue-dark);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.06);
+}
+
+.hero-badge-text,
+.trending-tag:hover,
+.text-link,
+.bento-action-link,
+.track-card-btn {
+  color: var(--ck-blue-dark);
+}
+
+.hero-search-bar {
+  border-color: #cbd5e1;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.055);
+}
+
+.hero-search-bar:focus-within {
+  border-color: var(--ck-blue);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+  transform: none;
+}
+
+.search-icon,
+.preview-chip svg,
+.persona-img-overlay-card svg,
+.widget-icon-box,
+.widget-icon-box.flash {
+  color: var(--ck-blue);
+}
+
+.hero-main-img {
+  height: clamp(390px, 36vw, 470px);
+  border: 6px solid #fff;
+  border-radius: 20px;
+  box-shadow: 0 22px 54px rgba(15, 23, 42, 0.14);
+}
+
+.hero-float-widget {
+  border-color: var(--ck-line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.1);
+}
+
+.widget-avatar,
+.mentor-avatar-wrap img {
+  border-color: var(--ck-blue);
+}
+
+.pulse-pill,
+.persona-badge-tag,
+.bento-badge.academy,
+.check-bullet {
+  background: var(--ck-blue-soft);
+  color: var(--ck-blue-dark);
+}
+
+.bar-fill,
+.career-progress-track span,
+.course-progress span,
+.exchange-progress-track span {
+  background: var(--ck-blue) !important;
+}
+
+.stats-strip {
+  gap: 14px;
+  margin-top: -26px;
+}
+
+.stat-card {
+  padding: 18px;
+  border-color: var(--ck-line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card:hover {
+  border-color: var(--ck-blue-border);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.stat-icon-wrapper,
+.stat-card:nth-child(2) .stat-icon-wrapper,
+.stat-card:nth-child(3) .stat-icon-wrapper,
+.stat-card:nth-child(4) .stat-icon-wrapper {
+  border-radius: 10px;
+  background: var(--ck-blue-soft);
+  color: var(--ck-blue);
+}
+
+.home-section {
+  padding-block: clamp(56px, 7vw, 82px);
+}
+
+.persona-section,
+.mentors-spotlight-section,
+.testimonials-section,
+.faq-section {
+  border-color: var(--ck-line);
+  background: #fff;
+}
+
+.ecosystem-section,
+.tracks-section,
+.journey-section {
+  background: var(--ck-canvas);
+}
+
+.section-heading,
+.section-heading-split {
+  margin-bottom: 30px;
+}
+
+.section-heading h2,
+.section-heading-split h2 {
+  color: var(--ck-ink);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.section-kicker {
+  color: var(--ck-blue);
+  letter-spacing: 0.06em;
+}
+
+.persona-tabs-nav {
+  margin-bottom: 28px;
+}
+
+.persona-tab-btn {
+  border-color: var(--ck-line);
+  background: #fff;
+}
+
+.persona-tab-btn:hover {
+  border-color: var(--ck-blue-border);
+  background: var(--ck-blue-soft);
+  color: var(--ck-blue-dark);
+}
+
+.persona-display-card {
+  padding: clamp(24px, 3vw, 38px);
+  border-color: var(--ck-line);
+  border-radius: 18px;
+  background: var(--ck-canvas);
+  box-shadow: var(--shadow-sm);
+}
+
+.persona-img-frame {
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+}
+
+.bento-grid,
+.tracks-grid,
+.mentors-grid,
+.journey-grid,
+.testimonials-grid {
+  gap: 16px;
+}
+
+:where(
+    .bento-card,
+    .track-card,
+    .mentor-card-modern,
+    .journey-step-card,
+    .testimonial-card,
+    .faq-accordion-item
+  ) {
+  border: 1px solid var(--ck-line);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.045);
+}
+
+:where(
+    .bento-card,
+    .track-card,
+    .mentor-card-modern,
+    .journey-step-card,
+    .testimonial-card
+  ):hover {
+  border-color: var(--ck-blue-border);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.075);
+  transform: translateY(-2px);
+}
+
+.bento-card,
+.track-card,
+.journey-step-card {
+  padding: 22px;
+}
+
+.preview-chip,
+.track-tag,
+.mentor-tag {
+  background: #f1f5f9;
+}
+
+.mentor-book-btn {
+  border-color: #cbd5e1;
+  border-radius: 9px;
+}
+
+.step-badge {
+  border-radius: 10px;
+  background: var(--ck-blue);
+}
+
+/* All public module pages use the same light hero and white card language. */
+:where(
+    .courses-page,
+    .career-page,
+    .community-page,
+    .mentorship-page,
+    .jobs-page,
+    .sessions-page,
+    .forum-page,
+    .forum-detail-page,
+    .discover-page,
+    .dashboard-page,
+    .profile-page,
+    .settings-page,
+    .notifications-page,
+    .messages-page,
+    .admin-page,
+    .analytics-page
+  ) {
+  background: var(--ck-canvas) !important;
+}
+
+:where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .dashboard-hero,
+    .admin-hero,
+    .analytics-hero,
+    .page-hero
+  ) {
+  padding-block: clamp(48px, 6vw, 72px) !important;
+  border-bottom: 1px solid var(--ck-line);
+  background:
+    radial-gradient(circle at 8% 10%, rgba(219, 234, 254, 0.82), transparent 28%),
+    radial-gradient(circle at 94% 16%, rgba(224, 242, 254, 0.68), transparent 28%),
+    linear-gradient(180deg, #ffffff 0%, #f7faff 100%) !important;
+  color: var(--ck-ink) !important;
+}
+
+:where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .dashboard-hero,
+    .admin-hero,
+    .analytics-hero,
+    .page-hero
+  )::before,
+:where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .dashboard-hero,
+    .admin-hero,
+    .analytics-hero,
+    .page-hero
+  )::after {
+  opacity: 0.12 !important;
+}
+
+:where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .dashboard-hero,
+    .admin-hero,
+    .analytics-hero,
+    .page-hero
+  ) :where(h1, h2, h3, strong) {
+  color: var(--ck-ink) !important;
+}
+
+:where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .dashboard-hero,
+    .admin-hero,
+    .analytics-hero,
+    .page-hero
+  ) :where(p, span:not(.btn-label)) {
+  color: #5b6b82;
+}
+
+:where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .dashboard-hero,
+    .admin-hero,
+    .analytics-hero,
+    .page-hero
+  ) :where(h1, h2) {
+  font-size: clamp(2.1rem, 4vw, 3.45rem);
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+}
+
+.courses-hero-stat,
+.forum-hero-stat,
+.dashboard-welcome-card,
+.dashboard-profile-card {
+  border: 1px solid var(--ck-line) !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+:where(
+    .courses-library,
+    .career-content,
+    .community-content,
+    .mentorship-content,
+    .jobs-content,
+    .sessions-content,
+    .forum-content,
+    .discover-content,
+    .dashboard-content,
+    .admin-content,
+    .analytics-content
+  ) {
+  gap: clamp(42px, 5vw, 64px);
+}
+
+:where(
+    .section-header,
+    .career-section-header,
+    .community-section-header,
+    .courses-library-header,
+    .dashboard-section-heading,
+    .dashboard-panel-header,
+    .analytics-panel-header
+  ) {
+  margin-bottom: 22px;
+}
+
+:where(
+    .section-header h2,
+    .career-section-header h2,
+    .community-section-header h2,
+    .courses-library-header h2,
+    .dashboard-section-heading h2,
+    .dashboard-panel-header h2,
+    .analytics-panel-header h2
+  ) {
+  color: var(--ck-ink);
+  font-size: clamp(1.45rem, 2.5vw, 2.05rem);
+}
+
+/* One card recipe across all twelve modules. */
+:where(
+    .course-card,
+    .course-detail-card,
+    .career-path-card,
+    .career-article-card,
+    .exchange-card,
+    .skill-match-card,
+    .mentor-card,
+    .mentor-profile-card,
+    .job-card,
+    .internship-card,
+    .session-card,
+    .forum-post-card,
+    .forum-category-card,
+    .forum-detail-card,
+    .forum-answer-card,
+    .forum-comment-section,
+    .discover-card,
+    .discover-profile-card,
+    .request-card,
+    .notification-card,
+    .conversation-card,
+    .message-panel,
+    .dashboard-panel,
+    .dashboard-stat-modern,
+    .dashboard-quick-card,
+    .dashboard-journey-track,
+    .dashboard-next-action-card,
+    .dashboard-insight-card,
+    .active-roadmap-panel,
+    .career-assessment-section,
+    .career-advice-section,
+    .assessment-form,
+    .assessment-result-panel,
+    .career-article-reader,
+    .learning-history-panel,
+    .exchange-progress-panel,
+    .profile-card,
+    .settings-card,
+    .analytics-panel,
+    .analytics-stat,
+    .admin-overview,
+    .admin-content .ant-card
+  ) {
+  border: 1px solid var(--ck-line) !important;
+  border-radius: var(--presentation-card-radius) !important;
+  background-color: #fff !important;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05) !important;
+}
+
+:where(
+    .course-card,
+    .career-path-card,
+    .career-article-card,
+    .exchange-card,
+    .mentor-card,
+    .job-card,
+    .session-card,
+    .forum-post-card,
+    .forum-category-card,
+    .discover-card,
+    .request-card,
+    .notification-card,
+    .conversation-card,
+    .dashboard-stat-modern,
+    .dashboard-quick-card
+  ):hover {
+  border-color: var(--ck-blue-border) !important;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.075) !important;
+  transform: translateY(-2px);
+}
+
+:where(
+    .course-filters,
+    .job-filters,
+    .mentor-filters,
+    .category-filters,
+    .forum-filters,
+    .skill-filter-row
+  ) {
+  border-color: var(--ck-line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: none;
+}
+
+:where(
+    .course-filters,
+    .job-filters,
+    .mentor-filters,
+    .category-filters,
+    .forum-filters,
+    .skill-filter-row
+  ) button {
+  border-radius: 8px;
+}
+
+:where(
+    .course-filters,
+    .job-filters,
+    .mentor-filters,
+    .category-filters,
+    .forum-filters,
+    .skill-filter-row
+  ) button:hover,
+:where(
+    .course-filters,
+    .job-filters,
+    .mentor-filters,
+    .category-filters,
+    .forum-filters,
+    .skill-filter-row
+  ) button.active {
+  border-color: var(--ck-blue-border) !important;
+  background: var(--ck-blue-soft) !important;
+  color: var(--ck-blue-dark) !important;
+}
+
+:where(
+    .course-search,
+    .jobs-search,
+    .mentor-search,
+    .forum-search,
+    .discover-search
+  ) {
+  filter: none;
+}
+
+:where(
+    .course-search input,
+    .jobs-search input,
+    .mentor-search input,
+    .forum-search input,
+    .discover-search input,
+    .career-section-header select
+  ) {
+  border-color: #d6dee9;
+  border-radius: 10px;
+  background: #fff;
+}
+
+/* Authentication and account screens. */
+.auth-page,
+.auth-required-state {
+  background:
+    radial-gradient(circle at 8% 12%, rgba(219, 234, 254, 0.8), transparent 28%),
+    radial-gradient(circle at 92% 84%, rgba(224, 242, 254, 0.68), transparent 30%),
+    var(--ck-canvas) !important;
+}
+
+.auth-card,
+.auth-required-card {
+  border: 1px solid var(--ck-line) !important;
+  border-radius: 18px !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.09) !important;
+}
+
+.auth-card::before {
+  background: var(--ck-blue) !important;
+}
+
+.auth-form label {
+  color: #24324a;
+  font-weight: 650;
+}
+
+.auth-form input,
+.auth-form select,
+.auth-form textarea {
+  min-height: 46px;
+  border-color: #d6dee9;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.auth-link,
+.auth-footer a,
+.auth-dev-link {
+  color: var(--ck-blue-dark);
+}
+
+.step-indicator .step.active,
+.selected-skill,
+.skill-category.active {
+  border-color: var(--ck-blue-border) !important;
+  background: var(--ck-blue-soft) !important;
+  color: var(--ck-blue-dark) !important;
+}
+
+/* Dashboard, analytics, and admin remain information-rich but visually calm. */
+.dashboard-content {
+  margin-top: -22px;
+}
+
+.dashboard-stat-icon,
+.dashboard-event-icon,
+.dashboard-job-icon,
+.notification-icon,
+.admin-report-icon,
+.auth-required-icon,
+.exchange-swap-icon,
+.feature-icon {
+  border-color: var(--ck-blue-border) !important;
+  background: var(--ck-blue-soft) !important;
+  color: var(--ck-blue) !important;
+}
+
+.analytics-stat,
+.dashboard-stat-modern,
+.career-stats article,
+.skill-progress-stats article,
+.internship-stats article {
+  min-height: 112px;
+}
+
+.rate-ring {
+  background: conic-gradient(var(--ck-blue) var(--rate), #e2e8f0 0) !important;
+}
+
+.admin-toolbar,
+.analytics-controls {
+  border-color: var(--ck-line) !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+/* Footer keeps contrast while using the same blue family. */
+.site-footer {
+  border-top: 1px solid #1e3a5f;
+  background: #0b1730 !important;
+}
+
+.site-footer::before,
+.footer-orb {
+  opacity: 0.16;
+}
+
+.footer-column h3,
+.footer-brand-name span,
+.footer-location svg {
+  color: #93c5fd;
+}
+
+.footer-column a:hover,
+.site-footer-bottom a:hover {
+  color: #bfdbfe;
+}
+
+.scroll-up {
+  border-color: var(--ck-blue-border);
+  background: #fff;
+  color: var(--ck-blue);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+}
+
+.scroll-up:hover {
+  border-color: var(--ck-blue);
+  background: var(--ck-blue);
+  color: #fff;
+}
+
+/* Khmer typography needs more vertical room than Latin text. */
+html[lang="km"] :where(h1, h2, h3, h4, h5, h6),
+html[data-language="km"] :where(h1, h2, h3, h4, h5, h6) {
+  line-height: 1.42;
+  letter-spacing: 0;
+}
+
+html[lang="km"] :where(p, li, label, button, a),
+html[data-language="km"] :where(p, li, label, button, a) {
+  line-height: 1.82;
+}
+
+html[lang="km"] :where(.section-kicker, .eyebrow, .courses-kicker),
+html[data-language="km"] :where(.section-kicker, .eyebrow, .courses-kicker) {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+@media (max-width: 1020px) {
+  .hero-grid {
+    grid-template-columns: 1fr 0.9fr;
+    gap: 34px;
+  }
+
+  .navbar-logo img {
+    width: 132px;
+  }
+}
+
+@media (max-width: 900px) {
+  .container,
+  .home-container,
+  .site-footer-inner,
+  .navbar-inner {
+    width: min(100% - 28px, var(--container));
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-copy {
+    max-width: 700px;
+  }
+
+  .hero-copy h1 {
+    max-width: 12ch;
+  }
+
+  .hero-visual-card {
+    max-width: 560px;
+  }
+
+  .stats-strip {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 22px;
+  }
+
+  .nav-content.open {
+    border-color: var(--ck-line);
+    background: rgba(255, 255, 255, 0.99);
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.12);
+  }
+
+  .nav-toggle {
+    border-color: var(--ck-line);
+    border-radius: 10px;
+    background: #fff;
+  }
+}
+
+@media (max-width: 640px) {
+  .container,
+  .home-container,
+  .site-footer-inner,
+  .navbar-inner {
+    width: min(100% - 22px, var(--container));
+  }
+
+  .navbar-inner {
+    min-height: 64px;
+  }
+
+  .navbar-logo img {
+    width: 124px;
+  }
+
+  .home-hero,
+  :where(
+      .courses-hero,
+      .career-hero,
+      .community-hero,
+      .mentorship-hero,
+      .jobs-hero,
+      .sessions-hero,
+      .forum-hero,
+      .discover-hero,
+      .dashboard-hero,
+      .admin-hero,
+      .analytics-hero,
+      .page-hero
+    ) {
+    padding-block: 42px !important;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(2.35rem, 13vw, 3.25rem);
+  }
+
+  .hero-main-img {
+    height: 360px;
+    border-width: 4px;
+  }
+
+  .hero-float-widget {
+    max-width: min(78vw, 250px);
+    padding: 10px 12px;
+  }
+
+  .mentor-widget {
+    left: -4px;
+  }
+
+  .progress-widget {
+    right: -4px;
+  }
+
+  .modules-widget {
+    left: 8px;
+  }
+
+  .stats-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 15px;
+  }
+
+  .home-section {
+    padding-block: 48px;
+  }
+
+  .section-heading-split {
+    align-items: flex-start;
+  }
+
+  .bento-card,
+  .track-card,
+  .journey-step-card {
+    padding: 18px;
+  }
+
+  .course-filters,
+  .job-filters,
+  .mentor-filters,
+  .category-filters,
+  .forum-filters,
+  .skill-filter-row {
+    border-radius: 12px;
+  }
+
+  .auth-card,
+  .auth-required-card {
+    border-radius: 14px !important;
+    box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(
+      .btn,
+      .home-btn,
+      .course-card,
+      .career-path-card,
+      .exchange-card,
+      .mentor-card,
+      .job-card,
+      .session-card,
+      .forum-post-card,
+      .discover-card,
+      .dashboard-stat-modern,
+      .dashboard-quick-card
+    ) {
+    transition: none !important;
+    transform: none !important;
+  }
+}

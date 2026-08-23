@@ -33,7 +33,11 @@ const Login = () => {
 
     setLoading(true);
     try {
-      await loginUser({ email: email.toLowerCase(), password, rememberMe: remember });
+      await loginUser({
+        email: email.toLowerCase(),
+        password,
+        rememberMe: remember,
+      });
       navigate(redirectTo);
     } catch (err) {
       setError(err.message || t("auth.loginError"));
@@ -67,7 +71,10 @@ const Login = () => {
         <form className="auth-form" onSubmit={handleSubmit}>
           {error && <div className="auth-error">{error}</div>}
           {needsVerification && (
-            <Link className="auth-dev-link" to={`/verify-email?email=${encodeURIComponent(email)}`}>
+            <Link
+              className="auth-dev-link"
+              to={`/verify-email?email=${encodeURIComponent(email)}`}
+            >
               {t("auth.resendVerification")}
             </Link>
           )}
@@ -108,12 +115,23 @@ const Login = () => {
             </Link>
           </div>
 
-          <button type="submit" className="btn primary auth-submit" disabled={loading}>
-            {loading ? <ButtonLoader>{t("auth.signingIn")}</ButtonLoader> : t("auth.login")}
+          <button
+            type="submit"
+            className="btn primary auth-submit"
+            disabled={loading}
+          >
+            {loading ? (
+              <ButtonLoader>{t("auth.signingIn")}</ButtonLoader>
+            ) : (
+              t("auth.login")
+            )}
           </button>
 
           <div className="auth-divider">{t("auth.continueWith")}</div>
-          <GoogleLoginButton onCredential={handleGoogleCredential} onError={setError} />
+          <GoogleLoginButton
+            onCredential={handleGoogleCredential}
+            onError={setError}
+          />
 
           <p className="auth-footer">
             {t("auth.noAccount")}{" "}

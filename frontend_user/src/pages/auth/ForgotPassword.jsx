@@ -56,7 +56,11 @@ const ForgotPassword = () => {
             />
           </label>
           <button className="btn primary auth-submit" disabled={loading}>
-            {loading ? <ButtonLoader>{t("auth.creatingLink")}</ButtonLoader> : t("auth.sendReset")}
+            {loading ? (
+              <ButtonLoader>{t("auth.creatingLink")}</ButtonLoader>
+            ) : (
+              t("auth.sendReset")
+            )}
           </button>
           <p className="auth-footer">
             {t("auth.remembered")}{" "}

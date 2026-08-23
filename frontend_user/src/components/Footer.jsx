@@ -45,10 +45,7 @@ const Footer = () => {
   const { t } = useLanguage();
 
   return (
-    <footer
-      className="site-footer site-footer-no-cta"
-      id="site-footer"
-    >
+    <footer className="site-footer site-footer-no-cta" id="site-footer">
       <div className="footer-orb footer-orb-one" aria-hidden="true" />
       <div className="footer-orb footer-orb-two" aria-hidden="true" />
 

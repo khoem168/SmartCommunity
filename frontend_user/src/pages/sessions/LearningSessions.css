@@ -10,7 +10,11 @@
   padding: clamp(66px, 8vw, 104px) 0 clamp(62px, 7vw, 92px);
   background:
     radial-gradient(circle at 8% 12%, rgba(45, 212, 191, 0.2), transparent 25%),
-    radial-gradient(circle at 92% 22%, rgba(37, 99, 235, 0.13), transparent 28%),
+    radial-gradient(
+      circle at 92% 22%,
+      rgba(37, 99, 235, 0.13),
+      transparent 28%
+    ),
     linear-gradient(180deg, #f7fffd 0%, #f7f9fc 100%);
   color: #0f172a;
 }
@@ -194,7 +198,10 @@
   border-radius: 20px;
   background: #fff;
   box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .session-card:hover {

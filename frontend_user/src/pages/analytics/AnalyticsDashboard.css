@@ -6,7 +6,11 @@
 .analytics-hero {
   padding: 58px 0;
   background:
-    radial-gradient(circle at 85% 0%, rgba(59, 130, 246, 0.28), transparent 30%),
+    radial-gradient(
+      circle at 85% 0%,
+      rgba(59, 130, 246, 0.28),
+      transparent 30%
+    ),
     linear-gradient(135deg, #0f172a 0%, #172554 100%);
   color: #fff;
 }
@@ -120,13 +124,40 @@
   font-size: 1.3rem;
 }
 
-.analytics-stat.purple > span { background: #f3e8ff; color: #7c3aed; }
-.analytics-stat.orange > span { background: #ffedd5; color: #c2410c; }
-.analytics-stat.blue > span { background: #dbeafe; color: #2563eb; }
-.analytics-stat.green > span { background: #dcfce7; color: #15803d; }
-.analytics-stat.rose > span { background: #ffe4e6; color: #e11d48; }
-.analytics-stat.cyan > span { background: #cffafe; color: #0e7490; }
-.analytics-stat.indigo > span { background: #e0e7ff; color: #4338ca; }
+.analytics-stat.purple > span {
+  background: #f3e8ff;
+  color: #7c3aed;
+}
+
+.analytics-stat.orange > span {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.analytics-stat.blue > span {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.analytics-stat.green > span {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.analytics-stat.rose > span {
+  background: #ffe4e6;
+  color: #e11d48;
+}
+
+.analytics-stat.cyan > span {
+  background: #cffafe;
+  color: #0e7490;
+}
+
+.analytics-stat.indigo > span {
+  background: #e0e7ff;
+  color: #4338ca;
+}
 
 .analytics-stat div {
   min-width: 0;

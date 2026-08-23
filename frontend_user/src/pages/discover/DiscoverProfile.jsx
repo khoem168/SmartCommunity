@@ -38,7 +38,10 @@ const normalizeMember = (member) => {
     availability: skills.availability || "Flexible schedule",
     teachSkills,
     learnSkills,
-    matchScore: Math.min(98, 72 + teachSkills.length * 4 + learnSkills.length * 3),
+    matchScore: Math.min(
+      98,
+      72 + teachSkills.length * 4 + learnSkills.length * 3,
+    ),
   };
 };
 

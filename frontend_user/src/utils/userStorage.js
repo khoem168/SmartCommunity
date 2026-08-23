@@ -19,7 +19,9 @@ export const loadRegisteredUsers = () => {
 
     const migratedUser = {
       ...currentUser,
-      id: currentUser.id || createUserId(currentUser.email || currentUser.fullName),
+      id:
+        currentUser.id ||
+        createUserId(currentUser.email || currentUser.fullName),
     };
     saveRegisteredUsers([migratedUser]);
     return [migratedUser];
@@ -36,9 +38,13 @@ export const upsertRegisteredUser = (user) => {
   const users = loadRegisteredUsers();
   const userId = user.id || createUserId(user.email || user.fullName);
   const nextUser = { ...user, id: userId };
-  const nextUsers = users.some((item) => item.id === userId || item.email === user.email)
+  const nextUsers = users.some(
+    (item) => item.id === userId || item.email === user.email,
+  )
     ? users.map((item) =>
-        item.id === userId || item.email === user.email ? { ...item, ...nextUser } : item,
+        item.id === userId || item.email === user.email
+          ? { ...item, ...nextUser }
+          : item,
       )
     : [nextUser, ...users];
 

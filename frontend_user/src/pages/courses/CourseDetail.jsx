@@ -53,7 +53,10 @@ const youtubeEmbed = (value) => {
 const countdownValue = (expiresAt) => {
   const remaining = Math.max(0, new Date(expiresAt).getTime() - Date.now());
   const minutes = String(Math.floor(remaining / 60000)).padStart(2, "0");
-  const seconds = String(Math.floor((remaining % 60000) / 1000)).padStart(2, "0");
+  const seconds = String(Math.floor((remaining % 60000) / 1000)).padStart(
+    2,
+    "0",
+  );
   return `${minutes}:${seconds}`;
 };
 
@@ -154,7 +157,9 @@ const CourseDetail = () => {
 
   const beginPayment = async () => {
     if (!user) {
-      navigate(`/login?redirect=${encodeURIComponent(`/courses/${courseSlug}`)}`);
+      navigate(
+        `/login?redirect=${encodeURIComponent(`/courses/${courseSlug}`)}`,
+      );
       return;
     }
     setPaymentState("creating");
@@ -205,13 +210,7 @@ const CourseDetail = () => {
       }
       setPaymentError("Checking payment… " + err.message);
     }
-  }, [
-    clearPolling,
-    loadCourse,
-    paymentId,
-    selectLesson,
-    selectedLessonId,
-  ]);
+  }, [clearPolling, loadCourse, paymentId, selectLesson, selectedLessonId]);
 
   useEffect(() => {
     if (paymentState !== "pending" || !paymentId) return undefined;
@@ -344,11 +343,13 @@ const CourseDetail = () => {
                   onClick={beginPayment}
                   disabled={paymentState === "creating"}
                 >
-                  {paymentState === "creating"
-                    ? <ButtonLoader>Creating KHQR…</ButtonLoader>
-                    : user
-                      ? "Pay with Bakong KHQR"
-                      : "Login to purchase"}
+                  {paymentState === "creating" ? (
+                    <ButtonLoader>Creating KHQR…</ButtonLoader>
+                  ) : user ? (
+                    "Pay with Bakong KHQR"
+                  ) : (
+                    "Login to purchase"
+                  )}
                 </button>
                 <span>
                   <FiShield /> Amount verified by the server
@@ -464,7 +465,9 @@ const CourseDetail = () => {
                   </span>
                   <div>
                     <strong>Lesson PDF resource</strong>
-                    <small>Open or save the study material for offline review.</small>
+                    <small>
+                      Open or save the study material for offline review.
+                    </small>
                   </div>
                   {lesson.pdfUrl ? (
                     <a
@@ -517,14 +520,20 @@ const CourseDetail = () => {
                 <span>KHQR</span>
                 <small>Bakong secure course payment</small>
               </div>
-              <button type="button" onClick={closePayment} aria-label="Close payment">
+              <button
+                type="button"
+                onClick={closePayment}
+                aria-label="Close payment"
+              >
                 <FiX />
               </button>
             </header>
 
             {paymentState === "creating" ? (
               <div className="payment-message">
-                <h2><ButtonLoader>Creating secure KHQR…</ButtonLoader></h2>
+                <h2>
+                  <ButtonLoader>Creating secure KHQR…</ButtonLoader>
+                </h2>
                 <p>The course price is being verified by the server.</p>
               </div>
             ) : paymentState === "success" ? (
@@ -579,7 +588,9 @@ const CourseDetail = () => {
                   Open Bakong or a KHQR-supported bank, scan this code, and
                   confirm the exact amount.
                 </p>
-                {paymentError && <div className="payment-error">{paymentError}</div>}
+                {paymentError && (
+                  <div className="payment-error">{paymentError}</div>
+                )}
                 {paymentState === "expired" ? (
                   <button
                     type="button"

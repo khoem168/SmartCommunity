@@ -54,8 +54,7 @@ const pretty = (value = "") =>
     .replaceAll("_", " ")
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 
-const dateTime = (value) =>
-  value ? new Date(value).toLocaleString() : "—";
+const dateTime = (value) => (value ? new Date(value).toLocaleString() : "—");
 
 const statusColor = (value) =>
   ({
@@ -74,7 +73,10 @@ const StatusTag = ({ value }) => (
   <Tag color={statusColor(value)}>{pretty(value)}</Tag>
 );
 
-const initialCollection = { items: [], pagination: { page: 1, limit: 10, total: 0 } };
+const initialCollection = {
+  items: [],
+  pagination: { page: 1, limit: 10, total: 0 },
+};
 
 const AdminPanel = () => {
   const { user, isLoading } = useGlobleContext();
@@ -87,10 +89,30 @@ const AdminPanel = () => {
   const [companies, setCompanies] = useState(initialCollection);
   const [internships, setInternships] = useState(initialCollection);
   const [audit, setAudit] = useState(initialCollection);
-  const [userFilters, setUserFilters] = useState({ q: "", role: "", status: "", page: 1, limit: 10 });
-  const [mentorFilters, setMentorFilters] = useState({ status: "", page: 1, limit: 10 });
-  const [companyFilters, setCompanyFilters] = useState({ q: "", status: "", page: 1, limit: 10 });
-  const [internshipFilters, setInternshipFilters] = useState({ q: "", status: "", page: 1, limit: 10 });
+  const [userFilters, setUserFilters] = useState({
+    q: "",
+    role: "",
+    status: "",
+    page: 1,
+    limit: 10,
+  });
+  const [mentorFilters, setMentorFilters] = useState({
+    status: "",
+    page: 1,
+    limit: 10,
+  });
+  const [companyFilters, setCompanyFilters] = useState({
+    q: "",
+    status: "",
+    page: 1,
+    limit: 10,
+  });
+  const [internshipFilters, setInternshipFilters] = useState({
+    q: "",
+    status: "",
+    page: 1,
+    limit: 10,
+  });
   const [auditPage, setAuditPage] = useState(1);
   const [editingUser, setEditingUser] = useState(null);
   const [review, setReview] = useState(null);
@@ -117,12 +139,21 @@ const AdminPanel = () => {
         });
       } else if (activeTab === "companies") {
         const result = await fetchAdminCompanies(companyFilters);
-        setCompanies({ items: result.companies, pagination: result.pagination });
+        setCompanies({
+          items: result.companies,
+          pagination: result.pagination,
+        });
       } else if (activeTab === "internships") {
         const result = await fetchAdminInternships(internshipFilters);
-        setInternships({ items: result.internships, pagination: result.pagination });
+        setInternships({
+          items: result.internships,
+          pagination: result.pagination,
+        });
       } else if (activeTab === "audit") {
-        const result = await fetchAdminAuditLogs({ page: auditPage, limit: 15 });
+        const result = await fetchAdminAuditLogs({
+          page: auditPage,
+          limit: 15,
+        });
         setAudit({ items: result.logs, pagination: result.pagination });
       }
     } catch (error) {
@@ -142,7 +173,9 @@ const AdminPanel = () => {
   ]);
 
   useEffect(() => {
-    Promise.resolve().then(loadActiveTab).catch(() => undefined);
+    Promise.resolve()
+      .then(loadActiveTab)
+      .catch(() => undefined);
   }, [loadActiveTab]);
 
   const openUserEditor = (record) => {
@@ -165,7 +198,8 @@ const AdminPanel = () => {
       setEditingUser(null);
       await loadActiveTab();
     } catch (error) {
-      if (!error?.errorFields) messageApi.error(error.message || "Unable to update this user.");
+      if (!error?.errorFields)
+        messageApi.error(error.message || "Unable to update this user.");
     } finally {
       setSaving(false);
     }
@@ -242,37 +276,41 @@ const AdminPanel = () => {
   });
 
   const userColumns = [
-      {
-        title: "User",
-        key: "user",
-        render: (_, record) => (
-          <div className="admin-primary-cell">
-            <strong>{record.fullName}</strong>
-            <small>{record.email}</small>
-          </div>
-        ),
-      },
-      { title: "Role", dataIndex: "role", render: (value) => <Tag>{pretty(value)}</Tag> },
-      {
-        title: "Account",
-        dataIndex: "isActive",
-        render: (value) => <StatusTag value={value ? "active" : "suspended"} />,
-      },
-      {
-        title: "Verified",
-        dataIndex: "isVerified",
-        render: (value) => (value ? <Tag color="green">Yes</Tag> : <Tag>No</Tag>),
-      },
-      { title: "Last login", dataIndex: "lastLogin", render: dateTime },
-      {
-        title: "",
-        key: "action",
-        render: (_, record) => (
-          <Button type="link" onClick={() => openUserEditor(record)}>
-            Manage
-          </Button>
-        ),
-      },
+    {
+      title: "User",
+      key: "user",
+      render: (_, record) => (
+        <div className="admin-primary-cell">
+          <strong>{record.fullName}</strong>
+          <small>{record.email}</small>
+        </div>
+      ),
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+      render: (value) => <Tag>{pretty(value)}</Tag>,
+    },
+    {
+      title: "Account",
+      dataIndex: "isActive",
+      render: (value) => <StatusTag value={value ? "active" : "suspended"} />,
+    },
+    {
+      title: "Verified",
+      dataIndex: "isVerified",
+      render: (value) => (value ? <Tag color="green">Yes</Tag> : <Tag>No</Tag>),
+    },
+    { title: "Last login", dataIndex: "lastLogin", render: dateTime },
+    {
+      title: "",
+      key: "action",
+      render: (_, record) => (
+        <Button type="link" onClick={() => openUserEditor(record)}>
+          Manage
+        </Button>
+      ),
+    },
   ];
 
   const mentorColumns = [
@@ -292,11 +330,17 @@ const AdminPanel = () => {
       render: (_, record) => (
         <div className="admin-primary-cell">
           <strong>{record.professionalTitle}</strong>
-          <small>{record.experienceYears} years · {record.company || "Independent"}</small>
+          <small>
+            {record.experienceYears} years · {record.company || "Independent"}
+          </small>
         </div>
       ),
     },
-    { title: "Status", dataIndex: "status", render: (value) => <StatusTag value={value} /> },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (value) => <StatusTag value={value} />,
+    },
     { title: "Applied", dataIndex: "createdAt", render: dateTime },
     {
       title: "Review",
@@ -331,7 +375,10 @@ const AdminPanel = () => {
       render: (_, record) => (
         <div className="admin-primary-cell">
           <strong>{record.name}</strong>
-          <small>{record.industry || "Industry not set"} · {record.location || "Location not set"}</small>
+          <small>
+            {record.industry || "Industry not set"} ·{" "}
+            {record.location || "Location not set"}
+          </small>
         </div>
       ),
     },
@@ -346,19 +393,34 @@ const AdminPanel = () => {
       ),
     },
     { title: "Postings", dataIndex: "internshipCount" },
-    { title: "Status", dataIndex: "verificationStatus", render: (value) => <StatusTag value={value} /> },
+    {
+      title: "Status",
+      dataIndex: "verificationStatus",
+      render: (value) => <StatusTag value={value} />,
+    },
     {
       title: "Review",
       key: "review",
       render: (_, record) => (
         <Space wrap>
-          <Button size="small" type="primary" onClick={() => openReview("company", record, "verified")}>
+          <Button
+            size="small"
+            type="primary"
+            onClick={() => openReview("company", record, "verified")}
+          >
             Verify
           </Button>
-          <Button size="small" danger onClick={() => openReview("company", record, "rejected")}>
+          <Button
+            size="small"
+            danger
+            onClick={() => openReview("company", record, "rejected")}
+          >
             Reject
           </Button>
-          <Button size="small" onClick={() => openReview("company", record, "pending")}>
+          <Button
+            size="small"
+            onClick={() => openReview("company", record, "pending")}
+          >
             Pending
           </Button>
         </Space>
@@ -373,12 +435,18 @@ const AdminPanel = () => {
       render: (_, record) => (
         <div className="admin-primary-cell">
           <strong>{record.title}</strong>
-          <small>{record.company} · {record.location || "Remote/unspecified"}</small>
+          <small>
+            {record.company} · {record.location || "Remote/unspecified"}
+          </small>
         </div>
       ),
     },
     { title: "Applications", dataIndex: "applicationCount" },
-    { title: "Deadline", dataIndex: "applicationDeadline", render: (value) => value ? new Date(value).toLocaleDateString() : "—" },
+    {
+      title: "Deadline",
+      dataIndex: "applicationDeadline",
+      render: (value) => (value ? new Date(value).toLocaleDateString() : "—"),
+    },
     {
       title: "Status",
       dataIndex: "status",
@@ -386,7 +454,10 @@ const AdminPanel = () => {
         <Select
           value={value}
           style={{ width: 112 }}
-          options={internshipStatuses.map((status) => ({ value: status, label: pretty(status) }))}
+          options={internshipStatuses.map((status) => ({
+            value: status,
+            label: pretty(status),
+          }))}
           onChange={(status) => changeInternshipStatus(record, status)}
         />
       ),
@@ -404,17 +475,22 @@ const AdminPanel = () => {
         </div>
       ),
     },
-    { title: "Action", dataIndex: "action", render: (value) => <Tag color="blue">{pretty(value)}</Tag> },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (value) => <Tag color="blue">{pretty(value)}</Tag>,
+    },
     {
       title: "Target",
       key: "target",
-      render: (_, record) => `${pretty(record.entityType || "system")} ${record.entityId || ""}`,
+      render: (_, record) =>
+        `${pretty(record.entityType || "system")} ${record.entityId || ""}`,
     },
     {
       title: "Details",
       dataIndex: "details",
       ellipsis: true,
-      render: (value) => value ? JSON.stringify(value) : "—",
+      render: (value) => (value ? JSON.stringify(value) : "—"),
     },
     { title: "Time", dataIndex: "createdAt", render: dateTime },
   ];
@@ -424,11 +500,31 @@ const AdminPanel = () => {
       <Row gutter={[16, 16]}>
         {[
           ["Users", dashboard?.summary?.users, <IoPeopleOutline key="users" />],
-          ["Suspended users", dashboard?.summary?.suspendedUsers, <IoShieldCheckmarkOutline key="suspended" />],
-          ["Pending mentors", dashboard?.summary?.pendingMentors, <IoRibbonOutline key="mentors" />],
-          ["Pending companies", dashboard?.summary?.pendingCompanies, <IoBusinessOutline key="companies" />],
-          ["Open internships", dashboard?.summary?.openInternships, <IoDocumentTextOutline key="internships" />],
-          ["Applications", dashboard?.summary?.applications, <IoDocumentTextOutline key="applications" />],
+          [
+            "Suspended users",
+            dashboard?.summary?.suspendedUsers,
+            <IoShieldCheckmarkOutline key="suspended" />,
+          ],
+          [
+            "Pending mentors",
+            dashboard?.summary?.pendingMentors,
+            <IoRibbonOutline key="mentors" />,
+          ],
+          [
+            "Pending companies",
+            dashboard?.summary?.pendingCompanies,
+            <IoBusinessOutline key="companies" />,
+          ],
+          [
+            "Open internships",
+            dashboard?.summary?.openInternships,
+            <IoDocumentTextOutline key="internships" />,
+          ],
+          [
+            "Applications",
+            dashboard?.summary?.applications,
+            <IoDocumentTextOutline key="applications" />,
+          ],
         ].map(([title, value, icon]) => (
           <Col xs={24} sm={12} lg={8} key={title}>
             <Card>
@@ -456,7 +552,9 @@ const AdminPanel = () => {
           allowClear
           placeholder="Search name or email"
           defaultValue={userFilters.q}
-          onSearch={(q) => setUserFilters((current) => ({ ...current, q, page: 1 }))}
+          onSearch={(q) =>
+            setUserFilters((current) => ({ ...current, q, page: 1 }))
+          }
           style={{ maxWidth: 320 }}
         />
         <Select
@@ -464,15 +562,22 @@ const AdminPanel = () => {
           placeholder="All roles"
           value={userFilters.role || undefined}
           options={roles.map((role) => ({ value: role, label: pretty(role) }))}
-          onChange={(role = "") => setUserFilters((current) => ({ ...current, role, page: 1 }))}
+          onChange={(role = "") =>
+            setUserFilters((current) => ({ ...current, role, page: 1 }))
+          }
           style={{ width: 150 }}
         />
         <Select
           allowClear
           placeholder="All accounts"
           value={userFilters.status || undefined}
-          options={["active", "suspended"].map((status) => ({ value: status, label: pretty(status) }))}
-          onChange={(status = "") => setUserFilters((current) => ({ ...current, status, page: 1 }))}
+          options={["active", "suspended"].map((status) => ({
+            value: status,
+            label: pretty(status),
+          }))}
+          onChange={(status = "") =>
+            setUserFilters((current) => ({ ...current, status, page: 1 }))
+          }
           style={{ width: 160 }}
         />
       </div>
@@ -481,7 +586,9 @@ const AdminPanel = () => {
         loading={loading}
         dataSource={users.items}
         columns={userColumns}
-        pagination={pagination(users.pagination, (page) => setUserFilters((current) => ({ ...current, page })))}
+        pagination={pagination(users.pagination, (page) =>
+          setUserFilters((current) => ({ ...current, page })),
+        )}
         scroll={{ x: 850 }}
       />
     </Card>
@@ -492,7 +599,12 @@ const AdminPanel = () => {
       <Row gutter={[14, 14]}>
         {mentorStatuses.map((status) => (
           <Col xs={24} sm={8} key={status}>
-            <Card><Statistic title={pretty(status)} value={mentors.stats?.[status] || 0} /></Card>
+            <Card>
+              <Statistic
+                title={pretty(status)}
+                value={mentors.stats?.[status] || 0}
+              />
+            </Card>
           </Col>
         ))}
       </Row>
@@ -502,8 +614,13 @@ const AdminPanel = () => {
             allowClear
             placeholder="All application statuses"
             value={mentorFilters.status || undefined}
-            options={mentorStatuses.map((status) => ({ value: status, label: pretty(status) }))}
-            onChange={(status = "") => setMentorFilters({ status, page: 1, limit: 10 })}
+            options={mentorStatuses.map((status) => ({
+              value: status,
+              label: pretty(status),
+            }))}
+            onChange={(status = "") =>
+              setMentorFilters({ status, page: 1, limit: 10 })
+            }
             style={{ width: 220 }}
           />
         </div>
@@ -515,13 +632,22 @@ const AdminPanel = () => {
           expandable={{
             expandedRowRender: (record) => (
               <div className="admin-expanded">
-                <p><strong>Expertise:</strong> {record.expertise}</p>
-                <p><strong>Motivation:</strong> {record.motivation}</p>
-                <p><strong>Availability:</strong> {record.availability || "Not specified"}</p>
+                <p>
+                  <strong>Expertise:</strong> {record.expertise}
+                </p>
+                <p>
+                  <strong>Motivation:</strong> {record.motivation}
+                </p>
+                <p>
+                  <strong>Availability:</strong>{" "}
+                  {record.availability || "Not specified"}
+                </p>
               </div>
             ),
           }}
-          pagination={pagination(mentors.pagination, (page) => setMentorFilters((current) => ({ ...current, page })))}
+          pagination={pagination(mentors.pagination, (page) =>
+            setMentorFilters((current) => ({ ...current, page })),
+          )}
           scroll={{ x: 900 }}
         />
       </Card>
@@ -535,15 +661,22 @@ const AdminPanel = () => {
           allowClear
           placeholder="Search companies or owners"
           defaultValue={companyFilters.q}
-          onSearch={(q) => setCompanyFilters((current) => ({ ...current, q, page: 1 }))}
+          onSearch={(q) =>
+            setCompanyFilters((current) => ({ ...current, q, page: 1 }))
+          }
           style={{ maxWidth: 320 }}
         />
         <Select
           allowClear
           placeholder="All verification states"
           value={companyFilters.status || undefined}
-          options={companyStatuses.map((status) => ({ value: status, label: pretty(status) }))}
-          onChange={(status = "") => setCompanyFilters((current) => ({ ...current, status, page: 1 }))}
+          options={companyStatuses.map((status) => ({
+            value: status,
+            label: pretty(status),
+          }))}
+          onChange={(status = "") =>
+            setCompanyFilters((current) => ({ ...current, status, page: 1 }))
+          }
           style={{ width: 210 }}
         />
       </div>
@@ -552,7 +685,9 @@ const AdminPanel = () => {
         loading={loading}
         dataSource={companies.items}
         columns={companyColumns}
-        pagination={pagination(companies.pagination, (page) => setCompanyFilters((current) => ({ ...current, page })))}
+        pagination={pagination(companies.pagination, (page) =>
+          setCompanyFilters((current) => ({ ...current, page })),
+        )}
         scroll={{ x: 950 }}
       />
     </Card>
@@ -565,15 +700,22 @@ const AdminPanel = () => {
           allowClear
           placeholder="Search internships or companies"
           defaultValue={internshipFilters.q}
-          onSearch={(q) => setInternshipFilters((current) => ({ ...current, q, page: 1 }))}
+          onSearch={(q) =>
+            setInternshipFilters((current) => ({ ...current, q, page: 1 }))
+          }
           style={{ maxWidth: 320 }}
         />
         <Select
           allowClear
           placeholder="All posting statuses"
           value={internshipFilters.status || undefined}
-          options={internshipStatuses.map((status) => ({ value: status, label: pretty(status) }))}
-          onChange={(status = "") => setInternshipFilters((current) => ({ ...current, status, page: 1 }))}
+          options={internshipStatuses.map((status) => ({
+            value: status,
+            label: pretty(status),
+          }))}
+          onChange={(status = "") =>
+            setInternshipFilters((current) => ({ ...current, status, page: 1 }))
+          }
           style={{ width: 190 }}
         />
       </div>
@@ -582,7 +724,9 @@ const AdminPanel = () => {
         loading={loading}
         dataSource={internships.items}
         columns={internshipColumns}
-        pagination={pagination(internships.pagination, (page) => setInternshipFilters((current) => ({ ...current, page })))}
+        pagination={pagination(internships.pagination, (page) =>
+          setInternshipFilters((current) => ({ ...current, page })),
+        )}
         scroll={{ x: 760 }}
       />
     </Card>
@@ -591,12 +735,36 @@ const AdminPanel = () => {
   const reports = (
     <div className="admin-report-grid">
       {[
-        ["users", "User accounts", "Roles, verification, activity, and account state."],
-        ["mentors", "Mentor applications", "Review outcomes and professional information."],
-        ["internships", "Internship postings", "Posting details, deadlines, and current status."],
-        ["applications", "Student applications", "Applicants, opportunities, and decisions."],
-        ["companies", "Company profiles", "Owners and company verification results."],
-        ["audit", "Administration audit", "A trace of protected administrative actions."],
+        [
+          "users",
+          "User accounts",
+          "Roles, verification, activity, and account state.",
+        ],
+        [
+          "mentors",
+          "Mentor applications",
+          "Review outcomes and professional information.",
+        ],
+        [
+          "internships",
+          "Internship postings",
+          "Posting details, deadlines, and current status.",
+        ],
+        [
+          "applications",
+          "Student applications",
+          "Applicants, opportunities, and decisions.",
+        ],
+        [
+          "companies",
+          "Company profiles",
+          "Owners and company verification results.",
+        ],
+        [
+          "audit",
+          "Administration audit",
+          "A trace of protected administrative actions.",
+        ],
       ].map(([key, title, description]) => (
         <Card key={key}>
           <IoCloudDownloadOutline className="admin-report-icon" />
@@ -636,14 +804,18 @@ const AdminPanel = () => {
   );
 
   if (isLoading) {
-    return <main className="admin-access-state">Checking administrator access…</main>;
+    return (
+      <main className="admin-access-state">Checking administrator access…</main>
+    );
   }
   if (!user) {
     return (
       <main className="admin-access-state">
         <IoShieldCheckmarkOutline size={58} />
         <h1>Login to open administration</h1>
-        <Link className="btn primary" to="/login">Login</Link>
+        <Link className="btn primary" to="/login">
+          Login
+        </Link>
       </main>
     );
   }
@@ -653,7 +825,9 @@ const AdminPanel = () => {
         <IoShieldCheckmarkOutline size={58} />
         <h1>Administrator access required</h1>
         <p>This workspace can change user and platform records.</p>
-        <Link className="btn outline" to="/dashboard">Back to dashboard</Link>
+        <Link className="btn outline" to="/dashboard">
+          Back to dashboard
+        </Link>
       </main>
     );
   }
@@ -666,9 +840,14 @@ const AdminPanel = () => {
           <div>
             <p className="eyebrow">Administration</p>
             <h1>Platform control center</h1>
-            <p>Manage accounts, approvals, companies, internships, reports, and the administrative audit trail.</p>
+            <p>
+              Manage accounts, approvals, companies, internships, reports, and
+              the administrative audit trail.
+            </p>
           </div>
-          <Link className="btn outline" to="/analytics">Open analytics</Link>
+          <Link className="btn outline" to="/analytics">
+            Open analytics
+          </Link>
         </div>
       </section>
       <section className="section container admin-content">
@@ -679,8 +858,16 @@ const AdminPanel = () => {
             { key: "overview", label: "Overview", children: overview },
             { key: "users", label: "Users", children: userManagement },
             { key: "mentors", label: "Mentors", children: mentorManagement },
-            { key: "companies", label: "Companies", children: companyManagement },
-            { key: "internships", label: "Internships", children: internshipManagement },
+            {
+              key: "companies",
+              label: "Companies",
+              children: companyManagement,
+            },
+            {
+              key: "internships",
+              label: "Internships",
+              children: internshipManagement,
+            },
             { key: "reports", label: "Reports", children: reports },
             { key: "audit", label: "Audit log", children: auditLog },
           ]}
@@ -697,30 +884,54 @@ const AdminPanel = () => {
         destroyOnHidden
       >
         <Form form={userForm} layout="vertical">
-          <Form.Item name="fullName" label="Full name" rules={[{ required: true, min: 2, max: 100 }]}>
+          <Form.Item
+            name="fullName"
+            label="Full name"
+            rules={[{ required: true, min: 2, max: 100 }]}
+          >
             <Input />
           </Form.Item>
           <Form.Item name="role" label="Role" rules={[{ required: true }]}>
-            <Select options={roles.map((role) => ({ value: role, label: pretty(role) }))} />
+            <Select
+              options={roles.map((role) => ({
+                value: role,
+                label: pretty(role),
+              }))}
+            />
           </Form.Item>
           <div className="admin-switch-row">
-            <Form.Item name="isVerified" label="Email verified" valuePropName="checked">
+            <Form.Item
+              name="isVerified"
+              label="Email verified"
+              valuePropName="checked"
+            >
               <Switch />
             </Form.Item>
-            <Form.Item name="isActive" label="Account active" valuePropName="checked">
+            <Form.Item
+              name="isActive"
+              label="Account active"
+              valuePropName="checked"
+            >
               <Switch />
             </Form.Item>
           </div>
           <Form.Item
             noStyle
-            shouldUpdate={(previous, current) => previous.isActive !== current.isActive}
+            shouldUpdate={(previous, current) =>
+              previous.isActive !== current.isActive
+            }
           >
             {({ getFieldValue }) =>
               !getFieldValue("isActive") && (
                 <Form.Item
                   name="suspensionReason"
                   label="Suspension reason"
-                  rules={[{ required: true, message: "Explain why this account is suspended." }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Explain why this account is suspended.",
+                    },
+                  ]}
                 >
                   <Input.TextArea rows={3} maxLength={500} showCount />
                 </Form.Item>
@@ -741,7 +952,8 @@ const AdminPanel = () => {
         destroyOnHidden
       >
         <p>
-          Confirm <strong>{review?.status}</strong> for <strong>{review?.name}</strong>.
+          Confirm <strong>{review?.status}</strong> for{" "}
+          <strong>{review?.name}</strong>.
         </p>
         {review?.status === "rejected" && (
           <Input.TextArea

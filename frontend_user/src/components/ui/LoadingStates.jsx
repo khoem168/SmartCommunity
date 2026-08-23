@@ -12,7 +12,10 @@ export const ButtonLoader = ({ children }) => (
 );
 
 export const CardSkeleton = ({ variant = "card" }) => (
-  <article className={`skeleton-card skeleton-card-${variant}`} aria-hidden="true">
+  <article
+    className={`skeleton-card skeleton-card-${variant}`}
+    aria-hidden="true"
+  >
     {variant === "course" && (
       <>
         {line("skeleton-media")}
@@ -167,7 +170,11 @@ export const SkeletonGrid = ({
   className = "skeleton-grid",
   label = "Loading content",
 }) => (
-  <div className={`${className} skeleton-grid-wrap`} aria-label={label} aria-busy="true">
+  <div
+    className={`${className} skeleton-grid-wrap`}
+    aria-label={label}
+    aria-busy="true"
+  >
     {Array.from({ length: count }, (_, index) => (
       <CardSkeleton key={`${variant}-${index}`} variant={variant} />
     ))}

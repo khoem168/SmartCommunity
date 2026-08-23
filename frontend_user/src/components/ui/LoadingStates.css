@@ -11,7 +11,7 @@
   border: 2px solid currentColor;
   border-top-color: transparent;
   border-radius: 999px;
-  animation: button-spin 0.75s linear infinite;
+  animation: button-spin 0.9s linear infinite;
 }
 
 .skeleton-grid-wrap {
@@ -26,7 +26,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.055);
 }
 
 .skeleton-card-course {
@@ -44,17 +44,16 @@
   overflow: hidden;
   min-width: 1rem;
   border-radius: 999px;
-  background:
-    linear-gradient(
-      105deg,
-      rgba(226, 232, 240, 0.9) 0%,
-      rgba(241, 245, 249, 0.9) 38%,
-      rgba(255, 255, 255, 0.95) 50%,
-      rgba(241, 245, 249, 0.9) 62%,
-      rgba(226, 232, 240, 0.9) 100%
-    );
+  background: linear-gradient(
+    105deg,
+    rgba(226, 232, 240, 0.78) 0%,
+    rgba(241, 245, 249, 0.84) 38%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(241, 245, 249, 0.84) 62%,
+    rgba(226, 232, 240, 0.78) 100%
+  );
   background-size: 220% 100%;
-  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  animation: skeleton-shimmer 1.85s ease-in-out infinite;
 }
 
 .skeleton-media {

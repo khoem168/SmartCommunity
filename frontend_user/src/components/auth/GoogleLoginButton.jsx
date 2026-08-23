@@ -38,7 +38,8 @@ const GoogleLoginButton = ({ onCredential, onError }) => {
     const existingScript = document.getElementById(SCRIPT_ID);
     if (existingScript) {
       if (window.google?.accounts?.id) renderButton();
-      else existingScript.addEventListener("load", renderButton, { once: true });
+      else
+        existingScript.addEventListener("load", renderButton, { once: true });
       return undefined;
     }
 

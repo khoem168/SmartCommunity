@@ -19,10 +19,10 @@ const firebaseConfig = {
 export const isFirebaseClientConfigured = () =>
   Boolean(
     firebaseConfig.apiKey &&
-      firebaseConfig.projectId &&
-      firebaseConfig.messagingSenderId &&
-      firebaseConfig.appId &&
-      import.meta.env.VITE_FIREBASE_VAPID_KEY,
+    firebaseConfig.projectId &&
+    firebaseConfig.messagingSenderId &&
+    firebaseConfig.appId &&
+    import.meta.env.VITE_FIREBASE_VAPID_KEY,
   );
 
 const getFirebaseMessaging = async () => {
@@ -30,7 +30,9 @@ const getFirebaseMessaging = async () => {
     throw new Error("Firebase browser configuration has not been added yet.");
   }
   if (!(await isSupported())) {
-    throw new Error("Firebase notifications are not supported in this browser.");
+    throw new Error(
+      "Firebase notifications are not supported in this browser.",
+    );
   }
   const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   return getMessaging(app);
@@ -58,7 +60,9 @@ export const enableFirebasePush = async () => {
 };
 
 export const getStoredFirebaseToken = () =>
-  typeof window === "undefined" ? "" : window.localStorage.getItem(TOKEN_KEY) || "";
+  typeof window === "undefined"
+    ? ""
+    : window.localStorage.getItem(TOKEN_KEY) || "";
 
 export const clearStoredFirebaseToken = () => {
   if (typeof window !== "undefined") window.localStorage.removeItem(TOKEN_KEY);

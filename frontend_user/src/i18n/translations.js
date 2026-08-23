@@ -126,8 +126,7 @@ export const translations = {
       internships: "Internships",
       discoverMembers: "Discover members",
       messages: "Messages",
-      copyright:
-        "Smart Community Skill & Career Development Platform",
+      copyright: "Smart Community Skill & Career Development Platform",
       closing: "Learning · Connection · Career growth",
       githubLabel: "View project on GitHub",
     },
@@ -142,7 +141,8 @@ export const translations = {
       startFree: "Start learning free",
       exploreInternships: "Explore internships & jobs",
       exploreRoadmap: "Explore career roadmap",
-      searchPlaceholder: "What do you want to learn? (e.g. React, UI/UX, Python, Cloud)...",
+      searchPlaceholder:
+        "What do you want to learn? (e.g. React, UI/UX, Python, Cloud)...",
       searchButton: "Search",
       trendingSearches: "Popular searches:",
       tagReact: "React & Next.js",
@@ -158,7 +158,8 @@ export const translations = {
       verifiedOpportunities: "Verified job & internship matching",
       khqrSecure: "Instant Bakong KHQR checkout",
 
-      heroImageAlt: "Students and professionals collaborating in modern tech ecosystem",
+      heroImageAlt:
+        "Students and professionals collaborating in modern tech ecosystem",
       modulesStrong: "12 integrated modules",
       modulesText: "working seamlessly in one unified platform",
       liveProgress: "Live career progress",
@@ -182,78 +183,104 @@ export const translations = {
       // Persona Switcher
       personaKicker: "Tailored to your goal",
       personaTitle: "Choose your path on Smart Community",
-      personaSubtitle: "Whether you are taking your first steps into tech or hiring top talent, our platform adapts to your journey.",
+      personaSubtitle:
+        "Whether you are taking your first steps into tech or hiring top talent, our platform adapts to your journey.",
       personaTabStudent: "🎓 Student & Beginner",
       personaTabSwitcher: "🚀 Career Switcher",
       personaTabSeeker: "💼 Job & Internship Seeker",
       personaTabMentor: "🌟 Mentor & Expert",
 
       personaStudentTitle: "Build strong foundations and learn by doing",
-      personaStudentDesc: "Access bite-sized practical courses with free lesson previews, swap skills with peers at zero cost, and build real portfolio projects.",
-      personaStudentPoint1: "Free lesson previews on all courses before enrolling",
-      personaStudentPoint2: "Peer skill exchange for practice and reciprocal learning",
-      personaStudentPoint3: "Earn verified certificates and showcase portfolio work",
+      personaStudentDesc:
+        "Access bite-sized practical courses with free lesson previews, swap skills with peers at zero cost, and build real portfolio projects.",
+      personaStudentPoint1:
+        "Free lesson previews on all courses before enrolling",
+      personaStudentPoint2:
+        "Peer skill exchange for practice and reciprocal learning",
+      personaStudentPoint3:
+        "Earn verified certificates and showcase portfolio work",
       personaStudentCta: "Start as a Student",
 
       personaSwitcherTitle: "Transition smoothly into high-demand tech roles",
-      personaSwitcherDesc: "Get direct 1-on-1 mentorship from senior practitioners who guide your roadmap, review your code, and prepare you for interviews.",
-      personaSwitcherPoint1: "Personalized career roadmap and skill gap analysis",
-      personaSwitcherPoint2: "Weekly 1:1 sessions with industry architects and leads",
-      personaSwitcherPoint3: "Real-world capstone projects evaluated by experts",
+      personaSwitcherDesc:
+        "Get direct 1-on-1 mentorship from senior practitioners who guide your roadmap, review your code, and prepare you for interviews.",
+      personaSwitcherPoint1:
+        "Personalized career roadmap and skill gap analysis",
+      personaSwitcherPoint2:
+        "Weekly 1:1 sessions with industry architects and leads",
+      personaSwitcherPoint3:
+        "Real-world capstone projects evaluated by experts",
       personaSwitcherCta: "Find a Mentor",
 
       personaSeekerTitle: "Fast-track your path to verified jobs & internships",
-      personaSeekerDesc: "Connect directly with verified recruiters and companies looking for talent in Cambodia and regionally.",
-      personaSeekerPoint1: "Direct applications with automated CV profile matching",
-      personaSeekerPoint2: "Verified internships with stipend & career mentorship",
+      personaSeekerDesc:
+        "Connect directly with verified recruiters and companies looking for talent in Cambodia and regionally.",
+      personaSeekerPoint1:
+        "Direct applications with automated CV profile matching",
+      personaSeekerPoint2:
+        "Verified internships with stipend & career mentorship",
       personaSeekerPoint3: "Mock interview practice and live session rooms",
       personaSeekerCta: "Explore Openings",
 
-      personaMentorTitle: "Share knowledge, build your brand, and mentor talent",
-      personaMentorDesc: "Host live learning sessions, create premium courses with KHQR monetization, and help shape the next generation of builders.",
-      personaMentorPoint1: "Monetize courses with secure Bakong KHQR instant payouts",
+      personaMentorTitle:
+        "Share knowledge, build your brand, and mentor talent",
+      personaMentorDesc:
+        "Host live learning sessions, create premium courses with KHQR monetization, and help shape the next generation of builders.",
+      personaMentorPoint1:
+        "Monetize courses with secure Bakong KHQR instant payouts",
       personaMentorPoint2: "Set your own schedule for 1:1 coaching sessions",
-      personaMentorPoint3: "Gain verified mentor badge and community recognition",
+      personaMentorPoint3:
+        "Gain verified mentor badge and community recognition",
       personaMentorCta: "Become a Mentor",
 
       // Core Pillars Bento
       toolsKicker: "Core Ecosystem",
       toolsTitle: "Everything you need to accelerate your career",
-      toolsSubtitle: "Four interconnected pillars designed to take you from foundational learning to professional mastery.",
+      toolsSubtitle:
+        "Four interconnected pillars designed to take you from foundational learning to professional mastery.",
 
       featureCommunityTitle: "Community learning",
-      featureCommunityDesc: "Learn with peers, ask questions, and build useful connections around shared goals.",
+      featureCommunityDesc:
+        "Learn with peers, ask questions, and build useful connections around shared goals.",
       featureExchangeTitle: "Skill exchange",
-      featureExchangeDesc: "Offer what you know, request help where you need it, and grow through practical exchange.",
+      featureExchangeDesc:
+        "Offer what you know, request help where you need it, and grow through practical exchange.",
       featureCoursesTitle: "Guided courses",
-      featureCoursesDesc: "Follow focused learning paths for technical, creative, and career-ready skills.",
+      featureCoursesDesc:
+        "Follow focused learning paths for technical, creative, and career-ready skills.",
       featureCareerTitle: "Career support",
-      featureCareerDesc: "Find internships, job opportunities, and mentor advice aligned with your profile.",
+      featureCareerDesc:
+        "Find internships, job opportunities, and mentor advice aligned with your profile.",
 
       pillarCoursesBadge: "Practical Academy",
       pillarCoursesTitle: "Smart Academy & Video Courses",
-      pillarCoursesDesc: "Bite-sized modules with downloadable PDF guides, video lessons, interactive coding challenges, and Bakong KHQR unlocking.",
+      pillarCoursesDesc:
+        "Bite-sized modules with downloadable PDF guides, video lessons, interactive coding challenges, and Bakong KHQR unlocking.",
       pillarCoursesAction: "Explore Courses",
 
       pillarMentorsBadge: "1:1 Coaching",
       pillarMentorsTitle: "Verified Industry Mentorship",
-      pillarMentorsDesc: "Book live 1:1 sessions with experienced tech leads, engineers, and designers for code reviews, portfolio feedback, and career guidance.",
+      pillarMentorsDesc:
+        "Book live 1:1 sessions with experienced tech leads, engineers, and designers for code reviews, portfolio feedback, and career guidance.",
       pillarMentorsAction: "Meet Mentors",
 
       pillarExchangeBadge: "Peer Learning",
       pillarExchangeTitle: "Collaborative Skill Exchange",
-      pillarExchangeDesc: "Teach what you know, learn what you need. Exchange Python coding for UI/UX design or English coaching without spending a single dollar.",
+      pillarExchangeDesc:
+        "Teach what you know, learn what you need. Exchange Python coding for UI/UX design or English coaching without spending a single dollar.",
       pillarExchangeAction: "Join Skill Exchange",
 
       pillarJobsBadge: "Verified Careers",
       pillarJobsTitle: "Internships & Career Opportunities",
-      pillarJobsDesc: "Curated job board with direct company contacts, internship trackings, fast application reviews, and career roadmap benchmarks.",
+      pillarJobsDesc:
+        "Curated job board with direct company contacts, internship trackings, fast application reviews, and career roadmap benchmarks.",
       pillarJobsAction: "Browse Jobs",
 
       // Tracks Section
       tracksKicker: "In-Demand Skills",
       tracksTitle: "Explore High-Growth Career Tracks",
-      tracksSubtitle: "Curated roadmaps aligned with current market demand in Cambodia and Southeast Asia.",
+      tracksSubtitle:
+        "Curated roadmaps aligned with current market demand in Cambodia and Southeast Asia.",
       allTracks: "All Specializations",
       trackCoursesCount: "{count} Courses",
       trackJobsCount: "{count} Openings",
@@ -262,12 +289,14 @@ export const translations = {
       // Mentors Spotlight
       mentorshipKicker: "Mentorship",
       mentorshipTitle: "Get guidance from people who understand the path",
-      mentorshipDesc: "Book sessions, review mentor profiles, and turn broad career goals into clear next steps with support from experienced professionals.",
+      mentorshipDesc:
+        "Book sessions, review mentor profiles, and turn broad career goals into clear next steps with support from experienced professionals.",
       meetMentors: "Meet mentors",
       mentorImageAlt: "Mentor guiding a learner during a session",
       featuredMentorsKicker: "Industry Leaders",
       featuredMentorsTitle: "Learn directly from proven practitioners",
-      featuredMentorsDesc: "Our mentors work at leading tech companies, banking institutions, and innovative design studios.",
+      featuredMentorsDesc:
+        "Our mentors work at leading tech companies, banking institutions, and innovative design studios.",
       viewAllMentors: "View All 150+ Mentors",
       bookSessionBtn: "Book Session",
       mentorExperience: "{years} yrs exp",
@@ -288,17 +317,24 @@ export const translations = {
       // Journey Steps
       howItWorks: "How it works",
       pathTitle: "A clear path from learning to career action",
-      stepOne: "Create your profile and highlight the skills you want to build.",
-      stepTwo: "Join courses, exchange sessions, or mentorship that matches your goal.",
-      stepThree: "Apply your progress to internships, jobs, and community projects.",
+      stepOne:
+        "Create your profile and highlight the skills you want to build.",
+      stepTwo:
+        "Join courses, exchange sessions, or mentorship that matches your goal.",
+      stepThree:
+        "Apply your progress to internships, jobs, and community projects.",
       step1Title: "1. Assess & Benchmark",
-      step1Desc: "Map your current skills against industry benchmarks and discover exact gaps to target.",
+      step1Desc:
+        "Map your current skills against industry benchmarks and discover exact gaps to target.",
       step2Title: "2. Learn & Build",
-      step2Desc: "Follow structured video courses and build hands-on projects alongside peer study groups.",
+      step2Desc:
+        "Follow structured video courses and build hands-on projects alongside peer study groups.",
       step3Title: "3. 1:1 Mentorship",
-      step3Desc: "Get your projects, resume, and interview prep reviewed one-on-one by industry veterans.",
+      step3Desc:
+        "Get your projects, resume, and interview prep reviewed one-on-one by industry veterans.",
       step4Title: "4. Apply & Get Hired",
-      step4Desc: "Directly apply for verified internships and jobs with hiring partners eager for your profile.",
+      step4Desc:
+        "Directly apply for verified internships and jobs with hiring partners eager for your profile.",
 
       careerImageAlt: "Team discussing career project work",
       popularCategories: "Popular categories",
@@ -312,29 +348,38 @@ export const translations = {
       // Testimonials / Social Proof
       storiesKicker: "Learner Stories",
       storiesTitle: "Real stories from our thriving community",
-      storiesSubtitle: "See how students, developers, and designers accelerated their careers through Smart Community.",
-      story1Quote: "Smart Community completely changed my career trajectory. I went from knowing basic HTML to landing a Junior Frontend Developer role in 4 months thanks to my mentor's weekly code reviews!",
+      storiesSubtitle:
+        "See how students, developers, and designers accelerated their careers through Smart Community.",
+      story1Quote:
+        "Smart Community completely changed my career trajectory. I went from knowing basic HTML to landing a Junior Frontend Developer role in 4 months thanks to my mentor's weekly code reviews!",
       story1Author: "Dara Sovann",
       story1Role: "Frontend Developer at Fintech Startup",
-      story2Quote: "The skill exchange module is pure magic. I taught Python automation to a teammate and in return they coached me on Figma UI design. It felt like having a superpower!",
+      story2Quote:
+        "The skill exchange module is pure magic. I taught Python automation to a teammate and in return they coached me on Figma UI design. It felt like having a superpower!",
       story2Author: "Sreypov Kim",
       story2Role: "Product Designer & Community Leader",
-      story3Quote: "The Bakong KHQR checkout made taking full courses so effortless. The curriculum is super practical and focused on things Cambodian companies actually look for.",
+      story3Quote:
+        "The Bakong KHQR checkout made taking full courses so effortless. The curriculum is super practical and focused on things Cambodian companies actually look for.",
       story3Author: "Vannak Meas",
       story3Role: "Fullstack Engineer Intern",
 
       // FAQ
       faqKicker: "Got questions?",
       faqTitle: "Frequently Asked Questions",
-      faqSubtitle: "Find quick answers to common questions about our platform, mentorship, courses, and payments.",
+      faqSubtitle:
+        "Find quick answers to common questions about our platform, mentorship, courses, and payments.",
       faq1Q: "Is it completely free to join and start learning?",
-      faq1A: "Yes! Creating an account, joining the community forum, and participating in peer skill exchanges is 100% free. Plus, every course on Smart Academy allows you to preview the first lesson for free before deciding to enroll.",
+      faq1A:
+        "Yes! Creating an account, joining the community forum, and participating in peer skill exchanges is 100% free. Plus, every course on Smart Academy allows you to preview the first lesson for free before deciding to enroll.",
       faq2Q: "How does the Bakong KHQR payment system work for courses?",
-      faq2A: "When you choose to unlock a premium course or book a paid mentor session, you can simply scan the official Bakong KHQR code using any Cambodian mobile banking app (ABA, Wing, ACLEDA, etc.). Access is granted instantly.",
+      faq2A:
+        "When you choose to unlock a premium course or book a paid mentor session, you can simply scan the official Bakong KHQR code using any Cambodian mobile banking app (ABA, Wing, ACLEDA, etc.). Access is granted instantly.",
       faq3Q: "How does the Peer Skill Exchange work?",
-      faq3A: "Skill Exchange is a barter system for knowledge. If you know JavaScript or Graphic Design, you can offer it and request help with Python, English, or Marketing. Once both parties agree, you can collaborate in our live session rooms.",
+      faq3A:
+        "Skill Exchange is a barter system for knowledge. If you know JavaScript or Graphic Design, you can offer it and request help with Python, English, or Marketing. Once both parties agree, you can collaborate in our live session rooms.",
       faq4Q: "How are mentors vetted on the platform?",
-      faq4A: "All mentors go through a verification process where their professional experience, past projects, and references are reviewed by our team before they receive the Verified Mentor badge.",
+      faq4A:
+        "All mentors go through a verification process where their professional experience, past projects, and references are reviewed by our team before they receive the Verified Mentor badge.",
 
       // Final CTA
       nextStep: "Your next step",
@@ -343,7 +388,8 @@ export const translations = {
       createAccount: "Create free account",
       ctaKicker: "Ready to take the leap?",
       ctaTitle: "Start your journey toward a high-impact career today",
-      ctaDesc: "Join thousands of ambitious learners, mentors, and employers building the future of skills in Cambodia.",
+      ctaDesc:
+        "Join thousands of ambitious learners, mentors, and employers building the future of skills in Cambodia.",
       ctaPrimary: "Join Community Free",
       ctaSecondary: "Browse Available Jobs",
       ctaCommunityCount: "Join 2,400+ members already growing their careers",
@@ -434,7 +480,8 @@ export const translations = {
       review: "Review",
       submitReview: "Submit review",
       myBookings: "My mentorship bookings",
-      bookingsDescription: "Manage approvals, meetings, completion, and reviews.",
+      bookingsDescription:
+        "Manage approvals, meetings, completion, and reviews.",
       verifiedMentors: "Verified mentors",
       searchDescription: "Search by name, career field, or mentoring skill.",
       mentorCount: "{count} mentors",
@@ -610,11 +657,9 @@ export const translations = {
       startLearning: "Start learning",
       startLearningDesc: "Browse guided courses and continue your progress.",
       findMentor: "Find a mentor",
-      findMentorDesc:
-        "Connect with people who understand your career path.",
+      findMentorDesc: "Connect with people who understand your career path.",
       exchangeSkills: "Exchange skills",
-      exchangeSkillsDesc:
-        "Share what you know and learn from the community.",
+      exchangeSkillsDesc: "Share what you know and learn from the community.",
       exploreInternships: "Explore internships",
       exploreInternshipsDesc:
         "Discover opportunities that match your direction.",
@@ -650,8 +695,7 @@ export const translations = {
       viewJobs: "View jobs",
       match: "{percent}% match",
       weeklyInsight: "Weekly insight",
-      weeklyMessage:
-        "One completed lesson today keeps your momentum visible.",
+      weeklyMessage: "One completed lesson today keeps your momentum visible.",
       unread: "{count} unread",
       certificates: "{count} certificates",
     },
@@ -744,11 +788,9 @@ export const translations = {
       alreadyAccount: "Already have an account?",
       selectCategory: "Select category",
       addCustomSkill: "Add custom skill",
-      noSkills:
-        "No skills added yet. Add your first skill above!",
+      noSkills: "No skills added yet. Add your first skill above!",
       chooseCategory: "Select a category to choose related skills.",
-      validationRequired:
-        "Please complete all required fields in step 1.",
+      validationRequired: "Please complete all required fields in step 1.",
       validationPasswordLength: "Password must be at least 8 characters.",
       validationPasswordStrength:
         "Password must include uppercase, lowercase, and a number.",
@@ -756,8 +798,7 @@ export const translations = {
         "Please provide a job title for the role you are posting.",
       validationCandidateSkills:
         "Please select the skills you are looking for in candidates.",
-      validationSkills:
-        "Please choose at least one skill to teach or learn.",
+      validationSkills: "Please choose at least one skill to teach or learn.",
       validationCompany: "Please enter your company or organization.",
       validationJobDescription:
         "Please add a short description of the role you are hiring for.",
@@ -923,7 +964,8 @@ export const translations = {
     },
     home: {
       eyebrow: "សហគមន៍តែមួយ សម្រាប់គ្រប់ជំហានអាជីព",
-      heroBadge: "✨ ប្រព័ន្ធអភិវឌ្ឍន៍ជំនាញ និងអាជីពជំនាន់ថ្មី • សមាជិកសកម្ម ២,៤០០+ នាក់",
+      heroBadge:
+        "✨ ប្រព័ន្ធអភិវឌ្ឍន៍ជំនាញ និងអាជីពជំនាន់ថ្មី • សមាជិកសកម្ម ២,៤០០+ នាក់",
       heroTitle: "កសាងជំនាញអនុវត្តជាក់ស្តែង",
       heroAccent: "ចាប់ផ្តើមការងារក្នុងក្តីស្រមៃ",
       heroDescription:
@@ -932,7 +974,8 @@ export const translations = {
       startFree: "ចាប់ផ្ដើមរៀនឥតគិតថ្លៃ",
       exploreInternships: "ស្វែងរកការងារ & ហាត់ការ",
       exploreRoadmap: "មើលផែនទីបង្ហាញផ្លូវអាជីព",
-      searchPlaceholder: "តើអ្នកចង់រៀនអ្វី? (ឧ. React, UI/UX, Python, Cloud)...",
+      searchPlaceholder:
+        "តើអ្នកចង់រៀនអ្វី? (ឧ. React, UI/UX, Python, Cloud)...",
       searchButton: "ស្វែងរក",
       trendingSearches: "ការស្វែងរកពេញនិយម៖",
       tagReact: "React & Next.js",
@@ -948,7 +991,8 @@ export const translations = {
       verifiedOpportunities: "ឱកាសការងារ & ហាត់ការដែលបានផ្ទៀងផ្ទាត់",
       khqrSecure: "ទូទាត់រហ័សតាម Bakong KHQR",
 
-      heroImageAlt: "សិស្សនិស្សិត និងអ្នកជំនាញកំពុងសហការគ្នាក្នុងប្រព័ន្ធបច្ចេកវិទ្យា",
+      heroImageAlt:
+        "សិស្សនិស្សិត និងអ្នកជំនាញកំពុងសហការគ្នាក្នុងប្រព័ន្ធបច្ចេកវិទ្យា",
       modulesStrong: "ម៉ូឌុលចំនួន ១២",
       modulesText: "ដំណើរការរួមគ្នាយ៉ាងរលូនក្នុងប្រព័ន្ធតែមួយ",
       liveProgress: "វឌ្ឍនភាពអាជីពផ្ទាល់",
@@ -972,78 +1016,102 @@ export const translations = {
       // Persona Switcher
       personaKicker: "តម្រូវតាមគោលដៅរបស់អ្នក",
       personaTitle: "ជ្រើសរើសផ្លូវរបស់អ្នកនៅលើ Smart Community",
-      personaSubtitle: "ទោះបីជាអ្នកទើបតែចាប់ផ្តើម ឬជាអ្នកចង់ផ្លាស់ប្តូរអាជីព ប្រព័ន្ធរបស់យើងរៀបចំយ៉ាងសមស្របសម្រាប់អ្នក។",
+      personaSubtitle:
+        "ទោះបីជាអ្នកទើបតែចាប់ផ្តើម ឬជាអ្នកចង់ផ្លាស់ប្តូរអាជីព ប្រព័ន្ធរបស់យើងរៀបចំយ៉ាងសមស្របសម្រាប់អ្នក។",
       personaTabStudent: "🎓 សិស្ស & អ្នកចាប់ផ្តើម",
       personaTabSwitcher: "🚀 អ្នកប្តូរអាជីព",
       personaTabSeeker: "💼 អ្នកស្វែងរកការងារ",
       personaTabMentor: "🌟 អ្នកណែនាំ & អ្នកជំនាញ",
 
       personaStudentTitle: "កសាងគ្រឹះរឹងមាំ និងរៀនតាមរយៈការអនុវត្តជាក់ស្តែង",
-      personaStudentDesc: "ចូលរៀនវគ្គសិក្សាដែលមានការអនុវត្តជាក់ស្តែង មើលមេរៀនដំបូងឥតគិតថ្លៃ ប្តូរជំនាញជាមួយមិត្តភក្តិ និងបង្កើតគម្រោងស្នាដៃពិតប្រាកដ។",
+      personaStudentDesc:
+        "ចូលរៀនវគ្គសិក្សាដែលមានការអនុវត្តជាក់ស្តែង មើលមេរៀនដំបូងឥតគិតថ្លៃ ប្តូរជំនាញជាមួយមិត្តភក្តិ និងបង្កើតគម្រោងស្នាដៃពិតប្រាកដ។",
       personaStudentPoint1: "មើលមេរៀនដំបូងឥតគិតថ្លៃមុនពេលចុះឈ្មោះ",
-      personaStudentPoint2: "ការប្តូរជំនាញជាមួយមិត្តភក្តិដើម្បីហ្វឹកហាត់រួមគ្នា",
-      personaStudentPoint3: "ទទួលបានវិញ្ញាបនបត្របញ្ជាក់ និងបង្ហាញស្នាដៃផ្ទាល់ខ្លួន",
+      personaStudentPoint2:
+        "ការប្តូរជំនាញជាមួយមិត្តភក្តិដើម្បីហ្វឹកហាត់រួមគ្នា",
+      personaStudentPoint3:
+        "ទទួលបានវិញ្ញាបនបត្របញ្ជាក់ និងបង្ហាញស្នាដៃផ្ទាល់ខ្លួន",
       personaStudentCta: "ចាប់ផ្តើមជាសិស្ស",
 
       personaSwitcherTitle: "ផ្លាស់ប្តូរអាជីពទៅកាន់វិស័យបច្ចេកវិទ្យាយ៉ាងរលូន",
-      personaSwitcherDesc: "ទទួលការណែនាំផ្ទាល់ ១ ទល់ ១ ពីអ្នកជំនាញជាន់ខ្ពស់ ដើម្បីពិនិត្យកូដ កែលម្អប្រវត្តិរូប និងត្រៀមសម្ភាសន៍។",
-      personaSwitcherPoint1: "ផែនទីបង្ហាញផ្លូវផ្ទាល់ខ្លួន និងការវាយតម្លៃគម្លាតជំនាញ",
-      personaSwitcherPoint2: "វគ្គពិគ្រោះ ១ ទល់ ១ ប្រចាំសប្តាហ៍ជាមួយអ្នកដឹកនាំបច្ចេកវិទ្យា",
-      personaSwitcherPoint3: "គម្រោងអនុវត្តចុងក្រោយដែលត្រូវបានវាយតម្លៃដោយអ្នកជំនាញ",
+      personaSwitcherDesc:
+        "ទទួលការណែនាំផ្ទាល់ ១ ទល់ ១ ពីអ្នកជំនាញជាន់ខ្ពស់ ដើម្បីពិនិត្យកូដ កែលម្អប្រវត្តិរូប និងត្រៀមសម្ភាសន៍។",
+      personaSwitcherPoint1:
+        "ផែនទីបង្ហាញផ្លូវផ្ទាល់ខ្លួន និងការវាយតម្លៃគម្លាតជំនាញ",
+      personaSwitcherPoint2:
+        "វគ្គពិគ្រោះ ១ ទល់ ១ ប្រចាំសប្តាហ៍ជាមួយអ្នកដឹកនាំបច្ចេកវិទ្យា",
+      personaSwitcherPoint3:
+        "គម្រោងអនុវត្តចុងក្រោយដែលត្រូវបានវាយតម្លៃដោយអ្នកជំនាញ",
       personaSwitcherCta: "ស្វែងរកអ្នកណែនាំ",
 
       personaSeekerTitle: "ឈានទៅរកការងារ និងឱកាសហាត់ការដែលបានផ្ទៀងផ្ទាត់",
-      personaSeekerDesc: "ភ្ជាប់ទំនាក់ទំនងផ្ទាល់ជាមួយក្រុមហ៊ុន និងអ្នកជ្រើសរើសបុគ្គលិកដែលមានទំនុកចិត្តនៅកម្ពុជា។",
-      personaSeekerPoint1: "ដាក់ពាក្យផ្ទាល់ជាមួយនឹងការផ្គូផ្គងប្រវត្តិរូបស្វ័យប្រវត្តិ",
+      personaSeekerDesc:
+        "ភ្ជាប់ទំនាក់ទំនងផ្ទាល់ជាមួយក្រុមហ៊ុន និងអ្នកជ្រើសរើសបុគ្គលិកដែលមានទំនុកចិត្តនៅកម្ពុជា។",
+      personaSeekerPoint1:
+        "ដាក់ពាក្យផ្ទាល់ជាមួយនឹងការផ្គូផ្គងប្រវត្តិរូបស្វ័យប្រវត្តិ",
       personaSeekerPoint2: "ឱកាសហាត់ការមានប្រាក់ឧបត្ថម្ភ និងការបណ្តុះបណ្តាល",
       personaSeekerPoint3: "ការហាត់សម្ភាសន៍សាកល្បង និងបន្ទប់ពិភាក្សាផ្ទាល់",
       personaSeekerCta: "ស្វែងរកការងារ",
 
-      personaMentorTitle: "ចែករំលែកចំណេះដឹង កសាងកេរ្តិ៍ឈ្មោះ និងបណ្តុះបណ្តាលធនធានថ្មី",
-      personaMentorDesc: "រៀបចំវគ្គបណ្តុះបណ្តាលផ្ទាល់ បង្កើតវគ្គសិក្សាលក់តាម KHQR និងជួយដល់សហគមន៍អ្នកបច្ចេកវិទ្យាជំនាន់ក្រោយ។",
-      personaMentorPoint1: "បង្កើតចំណូលពីវគ្គសិក្សាជាមួយការទូទាត់ភ្លាមៗតាម Bakong KHQR",
+      personaMentorTitle:
+        "ចែករំលែកចំណេះដឹង កសាងកេរ្តិ៍ឈ្មោះ និងបណ្តុះបណ្តាលធនធានថ្មី",
+      personaMentorDesc:
+        "រៀបចំវគ្គបណ្តុះបណ្តាលផ្ទាល់ បង្កើតវគ្គសិក្សាលក់តាម KHQR និងជួយដល់សហគមន៍អ្នកបច្ចេកវិទ្យាជំនាន់ក្រោយ។",
+      personaMentorPoint1:
+        "បង្កើតចំណូលពីវគ្គសិក្សាជាមួយការទូទាត់ភ្លាមៗតាម Bakong KHQR",
       personaMentorPoint2: "កំណត់កាលវិភាគណែនាំ ១ ទល់ ១ តាមភាពទំនេរផ្ទាល់ខ្លួន",
-      personaMentorPoint3: "ទទួលបានផ្លាកសញ្ញាបញ្ជាក់អ្នកណែនាំ និងការទទួលស្គាល់ពីសហគមន៍",
+      personaMentorPoint3:
+        "ទទួលបានផ្លាកសញ្ញាបញ្ជាក់អ្នកណែនាំ និងការទទួលស្គាល់ពីសហគមន៍",
       personaMentorCta: "ក្លាយជាអ្នកណែនាំ",
 
       // Core Pillars Bento
       toolsKicker: "ប្រព័ន្ធស្នូល",
       toolsTitle: "អ្វីគ្រប់យ៉ាងដែលអ្នកត្រូវការដើម្បីបង្កើនល្បឿនអាជីព",
-      toolsSubtitle: "សសរស្តម្ភសំខាន់ៗទាំង ៤ ដែលរៀបចំឡើងដើម្បីនាំអ្នកពីការចាប់ផ្តើមរហូតដល់កម្រិតជំនាញវិជ្ជាជីវៈ។",
+      toolsSubtitle:
+        "សសរស្តម្ភសំខាន់ៗទាំង ៤ ដែលរៀបចំឡើងដើម្បីនាំអ្នកពីការចាប់ផ្តើមរហូតដល់កម្រិតជំនាញវិជ្ជាជីវៈ។",
 
       featureCommunityTitle: "ការរៀនក្នុងសហគមន៍",
-      featureCommunityDesc: "រៀនជាមួយមិត្តភក្ដិ សួរសំណួរ និងកសាងទំនាក់ទំនងមានប្រយោជន៍ជុំវិញគោលដៅរួម។",
+      featureCommunityDesc:
+        "រៀនជាមួយមិត្តភក្ដិ សួរសំណួរ និងកសាងទំនាក់ទំនងមានប្រយោជន៍ជុំវិញគោលដៅរួម។",
       featureExchangeTitle: "ការប្ដូរជំនាញ",
-      featureExchangeDesc: "ចែករំលែកអ្វីដែលអ្នកចេះ ស្នើសុំជំនួយ និងរីកចម្រើនតាមរយៈការអនុវត្តជាក់ស្ដែង។",
+      featureExchangeDesc:
+        "ចែករំលែកអ្វីដែលអ្នកចេះ ស្នើសុំជំនួយ និងរីកចម្រើនតាមរយៈការអនុវត្តជាក់ស្ដែង។",
       featureCoursesTitle: "វគ្គសិក្សាដែលមានការណែនាំ",
-      featureCoursesDesc: "អនុវត្តតាមផ្លូវសិក្សាច្បាស់លាស់ សម្រាប់ជំនាញបច្ចេកទេស ច្នៃប្រឌិត និងត្រៀមខ្លួនសម្រាប់អាជីព។",
+      featureCoursesDesc:
+        "អនុវត្តតាមផ្លូវសិក្សាច្បាស់លាស់ សម្រាប់ជំនាញបច្ចេកទេស ច្នៃប្រឌិត និងត្រៀមខ្លួនសម្រាប់អាជីព។",
       featureCareerTitle: "ការគាំទ្រអាជីព",
-      featureCareerDesc: "ស្វែងរកឱកាសហាត់ការ ការងារ និងដំបូន្មានពីអ្នកណែនាំដែលសមនឹងប្រវត្តិរូបរបស់អ្នក។",
+      featureCareerDesc:
+        "ស្វែងរកឱកាសហាត់ការ ការងារ និងដំបូន្មានពីអ្នកណែនាំដែលសមនឹងប្រវត្តិរូបរបស់អ្នក។",
 
       pillarCoursesBadge: "បណ្ឌិត្យសភាអនុវត្ត",
       pillarCoursesTitle: "វគ្គសិក្សា & វីដេអូគុណភាពខ្ពស់",
-      pillarCoursesDesc: "មេរៀនខ្លីៗងាយយល់ ឯកសារ PDF ទាញយកបាន លំហាត់កូដជាក់ស្តែង និងការបង់ប្រាក់រហ័សតាម Bakong KHQR។",
+      pillarCoursesDesc:
+        "មេរៀនខ្លីៗងាយយល់ ឯកសារ PDF ទាញយកបាន លំហាត់កូដជាក់ស្តែង និងការបង់ប្រាក់រហ័សតាម Bakong KHQR។",
       pillarCoursesAction: "មើលវគ្គសិក្សា",
 
       pillarMentorsBadge: "ការណែនាំ ១ ទល់ ១",
       pillarMentorsTitle: "អ្នកណែនាំអាជីពដែលបានផ្ទៀងផ្ទាត់",
-      pillarMentorsDesc: "កក់វគ្គពិគ្រោះ ១ ទល់ ១ ជាមួយវិស្វករ និងអ្នករចនាជាន់ខ្ពស់ ដើម្បីពិនិត្យកូដ ពិនិត្យស្នាដៃ និងណែនាំផ្លូវអាជីព។",
+      pillarMentorsDesc:
+        "កក់វគ្គពិគ្រោះ ១ ទល់ ១ ជាមួយវិស្វករ និងអ្នករចនាជាន់ខ្ពស់ ដើម្បីពិនិត្យកូដ ពិនិត្យស្នាដៃ និងណែនាំផ្លូវអាជីព។",
       pillarMentorsAction: "ជួបអ្នកណែនាំ",
 
       pillarExchangeBadge: "រៀនជាមួយមិត្តភក្តិ",
       pillarExchangeTitle: "ការប្តូរជំនាញទៅវិញទៅមក",
-      pillarExchangeDesc: "ចែករំលែកអ្វីដែលអ្នកចេះ រៀនអ្វីដែលអ្នកត្រូវការ។ ប្តូរជំនាញ JavaScript យកការរចនា UI/UX ដោយមិនបាច់ចំណាយថវិកា។",
+      pillarExchangeDesc:
+        "ចែករំលែកអ្វីដែលអ្នកចេះ រៀនអ្វីដែលអ្នកត្រូវការ។ ប្តូរជំនាញ JavaScript យកការរចនា UI/UX ដោយមិនបាច់ចំណាយថវិកា។",
       pillarExchangeAction: "ចូលរួមប្តូរជំនាញ",
 
       pillarJobsBadge: "ការងារផ្ទៀងផ្ទាត់",
       pillarJobsTitle: "ការងារ & ឱកាសហាត់ការ",
-      pillarJobsDesc: "ក្តារការងារដែលបានផ្ទៀងផ្ទាត់ ភ្ជាប់ផ្ទាល់ជាមួយក្រុមហ៊ុន តាមដានការដាក់ពាក្យ និងផែនទីបង្ហាញផ្លូវអាជីព។",
+      pillarJobsDesc:
+        "ក្តារការងារដែលបានផ្ទៀងផ្ទាត់ ភ្ជាប់ផ្ទាល់ជាមួយក្រុមហ៊ុន តាមដានការដាក់ពាក្យ និងផែនទីបង្ហាញផ្លូវអាជីព។",
       pillarJobsAction: "ស្វែងរកការងារ",
 
       // Tracks Section
       tracksKicker: "ជំនាញពេញនិយម",
       tracksTitle: "ស្វែងរកផ្លូវអាជីពដែលមានតម្រូវការខ្ពស់",
-      tracksSubtitle: "ផែនទីបង្ហាញផ្លូវដែលស្របតាមតម្រូវការទីផ្សារការងារជាក់ស្តែងនៅកម្ពុជា។",
+      tracksSubtitle:
+        "ផែនទីបង្ហាញផ្លូវដែលស្របតាមតម្រូវការទីផ្សារការងារជាក់ស្តែងនៅកម្ពុជា។",
       allTracks: "គ្រប់ឯកទេស",
       trackCoursesCount: "{count} វគ្គសិក្សា",
       trackJobsCount: "{count} ការងារ",
@@ -1052,12 +1120,14 @@ export const translations = {
       // Mentors Spotlight
       mentorshipKicker: "ការណែនាំ",
       mentorshipTitle: "ទទួលការណែនាំពីអ្នកដែលយល់ច្បាស់អំពីផ្លូវអាជីព",
-      mentorshipDesc: "កក់វគ្គ ពិនិត្យប្រវត្តិអ្នកណែនាំ និងបម្លែងគោលដៅអាជីពទូទៅទៅជាជំហានបន្ទាប់ដែលច្បាស់លាស់ ជាមួយការគាំទ្រពីអ្នកជំនាញ។",
+      mentorshipDesc:
+        "កក់វគ្គ ពិនិត្យប្រវត្តិអ្នកណែនាំ និងបម្លែងគោលដៅអាជីពទូទៅទៅជាជំហានបន្ទាប់ដែលច្បាស់លាស់ ជាមួយការគាំទ្រពីអ្នកជំនាញ។",
       meetMentors: "ជួបអ្នកណែនាំ",
       mentorImageAlt: "អ្នកណែនាំកំពុងជួយអ្នកសិក្សាក្នុងវគ្គមួយ",
       featuredMentorsKicker: "អ្នកជំនាញក្នុងវិស័យ",
       featuredMentorsTitle: "រៀនផ្ទាល់ពីអ្នកដែលមានបទពិសោធន៍ពិត",
-      featuredMentorsDesc: "អ្នកណែនាំរបស់យើងមកពីក្រុមហ៊ុនបច្ចេកវិទ្យា ធនាគារឈានមុខ និងស្ទូឌីយោរចនាច្នៃប្រឌិត។",
+      featuredMentorsDesc:
+        "អ្នកណែនាំរបស់យើងមកពីក្រុមហ៊ុនបច្ចេកវិទ្យា ធនាគារឈានមុខ និងស្ទូឌីយោរចនាច្នៃប្រឌិត។",
       viewAllMentors: "មើលអ្នកណែនាំទាំងអស់ ១៥០+ នាក់",
       bookSessionBtn: "កក់វគ្គណែនាំ",
       mentorExperience: "បទពិសោធន៍ {years} ឆ្នាំ",
@@ -1080,15 +1150,20 @@ export const translations = {
       pathTitle: "ផ្លូវច្បាស់លាស់ពីការសិក្សាទៅកាន់សកម្មភាពអាជីព",
       stepOne: "បង្កើតប្រវត្តិរូប និងបង្ហាញជំនាញដែលអ្នកចង់អភិវឌ្ឍ។",
       stepTwo: "ចូលរួមវគ្គសិក្សា ការប្ដូរជំនាញ ឬការណែនាំដែលសមនឹងគោលដៅរបស់អ្នក។",
-      stepThree: "យកវឌ្ឍនភាពរបស់អ្នកទៅប្រើសម្រាប់ឱកាសហាត់ការ ការងារ និងគម្រោងសហគមន៍។",
+      stepThree:
+        "យកវឌ្ឍនភាពរបស់អ្នកទៅប្រើសម្រាប់ឱកាសហាត់ការ ការងារ និងគម្រោងសហគមន៍។",
       step1Title: "១. វាយតម្លៃ & កំណត់គោលដៅ",
-      step1Desc: "ប្រៀបធៀបជំនាញបច្ចុប្បន្នរបស់អ្នកជាមួយស្តង់ដារទីផ្សារ និងស្វែងរកចំណុចដែលត្រូវពង្រឹង។",
+      step1Desc:
+        "ប្រៀបធៀបជំនាញបច្ចុប្បន្នរបស់អ្នកជាមួយស្តង់ដារទីផ្សារ និងស្វែងរកចំណុចដែលត្រូវពង្រឹង។",
       step2Title: "២. រៀន & អនុវត្តជាក់ស្តែង",
-      step2Desc: "អនុវត្តតាមវគ្គសិក្សា និងបង្កើតគម្រោងជាក់ស្តែងជាមួយក្រុមសិក្សារួមគ្នា។",
+      step2Desc:
+        "អនុវត្តតាមវគ្គសិក្សា និងបង្កើតគម្រោងជាក់ស្តែងជាមួយក្រុមសិក្សារួមគ្នា។",
       step3Title: "៣. ទទួលការណែនាំ ១ ទល់ ១",
-      step3Desc: "ទទួលបានការពិនិត្យគម្រោង ប្រវត្តិរូប និងការត្រៀមសម្ភាសន៍ផ្ទាល់ពីអ្នកជំនាញ។",
+      step3Desc:
+        "ទទួលបានការពិនិត្យគម្រោង ប្រវត្តិរូប និងការត្រៀមសម្ភាសន៍ផ្ទាល់ពីអ្នកជំនាញ។",
       step4Title: "៤. ដាក់ពាក្យ & ទទួលបានការងារ",
-      step4Desc: "ដាក់ពាក្យផ្ទាល់ទៅកាន់ឱកាសហាត់ការ និងការងារជាមួយក្រុមហ៊ុនដៃគូដែលមានទំនុកចិត្ត។",
+      step4Desc:
+        "ដាក់ពាក្យផ្ទាល់ទៅកាន់ឱកាសហាត់ការ និងការងារជាមួយក្រុមហ៊ុនដៃគូដែលមានទំនុកចិត្ត។",
 
       careerImageAlt: "ក្រុមកំពុងពិភាក្សាអំពីគម្រោងអាជីព",
       popularCategories: "ប្រភេទជំនាញពេញនិយម",
@@ -1102,29 +1177,38 @@ export const translations = {
       // Testimonials / Social Proof
       storiesKicker: "រឿងរ៉ាវជោគជ័យ",
       storiesTitle: "បទពិសោធន៍ពិតពីសមាជិកក្នុងសហគមន៍",
-      storiesSubtitle: "ស្វែងយល់ពីរបៀបដែលសិស្ស និងអ្នកអភិវឌ្ឍន៍ជំនាញពន្លឿនអាជីពរបស់ពួកគេតាមរយៈ Smart Community។",
-      story1Quote: "Smart Community បានផ្លាស់ប្តូរអាជីពរបស់ខ្ញុំទាំងស្រុង! ខ្ញុំចាប់ផ្តើមពីការចេះ HTML មូលដ្ឋាន រហូតបានក្លាយជា Junior Frontend Developer ក្នុងរយៈពេល ៤ ខែ ដោយសារការណែនាំ និងការពិនិត្យកូដពីអ្នកណែនាំ!",
+      storiesSubtitle:
+        "ស្វែងយល់ពីរបៀបដែលសិស្ស និងអ្នកអភិវឌ្ឍន៍ជំនាញពន្លឿនអាជីពរបស់ពួកគេតាមរយៈ Smart Community។",
+      story1Quote:
+        "Smart Community បានផ្លាស់ប្តូរអាជីពរបស់ខ្ញុំទាំងស្រុង! ខ្ញុំចាប់ផ្តើមពីការចេះ HTML មូលដ្ឋាន រហូតបានក្លាយជា Junior Frontend Developer ក្នុងរយៈពេល ៤ ខែ ដោយសារការណែនាំ និងការពិនិត្យកូដពីអ្នកណែនាំ!",
       story1Author: "ដារ៉ា សុវណ្ណ",
       story1Role: "Frontend Developer នៅ Fintech Startup",
-      story2Quote: "ប្រព័ន្ធប្តូរជំនាញពិតជាអស្ចារ្យណាស់។ ខ្ញុំបានបង្រៀន Python ទៅកាន់មិត្តរួមក្រុម ហើយគាត់បានជួយបង្រៀនខ្ញុំពីការរចនា Figma UI មកវិញ។",
+      story2Quote:
+        "ប្រព័ន្ធប្តូរជំនាញពិតជាអស្ចារ្យណាស់។ ខ្ញុំបានបង្រៀន Python ទៅកាន់មិត្តរួមក្រុម ហើយគាត់បានជួយបង្រៀនខ្ញុំពីការរចនា Figma UI មកវិញ។",
       story2Author: "ស្រីពៅ គីម",
       story2Role: "Product Designer & អ្នកដឹកនាំសហគមន៍",
-      story3Quote: "ការទូទាត់តាម Bakong KHQR ពិតជាងាយស្រួល និងរហ័ស។ មេរៀនអនុវត្តជាក់ស្តែង និងចំគោលដៅដែលក្រុមហ៊ុននៅកម្ពុជាត្រូវការ។",
+      story3Quote:
+        "ការទូទាត់តាម Bakong KHQR ពិតជាងាយស្រួល និងរហ័ស។ មេរៀនអនុវត្តជាក់ស្តែង និងចំគោលដៅដែលក្រុមហ៊ុននៅកម្ពុជាត្រូវការ។",
       story3Author: "វណ្ណៈ មាស",
       story3Role: "Fullstack Engineer Intern",
 
       // FAQ
       faqKicker: "សំណួរដែលតែងតែសួរ",
       faqTitle: "សំណួរ និងចម្លើយញឹកញាប់",
-      faqSubtitle: "ស្វែងយល់បន្ថែមអំពីប្រព័ន្ធ ការណែនាំ វគ្គសិក្សា និងការទូទាត់ប្រាក់។",
+      faqSubtitle:
+        "ស្វែងយល់បន្ថែមអំពីប្រព័ន្ធ ការណែនាំ វគ្គសិក្សា និងការទូទាត់ប្រាក់។",
       faq1Q: "តើការចូលរួម និងរៀនក្នុងសហគមន៍ឥតគិតថ្លៃដែរឬទេ?",
-      faq1A: "ពិតប្រាកដណាស់! ការបង្កើតគណនី ការចូលរួមក្នុងវេទិកាពិភាក្សា និងការប្តូរជំនាញគឺឥតគិតថ្លៃ ១០០%។ លើសពីនេះ រាល់វគ្គសិក្សាទាំងអស់អនុញ្ញាតឱ្យមើលមេរៀនដំបូងដោយឥតគិតថ្លៃមុនពេលសម្រេចចិត្តចុះឈ្មោះ។",
+      faq1A:
+        "ពិតប្រាកដណាស់! ការបង្កើតគណនី ការចូលរួមក្នុងវេទិកាពិភាក្សា និងការប្តូរជំនាញគឺឥតគិតថ្លៃ ១០០%។ លើសពីនេះ រាល់វគ្គសិក្សាទាំងអស់អនុញ្ញាតឱ្យមើលមេរៀនដំបូងដោយឥតគិតថ្លៃមុនពេលសម្រេចចិត្តចុះឈ្មោះ។",
       faq2Q: "តើការទូទាត់តាម Bakong KHQR ដំណើរការយ៉ាងដូចម្តេច?",
-      faq2A: "នៅពេលអ្នកចង់ចុះឈ្មោះរៀនវគ្គពេញលេញ ឬកក់វគ្គណែនាំ អ្នកគ្រាន់តែស្កេនកូដ Bakong KHQR តាមរយៈកម្មវិធីធនាគារណាមួយ (ABA, Wing, ACLEDA ជាដើម) នោះអ្នកនឹងទទួលបានការអនុញ្ញាតចូលរៀនភ្លាមៗ។",
+      faq2A:
+        "នៅពេលអ្នកចង់ចុះឈ្មោះរៀនវគ្គពេញលេញ ឬកក់វគ្គណែនាំ អ្នកគ្រាន់តែស្កេនកូដ Bakong KHQR តាមរយៈកម្មវិធីធនាគារណាមួយ (ABA, Wing, ACLEDA ជាដើម) នោះអ្នកនឹងទទួលបានការអនុញ្ញាតចូលរៀនភ្លាមៗ។",
       faq3Q: "តើការប្តូរជំនាញ (Skill Exchange) ដំណើរការយ៉ាងដូចម្តេច?",
-      faq3A: "ការប្តូរជំនាញគឺជាការចែករំលែកចំណេះដឹងទៅវិញទៅមក។ ប្រសិនបើអ្នកចេះ JavaScript ឬ Graphic Design អ្នកអាចផ្តល់ជូនវា ហើយស្នើសុំរៀន Python, ភាសាអង់គ្លេស ឬ Marketing មកវិញ ហើយជួបគ្នាក្នុងបន្ទប់សិក្សាផ្ទាល់។",
+      faq3A:
+        "ការប្តូរជំនាញគឺជាការចែករំលែកចំណេះដឹងទៅវិញទៅមក។ ប្រសិនបើអ្នកចេះ JavaScript ឬ Graphic Design អ្នកអាចផ្តល់ជូនវា ហើយស្នើសុំរៀន Python, ភាសាអង់គ្លេស ឬ Marketing មកវិញ ហើយជួបគ្នាក្នុងបន្ទប់សិក្សាផ្ទាល់។",
       faq4Q: "តើអ្នកណែនាំត្រូវបានផ្ទៀងផ្ទាត់យ៉ាងដូចម្តេច?",
-      faq4A: "អ្នកណែនាំទាំងអស់ត្រូវឆ្លងកាត់ការពិនិត្យបទពិសោធន៍ការងារ គម្រោងស្នាដៃ និងឯកសារយោងដោយក្រុមការងាររបស់យើង មុនពេលទទួលបានផ្លាកសញ្ញា Verified Mentor។",
+      faq4A:
+        "អ្នកណែនាំទាំងអស់ត្រូវឆ្លងកាត់ការពិនិត្យបទពិសោធន៍ការងារ គម្រោងស្នាដៃ និងឯកសារយោងដោយក្រុមការងាររបស់យើង មុនពេលទទួលបានផ្លាកសញ្ញា Verified Mentor។",
 
       // Final CTA
       nextStep: "ជំហានបន្ទាប់របស់អ្នក",
@@ -1133,7 +1217,8 @@ export const translations = {
       createAccount: "បង្កើតគណនីឥតគិតថ្លៃ",
       ctaKicker: "ត្រៀមខ្លួនដើម្បីឈានទៅមុខហើយឬនៅ?",
       ctaTitle: "ចាប់ផ្តើមដំណើរឆ្ពោះទៅរកអាជីពក្នុងក្តីស្រមៃរបស់អ្នកថ្ងៃនេះ",
-      ctaDesc: "ចូលរួមជាមួយអ្នកសិក្សា អ្នកណែនាំ និងក្រុមហ៊ុនរាប់ពាន់នាក់ដែលកំពុងកសាងអនាគតបច្ចេកវិទ្យានៅកម្ពុជា។",
+      ctaDesc:
+        "ចូលរួមជាមួយអ្នកសិក្សា អ្នកណែនាំ និងក្រុមហ៊ុនរាប់ពាន់នាក់ដែលកំពុងកសាងអនាគតបច្ចេកវិទ្យានៅកម្ពុជា។",
       ctaPrimary: "ចូលរួមសហគមន៍ឥតគិតថ្លៃ",
       ctaSecondary: "ស្វែងរកការងារដែលមាន",
       ctaCommunityCount: "ចូលរួមជាមួយសមាជិក ២,៤០០+ នាក់ដែលកំពុងអភិវឌ្ឍន៍អាជីព",
@@ -1333,8 +1418,7 @@ export const translations = {
         "ពិន្ទុគណនាពីអ្វីដែលអ្នកអាចបង្រៀន អ្វីដែលអ្នកចង់រៀន និងចំណាប់អារម្មណ៍រួម។",
       loadingMatches: "កំពុងផ្ទុកការផ្គូផ្គងជំនាញ",
       addSkillsTitle: "បន្ថែមជំនាញដើម្បីបើកការផ្គូផ្គង",
-      addSkillsDescription:
-        "ប្រាប់សហគមន៍ថាអ្នកអាចបង្រៀនអ្វី និងចង់រៀនអ្វី។",
+      addSkillsDescription: "ប្រាប់សហគមន៍ថាអ្នកអាចបង្រៀនអ្វី និងចង់រៀនអ្វី។",
       completeProfile: "បំពេញប្រវត្តិជំនាញ",
       canLearn: "អ្នកអាចរៀន",
       canTeach: "អ្នកអាចបង្រៀន",
@@ -1377,6 +1461,14 @@ export const translations = {
       readinessDescription:
         "ប្រវត្តិរូបពេញលេញជួយឱ្យការណែនាំវគ្គសិក្សា អ្នកណែនាំ និងឱកាសហាត់ការកាន់តែសមស្រប។",
       improveProfile: "កែលម្អប្រវត្តិរូប",
+      learningStreak: "🔥 រៀនជាប់គ្នា ៣ ថ្ងៃ",
+      verifiedMember: "សមាជិកផ្ទៀងផ្ទាត់",
+      joinLiveRoom: "ចូលបន្ទប់",
+      resumeLesson: "បន្តរៀន",
+      activeBarters: "ប្ដូរជំនាញ",
+      postSkillOffer: "ចែករំលែកជំនាញ",
+      manageCandidates: "គ្រប់គ្រងបេក្ខជន",
+      postNewInternship: "ប្រកាសការងារ",
       overviewLabel: "ទិដ្ឋភាពទូទៅនៃផ្ទាំងការងារ",
       learningProgress: "វឌ្ឍនភាពសិក្សា",
       learningProgressDetail: "គិតពីការសិក្សាសកម្មរបស់អ្នក",
@@ -1390,7 +1482,8 @@ export const translations = {
       quickTitle: "តើអ្នកចង់ធ្វើអ្វី?",
       quickDescription: "ចូលទៅកាន់ឧបករណ៍ដែលអ្នកប្រើញឹកញាប់។",
       startLearning: "ចាប់ផ្ដើមរៀន",
-      startLearningDesc: "រកមើលវគ្គសិក្សាដែលមានការណែនាំ និងបន្តវឌ្ឍនភាពរបស់អ្នក។",
+      startLearningDesc:
+        "រកមើលវគ្គសិក្សាដែលមានការណែនាំ និងបន្តវឌ្ឍនភាពរបស់អ្នក។",
       findMentor: "ស្វែងរកអ្នកណែនាំ",
       findMentorDesc: "ភ្ជាប់ជាមួយអ្នកដែលយល់អំពីផ្លូវអាជីពរបស់អ្នក។",
       exchangeSkills: "ប្ដូរជំនាញ",
@@ -1403,8 +1496,8 @@ export const translations = {
       allCourses: "វគ្គសិក្សាទាំងអស់",
       courseProgressLabel: "វឌ្ឍនភាពនៃវគ្គ {course}",
       schedule: "កាលវិភាគ",
-      comingUp: "សកម្មភាពខាងមុខ",
-      scheduleDescription: "វគ្គ និងសកម្មភាពបន្ទាប់របស់អ្នក។",
+      comingUp: "វគ្គសិក្សាខាងមុខ",
+      scheduleDescription: "បន្ទប់ផ្សាយផ្ទាល់ និងសកម្មភាពបន្ទាប់របស់អ្នក។",
       viewSessions: "មើលវគ្គសិក្សាទាំងអស់",
       eventOneTitle: "វគ្គប្ដូរជំនាញ React",
       eventOneTime: "ថ្ងៃនេះ ម៉ោង ៧:០០ ល្ងាច",
@@ -1457,7 +1550,8 @@ export const translations = {
       googleLoadError: "មិនអាចដំណើរការការចូលដោយ Google បានទេ។",
       googleRequires: "ការចូលដោយ Google ត្រូវការការកំណត់បន្ថែម",
       forgotTitle: "ភ្លេចពាក្យសម្ងាត់?",
-      forgotDescription: "បញ្ចូលអ៊ីមែលគណនីរបស់អ្នក ដើម្បីទទួលតំណកំណត់ពាក្យសម្ងាត់ថ្មីដែលមានសុវត្ថិភាព។",
+      forgotDescription:
+        "បញ្ចូលអ៊ីមែលគណនីរបស់អ្នក ដើម្បីទទួលតំណកំណត់ពាក្យសម្ងាត់ថ្មីដែលមានសុវត្ថិភាព។",
       openDevReset: "បើកតំណកំណត់ពាក្យសម្ងាត់សម្រាប់ការអភិវឌ្ឍ",
       creatingLink: "កំពុងបង្កើតតំណ...",
       sendReset: "ផ្ញើតំណកំណត់ឡើងវិញ",
@@ -1472,7 +1566,8 @@ export const translations = {
       passwordsMismatch: "ពាក្យសម្ងាត់មិនត្រូវគ្នាទេ។",
       resetError: "មិនអាចកំណត់ពាក្យសម្ងាត់ថ្មីបានទេ។",
       verifyTitle: "ផ្ទៀងផ្ទាត់អ៊ីមែលរបស់អ្នក",
-      verifyDescription: "ការផ្ទៀងផ្ទាត់អ៊ីមែលជួយការពារគណនី និងអត្តសញ្ញាណក្នុងសហគមន៍។",
+      verifyDescription:
+        "ការផ្ទៀងផ្ទាត់អ៊ីមែលជួយការពារគណនី និងអត្តសញ្ញាណក្នុងសហគមន៍។",
       verifying: "កំពុងផ្ទៀងផ្ទាត់អ៊ីមែល...",
       verifyError: "មិនអាចផ្ទៀងផ្ទាត់អ៊ីមែលបានទេ។",
       resendError: "មិនអាចផ្ញើការផ្ទៀងផ្ទាត់ឡើងវិញបានទេ។",
@@ -1483,7 +1578,8 @@ export const translations = {
       pleaseWait: "សូមរង់ចាំ...",
       continueLogin: "បន្តទៅចូលគណនី",
       registerTitle: "បង្កើតគណនីរបស់អ្នក",
-      registerDescription: "បំពេញប្រវត្តិរូបតាមជំហានខ្លីៗ ហើយចូលរួមជាមួយសហគមន៍។",
+      registerDescription:
+        "បំពេញប្រវត្តិរូបតាមជំហានខ្លីៗ ហើយចូលរួមជាមួយសហគមន៍។",
       fullName: "ឈ្មោះពេញ",
       fullNamePlaceholder: "បញ្ចូលឈ្មោះរបស់អ្នក",
       role: "តួនាទី",
@@ -1519,13 +1615,15 @@ export const translations = {
       chooseCategory: "ជ្រើសប្រភេទមួយ ដើម្បីមើលជំនាញពាក់ព័ន្ធ។",
       validationRequired: "សូមបំពេញព័ត៌មានចាំបាច់ទាំងអស់ក្នុងជំហានទី ១។",
       validationPasswordLength: "ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៨ តួអក្សរ។",
-      validationPasswordStrength: "ពាក្យសម្ងាត់ត្រូវមានអក្សរធំ អក្សរតូច និងលេខ។",
+      validationPasswordStrength:
+        "ពាក្យសម្ងាត់ត្រូវមានអក្សរធំ អក្សរតូច និងលេខ។",
       validationJobTitle: "សូមបញ្ចូលចំណងជើងការងារដែលអ្នកចង់ប្រកាស។",
       validationCandidateSkills: "សូមជ្រើសជំនាញដែលអ្នកកំពុងស្វែងរកពីបេក្ខជន។",
       validationSkills: "សូមជ្រើសយ៉ាងតិចមួយជំនាញសម្រាប់បង្រៀន ឬរៀន។",
       validationCompany: "សូមបញ្ចូលក្រុមហ៊ុន ឬស្ថាប័នរបស់អ្នក។",
       validationJobDescription: "សូមបន្ថែមសេចក្ដីពិពណ៌នាខ្លីអំពីតួនាទីការងារ។",
-      validationBio: "សូមប្រាប់អំពីខ្លួនអ្នកបន្តិច ដើម្បីឱ្យអ្នកណែនាំ និងសមាជិកអាចភ្ជាប់ជាមួយអ្នក។",
+      validationBio:
+        "សូមប្រាប់អំពីខ្លួនអ្នកបន្តិច ដើម្បីឱ្យអ្នកណែនាំ និងសមាជិកអាចភ្ជាប់ជាមួយអ្នក។",
       registerError: "មិនអាចចុះឈ្មោះបានទេ។ សូមព្យាយាមម្ដងទៀត។",
       categoryTechnology: "បច្ចេកវិទ្យា និងការសរសេរកម្មវិធី",
       categoryDesign: "ការរចនា និងភាពច្នៃប្រឌិត",

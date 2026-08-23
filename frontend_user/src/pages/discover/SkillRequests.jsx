@@ -19,14 +19,20 @@ import "./Discover.css";
 
 const formatScheduledDate = (value) => {
   if (!value) return "";
-  const normalized = typeof value === "string" ? value.replace(" ", "T") : value;
+  const normalized =
+    typeof value === "string" ? value.replace(" ", "T") : value;
   return new Intl.DateTimeFormat("en", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(normalized));
 };
 
-const AcceptedActions = ({ request, currentUserId, completingId, onComplete }) => {
+const AcceptedActions = ({
+  request,
+  currentUserId,
+  completingId,
+  onComplete,
+}) => {
   if (!["accepted", "completed"].includes(request.status)) return null;
 
   const currentUserCompleted =
@@ -247,7 +253,9 @@ const SkillRequests = () => {
 
       <section className="section container">
         {error && <div className="auth-error">{error}</div>}
-        {isLoading && <p className="request-empty">Loading skill requests...</p>}
+        {isLoading && (
+          <p className="request-empty">Loading skill requests...</p>
+        )}
 
         <div className="request-learning-stats">
           <article>
@@ -360,9 +368,7 @@ const SkillRequests = () => {
                                 type="button"
                                 className="btn primary small"
                                 disabled={
-                                  !declineReasonByRequestId[
-                                    request.id
-                                  ]?.trim()
+                                  !declineReasonByRequestId[request.id]?.trim()
                                 }
                                 onClick={() =>
                                   updateRequestStatus(request.id, "rejected", {
@@ -425,7 +431,9 @@ const SkillRequests = () => {
                         <button
                           type="button"
                           className="btn outline small"
-                          onClick={() => updateRequestStatus(request.id, "cancelled")}
+                          onClick={() =>
+                            updateRequestStatus(request.id, "cancelled")
+                          }
                         >
                           Cancel request
                         </button>

@@ -32,6 +32,7 @@ import {
 } from "./pages";
 import RootLayout from "./layouts/RootLayout";
 import RequireAuth from "./components/auth/RequireAuth";
+import "./design-refresh.css";
 
 const CareerDevelopment = lazy(
   () => import("./pages/career/CareerDevelopment"),
@@ -40,9 +41,7 @@ const Courses = lazy(() => import("./pages/courses/Courses"));
 const CourseDetail = lazy(() => import("./pages/courses/CourseDetail"));
 const Forum = lazy(() => import("./pages/forum/Forum"));
 const ForumDetail = lazy(() => import("./pages/forum/ForumDetail"));
-const Notifications = lazy(
-  () => import("./pages/notifications/Notifications"),
-);
+const Notifications = lazy(() => import("./pages/notifications/Notifications"));
 const AnalyticsDashboard = lazy(
   () => import("./pages/analytics/AnalyticsDashboard"),
 );
@@ -58,7 +57,11 @@ const routes = createBrowserRouter(
       <Route
         path="courses"
         element={
-          <Suspense fallback={<main className="section container">Loading courses...</main>}>
+          <Suspense
+            fallback={
+              <main className="section container">Loading courses...</main>
+            }
+          >
             <Courses />
           </Suspense>
         }
@@ -66,34 +69,62 @@ const routes = createBrowserRouter(
       <Route
         path="courses/:courseId"
         element={
-          <Suspense fallback={<main className="section container">Preparing classroom...</main>}>
+          <Suspense
+            fallback={
+              <main className="section container">Preparing classroom...</main>
+            }
+          >
             <CourseDetail />
           </Suspense>
         }
       />
       <Route path="sessions" element={<LearningSessions />} />
       <Route path="sessions/:sessionId" element={<LearningSessions />} />
-      <Route path="sessions/:sessionId/room" element={protectedElement(<SessionRoom />)} />
+      <Route
+        path="sessions/:sessionId/room"
+        element={protectedElement(<SessionRoom />)}
+      />
       <Route path="discover" element={protectedElement(<Discover />)} />
-      <Route path="discover/:memberId" element={protectedElement(<DiscoverProfile />)} />
+      <Route
+        path="discover/:memberId"
+        element={protectedElement(<DiscoverProfile />)}
+      />
       <Route path="jobs" element={<Jobs />} />
       <Route
         path="career"
         element={
-          <Suspense fallback={<main className="section container">Loading career dashboard...</main>}>
+          <Suspense
+            fallback={
+              <main className="section container">
+                Loading career dashboard...
+              </main>
+            }
+          >
             <CareerDevelopment />
           </Suspense>
         }
       />
-      <Route path="applications" element={protectedElement(<InternshipDashboard />)} />
-      <Route path="my-posts" element={protectedElement(<InternshipDashboard />)} />
+      <Route
+        path="applications"
+        element={protectedElement(<InternshipDashboard />)}
+      />
+      <Route
+        path="my-posts"
+        element={protectedElement(<InternshipDashboard />)}
+      />
       <Route path="mentorship" element={<Mentorship />} />
       <Route path="mentorship/:mentorId" element={<MentorDetail />} />
       <Route path="community" element={<Community />} />
       <Route
         path="forum"
         element={
-          <Suspense fallback={<main className="section container">Loading community forum...</main>}>
+          <Suspense
+            fallback={
+              <main className="section container">
+                Loading community forum...
+              </main>
+            }
+          >
             <Forum />
           </Suspense>
         }
@@ -101,7 +132,11 @@ const routes = createBrowserRouter(
       <Route
         path="forum/:postId"
         element={
-          <Suspense fallback={<main className="section container">Loading discussion...</main>}>
+          <Suspense
+            fallback={
+              <main className="section container">Loading discussion...</main>
+            }
+          >
             <ForumDetail />
           </Suspense>
         }
@@ -118,13 +153,25 @@ const routes = createBrowserRouter(
       <Route path="post-job" element={protectedElement(<PostJob />)} />
       <Route path="profile" element={protectedElement(<Profile />)} />
       <Route path="settings" element={protectedElement(<Settings />)} />
-      <Route path="skill-requests" element={protectedElement(<SkillRequests />)} />
+      <Route
+        path="skill-requests"
+        element={protectedElement(<SkillRequests />)}
+      />
       <Route path="messages" element={protectedElement(<Messages />)} />
-      <Route path="messages/:conversationId" element={protectedElement(<Messages />)} />
+      <Route
+        path="messages/:conversationId"
+        element={protectedElement(<Messages />)}
+      />
       <Route
         path="notifications"
         element={protectedElement(
-          <Suspense fallback={<main className="section container">Loading notifications...</main>}>
+          <Suspense
+            fallback={
+              <main className="section container">
+                Loading notifications...
+              </main>
+            }
+          >
             <Notifications />
           </Suspense>,
         )}
@@ -132,7 +179,11 @@ const routes = createBrowserRouter(
       <Route
         path="analytics"
         element={protectedElement(
-          <Suspense fallback={<main className="section container">Loading analytics...</main>}>
+          <Suspense
+            fallback={
+              <main className="section container">Loading analytics...</main>
+            }
+          >
             <AnalyticsDashboard />
           </Suspense>,
         )}
@@ -140,7 +191,13 @@ const routes = createBrowserRouter(
       <Route
         path="admin"
         element={protectedElement(
-          <Suspense fallback={<main className="section container">Loading administration...</main>}>
+          <Suspense
+            fallback={
+              <main className="section container">
+                Loading administration...
+              </main>
+            }
+          >
             <AdminPanel />
           </Suspense>,
         )}

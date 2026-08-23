@@ -23,7 +23,8 @@ const uploadImage = (path, file) => {
   return apiFetch(path, { method: "POST", body });
 };
 
-export const uploadAvatarRequest = (file) => uploadImage("/profile/avatar", file);
+export const uploadAvatarRequest = (file) =>
+  uploadImage("/profile/avatar", file);
 
 export const uploadProjectImageRequest = (file) =>
   uploadImage("/profile/project-image", file);

@@ -61,9 +61,7 @@ const Courses = () => {
           <div>
             <p className="courses-kicker">Smart Community Academy</p>
             <h1>{t("coursesPage.heroTitle")}</h1>
-            <p>
-              {t("coursesPage.heroDescription")}
-            </p>
+            <p>{t("coursesPage.heroDescription")}</p>
             <div className="courses-trust-row">
               <span>
                 <FiPlayCircle /> {t("coursesPage.freePreviews")}
@@ -100,7 +98,10 @@ const Courses = () => {
           </label>
         </header>
 
-        <div className="course-filters" aria-label={t("coursesPage.categoriesLabel")}>
+        <div
+          className="course-filters"
+          aria-label={t("coursesPage.categoriesLabel")}
+        >
           {categories.map((item) => (
             <button
               type="button"
@@ -134,68 +135,90 @@ const Courses = () => {
                 : `/register?redirect=${encodeURIComponent(coursePath)}`;
 
               return (
-              <article key={course.id} className="course-card">
-                <Link
-                  to={accessPath}
-                  className="course-cover"
-                  aria-label={t("coursesPage.viewCourse", { title: course.title })}
-                >
-                  <img src={course.thumbnailUrl} alt="" />
-                  <span className="course-level">{course.level}</span>
-                  <span className="course-play">
-                    <FiPlayCircle />
-                  </span>
-                </Link>
-                <div className="course-card-content">
-                  <div className="course-card-topline">
-                    <span className="course-category">{course.category}</span>
-                    {course.isEnrolled && (
-                      <span className="course-owned">
-                        <FiCheckCircle /> {t("coursesPage.enrolled")}
+                <article key={course.id} className="course-card">
+                  <Link
+                    to={accessPath}
+                    className="course-cover"
+                    aria-label={t("coursesPage.viewCourse", {
+                      title: course.title,
+                    })}
+                  >
+                    <img src={course.thumbnailUrl} alt="" />
+                    <span className="course-level">{course.level}</span>
+                    <span className="course-play">
+                      <FiPlayCircle />
+                    </span>
+                  </Link>
+                  <div className="course-card-content">
+                    <div className="course-card-topline">
+                      <span className="course-category">{course.category}</span>
+                      {course.isEnrolled && (
+                        <span className="course-owned">
+                          <FiCheckCircle /> {t("coursesPage.enrolled")}
+                        </span>
+                      )}
+                    </div>
+                    <h3>
+                      <Link to={accessPath}>{course.title}</Link>
+                    </h3>
+                    <p>{course.description}</p>
+                    <div className="course-meta">
+                      <span>
+                        <FiBookOpen />{" "}
+                        {t("coursesPage.lessons", {
+                          count: course.lessonCount,
+                        })}
                       </span>
-                    )}
-                  </div>
-                  <h3>
-                    <Link to={accessPath}>{course.title}</Link>
-                  </h3>
-                  <p>{course.description}</p>
-                  <div className="course-meta">
-                    <span>
-                      <FiBookOpen /> {t("coursesPage.lessons", { count: course.lessonCount })}
-                    </span>
-                    <span>
-                      <FiClock /> {course.duration}
-                    </span>
-                  </div>
-                  {course.isEnrolled ? (
-                    <div className="course-progress">
-                      <div>
-                        <span style={{ width: `${course.progress}%` }} />
+                      <span>
+                        <FiClock /> {course.duration}
+                      </span>
+                    </div>
+                    {course.isEnrolled ? (
+                      <div className="course-progress">
+                        <div>
+                          <span style={{ width: `${course.progress}%` }} />
+                        </div>
+                        <small>
+                          {t("coursesPage.complete", {
+                            percent: course.progress,
+                          })}
+                        </small>
                       </div>
-                      <small>{t("coursesPage.complete", { percent: course.progress })}</small>
-                    </div>
-                  ) : (
-                    <div className="course-preview-note">
-                      {user ? <FiPlayCircle /> : <FiLock />} {user ? t("coursesPage.freePreview", { count: course.previewCount }) : t("coursesPage.accountRequired")}
-                    </div>
-                  )}
-                  <footer>
-                    <div>
-                      <small>{course.isEnrolled ? t("coursesPage.yourCourse") : t("coursesPage.fullAccess")}</small>
-                      <strong>
-                        {course.isEnrolled
-                          ? t("coursesPage.continueLearning")
-                          : user
-                            ? money(course.price, course.currency, language === "km" ? "km-KH" : "en-US")
-                            : t("coursesPage.createToView")}
-                      </strong>
-                    </div>
-                    <Link to={accessPath} className="course-arrow">
-                      {course.isEnrolled ? <FiArrowRight /> : <FiLock />}
-                    </Link>
-                  </footer>
-                </div>
-              </article>
+                    ) : (
+                      <div className="course-preview-note">
+                        {user ? <FiPlayCircle /> : <FiLock />}{" "}
+                        {user
+                          ? t("coursesPage.freePreview", {
+                              count: course.previewCount,
+                            })
+                          : t("coursesPage.accountRequired")}
+                      </div>
+                    )}
+                    <footer>
+                      <div>
+                        <small>
+                          {course.isEnrolled
+                            ? t("coursesPage.yourCourse")
+                            : t("coursesPage.fullAccess")}
+                        </small>
+                        <strong>
+                          {course.isEnrolled
+                            ? t("coursesPage.continueLearning")
+                            : user
+                              ? money(
+                                  course.price,
+                                  course.currency,
+                                  language === "km" ? "km-KH" : "en-US",
+                                )
+                              : t("coursesPage.createToView")}
+                        </strong>
+                      </div>
+                      <Link to={accessPath} className="course-arrow">
+                        {course.isEnrolled ? <FiArrowRight /> : <FiLock />}
+                      </Link>
+                    </footer>
+                  </div>
+                </article>
               );
             })}
           </div>

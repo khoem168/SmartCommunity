@@ -67,7 +67,9 @@ export const skillCategories = [
   },
 ];
 
-export const teachSkills = skillCategories.flatMap((category) => category.skills);
+export const teachSkills = skillCategories.flatMap(
+  (category) => category.skills,
+);
 
 export const learnSkills = teachSkills;
 

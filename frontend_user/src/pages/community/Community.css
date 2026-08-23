@@ -11,7 +11,11 @@
   padding: clamp(66px, 8vw, 104px) 0 clamp(62px, 7vw, 92px);
   background:
     radial-gradient(circle at 8% 12%, rgba(45, 212, 191, 0.2), transparent 25%),
-    radial-gradient(circle at 92% 22%, rgba(37, 99, 235, 0.13), transparent 28%),
+    radial-gradient(
+      circle at 92% 22%,
+      rgba(37, 99, 235, 0.13),
+      transparent 28%
+    ),
     linear-gradient(180deg, #f7fffd 0%, #f7f9fc 100%);
 }
 
@@ -92,7 +96,9 @@
   border-radius: 20px;
   padding: 24px;
   box-shadow: 0 16px 42px rgba(15, 23, 42, 0.07);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .exchange-card:hover {

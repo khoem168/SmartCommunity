@@ -17,8 +17,7 @@ export const fetchMentors = async (filters = {}) => {
   return response.mentors || [];
 };
 
-export const fetchMentorDetail = (mentorId) =>
-  apiFetch(`/mentors/${mentorId}`);
+export const fetchMentorDetail = (mentorId) => apiFetch(`/mentors/${mentorId}`);
 
 export const createMentorshipRequest = async (payload) =>
   apiFetch("/mentorships", {

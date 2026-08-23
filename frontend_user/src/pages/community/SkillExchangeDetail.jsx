@@ -16,7 +16,10 @@ import "./Community.css";
 
 const formatDate = (value) =>
   value
-    ? new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" }).format(
+    ? new Intl.DateTimeFormat("en", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(
         new Date(typeof value === "string" ? value.replace(" ", "T") : value),
       )
     : "Not scheduled";
@@ -86,7 +89,10 @@ const SkillExchangeDetail = () => {
     setBusy(true);
     setError("");
     try {
-      const response = await confirmSkillExchangeCompletionRequest(exchangeId, note);
+      const response = await confirmSkillExchangeCompletionRequest(
+        exchangeId,
+        note,
+      );
       setMessage(response.message);
       setNote("");
       await loadExchange();
@@ -97,9 +103,27 @@ const SkillExchangeDetail = () => {
     }
   };
 
-  if (loading) return <main className="exchange-detail-page community-loading">Loading exchange...</main>;
+  if (loading)
+    return (
+      <main className="exchange-detail-page community-loading">
+        Loading exchange...
+      </main>
+    );
   if (!exchange) {
-    return <main className="exchange-detail-page"><section className="section container"><h1>Skill exchange unavailable</h1><p>{error || "This exchange was not found or does not belong to your account."}</p><Link to="/community" className="btn outline">Back to community</Link></section></main>;
+    return (
+      <main className="exchange-detail-page">
+        <section className="section container">
+          <h1>Skill exchange unavailable</h1>
+          <p>
+            {error ||
+              "This exchange was not found or does not belong to your account."}
+          </p>
+          <Link to="/community" className="btn outline">
+            Back to community
+          </Link>
+        </section>
+      </main>
+    );
   }
 
   return (
@@ -108,14 +132,41 @@ const SkillExchangeDetail = () => {
         <div className="container exchange-detail-layout">
           <div>
             <p className="eyebrow">Skill Exchange · {exchange.status}</p>
-            <h1>{exchange.offeredSkill} for {exchange.requestedSkill}</h1>
-            <p>{exchange.details || `${exchange.requesterName} and ${exchange.providerName} are exchanging skills.`}</p>
-            <div className="exchange-participants"><span>{exchange.requesterName}</span><strong>↔</strong><span>{exchange.providerName}</span></div>
+            <h1>
+              {exchange.offeredSkill} for {exchange.requestedSkill}
+            </h1>
+            <p>
+              {exchange.details ||
+                `${exchange.requesterName} and ${exchange.providerName} are exchanging skills.`}
+            </p>
+            <div className="exchange-participants">
+              <span>{exchange.requesterName}</span>
+              <strong>↔</strong>
+              <span>{exchange.providerName}</span>
+            </div>
           </div>
           <div className="exchange-detail-actions">
-            <Link to="/skill-requests" className="btn outline">All requests</Link>
-            {exchange.conversationId && <Link className="btn primary" to={`/messages/${exchange.conversationId}`}><IoChatbubbleEllipsesOutline /> Chat</Link>}
-            {exchange.meetingLink && <a className="btn outline" href={exchange.meetingLink} target="_blank" rel="noreferrer"><IoVideocamOutline /> Meeting</a>}
+            <Link to="/skill-requests" className="btn outline">
+              All requests
+            </Link>
+            {exchange.conversationId && (
+              <Link
+                className="btn primary"
+                to={`/messages/${exchange.conversationId}`}
+              >
+                <IoChatbubbleEllipsesOutline /> Chat
+              </Link>
+            )}
+            {exchange.meetingLink && (
+              <a
+                className="btn outline"
+                href={exchange.meetingLink}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <IoVideocamOutline /> Meeting
+              </a>
+            )}
           </div>
         </div>
       </section>
@@ -124,27 +175,86 @@ const SkillExchangeDetail = () => {
         {error && <div className="auth-error">{error}</div>}
         {message && <div className="profile-success">{message}</div>}
         <section className="exchange-progress-panel">
-          <div className="progress-heading"><div><h2>Learning progress</h2><p>Scheduled: {formatDate(exchange.scheduledDate)}</p></div><strong>{exchange.progressPercent}%</strong></div>
-          <div className="exchange-progress-track"><span style={{ width: `${exchange.progressPercent}%` }} /></div>
+          <div className="progress-heading">
+            <div>
+              <h2>Learning progress</h2>
+              <p>Scheduled: {formatDate(exchange.scheduledDate)}</p>
+            </div>
+            <strong>{exchange.progressPercent}%</strong>
+          </div>
+          <div className="exchange-progress-track">
+            <span style={{ width: `${exchange.progressPercent}%` }} />
+          </div>
 
           {exchange.status === "accepted" && (
             <form className="exchange-progress-form" onSubmit={saveProgress}>
-              <label>Progress: {progress}%<input type="range" min="0" max="100" step="5" value={progress} onChange={(event) => setProgress(event.target.value)} /></label>
-              <label>Learning note<textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="What did you learn or complete?" maxLength="500" /></label>
-              <div className="progress-actions"><button className="btn primary" disabled={busy}>{busy ? "Saving..." : "Save progress"}</button><button type="button" className="btn outline" disabled={busy || exchange.currentUserCompleted} onClick={confirmCompletion}>{exchange.currentUserCompleted ? "You confirmed completion" : "Confirm my completion"}</button></div>
+              <label>
+                Progress: {progress}%
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="5"
+                  value={progress}
+                  onChange={(event) => setProgress(event.target.value)}
+                />
+              </label>
+              <label>
+                Learning note
+                <textarea
+                  value={note}
+                  onChange={(event) => setNote(event.target.value)}
+                  placeholder="What did you learn or complete?"
+                  maxLength="500"
+                />
+              </label>
+              <div className="progress-actions">
+                <button className="btn primary" disabled={busy}>
+                  {busy ? "Saving..." : "Save progress"}
+                </button>
+                <button
+                  type="button"
+                  className="btn outline"
+                  disabled={busy || exchange.currentUserCompleted}
+                  onClick={confirmCompletion}
+                >
+                  {exchange.currentUserCompleted
+                    ? "You confirmed completion"
+                    : "Confirm my completion"}
+                </button>
+              </div>
             </form>
           )}
 
           <div className="completion-confirmations">
-            <span className={exchange.requesterCompleted ? "confirmed" : ""}><IoCheckmarkCircleOutline /> {exchange.requesterName}</span>
-            <span className={exchange.providerCompleted ? "confirmed" : ""}><IoCheckmarkCircleOutline /> {exchange.providerName}</span>
+            <span className={exchange.requesterCompleted ? "confirmed" : ""}>
+              <IoCheckmarkCircleOutline /> {exchange.requesterName}
+            </span>
+            <span className={exchange.providerCompleted ? "confirmed" : ""}>
+              <IoCheckmarkCircleOutline /> {exchange.providerName}
+            </span>
           </div>
         </section>
 
         <section className="exchange-progress-panel">
           <h2>Progress updates</h2>
           <div className="progress-timeline">
-            {updates.length ? updates.map((update) => <article key={update.id}><IoTimeOutline /><div><strong>{update.userName} · {update.progressPercent}%</strong><p>{update.note || "Progress updated"}</p><small>{formatDate(update.createdAt)}</small></div></article>) : <p className="community-empty">No progress updates yet.</p>}
+            {updates.length ? (
+              updates.map((update) => (
+                <article key={update.id}>
+                  <IoTimeOutline />
+                  <div>
+                    <strong>
+                      {update.userName} · {update.progressPercent}%
+                    </strong>
+                    <p>{update.note || "Progress updated"}</p>
+                    <small>{formatDate(update.createdAt)}</small>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <p className="community-empty">No progress updates yet.</p>
+            )}
           </div>
         </section>
       </section>

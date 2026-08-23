@@ -19,7 +19,8 @@ const ResetPassword = () => {
     event.preventDefault();
     setError("");
     if (!token) return setError(t("auth.missingToken"));
-    if (password !== confirmPassword) return setError(t("auth.passwordsMismatch"));
+    if (password !== confirmPassword)
+      return setError(t("auth.passwordsMismatch"));
     setLoading(true);
     try {
       const response = await resetPasswordRequest(token, password);
@@ -63,8 +64,15 @@ const ResetPassword = () => {
               required
             />
           </label>
-          <button className="btn primary auth-submit" disabled={loading || !token}>
-            {loading ? <ButtonLoader>{t("auth.updating")}</ButtonLoader> : t("auth.resetPassword")}
+          <button
+            className="btn primary auth-submit"
+            disabled={loading || !token}
+          >
+            {loading ? (
+              <ButtonLoader>{t("auth.updating")}</ButtonLoader>
+            ) : (
+              t("auth.resetPassword")
+            )}
           </button>
           <p className="auth-footer">
             <Link to="/login">{t("auth.returnLogin")}</Link>

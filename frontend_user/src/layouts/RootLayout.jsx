@@ -48,13 +48,13 @@ const RootLayout = () => {
           <motion.div
             key={location.pathname}
             className="route-transition"
-            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 12 }}
+            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
+            exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -4 }}
             transition={
               reduceMotion
                 ? { duration: 0 }
-                : { duration: 0.3, ease: "easeOut" }
+                : { duration: 0.24, ease: [0.2, 0.75, 0.25, 1] }
             }
           >
             {outlet}

@@ -73,9 +73,7 @@ const VerifyEmail = () => {
         <div className="auth-form">
           {error && <div className="auth-error">{error}</div>}
           {(status || (loading && token)) && (
-            <div className="auth-success">
-              {status || t("auth.verifying")}
-            </div>
+            <div className="auth-success">{status || t("auth.verifying")}</div>
           )}
           {devUrl && (
             <a className="auth-dev-link" href={devUrl}>
@@ -83,7 +81,10 @@ const VerifyEmail = () => {
             </a>
           )}
           {!token && (
-            <form className="auth-form auth-nested-form" onSubmit={handleResend}>
+            <form
+              className="auth-form auth-nested-form"
+              onSubmit={handleResend}
+            >
               <label>
                 {t("auth.accountEmail")}
                 <input
@@ -94,7 +95,11 @@ const VerifyEmail = () => {
                 />
               </label>
               <button className="btn primary auth-submit" disabled={loading}>
-                {loading ? <ButtonLoader>{t("auth.sending")}</ButtonLoader> : t("auth.resend")}
+                {loading ? (
+                  <ButtonLoader>{t("auth.sending")}</ButtonLoader>
+                ) : (
+                  t("auth.resend")
+                )}
               </button>
             </form>
           )}

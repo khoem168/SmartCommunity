@@ -32,9 +32,10 @@ const splitList = (value = "") =>
 
 const formatDate = (value) => {
   if (!value) return "Present";
-  return new Intl.DateTimeFormat("en", { month: "short", year: "numeric" }).format(
-    new Date(value),
-  );
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    year: "numeric",
+  }).format(new Date(value));
 };
 
 const getInitials = (name = "") =>
@@ -78,7 +79,12 @@ const projectFields = [
   { name: "technologies", label: "Technologies (comma separated)" },
   { name: "projectUrl", label: "Live project URL", type: "url" },
   { name: "githubUrl", label: "GitHub URL", type: "url" },
-  { name: "imageFile", label: "Project image", type: "file", accept: "image/jpeg,image/png,image/webp" },
+  {
+    name: "imageFile",
+    label: "Project image",
+    type: "file",
+    accept: "image/jpeg,image/png,image/webp",
+  },
 ];
 
 const emptyFormFor = (fields) =>
@@ -110,10 +116,15 @@ const ProfileRecordSection = ({
       Object.fromEntries(
         fields.map((field) => {
           let value = item[field.name];
-          if (field.name === "technologies" && Array.isArray(value)) value = value.join(", ");
-          if (field.type === "date" && value) value = String(value).slice(0, 10);
+          if (field.name === "technologies" && Array.isArray(value))
+            value = value.join(", ");
+          if (field.type === "date" && value)
+            value = String(value).slice(0, 10);
           if (field.type === "file") value = "";
-          return [field.name, value ?? (field.type === "checkbox" ? false : "")];
+          return [
+            field.name,
+            value ?? (field.type === "checkbox" ? false : ""),
+          ];
         }),
       ),
     );
@@ -138,7 +149,9 @@ const ProfileRecordSection = ({
           .filter((field) => field.type !== "file")
           .map((field) => [
             field.name,
-            field.name === "technologies" ? splitList(form[field.name]) : form[field.name],
+            field.name === "technologies"
+              ? splitList(form[field.name])
+              : form[field.name],
           ]),
       );
       if (beforeSubmit) payload = await beforeSubmit(payload, form.imageFile);
@@ -170,7 +183,10 @@ const ProfileRecordSection = ({
   return (
     <section className="profile-panel profile-record-section">
       <div className="profile-section-heading">
-        <h2>{icon}{title}</h2>
+        <h2>
+          {icon}
+          {title}
+        </h2>
         <button
           type="button"
           className="btn outline profile-small-action"
@@ -190,7 +206,10 @@ const ProfileRecordSection = ({
                   type="checkbox"
                   checked={Boolean(form[field.name])}
                   onChange={(event) =>
-                    setForm((current) => ({ ...current, [field.name]: event.target.checked }))
+                    setForm((current) => ({
+                      ...current,
+                      [field.name]: event.target.checked,
+                    }))
                   }
                 />
                 {field.label}
@@ -202,17 +221,25 @@ const ProfileRecordSection = ({
                   <textarea
                     value={form[field.name] || ""}
                     onChange={(event) =>
-                      setForm((current) => ({ ...current, [field.name]: event.target.value }))
+                      setForm((current) => ({
+                        ...current,
+                        [field.name]: event.target.value,
+                      }))
                     }
                   />
                 ) : (
                   <input
                     type={field.type || "text"}
-                    value={field.type === "file" ? undefined : form[field.name] || ""}
+                    value={
+                      field.type === "file" ? undefined : form[field.name] || ""
+                    }
                     onChange={(event) =>
                       setForm((current) => ({
                         ...current,
-                        [field.name]: field.type === "file" ? event.target.files?.[0] : event.target.value,
+                        [field.name]:
+                          field.type === "file"
+                            ? event.target.files?.[0]
+                            : event.target.value,
                       }))
                     }
                     accept={field.accept}
@@ -234,10 +261,18 @@ const ProfileRecordSection = ({
             <article className="profile-record" key={item.id}>
               <div className="profile-record-content">{renderItem(item)}</div>
               <div className="profile-record-actions">
-                <button type="button" title="Edit" onClick={() => beginEdit(item)}>
+                <button
+                  type="button"
+                  title="Edit"
+                  onClick={() => beginEdit(item)}
+                >
                   <IoCreateOutline />
                 </button>
-                <button type="button" title="Delete" onClick={() => handleDelete(item.id)}>
+                <button
+                  type="button"
+                  title="Delete"
+                  onClick={() => handleDelete(item.id)}
+                >
                   <IoTrashOutline />
                 </button>
               </div>
@@ -288,13 +323,18 @@ const Profile = () => {
     return data;
   };
 
-  if (loading) return <main className="profile-page profile-loading">Loading profile...</main>;
+  if (loading)
+    return (
+      <main className="profile-page profile-loading">Loading profile...</main>
+    );
   if (!user) {
     return (
       <main className="profile-page">
         <section className="profile-empty container">
           <h1>Create an account to build your professional profile.</h1>
-          <Link className="btn primary" to="/register">Create account</Link>
+          <Link className="btn primary" to="/register">
+            Create account
+          </Link>
         </section>
       </main>
     );
@@ -380,26 +420,62 @@ const Profile = () => {
           <div className="profile-identity">
             <div className="profile-avatar-wrap">
               {profileUser.avatarUrl ? (
-                <img className="profile-large-avatar image" src={profileUser.avatarUrl} alt={profileUser.fullName} />
+                <img
+                  className="profile-large-avatar image"
+                  src={profileUser.avatarUrl}
+                  alt={profileUser.fullName}
+                />
               ) : (
-                <span className="profile-large-avatar">{getInitials(profileUser.fullName || profileUser.email)}</span>
+                <span className="profile-large-avatar">
+                  {getInitials(profileUser.fullName || profileUser.email)}
+                </span>
               )}
-              <label className="profile-avatar-upload" title="Upload profile picture">
+              <label
+                className="profile-avatar-upload"
+                title="Upload profile picture"
+              >
                 <IoCameraOutline />
-                <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleAvatar} disabled={busy} />
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleAvatar}
+                  disabled={busy}
+                />
               </label>
             </div>
             <div>
               <p className="eyebrow">{profileUser.role}</p>
               <h1>{profileUser.fullName}</h1>
-              <p>{profileUser.bio || profileUser.careerGoal || "Build your skills and career with the community."}</p>
+              <p>
+                {profileUser.bio ||
+                  profileUser.careerGoal ||
+                  "Build your skills and career with the community."}
+              </p>
               <div className="profile-social-links">
-                {profileUser.githubUrl && <a href={profileUser.githubUrl} target="_blank" rel="noreferrer"><IoLogoGithub /> GitHub</a>}
-                {profileUser.linkedinUrl && <a href={profileUser.linkedinUrl} target="_blank" rel="noreferrer"><IoLogoLinkedin /> LinkedIn</a>}
+                {profileUser.githubUrl && (
+                  <a
+                    href={profileUser.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <IoLogoGithub /> GitHub
+                  </a>
+                )}
+                {profileUser.linkedinUrl && (
+                  <a
+                    href={profileUser.linkedinUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <IoLogoLinkedin /> LinkedIn
+                  </a>
+                )}
               </div>
             </div>
           </div>
-          <button className="btn primary" type="button" onClick={beginEdit}>Edit profile</button>
+          <button className="btn primary" type="button" onClick={beginEdit}>
+            Edit profile
+          </button>
         </div>
       </section>
 
@@ -409,22 +485,75 @@ const Profile = () => {
 
         {editing && (
           <section className="profile-panel profile-editor-panel">
-            <div className="profile-section-heading"><h2>Personal and career information</h2></div>
-            <form className="profile-edit-form profile-edit-grid" onSubmit={handleSave}>
+            <div className="profile-section-heading">
+              <h2>Personal and career information</h2>
+            </div>
+            <form
+              className="profile-edit-form profile-edit-grid"
+              onSubmit={handleSave}
+            >
               {[
-                ["fullName", "Full name"], ["location", "Location"], ["jobTitle", "Profession or job title"],
-                ["recruiterCompany", "Company"], ["githubUrl", "GitHub URL", "url"], ["linkedinUrl", "LinkedIn URL", "url"],
-                ["availability", "Availability"], ["experienceLevel", "Experience level"],
-                ["skillsToTeach", "Skills I can teach"], ["skillsToLearn", "Skills I want to learn"],
+                ["fullName", "Full name"],
+                ["location", "Location"],
+                ["jobTitle", "Profession or job title"],
+                ["recruiterCompany", "Company"],
+                ["githubUrl", "GitHub URL", "url"],
+                ["linkedinUrl", "LinkedIn URL", "url"],
+                ["availability", "Availability"],
+                ["experienceLevel", "Experience level"],
+                ["skillsToTeach", "Skills I can teach"],
+                ["skillsToLearn", "Skills I want to learn"],
                 ["interestedSkills", "Interested skills"],
               ].map(([name, label, type]) => (
-                <label key={name}>{label}<input type={type || "text"} value={form[name] || ""} onChange={(event) => setForm((current) => ({ ...current, [name]: event.target.value }))} /></label>
+                <label key={name}>
+                  {label}
+                  <input
+                    type={type || "text"}
+                    value={form[name] || ""}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        [name]: event.target.value,
+                      }))
+                    }
+                  />
+                </label>
               ))}
-              <label className="profile-wide-field">Bio<textarea value={form.bio || ""} onChange={(event) => setForm((current) => ({ ...current, bio: event.target.value }))} /></label>
-              <label className="profile-wide-field">Career goal<textarea value={form.careerGoal || ""} onChange={(event) => setForm((current) => ({ ...current, careerGoal: event.target.value }))} /></label>
+              <label className="profile-wide-field">
+                Bio
+                <textarea
+                  value={form.bio || ""}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      bio: event.target.value,
+                    }))
+                  }
+                />
+              </label>
+              <label className="profile-wide-field">
+                Career goal
+                <textarea
+                  value={form.careerGoal || ""}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      careerGoal: event.target.value,
+                    }))
+                  }
+                />
+              </label>
               <div className="profile-form-actions profile-wide-field">
-                <button className="btn outline" type="button" onClick={() => setEditing(false)}>Cancel</button>
-                <button className="btn primary" disabled={busy}>{busy ? "Saving..." : "Save profile"}</button>
+                <button
+                  className="btn outline"
+                  type="button"
+                  onClick={() => setEditing(false)}
+                >
+                  Cancel
+                </button>
+                <button className="btn primary" disabled={busy}>
+                  {busy ? "Saving..." : "Save profile"}
+                </button>
               </div>
             </form>
           </section>
@@ -434,27 +563,163 @@ const Profile = () => {
           <section className="profile-panel">
             <h2>Career overview</h2>
             <div className="profile-info-list">
-              <span><IoBriefcaseOutline /> {profileUser.profession || "Add your profession"}</span>
-              <span><IoSchoolOutline /> {skillData.experienceLevel || "Beginner"} level</span>
-              <span><IoCalendarOutline /> Joined {formatDate(profileUser.createdAt)}</span>
+              <span>
+                <IoBriefcaseOutline />{" "}
+                {profileUser.profession || "Add your profession"}
+              </span>
+              <span>
+                <IoSchoolOutline /> {skillData.experienceLevel || "Beginner"}{" "}
+                level
+              </span>
+              <span>
+                <IoCalendarOutline /> Joined {formatDate(profileUser.createdAt)}
+              </span>
             </div>
-            {profileUser.careerGoal && <p className="profile-career-goal">{profileUser.careerGoal}</p>}
+            {profileUser.careerGoal && (
+              <p className="profile-career-goal">{profileUser.careerGoal}</p>
+            )}
           </section>
           <section className="profile-panel">
             <h2>Skills and interests</h2>
-            <div className="profile-skill-group"><strong>Teach</strong><div className="profile-skill-wrap">{skillsToTeach.map((skill) => <span className="profile-skill" key={skill}>{skill}</span>)}</div></div>
-            <div className="profile-skill-group"><strong>Learn</strong><div className="profile-skill-wrap">{skillsToLearn.map((skill) => <span className="profile-skill" key={skill}>{skill}</span>)}</div></div>
-            <div className="profile-skill-group"><strong>Interested</strong><div className="profile-skill-wrap">{(profileUser.interestedSkills || []).map((skill) => <span className="profile-skill interested" key={skill}>{skill}</span>)}</div></div>
+            <div className="profile-skill-group">
+              <strong>Teach</strong>
+              <div className="profile-skill-wrap">
+                {skillsToTeach.map((skill) => (
+                  <span className="profile-skill" key={skill}>
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="profile-skill-group">
+              <strong>Learn</strong>
+              <div className="profile-skill-wrap">
+                {skillsToLearn.map((skill) => (
+                  <span className="profile-skill" key={skill}>
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="profile-skill-group">
+              <strong>Interested</strong>
+              <div className="profile-skill-wrap">
+                {(profileUser.interestedSkills || []).map((skill) => (
+                  <span className="profile-skill interested" key={skill}>
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
           </section>
         </div>
 
         <div className="profile-record-grid">
-          <ProfileRecordSection title="Education" icon={<IoSchoolOutline />} resource="education" fields={educationFields} items={profile?.education || []} emptyText="Add your education history." onChanged={reloadProfile} renderItem={(item) => <><h3>{item.institution}</h3><p>{[item.degree, item.fieldOfStudy].filter(Boolean).join(" · ")}</p><small>{formatDate(item.startDate)} – {formatDate(item.endDate)}</small>{item.description && <p>{item.description}</p>}</>} />
-          <ProfileRecordSection title="Experience" icon={<IoBriefcaseOutline />} resource="experiences" fields={experienceFields} items={profile?.experiences || []} emptyText="Add your professional experience." onChanged={reloadProfile} renderItem={(item) => <><h3>{item.title}</h3><p>{item.company}{item.employmentType ? ` · ${item.employmentType}` : ""}</p><small>{formatDate(item.startDate)} – {item.isCurrent ? "Present" : formatDate(item.endDate)}</small>{item.description && <p>{item.description}</p>}</>} />
-          <ProfileRecordSection title="Certificates" icon={<IoRibbonOutline />} resource="certificates" fields={certificateFields} items={profile?.certificates || []} emptyText="Add certificates and credentials." onChanged={reloadProfile} renderItem={(item) => <><h3>{item.name}</h3><p>{item.issuer || "Certificate"}</p><small>{formatDate(item.issueDate)}</small>{item.credentialUrl && <a href={item.credentialUrl} target="_blank" rel="noreferrer">View credential</a>}</>} />
+          <ProfileRecordSection
+            title="Education"
+            icon={<IoSchoolOutline />}
+            resource="education"
+            fields={educationFields}
+            items={profile?.education || []}
+            emptyText="Add your education history."
+            onChanged={reloadProfile}
+            renderItem={(item) => (
+              <>
+                <h3>{item.institution}</h3>
+                <p>
+                  {[item.degree, item.fieldOfStudy].filter(Boolean).join(" · ")}
+                </p>
+                <small>
+                  {formatDate(item.startDate)} – {formatDate(item.endDate)}
+                </small>
+                {item.description && <p>{item.description}</p>}
+              </>
+            )}
+          />
+          <ProfileRecordSection
+            title="Experience"
+            icon={<IoBriefcaseOutline />}
+            resource="experiences"
+            fields={experienceFields}
+            items={profile?.experiences || []}
+            emptyText="Add your professional experience."
+            onChanged={reloadProfile}
+            renderItem={(item) => (
+              <>
+                <h3>{item.title}</h3>
+                <p>
+                  {item.company}
+                  {item.employmentType ? ` · ${item.employmentType}` : ""}
+                </p>
+                <small>
+                  {formatDate(item.startDate)} –{" "}
+                  {item.isCurrent ? "Present" : formatDate(item.endDate)}
+                </small>
+                {item.description && <p>{item.description}</p>}
+              </>
+            )}
+          />
+          <ProfileRecordSection
+            title="Certificates"
+            icon={<IoRibbonOutline />}
+            resource="certificates"
+            fields={certificateFields}
+            items={profile?.certificates || []}
+            emptyText="Add certificates and credentials."
+            onChanged={reloadProfile}
+            renderItem={(item) => (
+              <>
+                <h3>{item.name}</h3>
+                <p>{item.issuer || "Certificate"}</p>
+                <small>{formatDate(item.issueDate)}</small>
+                {item.credentialUrl && (
+                  <a href={item.credentialUrl} target="_blank" rel="noreferrer">
+                    View credential
+                  </a>
+                )}
+              </>
+            )}
+          />
         </div>
 
-        <ProfileRecordSection title="Portfolio projects" icon={<IoLogoGithub />} resource="projects" fields={projectFields} items={profile?.projects || []} emptyText="Upload your first portfolio project." onChanged={reloadProfile} beforeSubmit={uploadProjectBeforeSave} renderItem={(item) => <div className="portfolio-record">{item.imageUrl && <img src={item.imageUrl} alt="" />}<div><h3>{item.title}</h3>{item.description && <p>{item.description}</p>}<div className="profile-skill-wrap">{item.technologies.map((technology) => <span className="profile-skill" key={technology}>{technology}</span>)}</div><div className="portfolio-links">{item.projectUrl && <a href={item.projectUrl} target="_blank" rel="noreferrer">Live project</a>}{item.githubUrl && <a href={item.githubUrl} target="_blank" rel="noreferrer">GitHub</a>}</div></div></div>} />
+        <ProfileRecordSection
+          title="Portfolio projects"
+          icon={<IoLogoGithub />}
+          resource="projects"
+          fields={projectFields}
+          items={profile?.projects || []}
+          emptyText="Upload your first portfolio project."
+          onChanged={reloadProfile}
+          beforeSubmit={uploadProjectBeforeSave}
+          renderItem={(item) => (
+            <div className="portfolio-record">
+              {item.imageUrl && <img src={item.imageUrl} alt="" />}
+              <div>
+                <h3>{item.title}</h3>
+                {item.description && <p>{item.description}</p>}
+                <div className="profile-skill-wrap">
+                  {item.technologies.map((technology) => (
+                    <span className="profile-skill" key={technology}>
+                      {technology}
+                    </span>
+                  ))}
+                </div>
+                <div className="portfolio-links">
+                  {item.projectUrl && (
+                    <a href={item.projectUrl} target="_blank" rel="noreferrer">
+                      Live project
+                    </a>
+                  )}
+                  {item.githubUrl && (
+                    <a href={item.githubUrl} target="_blank" rel="noreferrer">
+                      GitHub
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        />
       </section>
     </main>
   );

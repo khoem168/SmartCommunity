@@ -6,7 +6,11 @@
 .notifications-hero {
   padding: 58px 0;
   background:
-    radial-gradient(circle at 85% 5%, rgba(45, 212, 191, 0.28), transparent 30%),
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(45, 212, 191, 0.28),
+      transparent 30%
+    ),
     linear-gradient(135deg, #0f172a, #134e4a);
   color: #fff;
 }

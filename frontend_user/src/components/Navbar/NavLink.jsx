@@ -87,7 +87,9 @@ const Navlink = () => {
 
         return (
           <li
-            className={iconOnly ? `nav-icon-item nav-icon-item-${icon}` : undefined}
+            className={
+              iconOnly ? `nav-icon-item nav-icon-item-${icon}` : undefined
+            }
             key={link}
           >
             {link.includes("#") ? (
@@ -108,7 +110,9 @@ const Navlink = () => {
                   <span className="nav-icon">
                     <Icon aria-hidden="true" />
                     {badgeCounts[icon] > 0 ? (
-                      <span className="nav-badge realtime-pulse-dot">{badgeCounts[icon]}</span>
+                      <span className="nav-badge realtime-pulse-dot">
+                        {badgeCounts[icon]}
+                      </span>
                     ) : null}
                   </span>
                 ) : null}

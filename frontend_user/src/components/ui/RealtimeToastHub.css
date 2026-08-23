@@ -14,16 +14,19 @@
   align-items: flex-start;
   gap: 0.75rem;
   padding: 0.9rem 1rem;
-  border: 1px solid rgba(20, 184, 166, 0.22);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(203, 213, 225, 0.78);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.94)),
+    #fff;
   color: var(--text-main);
-  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.16);
+  box-shadow: 0 16px 42px rgba(15, 23, 42, 0.13);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   pointer-events: auto;
-  animation: realtime-toast-in 300ms ease-out both,
-    realtime-toast-out 260ms ease-in forwards 4.5s;
+  animation:
+    realtime-toast-in 260ms cubic-bezier(0.2, 0.75, 0.25, 1) both,
+    realtime-toast-out 240ms ease-in forwards 4.5s;
 }
 
 .realtime-toast-icon {
@@ -33,8 +36,9 @@
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
-  background: #ecfdf5;
+  border: 1px solid rgba(15, 118, 110, 0.12);
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ecfdf5, #e0f2fe);
   color: #0f766e;
 }
 
@@ -105,7 +109,7 @@
 @keyframes realtime-toast-in {
   from {
     opacity: 0;
-    transform: translateX(40px);
+    transform: translateX(24px) translateY(-4px);
   }
 
   to {
@@ -117,7 +121,7 @@
 @keyframes realtime-toast-out {
   to {
     opacity: 0;
-    transform: translateX(40px);
+    transform: translateX(24px) translateY(-4px);
   }
 }
 

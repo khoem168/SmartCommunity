@@ -269,7 +269,7 @@ const faqItems = [
 const splitHeroLines = (value) =>
   String(value)
     .split("\n")
-    .flatMap((segment) => segment.match(/[^។.]+[។.]?/g) || [segment])
+    .flatMap((segment) => segment.match(/[^។.!?]+[។.!?]?/g) || [segment])
     .map((line) => line.trim())
     .filter(Boolean);
 
@@ -499,11 +499,16 @@ const Home = () => {
                 <div className="widget-info">
                   <div className="widget-title-row">
                     <strong>{t("home.mentorCardTitle")}</strong>
-                    <span className="live-status-dot" title={t("home.mentorAvailable")} />
+                    <span
+                      className="live-status-dot"
+                      title={t("home.mentorAvailable")}
+                    />
                   </div>
                   <span className="widget-sub">{t("home.mentorCardRole")}</span>
                   <div className="widget-meta">
-                    <span className="rating-tag">{t("home.mentorCardRating")}</span>
+                    <span className="rating-tag">
+                      {t("home.mentorCardRating")}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -518,7 +523,9 @@ const Home = () => {
                     <strong>{t("home.careerMatchScore")}</strong>
                     <span className="pulse-pill">Active</span>
                   </div>
-                  <span className="widget-sub">{t("home.careerMatchLabel")}</span>
+                  <span className="widget-sub">
+                    {t("home.careerMatchLabel")}
+                  </span>
                   <div className="widget-progress-bar">
                     <div className="bar-fill" style={{ width: "94%" }} />
                   </div>
@@ -849,7 +856,7 @@ const Home = () => {
 
                 <div className="track-stats-row">
                   <span>{track.courses} Courses</span>
-                  <span>•</span>
+                  <span aria-hidden="true">•</span>
                   <span>{track.jobs} Openings</span>
                 </div>
 
@@ -894,7 +901,10 @@ const Home = () => {
                 <div className="mentor-card-top-bar">
                   <div className="mentor-avatar-wrap">
                     <img src={mentor.avatar} alt={mentor.name} />
-                    <span className="verified-shield-icon" title="Verified Mentor">
+                    <span
+                      className="verified-shield-icon"
+                      title="Verified Mentor"
+                    >
                       <IoShieldCheckmarkOutline />
                     </span>
                   </div>

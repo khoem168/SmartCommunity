@@ -2,8 +2,7 @@
 
 @font-face {
   font-family: "Kantumruy Pro Local";
-  src: url("/fonts/khmer/KantumruyPro-VariableFont_wght.ttf")
-    format("truetype");
+  src: url("/fonts/khmer/KantumruyPro-VariableFont_wght.ttf") format("truetype");
   font-style: normal;
   font-weight: 100 700;
   font-display: swap;
@@ -26,7 +25,8 @@
 }
 
 :root {
-  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-display: "Manrope", "Inter", sans-serif;
   --color-primary: #0f766e;
   --color-primary-dark: #115e59;
@@ -114,7 +114,8 @@ html[lang="km"] h6 {
   text-wrap: balance;
 }
 
-html[lang="km"] :where(.section-header p, .hero-content > p:last-of-type, .page-hero p) {
+html[lang="km"]
+  :where(.section-header p, .hero-content > p:last-of-type, .page-hero p) {
   line-height: 2;
   word-spacing: 0.025em;
 }
@@ -327,8 +328,16 @@ ol {
   padding: 82px 20px;
   border-bottom: 1px solid rgba(226, 232, 240, 0.8);
   background:
-    radial-gradient(circle at 12% 15%, rgba(20, 184, 166, 0.16), transparent 27%),
-    radial-gradient(circle at 85% 20%, rgba(37, 99, 235, 0.12), transparent 25%),
+    radial-gradient(
+      circle at 12% 15%,
+      rgba(20, 184, 166, 0.16),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(37, 99, 235, 0.12),
+      transparent 25%
+    ),
     linear-gradient(180deg, #f8fffe, #f7f9fc);
 }
 
@@ -514,18 +523,47 @@ textarea:focus {
   font-weight: 700;
 }
 
-.txt-center { text-align: center; }
-.mg-10 { margin-top: 10px; }
-.mg-t20 { margin-top: 20px; }
-.mg-t50 { margin-top: 50px; }
-.pd-primary { padding: 10px 20px; }
-.pd-10 { padding: 10px; }
-.flex { display: flex; align-items: center; flex-wrap: wrap; }
-.grid-1x2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.grid-1x3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.grid-1x4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.gap-10 { gap: 10px; }
-.gap-20 { gap: 20px; }
+.txt-center {
+  text-align: center;
+}
+.mg-10 {
+  margin-top: 10px;
+}
+.mg-t20 {
+  margin-top: 20px;
+}
+.mg-t50 {
+  margin-top: 50px;
+}
+.pd-primary {
+  padding: 10px 20px;
+}
+.pd-10 {
+  padding: 10px;
+}
+.flex {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.grid-1x2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.grid-1x3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.grid-1x4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.gap-10 {
+  gap: 10px;
+}
+.gap-20 {
+  gap: 20px;
+}
 
 .scroll-up {
   position: fixed;
@@ -544,7 +582,9 @@ textarea:focus {
   cursor: pointer;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  transition: transform 0.2s ease, background 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
 }
 
 .scroll-up:hover {
@@ -586,10 +626,7 @@ textarea:focus {
 .site-footer-inner {
   position: relative;
   z-index: 1;
-  width: min(
-    1320px,
-    calc(100% - var(--page-gutter) - var(--page-gutter))
-  );
+  width: min(1320px, calc(100% - var(--page-gutter) - var(--page-gutter)));
   margin-inline: auto;
   padding: 48px 0 24px;
 }
@@ -609,7 +646,9 @@ textarea:focus {
   border-radius: 10px;
   font-size: 0.77rem;
   font-weight: 800;
-  transition: transform 160ms ease, background 160ms ease;
+  transition:
+    transform 160ms ease,
+    background 160ms ease;
 }
 
 .footer-button:hover {
@@ -666,7 +705,9 @@ textarea:focus {
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 12px 30px rgba(0, 8, 20, 0.18);
-  transition: transform 160ms ease, box-shadow 160ms ease;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .footer-logo:hover {
@@ -770,7 +811,10 @@ textarea:focus {
   border-radius: 8px;
   color: #91a7b6;
   font-size: 0.79rem;
-  transition: color 150ms ease, background 150ms ease, transform 150ms ease;
+  transition:
+    color 150ms ease,
+    background 150ms ease,
+    transform 150ms ease;
 }
 
 .footer-column a svg {
@@ -830,7 +874,6 @@ textarea:focus {
   .footer-identity {
     max-width: 620px;
   }
-
 }
 
 @media (max-width: 760px) {
@@ -976,8 +1019,16 @@ html {
 
 body {
   background:
-    radial-gradient(circle at top left, rgba(20, 184, 166, 0.045), transparent 32rem),
-    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.04), transparent 34rem),
+    radial-gradient(
+      circle at top left,
+      rgba(20, 184, 166, 0.045),
+      transparent 32rem
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(37, 99, 235, 0.04),
+      transparent 34rem
+    ),
     var(--color-bg);
 }
 
@@ -1022,20 +1073,54 @@ body::-webkit-scrollbar-thumb:hover {
   filter: saturate(0.8);
 }
 
-:where(.btn, .footer-button, .home-btn, .learning-button, button):active:not(:disabled) {
+:where(.btn, .footer-button, .home-btn, .learning-button, button):active:not(
+    :disabled
+  ) {
   transform: translateY(0) scale(0.99);
 }
 
-:where(.course-card, .job-card, .mentor-card, .exchange-card, .career-path-card, .session-card, .application-tracking-card, .company-profile-form, .mentor-application-form, .mentor-admin-panel, .my-mentorships, .profile-card, .settings-card, .forum-post-card) {
+:where(
+  .course-card,
+  .job-card,
+  .mentor-card,
+  .exchange-card,
+  .career-path-card,
+  .session-card,
+  .application-tracking-card,
+  .company-profile-form,
+  .mentor-application-form,
+  .mentor-admin-panel,
+  .my-mentorships,
+  .profile-card,
+  .settings-card,
+  .forum-post-card
+) {
   backface-visibility: hidden;
 }
 
-:where(.course-card, .job-card, .mentor-card, .exchange-card, .career-path-card, .session-card, .application-tracking-card):focus-within {
+:where(
+  .course-card,
+  .job-card,
+  .mentor-card,
+  .exchange-card,
+  .career-path-card,
+  .session-card,
+  .application-tracking-card
+):focus-within {
   border-color: rgba(15, 118, 110, 0.32);
   box-shadow: 0 20px 52px rgba(15, 23, 42, 0.12);
 }
 
-:where(.section-header > span, .mentor-application-status, .application-status, .booking-status, .session-status, .exchange-status, .course-category, .job-type) {
+:where(
+  .section-header > span,
+  .mentor-application-status,
+  .application-status,
+  .booking-status,
+  .session-status,
+  .exchange-status,
+  .course-category,
+  .job-type
+) {
   letter-spacing: 0.01em;
 }
 
@@ -1046,7 +1131,14 @@ body::-webkit-scrollbar-thumb:hover {
 @media (hover: none) {
   .btn:hover,
   .btn-tag:hover,
-  :where(.course-card, .job-card, .mentor-card, .exchange-card, .career-path-card, .session-card):hover {
+  :where(
+    .course-card,
+    .job-card,
+    .mentor-card,
+    .exchange-card,
+    .career-path-card,
+    .session-card
+  ):hover {
     transform: none;
   }
 }
@@ -1094,7 +1186,9 @@ body::-webkit-scrollbar-thumb:hover {
 
 /* Modern icon polish */
 :where(.btn, .footer-button, .home-btn, .learning-button) > svg,
-:where(.btn, .footer-button, .home-btn, .learning-button) .button-loading-state + svg {
+:where(.btn, .footer-button, .home-btn, .learning-button)
+  .button-loading-state
+  + svg {
   width: 1.08em;
   height: 1.08em;
   flex: 0 0 auto;
@@ -1102,15 +1196,28 @@ body::-webkit-scrollbar-thumb:hover {
   transition: transform 180ms ease;
 }
 
-:where(.btn, .footer-button, .home-btn, .learning-button):hover > svg:last-child {
+:where(.btn, .footer-button, .home-btn, .learning-button):hover
+  > svg:last-child {
   transform: translateX(2px);
 }
 
-:where(.btn, .footer-button, .home-btn, .learning-button):hover > svg:first-child:not(:last-child) {
+:where(.btn, .footer-button, .home-btn, .learning-button):hover
+  > svg:first-child:not(:last-child) {
   transform: translateY(-1px) scale(1.04);
 }
 
-:where(.feature-icon, .dashboard-stat-icon, .dashboard-event-icon, .dashboard-job-icon, .exchange-swap-icon, .realtime-toast-icon, .course-play, .lesson-number, .notification-icon, .admin-report-icon) {
+:where(
+  .feature-icon,
+  .dashboard-stat-icon,
+  .dashboard-event-icon,
+  .dashboard-job-icon,
+  .exchange-swap-icon,
+  .realtime-toast-icon,
+  .course-play,
+  .lesson-number,
+  .notification-icon,
+  .admin-report-icon
+) {
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -1119,32 +1226,112 @@ body::-webkit-scrollbar-thumb:hover {
     0 10px 24px rgba(15, 23, 42, 0.08);
 }
 
-:where(.feature-icon, .dashboard-stat-icon, .dashboard-event-icon, .dashboard-job-icon, .exchange-swap-icon, .realtime-toast-icon, .course-play, .lesson-number, .notification-icon, .admin-report-icon)::before {
+:where(
+  .feature-icon,
+  .dashboard-stat-icon,
+  .dashboard-event-icon,
+  .dashboard-job-icon,
+  .exchange-swap-icon,
+  .realtime-toast-icon,
+  .course-play,
+  .lesson-number,
+  .notification-icon,
+  .admin-report-icon
+)::before {
   position: absolute;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(circle at 28% 20%, rgba(255, 255, 255, 0.55), transparent 34%),
+    radial-gradient(
+      circle at 28% 20%,
+      rgba(255, 255, 255, 0.55),
+      transparent 34%
+    ),
     linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent);
   content: "";
 }
 
-:where(.feature-icon, .dashboard-stat-icon, .dashboard-event-icon, .dashboard-job-icon, .exchange-swap-icon, .realtime-toast-icon, .course-play, .lesson-number, .notification-icon, .admin-report-icon) > svg {
+:where(
+    .feature-icon,
+    .dashboard-stat-icon,
+    .dashboard-event-icon,
+    .dashboard-job-icon,
+    .exchange-swap-icon,
+    .realtime-toast-icon,
+    .course-play,
+    .lesson-number,
+    .notification-icon,
+    .admin-report-icon
+  )
+  > svg {
   width: 1.2em;
   height: 1.2em;
   flex: 0 0 auto;
   filter: drop-shadow(0 4px 8px rgba(15, 23, 42, 0.12));
 }
 
-:where(.course-card, .job-card, .mentor-card, .exchange-card, .career-path-card, .session-card, .dashboard-stat, .application-tracking-card):hover :where(.feature-icon, .dashboard-stat-icon, .dashboard-event-icon, .dashboard-job-icon, .exchange-swap-icon, .course-play, .lesson-number, .notification-icon) > svg {
+:where(
+    .course-card,
+    .job-card,
+    .mentor-card,
+    .exchange-card,
+    .career-path-card,
+    .session-card,
+    .dashboard-stat,
+    .application-tracking-card
+  ):hover
+  :where(
+    .feature-icon,
+    .dashboard-stat-icon,
+    .dashboard-event-icon,
+    .dashboard-job-icon,
+    .exchange-swap-icon,
+    .course-play,
+    .lesson-number,
+    .notification-icon
+  )
+  > svg {
   transform: scale(1.05) rotate(-2deg);
 }
 
-:where(.course-card, .job-card, .mentor-card, .exchange-card, .career-path-card, .session-card, .dashboard-stat, .application-tracking-card) :where(.feature-icon, .dashboard-stat-icon, .dashboard-event-icon, .dashboard-job-icon, .exchange-swap-icon, .course-play, .lesson-number, .notification-icon) > svg {
+:where(
+    .course-card,
+    .job-card,
+    .mentor-card,
+    .exchange-card,
+    .career-path-card,
+    .session-card,
+    .dashboard-stat,
+    .application-tracking-card
+  )
+  :where(
+    .feature-icon,
+    .dashboard-stat-icon,
+    .dashboard-event-icon,
+    .dashboard-job-icon,
+    .exchange-swap-icon,
+    .course-play,
+    .lesson-number,
+    .notification-icon
+  )
+  > svg {
   transition: transform 180ms ease;
 }
 
-:where(.course-meta span, .job-meta span, .booking-meta span, .mentor-meta span, .session-meta span, .detail-session-meta span, .career-path-meta span, .profile-info-list span, .footer-location span, .dashboard-activity-pills span, .dashboard-row-meta span) > svg {
+:where(
+    .course-meta span,
+    .job-meta span,
+    .booking-meta span,
+    .mentor-meta span,
+    .session-meta span,
+    .detail-session-meta span,
+    .career-path-meta span,
+    .profile-info-list span,
+    .footer-location span,
+    .dashboard-activity-pills span,
+    .dashboard-row-meta span
+  )
+  > svg {
   width: 1em;
   height: 1em;
   flex: 0 0 auto;
@@ -1152,24 +1339,61 @@ body::-webkit-scrollbar-thumb:hover {
   opacity: 0.95;
 }
 
-:where(.course-meta span, .job-meta span, .booking-meta span, .mentor-meta span, .session-meta span, .detail-session-meta span, .career-path-meta span, .profile-info-list span, .footer-location span, .dashboard-activity-pills span, .dashboard-row-meta span) {
+:where(
+  .course-meta span,
+  .job-meta span,
+  .booking-meta span,
+  .mentor-meta span,
+  .session-meta span,
+  .detail-session-meta span,
+  .career-path-meta span,
+  .profile-info-list span,
+  .footer-location span,
+  .dashboard-activity-pills span,
+  .dashboard-row-meta span
+) {
   align-items: center;
 }
 
-:where(.internship-stats article > svg, .internship-dashboard-stats article > svg, .career-stats article > svg, .skill-progress-stats article > svg, .analytics-stat > svg) {
+:where(
+  .internship-stats article > svg,
+  .internship-dashboard-stats article > svg,
+  .career-stats article > svg,
+  .skill-progress-stats article > svg,
+  .analytics-stat > svg
+) {
   border: 1px solid rgba(37, 99, 235, 0.1);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.55),
     0 10px 22px rgba(37, 99, 235, 0.1);
 }
 
-:where(.mentor-card-person > span, .skill-match-person > span, .exchange-owner > span, .attendance-avatar, .conversation-avatar, .profile-avatar, .profile-large-avatar) {
+:where(
+  .mentor-card-person > span,
+  .skill-match-person > span,
+  .exchange-owner > span,
+  .attendance-avatar,
+  .conversation-avatar,
+  .profile-avatar,
+  .profile-large-avatar
+) {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.35),
     0 10px 24px rgba(15, 23, 42, 0.1);
 }
 
-:where(.application-status, .booking-status, .session-status, .exchange-status, .mentor-application-status, .course-category, .job-type, .skill-pill, .profile-skill, .btn-tag) {
+:where(
+  .application-status,
+  .booking-status,
+  .session-status,
+  .exchange-status,
+  .mentor-application-status,
+  .course-category,
+  .job-type,
+  .skill-pill,
+  .profile-skill,
+  .btn-tag
+) {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
@@ -1179,8 +1403,16 @@ body::-webkit-scrollbar-thumb:hover {
   place-items: center;
   padding: clamp(44px, 8vw, 88px) var(--page-gutter);
   background:
-    radial-gradient(circle at 18% 12%, rgba(45, 212, 191, 0.18), transparent 32%),
-    radial-gradient(circle at 82% 16%, rgba(59, 130, 246, 0.12), transparent 30%),
+    radial-gradient(
+      circle at 18% 12%,
+      rgba(45, 212, 191, 0.18),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 82% 16%,
+      rgba(59, 130, 246, 0.12),
+      transparent 30%
+    ),
     linear-gradient(135deg, #f8fffd 0%, #f8fbff 100%);
 }
 
@@ -1193,7 +1425,11 @@ body::-webkit-scrollbar-thumb:hover {
   border: 1px solid rgba(203, 213, 225, 0.82);
   border-radius: 30px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.88)),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.96),
+      rgba(255, 255, 255, 0.88)
+    ),
     #fff;
   text-align: center;
   box-shadow:
@@ -1250,8 +1486,857 @@ html[data-language="km"] .auth-required-card h1 {
 
 @media (prefers-reduced-motion: reduce) {
   :where(.btn, .footer-button, .home-btn, .learning-button) > svg,
-  :where(.course-card, .job-card, .mentor-card, .exchange-card, .career-path-card, .session-card, .dashboard-stat, .application-tracking-card) :where(.feature-icon, .dashboard-stat-icon, .dashboard-event-icon, .dashboard-job-icon, .exchange-swap-icon, .course-play, .lesson-number, .notification-icon) > svg {
+  :where(
+      .course-card,
+      .job-card,
+      .mentor-card,
+      .exchange-card,
+      .career-path-card,
+      .session-card,
+      .dashboard-stat,
+      .application-tracking-card
+    )
+    :where(
+      .feature-icon,
+      .dashboard-stat-icon,
+      .dashboard-event-icon,
+      .dashboard-job-icon,
+      .exchange-swap-icon,
+      .course-play,
+      .lesson-number,
+      .notification-icon
+    )
+    > svg {
     transform: none !important;
     transition: none !important;
+  }
+}
+
+/* Final-year presentation polish: calm, modern, and consistent */
+:root {
+  --ease-polished: cubic-bezier(0.2, 0.75, 0.25, 1);
+  --surface-glass: rgba(255, 255, 255, 0.88);
+  --surface-raised: #ffffff;
+  --border-soft: rgba(203, 213, 225, 0.78);
+  --shadow-polished: 0 18px 48px rgba(15, 23, 42, 0.075);
+  --shadow-polished-hover: 0 24px 60px rgba(15, 23, 42, 0.105);
+}
+
+body {
+  background:
+    radial-gradient(circle at 4% 0%, rgba(20, 184, 166, 0.055), transparent 30rem),
+    radial-gradient(circle at 98% 18%, rgba(37, 99, 235, 0.05), transparent 32rem),
+    #f8fafc;
+}
+
+.app-content > main {
+  animation: page-enter-polished 0.38s var(--ease-polished) both;
+}
+
+@keyframes page-enter-polished {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: saturate(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: saturate(1);
+  }
+}
+
+:where(.page-hero, .courses-hero, .jobs-hero, .mentorship-hero, .community-hero, .forum-hero, .sessions-hero, .career-hero, .discover-hero, .profile-hero) {
+  border-bottom: 1px solid rgba(226, 232, 240, 0.72);
+}
+
+:where(
+    .course-card,
+    .job-card,
+    .mentor-card,
+    .exchange-card,
+    .career-path-card,
+    .session-card,
+    .forum-post-card,
+    .forum-category-card,
+    .discover-card,
+    .request-card,
+    .notification-card,
+    .conversation-card,
+    .profile-card,
+    .settings-card,
+    .application-tracking-card,
+    .active-roadmap-panel,
+    .career-assessment-section,
+    .career-advice-section,
+    .assessment-form,
+    .career-article-reader,
+    .company-profile-form,
+    .mentor-application-card,
+    .mentorship-booking-card,
+    .mentor-profile-card,
+    .mentor-card-section
+  ) {
+  border-color: var(--border-soft);
+  border-radius: clamp(18px, 1.5vw, 24px);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.94)),
+    var(--surface-raised);
+  box-shadow:
+    var(--shadow-polished),
+    inset 0 1px 0 rgba(255, 255, 255, 0.78);
+}
+
+:where(
+    .course-card,
+    .job-card,
+    .mentor-card,
+    .exchange-card,
+    .career-path-card,
+    .session-card,
+    .forum-post-card,
+    .forum-category-card,
+    .discover-card,
+    .request-card,
+    .notification-card,
+    .conversation-card,
+    .application-tracking-card
+  ) {
+  transition:
+    transform 180ms var(--ease-polished),
+    border-color 180ms var(--ease-polished),
+    box-shadow 180ms var(--ease-polished),
+    background 180ms var(--ease-polished);
+}
+
+:where(
+    .course-card,
+    .job-card,
+    .mentor-card,
+    .exchange-card,
+    .career-path-card,
+    .session-card,
+    .forum-post-card,
+    .forum-category-card,
+    .discover-card,
+    .request-card,
+    .notification-card,
+    .conversation-card,
+    .application-tracking-card
+  ):hover {
+  transform: translateY(-3px);
+  border-color: rgba(15, 118, 110, 0.22);
+  box-shadow: var(--shadow-polished-hover);
+}
+
+:where(.btn, .footer-button, .home-btn, .learning-button, .nav-signin-button, .scroll-popup-button) {
+  border-radius: 14px;
+  transition:
+    transform 170ms var(--ease-polished),
+    border-color 170ms var(--ease-polished),
+    box-shadow 170ms var(--ease-polished),
+    background 170ms var(--ease-polished),
+    color 170ms var(--ease-polished);
+}
+
+:where(.btn, .footer-button, .home-btn, .learning-button, .nav-signin-button, .scroll-popup-button):hover {
+  transform: translateY(-1px);
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+  box-shadow: 0 14px 30px rgba(15, 118, 110, 0.2);
+}
+
+.btn.primary:hover {
+  background: linear-gradient(135deg, #115e59, #0f766e);
+  box-shadow: 0 18px 38px rgba(15, 118, 110, 0.24);
+}
+
+.btn.outline {
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+:where(.btn-tag, .badge, .course-category, .job-type, .skill-pill, .profile-skill, .exchange-status, .session-status, .application-status, .booking-status) {
+  border: 1px solid rgba(15, 118, 110, 0.12);
+  background: #ecfdf5;
+  color: #0f766e;
+}
+
+:where(input, select, textarea, .search-input) {
+  min-height: 44px;
+  border: 1px solid #d7e1eb;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+:where(input, select, textarea, .search-input):focus {
+  border-color: rgba(15, 118, 110, 0.52);
+  box-shadow:
+    0 0 0 4px rgba(15, 118, 110, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+:where(.course-cover, .career-card, .hero-visual, .home-visual-card, .mentor-profile-card, .discover-profile-card) img {
+  object-fit: cover;
+  transform: translateZ(0);
+}
+
+:where(.course-cover, .hero-image-frame, .home-visual-card, .career-card, .mentor-profile-card, .discover-profile-card) {
+  overflow: hidden;
+  border-radius: clamp(18px, 2vw, 28px);
+}
+
+:where(.course-cover img, .home-visual-card img, .career-card img, .mentor-profile-card img, .discover-profile-card img) {
+  transition: transform 520ms var(--ease-polished), filter 520ms var(--ease-polished);
+}
+
+:where(.course-card, .home-visual-card, .career-card, .mentor-profile-card, .discover-profile-card):hover img {
+  transform: scale(1.025);
+  filter: saturate(1.03);
+}
+
+:where(
+    .feature-icon,
+    .dashboard-stat-icon,
+    .dashboard-event-icon,
+    .dashboard-job-icon,
+    .exchange-swap-icon,
+    .realtime-toast-icon,
+    .course-play,
+    .lesson-number,
+    .notification-icon,
+    .admin-report-icon,
+    .auth-required-icon
+  ) {
+  border: 1px solid rgba(15, 118, 110, 0.12);
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.74), transparent 34%),
+    linear-gradient(135deg, #ecfdf5, #e0f2fe);
+  color: #0f766e;
+}
+
+.section {
+  padding-block: clamp(54px, 7vw, 84px);
+}
+
+.section-header {
+  margin-bottom: clamp(20px, 3vw, 32px);
+}
+
+.section-header h2,
+.career-section-header h2,
+.profile-section-heading h2 {
+  letter-spacing: -0.04em;
+}
+
+html[lang="km"] :where(.btn, .home-btn, .learning-button, .nav-signin-button) {
+  font-weight: 760;
+  line-height: 1.45;
+}
+
+html[lang="km"] :where(.section-header h2, .career-section-header h2, .page-hero h1, .hero-content h1) {
+  letter-spacing: -0.012em;
+}
+
+@media (max-width: 760px) {
+  :where(
+      .course-card,
+      .job-card,
+      .mentor-card,
+      .exchange-card,
+      .career-path-card,
+      .session-card,
+      .forum-post-card,
+      .discover-card,
+      .request-card,
+      .notification-card,
+      .conversation-card
+    ):hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-content > main {
+    animation: none !important;
+  }
+
+  :where(
+      .course-card,
+      .job-card,
+      .mentor-card,
+      .exchange-card,
+      .career-path-card,
+      .session-card,
+      .forum-post-card,
+      .discover-card,
+      .request-card,
+      .notification-card,
+      .conversation-card
+    ),
+  :where(.course-cover img, .home-visual-card img, .career-card img, .mentor-profile-card img, .discover-profile-card img) {
+    transition: none !important;
+  }
+}
+
+/* School presentation refinement: one calm visual language across pages */
+:root {
+  --presentation-max-width: 1180px;
+  --presentation-section-gap: clamp(48px, 6vw, 78px);
+  --presentation-card-radius: 20px;
+}
+
+:where(
+    .courses-page,
+    .career-page,
+    .community-page,
+    .mentorship-page,
+    .jobs-page,
+    .sessions-page,
+    .forum-page,
+    .discover-page,
+    .dashboard-page,
+    .profile-page,
+    .settings-page,
+    .notifications-page,
+    .messages-page
+  ) {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.72),
+      rgba(248, 250, 252, 0.96) 28rem
+    ),
+    #f8fafc;
+}
+
+:where(
+    .courses-page,
+    .career-page,
+    .community-page,
+    .mentorship-page,
+    .jobs-page,
+    .sessions-page,
+    .forum-page,
+    .discover-page,
+    .dashboard-page,
+    .profile-page,
+    .settings-page,
+    .notifications-page,
+    .messages-page
+  )
+  :where(.container, .section.container, .home-container) {
+  width: min(var(--presentation-max-width), calc(100% - 40px));
+}
+
+:where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .page-hero
+  ) {
+  padding-block: clamp(54px, 7vw, 86px);
+  color: #0f172a;
+  background:
+    radial-gradient(
+      circle at 8% 8%,
+      rgba(45, 212, 191, 0.14),
+      transparent 26rem
+    ),
+    radial-gradient(
+      circle at 96% 12%,
+      rgba(59, 130, 246, 0.1),
+      transparent 28rem
+    ),
+    linear-gradient(180deg, #fbfffe 0%, #f7fafc 100%) !important;
+}
+
+:where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .page-hero
+  )::before,
+:where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .page-hero
+  )::after {
+  opacity: 0.42;
+}
+
+:where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .page-hero
+  )
+  :where(h1, h2) {
+  max-width: 13ch;
+  color: #0f172a;
+  letter-spacing: -0.045em;
+}
+
+:where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .page-hero
+  )
+  :where(p:not(.eyebrow):not(.courses-kicker)) {
+  max-width: 64ch;
+  color: #536176;
+  font-size: clamp(0.98rem, 1.05vw, 1.06rem);
+}
+
+:where(
+    .courses-library,
+    .career-content,
+    .community-content,
+    .mentorship-content,
+    .jobs-content,
+    .sessions-content,
+    .forum-content,
+    .discover-content,
+    .dashboard-content
+  ) {
+  gap: var(--presentation-section-gap);
+}
+
+:where(
+    .section-header,
+    .career-section-header,
+    .community-section-header,
+    .courses-library-header,
+    .dashboard-section-heading,
+    .dashboard-panel-header
+  ) {
+  align-items: flex-end;
+  gap: 18px;
+}
+
+:where(
+    .section-header h2,
+    .career-section-header h2,
+    .community-section-header h2,
+    .courses-library-header h2,
+    .dashboard-section-heading h2,
+    .dashboard-panel-header h2
+  ) {
+  color: #0f172a;
+  font-size: clamp(1.42rem, 2.4vw, 2.12rem);
+  line-height: 1.18;
+  letter-spacing: -0.035em;
+}
+
+:where(
+    .section-header p,
+    .career-section-header p,
+    .community-section-header p,
+    .dashboard-section-heading p,
+    .dashboard-panel-header p
+  ) {
+  max-width: 62ch;
+  color: #64748b;
+}
+
+:where(
+    .course-card,
+    .career-path-card,
+    .exchange-card,
+    .mentor-card,
+    .job-card,
+    .session-card,
+    .forum-post-card,
+    .forum-category-card,
+    .discover-card,
+    .request-card,
+    .notification-card,
+    .conversation-card,
+    .dashboard-panel,
+    .dashboard-stat-modern,
+    .dashboard-quick-card,
+    .dashboard-journey-track,
+    .dashboard-next-action-card,
+    .dashboard-insight-card,
+    .active-roadmap-panel,
+    .career-assessment-section,
+    .career-advice-section,
+    .assessment-form,
+    .career-article-reader,
+    .skill-match-card,
+    .community-empty-card,
+    .learning-history-panel,
+    .exchange-progress-panel
+  ) {
+  border-radius: var(--presentation-card-radius) !important;
+  border-color: rgba(203, 213, 225, 0.76) !important;
+  box-shadow:
+    0 14px 38px rgba(15, 23, 42, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75) !important;
+}
+
+:where(
+    .course-card,
+    .career-path-card,
+    .exchange-card,
+    .mentor-card,
+    .job-card,
+    .session-card,
+    .forum-post-card,
+    .forum-category-card,
+    .discover-card,
+    .request-card,
+    .notification-card,
+    .conversation-card,
+    .dashboard-stat-modern,
+    .dashboard-quick-card
+  ):hover {
+  transform: translateY(-3px);
+  border-color: rgba(15, 118, 110, 0.26) !important;
+  box-shadow:
+    0 20px 50px rgba(15, 23, 42, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
+}
+
+:where(
+    .courses-grid,
+    .career-path-grid,
+    .community-grid,
+    .skill-match-grid,
+    .mentors-grid,
+    .jobs-grid,
+    .sessions-grid,
+    .forum-post-grid,
+    .discover-grid,
+    .dashboard-stats-grid,
+    .dashboard-quick-grid
+  ) {
+  gap: clamp(14px, 2vw, 22px);
+}
+
+:where(
+    .course-filters,
+    .job-filters,
+    .mentor-filters,
+    .category-filters,
+    .forum-filters,
+    .skill-filter-row
+  ) {
+  width: fit-content;
+  max-width: 100%;
+  padding: 6px;
+  border: 1px solid rgba(226, 232, 240, 0.88);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+:where(
+    .course-filters,
+    .job-filters,
+    .mentor-filters,
+    .category-filters,
+    .forum-filters,
+    .skill-filter-row
+  )
+  button {
+  min-height: 34px;
+  border-radius: 999px;
+}
+
+:where(
+    .course-search,
+    .jobs-search,
+    .mentor-search,
+    .forum-search,
+    .discover-search
+  ) {
+  filter: drop-shadow(0 10px 24px rgba(15, 23, 42, 0.04));
+}
+
+:where(
+    .course-search input,
+    .jobs-search input,
+    .mentor-search input,
+    .forum-search input,
+    .discover-search input,
+    .career-section-header select
+  ) {
+  border-color: #d7e1eb;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+:where(
+    .career-stats article,
+    .skill-progress-stats article,
+    .internship-stats article,
+    .analytics-stat,
+    .dashboard-stat-modern
+  ) {
+  min-height: 126px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.98),
+      rgba(248, 250, 252, 0.9)
+    ),
+    #fff;
+}
+
+:where(.dashboard-hero, .cta-banner-card, .site-footer) {
+  background:
+    radial-gradient(
+      circle at 88% 8%,
+      rgba(45, 212, 191, 0.18),
+      transparent 28rem
+    ),
+    linear-gradient(132deg, #071426, #0c2435 58%, #08383a) !important;
+}
+
+.dashboard-hero {
+  padding-block: clamp(44px, 6vw, 70px) clamp(54px, 7vw, 82px);
+}
+
+.dashboard-content {
+  margin-top: -28px;
+}
+
+:where(
+    .dashboard-panel,
+    .active-roadmap-panel,
+    .career-assessment-section,
+    .career-advice-section,
+    .assessment-form,
+    .career-article-reader,
+    .skill-match-card,
+    .learning-history-panel,
+    .exchange-progress-panel
+  ) {
+  padding: clamp(18px, 2.4vw, 26px);
+}
+
+.assessment-layout {
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1fr);
+}
+
+.assessment-list article {
+  align-items: start;
+}
+
+.assessment-result-panel {
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(45, 212, 191, 0.1),
+      transparent 18rem
+    ),
+    #fff;
+}
+
+.career-radar-chart {
+  min-height: 260px;
+}
+
+:where(
+    .story-quote,
+    .course-card-content > p,
+    .career-path-card > p,
+    .exchange-card > p,
+    .mentor-card p,
+    .job-card p,
+    .session-card p
+  ) {
+  color: #5f6f84;
+}
+
+html[lang="km"]
+  :where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .page-hero
+  )
+  :where(h1, h2),
+html[data-language="km"]
+  :where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .page-hero
+  )
+  :where(h1, h2) {
+  max-width: 15ch;
+  line-height: 1.34;
+  letter-spacing: -0.012em;
+}
+
+html[lang="km"]
+  :where(.card, article, .btn, .home-btn, button, a),
+html[data-language="km"]
+  :where(.card, article, .btn, .home-btn, button, a) {
+  text-wrap: pretty;
+}
+
+html[lang="km"]
+  :where(
+    .course-card h3,
+    .career-path-card h3,
+    .exchange-card h3,
+    .mentor-card h3,
+    .job-card h3,
+    .session-card h3,
+    .dashboard-panel h2
+  ),
+html[data-language="km"]
+  :where(
+    .course-card h3,
+    .career-path-card h3,
+    .exchange-card h3,
+    .mentor-card h3,
+    .job-card h3,
+    .session-card h3,
+    .dashboard-panel h2
+  ) {
+  line-height: 1.42;
+}
+
+@media (max-width: 900px) {
+  :where(
+      .courses-page,
+      .career-page,
+      .community-page,
+      .mentorship-page,
+      .jobs-page,
+      .sessions-page,
+      .forum-page,
+      .discover-page,
+      .dashboard-page,
+      .profile-page,
+      .settings-page,
+      .notifications-page,
+      .messages-page
+    )
+    :where(.container, .section.container, .home-container) {
+    width: min(100% - 28px, var(--presentation-max-width));
+  }
+
+  :where(
+      .courses-hero,
+      .career-hero,
+      .community-hero,
+      .mentorship-hero,
+      .jobs-hero,
+      .sessions-hero,
+      .forum-hero,
+      .discover-hero,
+      .page-hero
+    ) {
+    padding-block: 48px;
+  }
+
+  :where(
+      .courses-hero,
+      .career-hero,
+      .community-hero,
+      .mentorship-hero,
+      .jobs-hero,
+      .sessions-hero,
+      .forum-hero,
+      .discover-hero,
+      .page-hero
+    )
+    :where(h1, h2) {
+    max-width: 100%;
+  }
+
+  :where(
+      .section-header,
+      .career-section-header,
+      .community-section-header,
+      .courses-library-header,
+      .dashboard-section-heading,
+      .dashboard-panel-header
+    ) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  :where(
+      .course-filters,
+      .job-filters,
+      .mentor-filters,
+      .category-filters,
+      .forum-filters,
+      .skill-filter-row
+    ) {
+    width: 100%;
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  :where(
+      .courses-grid,
+      .career-path-grid,
+      .community-grid,
+      .skill-match-grid,
+      .mentors-grid,
+      .jobs-grid,
+      .sessions-grid,
+      .forum-post-grid,
+      .discover-grid,
+      .dashboard-stats-grid,
+      .dashboard-quick-grid
+    ) {
+    grid-template-columns: 1fr !important;
+  }
+
+  :where(.btn, .home-btn, .learning-button, .nav-signin-button) {
+    min-height: 44px;
+  }
+
+  .dashboard-content {
+    margin-top: -18px;
   }
 }

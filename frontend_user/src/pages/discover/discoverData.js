@@ -83,7 +83,10 @@ const normalizeRegisteredUser = (user) => {
       "Ready to exchange skills and learn with the community.",
     teachSkills: teachSkills.length ? teachSkills : user.candidateSkills || [],
     learnSkills,
-    matchScore: Math.min(98, 72 + teachSkills.length * 4 + learnSkills.length * 3),
+    matchScore: Math.min(
+      98,
+      72 + teachSkills.length * 4 + learnSkills.length * 3,
+    ),
     source: "registered",
   };
 };

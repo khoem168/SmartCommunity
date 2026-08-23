@@ -5,8 +5,7 @@ export const fetchCareerPaths = async () => {
   return response.paths || [];
 };
 
-export const fetchCareerPath = (pathId) =>
-  apiFetch(`/career/paths/${pathId}`);
+export const fetchCareerPath = (pathId) => apiFetch(`/career/paths/${pathId}`);
 
 export const fetchCareerOverview = () => apiFetch("/career/overview");
 
@@ -16,11 +15,7 @@ export const startCareerRoadmapRequest = (pathId) =>
     body: JSON.stringify({ pathId }),
   });
 
-export const updateCareerRoadmapStepRequest = (
-  roadmapId,
-  stepId,
-  completed,
-) =>
+export const updateCareerRoadmapStepRequest = (roadmapId, stepId, completed) =>
   apiFetch(`/career/roadmaps/${roadmapId}/steps/${stepId}`, {
     method: "PATCH",
     body: JSON.stringify({ completed }),

@@ -6,7 +6,11 @@
 
 .mentor-detail-page .mentor-hero {
   padding: 58px 0;
-  background: radial-gradient(circle at top right, rgba(20, 184, 166, 0.16), transparent 42%);
+  background: radial-gradient(
+    circle at top right,
+    rgba(20, 184, 166, 0.16),
+    transparent 42%
+  );
 }
 
 .mentor-detail-layout {

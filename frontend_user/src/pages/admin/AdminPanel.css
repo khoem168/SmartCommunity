@@ -7,7 +7,11 @@
   padding: 52px 0;
   color: #fff;
   background:
-    radial-gradient(circle at 88% 10%, rgba(45, 212, 191, 0.22), transparent 28%),
+    radial-gradient(
+      circle at 88% 10%,
+      rgba(45, 212, 191, 0.22),
+      transparent 28%
+    ),
     linear-gradient(135deg, #111827, #0f3d4a);
 }
 

@@ -116,9 +116,7 @@ export const NavProfile = ({ user = {}, onLogout }) => {
           >
             <span>{t("profile.skillRequests")}</span>
             {pendingSkillRequests > 0 && (
-              <span className="profile-menu-badge">
-                {pendingSkillRequests}
-              </span>
+              <span className="profile-menu-badge">{pendingSkillRequests}</span>
             )}
           </Link>
 

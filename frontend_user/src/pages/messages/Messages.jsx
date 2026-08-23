@@ -162,7 +162,9 @@ const Messages = () => {
         String(payload.conversationId) === String(roomId) &&
         Number(payload.user?.id) !== Number(user.id)
       ) {
-        setTypingUser(payload.isTyping ? payload.user?.fullName || "Someone" : "");
+        setTypingUser(
+          payload.isTyping ? payload.user?.fullName || "Someone" : "",
+        );
       }
     };
 
@@ -179,9 +181,13 @@ const Messages = () => {
   useEffect(() => {
     if (!activeId || !user) return;
     const socket = getSocket();
-    socket.emit("typing", { conversationId: activeId, isTyping: Boolean(draft) });
+    socket.emit("typing", {
+      conversationId: activeId,
+      isTyping: Boolean(draft),
+    });
     const timer = window.setTimeout(
-      () => socket.emit("typing", { conversationId: activeId, isTyping: false }),
+      () =>
+        socket.emit("typing", { conversationId: activeId, isTyping: false }),
       1200,
     );
     return () => window.clearTimeout(timer);
@@ -390,7 +396,9 @@ const Messages = () => {
           <div className="thread-header">
             <div className="thread-person">
               {activeConversation && (
-                <span className={`conversation-avatar ${activeConversation.type}`}>
+                <span
+                  className={`conversation-avatar ${activeConversation.type}`}
+                >
                   {activeConversation.type === "group" ? (
                     <IoPeopleOutline />
                   ) : (
@@ -434,7 +442,9 @@ const Messages = () => {
           {error && <div className="message-error">{error}</div>}
           <div className="thread-body">
             {!user ? (
-              <div className="message-empty">Please login to see your messages.</div>
+              <div className="message-empty">
+                Please login to see your messages.
+              </div>
             ) : !activeConversation ? (
               <div className="message-empty">
                 Select a conversation or create a community group.
@@ -502,10 +512,13 @@ const Messages = () => {
                               : message.senderName || "Member"}
                           </span>
                           <span>
-                            {new Date(message.createdAt).toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
+                            {new Date(message.createdAt).toLocaleTimeString(
+                              [],
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              },
+                            )}
                           </span>
                         </div>
                       </div>
@@ -517,7 +530,9 @@ const Messages = () => {
                   </div>
                 )}
                 {typingUser && (
-                  <div className="typing-indicator">{typingUser} is typing…</div>
+                  <div className="typing-indicator">
+                    {typingUser} is typing…
+                  </div>
                 )}
               </div>
             )}
@@ -641,7 +656,9 @@ const Messages = () => {
                       checked={groupForm.memberIds.includes(member.id)}
                       onChange={() => toggleGroupMember(member.id)}
                     />
-                    <span className="mini-avatar">{getInitials(member.name)}</span>
+                    <span className="mini-avatar">
+                      {getInitials(member.name)}
+                    </span>
                     <span>
                       <strong>{member.name}</strong>
                       <small>{member.title || member.role}</small>

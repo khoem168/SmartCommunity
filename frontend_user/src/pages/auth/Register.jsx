@@ -164,9 +164,7 @@ const SkillCategoryPicker = ({ title, field, selectedSkills, onToggle }) => {
         </div>
       ) : (
         <div className="empty-skill-message">
-          {activeCategory
-            ? t("auth.noSkills")
-            : t("auth.chooseCategory")}
+          {activeCategory ? t("auth.noSkills") : t("auth.chooseCategory")}
         </div>
       )}
     </div>
@@ -318,9 +316,13 @@ const Register = () => {
       const response = await registerUser(registerPayload);
       if (response.devVerificationUrl) {
         const verificationUrl = new URL(response.devVerificationUrl);
-        navigate(`${verificationUrl.pathname}${verificationUrl.search}${redirectQuery}`);
+        navigate(
+          `${verificationUrl.pathname}${verificationUrl.search}${redirectQuery}`,
+        );
       } else {
-        navigate(`/verify-email?email=${encodeURIComponent(registerPayload.email)}&sent=1${redirectQuery}`);
+        navigate(
+          `/verify-email?email=${encodeURIComponent(registerPayload.email)}&sent=1${redirectQuery}`,
+        );
       }
     } catch (err) {
       setError(err.message || t("auth.registerError"));
@@ -574,7 +576,8 @@ const Register = () => {
                     <p>
                       {t("auth.candidateSkills")}:{" "}
                       <strong>
-                        {formData.candidateSkills.join(", ") || t("common.none")}
+                        {formData.candidateSkills.join(", ") ||
+                          t("common.none")}
                       </strong>
                     </p>
                     <p>
@@ -666,13 +669,17 @@ const Register = () => {
             >
               {submitting ? (
                 <ButtonLoader>
-                  {isRecruiter ? t("auth.createAccount") : t("auth.completeRegistration")}
+                  {isRecruiter
+                    ? t("auth.createAccount")
+                    : t("auth.completeRegistration")}
                 </ButtonLoader>
-              ) : isRecruiter
-                ? t("auth.createAccount")
-                : step === 3
-                  ? t("auth.completeRegistration")
-                  : t("common.next")}
+              ) : isRecruiter ? (
+                t("auth.createAccount")
+              ) : step === 3 ? (
+                t("auth.completeRegistration")
+              ) : (
+                t("common.next")
+              )}
             </button>
           </div>
 
