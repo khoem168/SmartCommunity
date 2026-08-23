@@ -596,17 +596,12 @@ textarea:focus {
   position: relative;
   overflow: hidden;
   color: #c7d4dc;
-  border-top: 1px solid rgba(94, 234, 212, 0.1);
-  background:
-    radial-gradient(circle at 93% 8%, rgba(20, 184, 166, 0.2), transparent 30%),
-    linear-gradient(132deg, #071426, #0a1b2c 58%, #092a32);
+  border-top: 1px solid #1e3a5f;
+  background: #0b1730;
 }
 
 .footer-orb {
-  position: absolute;
-  border: 1px solid rgba(99, 215, 197, 0.09);
-  border-radius: 50%;
-  pointer-events: none;
+  display: none;
 }
 
 .footer-orb-one {

@@ -176,19 +176,6 @@ const tracksList = [
 
 const featuredMentors = [
   {
-    id: "mentor-1",
-    name: "Sokha Chen",
-    role: "Staff Software Architect",
-    company: "ABA Bank / Tech Lead",
-    avatar:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80",
-    rating: "4.98",
-    sessions: 142,
-    years: "12",
-    badgeKey: "mentorBadgeLead",
-    tags: ["System Design", "Cloud", "Microservices", "Career Guidance"],
-  },
-  {
     id: "mentor-2",
     name: "Chanthou Rath",
     role: "Lead Product Designer",
@@ -489,31 +476,7 @@ const Home = () => {
                 className="hero-main-img"
               />
 
-              {/* Floating Widget 1: Top Verified Mentor */}
-              <div className="hero-float-widget mentor-widget">
-                <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
-                  alt="Mentor"
-                  className="widget-avatar"
-                />
-                <div className="widget-info">
-                  <div className="widget-title-row">
-                    <strong>{t("home.mentorCardTitle")}</strong>
-                    <span
-                      className="live-status-dot"
-                      title={t("home.mentorAvailable")}
-                    />
-                  </div>
-                  <span className="widget-sub">{t("home.mentorCardRole")}</span>
-                  <div className="widget-meta">
-                    <span className="rating-tag">
-                      {t("home.mentorCardRating")}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Widget 2: Career Readiness Radar */}
+              {/* Floating career readiness indicator */}
               <div className="hero-float-widget progress-widget">
                 <div className="widget-icon-box">
                   <IoTrendingUpOutline />
@@ -1059,56 +1022,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 10. HIGH-IMPACT FINAL CTA BANNER */}
-      <section className="home-section cta-banner-section">
-        <div className="home-container">
-          <div className="cta-banner-card reveal">
-            <div className="cta-banner-mesh" aria-hidden="true" />
-            <div className="cta-banner-content">
-              <span className="cta-eyebrow">
-                <IoSparklesOutline /> {t("home.ctaKicker")}
-              </span>
-              <h2>{t("home.ctaTitle")}</h2>
-              <p>{t("home.ctaDesc")}</p>
-
-              <div className="cta-actions-row">
-                <Link
-                  to={user ? "/dashboard" : "/register"}
-                  className="home-btn primary"
-                >
-                  {user ? t("home.goDashboard") : t("home.ctaPrimary")}
-                  <IoArrowForward />
-                </Link>
-                <Link to="/jobs" className="home-btn secondary">
-                  {t("home.ctaSecondary")}
-                </Link>
-              </div>
-
-              <div className="cta-avatar-stack-row">
-                <div className="avatar-stack">
-                  <img
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
-                    alt="Member"
-                  />
-                  <img
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80"
-                    alt="Member"
-                  />
-                  <img
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80"
-                    alt="Member"
-                  />
-                  <img
-                    src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=100&q=80"
-                    alt="Member"
-                  />
-                </div>
-                <span>{t("home.ctaCommunityCount")}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
   );
 };
