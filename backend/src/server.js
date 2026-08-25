@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 
 dotenv.config();
+require("./config/validateEnv")();
 
 const adminRoutes = require("./routes/adminRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -54,11 +55,15 @@ app.get("/health", (req, res) => {
 });
 
 app.get("/db-check", async (req, res) => {
+  if (process.env.NODE_ENV === "production") {
+    return res.status(404).json({ error: "Route not found." });
+  }
+
   try {
     const [rows] = await db.query("SELECT COUNT(*) AS cnt FROM users");
     res.json({ users: rows[0].cnt });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Database connection failed." });
   }
 });
 

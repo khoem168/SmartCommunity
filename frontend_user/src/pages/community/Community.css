@@ -8,7 +8,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: clamp(66px, 8vw, 104px) 0 clamp(62px, 7vw, 92px);
+  padding: clamp(46px, 5vw, 66px) 20px !important;
   background:
     radial-gradient(circle at 8% 12%, rgba(45, 212, 191, 0.2), transparent 25%),
     radial-gradient(
@@ -43,22 +43,29 @@
 }
 
 .community-hero .hero-content {
-  max-width: 720px;
+  width: min(940px, 100%);
+  max-width: 940px;
   margin: 0 auto;
   text-align: center;
 }
 
 .community-hero h1 {
+  max-width: 880px !important;
+  margin: 10px auto 14px;
   color: #0f172a;
-  font-size: clamp(2.3rem, 4vw, 3.7rem);
-  margin-bottom: 16px;
-  letter-spacing: -0.05em;
+  font-size: clamp(2.35rem, 3.35vw, 3.35rem) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
 }
 
 .community-hero .hero-content > p:last-of-type {
+  max-width: 62ch;
+  margin: 0 auto;
   color: #526178;
-  font-size: 1.02rem;
-  line-height: 1.75;
+  font-size: clamp(0.96rem, 1.05vw, 1.03rem);
+  line-height: 1.65;
+  text-wrap: balance;
 }
 
 .community-hero .eyebrow {
@@ -614,6 +621,15 @@
 }
 
 @media (max-width: 600px) {
+  .community-hero {
+    padding: 38px 16px 42px !important;
+  }
+
+  .community-hero h1 {
+    max-width: 18ch !important;
+    font-size: clamp(2rem, 10.5vw, 2.65rem) !important;
+  }
+
   .community-grid,
   .skill-match-grid {
     grid-template-columns: minmax(0, 1fr);

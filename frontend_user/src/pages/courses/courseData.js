@@ -2,7 +2,7 @@ export const sampleCourses = [
   {
     id: "react-modern-web",
     title: "React for Modern Web",
-    mentor: "Jane Doe",
+    mentor: "MUY KALIN",
     category: "Frontend",
     lessons: 24,
     duration: "6 weeks",
@@ -19,7 +19,7 @@ export const sampleCourses = [
   {
     id: "node-api-development",
     title: "Node.js API Development",
-    mentor: "John Smith",
+    mentor: "MUY KALIN",
     category: "Backend",
     lessons: 18,
     duration: "5 weeks",
@@ -36,7 +36,7 @@ export const sampleCourses = [
   {
     id: "ui-ux-design-essentials",
     title: "UI/UX Design Essentials",
-    mentor: "Sara Lee",
+    mentor: "Smart Community Project Team",
     category: "Design",
     lessons: 20,
     duration: "4 weeks",

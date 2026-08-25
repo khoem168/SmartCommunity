@@ -682,3 +682,67 @@
     animation: none !important;
   }
 }
+
+/* Compact bilingual presentation aligned with the Home page visual rhythm. */
+.sessions-page .sessions-hero {
+  min-height: 0;
+  padding-block: clamp(46px, 5vw, 70px) !important;
+}
+
+.sessions-page .sessions-hero-inner {
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  gap: clamp(30px, 5vw, 64px);
+}
+
+.sessions-page .sessions-hero h1 {
+  max-width: 15ch;
+  margin: 10px 0 14px;
+  font-size: clamp(2.35rem, 3.8vw, 3.5rem) !important;
+  line-height: 1.1;
+}
+
+.sessions-page .sessions-hero p:not(.eyebrow) {
+  max-width: 620px;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.sessions-page .sessions-hero-actions {
+  margin-top: 22px;
+}
+
+.sessions-page .sessions-stats div {
+  padding-block: 24px;
+}
+
+.sessions-page .sessions-content.section {
+  padding-block: clamp(32px, 4vw, 52px);
+}
+
+html[lang="km"] .sessions-page .sessions-hero h1 {
+  max-width: 18ch;
+  font-size: clamp(2rem, 3.25vw, 3rem) !important;
+  line-height: 1.42;
+  letter-spacing: 0;
+}
+
+@media (max-width: 760px) {
+  .sessions-page .sessions-hero {
+    padding-block: 36px !important;
+  }
+
+  .sessions-page .sessions-hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .sessions-page .sessions-hero h1,
+  html[lang="km"] .sessions-page .sessions-hero h1 {
+    max-width: 100%;
+    font-size: clamp(1.9rem, 9vw, 2.65rem) !important;
+  }
+
+  .sessions-page .sessions-content.section {
+    padding-block: 26px;
+  }
+}

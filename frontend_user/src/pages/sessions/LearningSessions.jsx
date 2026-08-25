@@ -12,6 +12,7 @@ import {
   IoVideocamOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import {
   cancelLearningSessionRegistration,
   createLearningSession,
@@ -37,8 +38,8 @@ const emptyForm = {
   materialsText: "",
 };
 
-const formatDate = (value) =>
-  new Date(value).toLocaleString([], {
+const formatDate = (value, locale) =>
+  new Date(value).toLocaleString(locale, {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -57,6 +58,7 @@ const initials = (name = "") =>
 
 const LearningSessions = () => {
   const { user } = useGlobleContext();
+  const { language, t } = useLanguage();
   const { sessionId } = useParams();
   const navigate = useNavigate();
   const [sessions, setSessions] = useState([]);
@@ -86,11 +88,11 @@ const LearningSessions = () => {
       setCategories(response.categories || []);
       setError("");
     } catch (err) {
-      setError(err.message || "Unable to load learning sessions.");
+      setError(err.message || t("sessionsPage.loadError"));
     } finally {
       setLoading(false);
     }
-  }, [scope, query, category]);
+  }, [scope, query, category, t]);
 
   useEffect(() => {
     const timer = window.setTimeout(loadSessions, 250);
@@ -109,11 +111,11 @@ const LearningSessions = () => {
           setParticipants([]);
         }
       } catch (err) {
-        setError(err.message || "Unable to load this session.");
+        setError(err.message || t("sessionsPage.detailError"));
       }
     };
     loadDetail();
-  }, [sessionId]);
+  }, [sessionId, t]);
 
   const stats = useMemo(
     () => ({
@@ -151,7 +153,7 @@ const LearningSessions = () => {
       }
       await refreshSelected(selected?.id === session.id ? session.id : null);
     } catch (err) {
-      setError(err.message || "Unable to update registration.");
+      setError(err.message || t("sessionsPage.registrationError"));
     } finally {
       setBusy("");
     }
@@ -173,7 +175,7 @@ const LearningSessions = () => {
       await loadSessions();
       navigate(`/sessions/${result.sessionId}`);
     } catch (err) {
-      setError(err.message || "Unable to create the session.");
+      setError(err.message || t("sessionsPage.createError"));
     } finally {
       setBusy("");
     }
@@ -183,14 +185,14 @@ const LearningSessions = () => {
     if (!selected) return;
     const cancelReason =
       status === "cancelled"
-        ? window.prompt("Why is this session being cancelled?") || ""
+        ? window.prompt(t("sessionsPage.cancelReasonPrompt")) || ""
         : "";
     try {
       setBusy(`status-${status}`);
       await updateLearningSessionStatus(selected.id, { status, cancelReason });
       await refreshSelected(selected.id);
     } catch (err) {
-      setError(err.message || "Unable to update session status.");
+      setError(err.message || t("sessionsPage.statusError"));
     } finally {
       setBusy("");
     }
@@ -204,7 +206,7 @@ const LearningSessions = () => {
       setFeedback({ rating: 5, feedback: "" });
       await refreshSelected(selected.id);
     } catch (err) {
-      setError(err.message || "Unable to save feedback.");
+      setError(err.message || t("sessionsPage.feedbackError"));
     } finally {
       setBusy("");
     }
@@ -215,12 +217,9 @@ const LearningSessions = () => {
       <section className="sessions-hero">
         <div className="container sessions-hero-inner">
           <div>
-            <p className="eyebrow">Live community learning</p>
-            <h1>Learn together in interactive online sessions.</h1>
-            <p>
-              Register for mentor-led workshops, join through Jitsi, share your
-              screen, and keep a verified attendance history.
-            </p>
+            <p className="eyebrow">{t("sessionsPage.eyebrow")}</p>
+            <h1>{t("sessionsPage.title")}</h1>
+            <p>{t("sessionsPage.description")}</p>
             <div className="sessions-hero-actions">
               {canCreate && (
                 <button
@@ -228,7 +227,7 @@ const LearningSessions = () => {
                   type="button"
                   onClick={() => setCreateOpen(true)}
                 >
-                  <IoAddOutline /> Create session
+                  <IoAddOutline /> {t("sessionsPage.createSession")}
                 </button>
               )}
               <button
@@ -236,22 +235,24 @@ const LearningSessions = () => {
                 type="button"
                 onClick={() => (user ? setScope("my") : navigate("/login"))}
               >
-                {user ? "My learning sessions" : "Login to join sessions"}
+                {user
+                  ? t("sessionsPage.mySessions")
+                  : t("sessionsPage.loginToJoin")}
               </button>
             </div>
           </div>
           <div className="sessions-stats">
             <div>
               <strong>{stats.upcoming}</strong>
-              <span>Upcoming</span>
+              <span>{t("sessionsPage.upcoming")}</span>
             </div>
             <div>
               <strong>{stats.registered}</strong>
-              <span>Registered</span>
+              <span>{t("sessionsPage.registered")}</span>
             </div>
             <div className={stats.live > 0 ? "sessions-live-stat" : ""}>
               <strong>{stats.live}</strong>
-              <span>Live now</span>
+              <span>{t("sessionsPage.liveNow")}</span>
             </div>
           </div>
         </div>
@@ -265,14 +266,14 @@ const LearningSessions = () => {
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search title, description, or host"
+              placeholder={t("sessionsPage.searchPlaceholder")}
             />
           </label>
           <select
             value={category}
             onChange={(event) => setCategory(event.target.value)}
           >
-            <option value="">All categories</option>
+            <option value="">{t("sessionsPage.allCategories")}</option>
             {categories.map((item) => (
               <option value={item} key={item}>
                 {item}
@@ -287,7 +288,7 @@ const LearningSessions = () => {
                 onClick={() => setScope(item)}
                 key={item}
               >
-                {item}
+                {t(`sessionsPage.tabs.${item}`)}
               </button>
             ))}
           </div>
@@ -297,7 +298,7 @@ const LearningSessions = () => {
           <SkeletonGrid
             className="sessions-grid"
             count={3}
-            label="Loading learning sessions"
+            label={t("sessionsPage.loading")}
             variant="session"
           />
         ) : sessions.length ? (
@@ -310,28 +311,35 @@ const LearningSessions = () => {
                     <span
                       className={`session-status ${session.status} ${session.status === "ongoing" ? "realtime-live-pill" : ""}`}
                     >
-                      {session.status}
+                      {t(`sessionsPage.status.${session.status}`)}
                     </span>
-                    <span className="session-level">{session.level}</span>
+                    <span className="session-level">
+                      {t(`sessionsPage.level.${session.level}`)}
+                    </span>
                   </div>
                   <span className="session-category">{session.category}</span>
                   <h2>{session.title}</h2>
                   <p className="session-description">
-                    {session.description || "A community learning session."}
+                    {session.description || t("sessionsPage.defaultDescription")}
                   </p>
                   <div className="session-host">
                     <span>{initials(session.hostName)}</span>
                     <div>
                       <strong>{session.hostName}</strong>
-                      <small>{session.hostTitle || "Session host"}</small>
+                      <small>{session.hostTitle || t("sessionsPage.host")}</small>
                     </div>
                   </div>
                   <div className="session-meta">
                     <span>
-                      <IoCalendarOutline /> {formatDate(session.scheduledTime)}
+                      <IoCalendarOutline />{" "}
+                      {formatDate(
+                        session.scheduledTime,
+                        language === "km" ? "km-KH" : "en-US",
+                      )}
                     </span>
                     <span>
-                      <IoTimeOutline /> {session.durationMinutes} minutes
+                      <IoTimeOutline /> {session.durationMinutes}{" "}
+                      {t("sessionsPage.minutes")}
                     </span>
                     <span>
                       <IoPeopleOutline /> {session.participantCount}/
@@ -347,14 +355,14 @@ const LearningSessions = () => {
                       className="btn outline small"
                       onClick={() => navigate(`/sessions/${session.id}`)}
                     >
-                      View details
+                      {t("sessionsPage.viewDetails")}
                     </button>
                     {session.canJoin ? (
                       <Link
                         className="btn primary small"
                         to={`/sessions/${session.id}/room`}
                       >
-                        <IoVideocamOutline /> Join now
+                        <IoVideocamOutline /> {t("sessionsPage.joinNow")}
                       </Link>
                     ) : !session.isHost && session.status === "scheduled" ? (
                       <button
@@ -367,13 +375,13 @@ const LearningSessions = () => {
                         }
                       >
                         {busy === `registration-${session.id}` ? (
-                          <ButtonLoader>Updating...</ButtonLoader>
+                          <ButtonLoader>{t("sessionsPage.updating")}</ButtonLoader>
                         ) : session.isRegistered ? (
-                          "Cancel registration"
+                          t("sessionsPage.cancelRegistration")
                         ) : full ? (
-                          "Session full"
+                          t("sessionsPage.sessionFull")
                         ) : (
-                          "Register"
+                          t("sessionsPage.register")
                         )}
                       </button>
                     ) : null}
@@ -385,8 +393,8 @@ const LearningSessions = () => {
         ) : (
           <div className="sessions-empty">
             <IoVideocamOutline size={46} />
-            <h2>No sessions found</h2>
-            <p>Try another filter or ask a verified mentor to schedule one.</p>
+            <h2>{t("sessionsPage.noSessions")}</h2>
+            <p>{t("sessionsPage.noSessionsDescription")}</p>
           </div>
         )}
       </section>
@@ -402,38 +410,43 @@ const LearningSessions = () => {
               type="button"
               className="session-close"
               onClick={() => navigate("/sessions")}
-              aria-label="Close session details"
+              aria-label={t("sessionsPage.closeDetails")}
             >
               <IoCloseOutline />
             </button>
             <span
               className={`session-status ${selected.status} ${selected.status === "ongoing" ? "realtime-live-pill" : ""}`}
             >
-              {selected.status}
+              {t(`sessionsPage.status.${selected.status}`)}
             </span>
             <h2>{selected.title}</h2>
             <p>
-              {selected.description || "A live community learning session."}
+              {selected.description || t("sessionsPage.defaultLiveDescription")}
             </p>
             <div className="detail-session-meta">
               <span>
-                <IoCalendarOutline /> {formatDate(selected.scheduledTime)}
+                <IoCalendarOutline />{" "}
+                {formatDate(
+                  selected.scheduledTime,
+                  language === "km" ? "km-KH" : "en-US",
+                )}
               </span>
               <span>
-                <IoTimeOutline /> {selected.durationMinutes} minutes
+                <IoTimeOutline /> {selected.durationMinutes}{" "}
+                {t("sessionsPage.minutes")}
               </span>
               <span>
                 <IoPeopleOutline /> {selected.participantCount}/
-                {selected.maxParticipants} participants
+                {selected.maxParticipants} {t("sessionsPage.participants")}
               </span>
               <span>
-                <IoVideocamOutline /> Jitsi video and screen sharing
+                <IoVideocamOutline /> {t("sessionsPage.jitsiFeature")}
               </span>
             </div>
 
             {selected.materials?.length > 0 && (
               <div className="session-materials">
-                <h3>Session materials</h3>
+                <h3>{t("sessionsPage.materials")}</h3>
                 {selected.materials.map((material) => (
                   <a
                     href={material.url}
@@ -453,7 +466,7 @@ const LearningSessions = () => {
                   className="btn primary"
                   to={`/sessions/${selected.id}/room`}
                 >
-                  <IoVideocamOutline /> Enter Jitsi room
+                  <IoVideocamOutline /> {t("sessionsPage.enterRoom")}
                 </Link>
               )}
               {!selected.isHost && selected.status === "scheduled" && (
@@ -464,11 +477,11 @@ const LearningSessions = () => {
                   disabled={busy === `registration-${selected.id}`}
                 >
                   {busy === `registration-${selected.id}` ? (
-                    <ButtonLoader>Updating...</ButtonLoader>
+                    <ButtonLoader>{t("sessionsPage.updating")}</ButtonLoader>
                   ) : selected.isRegistered ? (
-                    "Cancel registration"
+                    t("sessionsPage.cancelRegistration")
                   ) : (
-                    "Register for session"
+                    t("sessionsPage.registerForSession")
                   )}
                 </button>
               )}
@@ -481,9 +494,9 @@ const LearningSessions = () => {
                     disabled={busy === "status-ongoing"}
                   >
                     {busy === "status-ongoing" ? (
-                      <ButtonLoader>Starting...</ButtonLoader>
+                      <ButtonLoader>{t("sessionsPage.starting")}</ButtonLoader>
                     ) : (
-                      "Start session"
+                      t("sessionsPage.startSession")
                     )}
                   </button>
                   <button
@@ -493,9 +506,9 @@ const LearningSessions = () => {
                     disabled={busy === "status-cancelled"}
                   >
                     {busy === "status-cancelled" ? (
-                      <ButtonLoader>Cancelling...</ButtonLoader>
+                      <ButtonLoader>{t("sessionsPage.cancelling")}</ButtonLoader>
                     ) : (
-                      "Cancel session"
+                      t("sessionsPage.cancelSession")
                     )}
                   </button>
                 </>
@@ -508,9 +521,9 @@ const LearningSessions = () => {
                   disabled={busy === "status-completed"}
                 >
                   {busy === "status-completed" ? (
-                    <ButtonLoader>Completing...</ButtonLoader>
+                    <ButtonLoader>{t("sessionsPage.completing")}</ButtonLoader>
                   ) : (
-                    "Complete session"
+                    t("sessionsPage.completeSession")
                   )}
                 </button>
               )}
@@ -518,7 +531,9 @@ const LearningSessions = () => {
 
             {selected.isHost && (
               <div className="attendance-board">
-                <h3>Attendance ({participants.length})</h3>
+                <h3>
+                  {t("sessionsPage.attendance", { count: participants.length })}
+                </h3>
                 {participants.length ? (
                   participants.map((participant) => (
                     <div className="attendance-row" key={participant.id}>
@@ -534,11 +549,13 @@ const LearningSessions = () => {
                       >
                         {participant.attendanceStatus}
                       </span>
-                      <span>{participant.attendanceMinutes || 0} min</span>
+                      <span>
+                        {participant.attendanceMinutes || 0} {t("sessionsPage.min")}
+                      </span>
                     </div>
                   ))
                 ) : (
-                  <p>No registrations yet.</p>
+                  <p>{t("sessionsPage.noRegistrations")}</p>
                 )}
               </div>
             )}
@@ -547,9 +564,9 @@ const LearningSessions = () => {
               selected.attendanceStatus === "attended" &&
               !selected.myRating && (
                 <form className="session-feedback" onSubmit={submitFeedback}>
-                  <h3>Rate this session</h3>
+                  <h3>{t("sessionsPage.rateSession")}</h3>
                   <label>
-                    Rating
+                    {t("sessionsPage.rating")}
                     <select
                       value={feedback.rating}
                       onChange={(event) =>
@@ -561,7 +578,7 @@ const LearningSessions = () => {
                     >
                       {[5, 4, 3, 2, 1].map((rating) => (
                         <option value={rating} key={rating}>
-                          {rating} stars
+                          {rating} {t("sessionsPage.stars")}
                         </option>
                       ))}
                     </select>
@@ -575,7 +592,7 @@ const LearningSessions = () => {
                         feedback: event.target.value,
                       }))
                     }
-                    placeholder="What was useful?"
+                    placeholder={t("sessionsPage.feedbackPlaceholder")}
                   />
                   <button
                     className="btn primary small"
@@ -583,10 +600,10 @@ const LearningSessions = () => {
                     disabled={busy === "feedback"}
                   >
                     {busy === "feedback" ? (
-                      <ButtonLoader>Submitting...</ButtonLoader>
+                      <ButtonLoader>{t("sessionsPage.submitting")}</ButtonLoader>
                     ) : (
                       <>
-                        <IoStar /> Submit feedback
+                        <IoStar /> {t("sessionsPage.submitFeedback")}
                       </>
                     )}
                   </button>
@@ -594,8 +611,10 @@ const LearningSessions = () => {
               )}
             {selected.myRating && (
               <p className="feedback-saved">
-                <IoCheckmarkCircleOutline /> Your {selected.myRating}-star
-                feedback is saved.
+                <IoCheckmarkCircleOutline />{" "}
+                {t("sessionsPage.feedbackSaved", {
+                  rating: selected.myRating,
+                })}
               </p>
             )}
           </section>
@@ -607,8 +626,8 @@ const LearningSessions = () => {
           <form className="create-session-panel" onSubmit={handleCreate}>
             <div className="create-session-header">
               <div>
-                <h2>Schedule a learning session</h2>
-                <p>A private Jitsi link is generated automatically.</p>
+                <h2>{t("sessionsPage.scheduleTitle")}</h2>
+                <p>{t("sessionsPage.scheduleDescription")}</p>
               </div>
               <button
                 type="button"
@@ -620,7 +639,7 @@ const LearningSessions = () => {
             </div>
             <div className="create-session-grid">
               <label className="wide">
-                Title
+                {t("sessionsPage.form.title")}
                 <input
                   required
                   minLength={3}
@@ -630,7 +649,7 @@ const LearningSessions = () => {
                 />
               </label>
               <label>
-                Category
+                {t("sessionsPage.form.category")}
                 <input
                   required
                   value={form.category}
@@ -640,19 +659,25 @@ const LearningSessions = () => {
                 />
               </label>
               <label>
-                Level
+                {t("sessionsPage.form.level")}
                 <select
                   value={form.level}
                   onChange={(e) => setForm({ ...form, level: e.target.value })}
                 >
-                  <option value="all">All levels</option>
-                  <option value="beginner">Beginner</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="advanced">Advanced</option>
+                  <option value="all">{t("sessionsPage.level.all")}</option>
+                  <option value="beginner">
+                    {t("sessionsPage.level.beginner")}
+                  </option>
+                  <option value="intermediate">
+                    {t("sessionsPage.level.intermediate")}
+                  </option>
+                  <option value="advanced">
+                    {t("sessionsPage.level.advanced")}
+                  </option>
                 </select>
               </label>
               <label>
-                Start date and time
+                {t("sessionsPage.form.startTime")}
                 <input
                   required
                   type="datetime-local"
@@ -663,7 +688,7 @@ const LearningSessions = () => {
                 />
               </label>
               <label>
-                Registration deadline
+                {t("sessionsPage.form.deadline")}
                 <input
                   type="datetime-local"
                   value={form.registrationDeadline}
@@ -673,7 +698,7 @@ const LearningSessions = () => {
                 />
               </label>
               <label>
-                Duration (minutes)
+                {t("sessionsPage.form.duration")}
                 <input
                   required
                   type="number"
@@ -689,7 +714,7 @@ const LearningSessions = () => {
                 />
               </label>
               <label>
-                Maximum participants
+                {t("sessionsPage.form.maxParticipants")}
                 <input
                   required
                   type="number"
@@ -705,7 +730,7 @@ const LearningSessions = () => {
                 />
               </label>
               <label className="wide">
-                Description
+                {t("sessionsPage.form.description")}
                 <textarea
                   value={form.description}
                   onChange={(e) =>
@@ -714,7 +739,7 @@ const LearningSessions = () => {
                 />
               </label>
               <label className="wide">
-                Material links (one URL per line)
+                {t("sessionsPage.form.materials")}
                 <textarea
                   value={form.materialsText}
                   onChange={(e) =>
@@ -730,7 +755,7 @@ const LearningSessions = () => {
                 className="btn outline"
                 onClick={() => setCreateOpen(false)}
               >
-                Cancel
+                {t("sessionsPage.cancel")}
               </button>
               <button
                 type="submit"
@@ -738,10 +763,10 @@ const LearningSessions = () => {
                 disabled={busy === "create"}
               >
                 {busy === "create" ? (
-                  <ButtonLoader>Scheduling...</ButtonLoader>
+                  <ButtonLoader>{t("sessionsPage.scheduling")}</ButtonLoader>
                 ) : (
                   <>
-                    <IoCalendarOutline /> Schedule session
+                    <IoCalendarOutline /> {t("sessionsPage.scheduleSession")}
                   </>
                 )}
               </button>

@@ -11,7 +11,6 @@ import {
   IoTrendingUpOutline,
   IoSearchOutline,
   IoShieldCheckmarkOutline,
-  IoStar,
   IoSwapHorizontalOutline,
   IoPlayCircleOutline,
   IoChevronDownOutline,
@@ -25,6 +24,12 @@ import {
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
+import { fetchStats } from "../../services/platformService";
+import heangChhengKhoemPhoto from "../../assets/team/heang-chheng-khoem.jpg";
+import hornPiseyPhoto from "../../assets/team/horn-pisey.jpg";
+import krySoranuthPhoto from "../../assets/team/kry-soranuth.jpg";
+import muyKalinPhoto from "../../assets/team/muy-kalin.jpg";
+import samrithRatanaPhoto from "../../assets/team/samrith-ratana.jpg";
 import "./Home.css";
 
 const heroImage =
@@ -176,73 +181,59 @@ const tracksList = [
 
 const featuredMentors = [
   {
-    id: "mentor-2",
-    name: "Chanthou Rath",
-    role: "Lead Product Designer",
-    company: "Smart Axiata Digital Lab",
-    avatar:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=500&q=80",
-    rating: "4.95",
-    sessions: 98,
-    years: "8",
-    badgeKey: "mentorBadgeDesign",
-    tags: ["Figma", "Design Systems", "Portfolio Review", "UX Research"],
+    id: "muy-kalin",
+    name: "MUY KALIN",
+    role: "Full-stack & Frontend Development",
+    company: "Cambodian Mekong University",
+    avatar: muyKalinPhoto,
+    focus: "Web, API & database development",
+    summary:
+      "Builds responsive React interfaces and connects frontend experiences with backend services and databases.",
+    tags: ["React.js", "Node.js", "PHP", "MySQL"],
   },
   {
-    id: "mentor-3",
-    name: "Vireak Sambath",
-    role: "Principal AI & Data Engineer",
-    company: "Fintech Innovation Center",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80",
-    rating: "4.99",
-    sessions: 116,
-    years: "9",
-    badgeKey: "mentorBadgeData",
-    tags: ["Python", "Machine Learning", "Data Pipelines", "AI Apps"],
+    id: "horn-pisey",
+    name: "HORN PISEY",
+    role: "IT Audit & Cyber Risk",
+    company: "Camma Microfinance Limited",
+    avatar: hornPiseyPhoto,
+    focus: "ITGC, compliance & risk controls",
+    summary:
+      "Supports IT audits across access management, network security, backup, recovery, and control improvement.",
+    tags: ["IT Audit", "ITGC", "Cyber Risk", "Power BI"],
   },
   {
-    id: "mentor-4",
-    name: "Monineath Sin",
-    role: "Senior Security Specialist",
-    company: "Cyber Defense Hub",
-    avatar:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=500&q=80",
-    rating: "4.94",
-    sessions: 84,
-    years: "7",
-    badgeKey: "mentorBadgeArch",
-    tags: ["Cloud Security", "DevSecOps", "Penetration Testing"],
-  },
-];
-
-const testimonials = [
-  {
-    quoteKey: "story1Quote",
-    authorKey: "story1Author",
-    roleKey: "story1Role",
-    avatar:
-      "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80",
-    badge: "Hired at Startup",
-    stars: 5,
+    id: "kry-soranuth",
+    name: "KRY SORANUTH",
+    role: "Cybersecurity & Network Foundations",
+    company: "Cambodian Mekong University",
+    avatar: krySoranuthPhoto,
+    focus: "Security, Linux & network fundamentals",
+    summary:
+      "Focuses on cybersecurity foundations, risk assessment, Linux administration, Python, and network security.",
+    tags: ["Cybersecurity", "Linux", "Python", "Networking"],
   },
   {
-    quoteKey: "story2Quote",
-    authorKey: "story2Author",
-    roleKey: "story2Role",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
-    badge: "15+ Skills Swapped",
-    stars: 5,
+    id: "samrith-ratana",
+    name: "SAMRITH RATANA",
+    role: "B2B Account & Technical Support",
+    company: "Viettel (Cambodia) PTE. LTD.",
+    avatar: samrithRatanaPhoto,
+    focus: "Enterprise accounts & client support",
+    summary:
+      "Brings experience in corporate client communication, service proposals, account support, and technical setup.",
+    tags: ["B2B", "Client Support", "MS Office", "IT Setup"],
   },
   {
-    quoteKey: "story3Quote",
-    authorKey: "story3Author",
-    roleKey: "story3Role",
-    avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
-    badge: "Bakong KHQR Learner",
-    stars: 5,
+    id: "heang-chheng-khoem",
+    name: "HEANG CHHENGKHOEM",
+    role: "Digital Marketing & IT Support",
+    company: "888 UP FAST CASH",
+    avatar: heangChhengKhoemPhoto,
+    focus: "Digital growth, automation & operations",
+    summary:
+      "Works across social media, local SEO, campaign analytics, technical support, automation, and content production.",
+    tags: ["Digital Marketing", "SEO", "IT Support", "Automation"],
   },
 ];
 
@@ -269,6 +260,7 @@ const Home = () => {
   const [activePersona, setActivePersona] = useState("student");
   const [activeTrackFilter] = useState("all");
   const [openFaq, setOpenFaq] = useState(0);
+  const [platformStats, setPlatformStats] = useState(null);
 
   const heroTitleLines = splitHeroLines(t("home.heroTitle"));
   const heroAccentLines = splitHeroLines(t("home.heroAccent"));
@@ -286,6 +278,22 @@ const Home = () => {
   const handleTagClick = (tag) => {
     navigate(`/courses?search=${encodeURIComponent(tag)}`);
   };
+
+  useEffect(() => {
+    let isActive = true;
+
+    fetchStats()
+      .then((stats) => {
+        if (isActive) setPlatformStats(stats);
+      })
+      .catch(() => {
+        if (isActive) setPlatformStats({});
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia(
@@ -338,6 +346,11 @@ const Home = () => {
       : tracksList.filter((track) => track.id === activeTrackFilter);
 
   const currentPersona = personaData[activePersona] || personaData.student;
+  const formatPlatformStat = (value) => {
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue)) return "—";
+    return numericValue.toLocaleString(language === "km" ? "km-KH" : "en-US");
+  };
 
   return (
     <main className="home-page">
@@ -520,7 +533,7 @@ const Home = () => {
             <IoPeopleOutline />
           </div>
           <div className="stat-content">
-            <strong>{t("home.statsLearners")}</strong>
+            <strong>{formatPlatformStat(platformStats?.users)}</strong>
             <span>{t("home.statsLearnersLabel")}</span>
           </div>
         </div>
@@ -530,7 +543,7 @@ const Home = () => {
             <IoRibbonOutline />
           </div>
           <div className="stat-content">
-            <strong>{t("home.statsMentors")}</strong>
+            <strong>{formatPlatformStat(platformStats?.mentors)}</strong>
             <span>{t("home.statsMentorsLabel")}</span>
           </div>
         </div>
@@ -540,7 +553,7 @@ const Home = () => {
             <IoSchoolOutline />
           </div>
           <div className="stat-content">
-            <strong>{t("home.statsCourses")}</strong>
+            <strong>{formatPlatformStat(platformStats?.courses)}</strong>
             <span>{t("home.statsCoursesLabel")}</span>
           </div>
         </div>
@@ -550,7 +563,7 @@ const Home = () => {
             <IoBriefcaseOutline />
           </div>
           <div className="stat-content">
-            <strong>{t("home.statsPlacement")}</strong>
+            <strong>{formatPlatformStat(platformStats?.jobs)}</strong>
             <span>{t("home.statsPlacementLabel")}</span>
           </div>
         </div>
@@ -698,19 +711,14 @@ const Home = () => {
                 <h3>{t("home.pillarMentorsTitle")}</h3>
                 <p>{t("home.pillarMentorsDesc")}</p>
                 <div className="mentor-avatars-preview">
-                  <img
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
-                    alt="Mentor"
-                  />
-                  <img
-                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80"
-                    alt="Mentor"
-                  />
-                  <img
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80"
-                    alt="Mentor"
-                  />
-                  <span className="more-mentors">+150</span>
+                  {featuredMentors.slice(0, 3).map((member) => (
+                    <img
+                      key={member.id}
+                      src={member.avatar}
+                      alt={member.name}
+                    />
+                  ))}
+                  <span className="more-mentors">+2</span>
                 </div>
               </div>
               <div className="bento-footer">
@@ -842,7 +850,10 @@ const Home = () => {
       </section>
 
       {/* 6. FEATURED MENTORS SPOTLIGHT */}
-      <section className="home-section mentors-spotlight-section">
+      <section
+        id="project-team"
+        className="home-section mentors-spotlight-section"
+      >
         <div className="home-container">
           <div className="section-heading-split reveal">
             <div>
@@ -852,7 +863,7 @@ const Home = () => {
               <h2>{t("home.featuredMentorsTitle")}</h2>
               <p className="section-desc">{t("home.featuredMentorsDesc")}</p>
             </div>
-            <Link to="/mentorship" className="home-btn primary">
+            <Link to="/community" className="home-btn primary">
               {t("home.viewAllMentors")}
               <IoArrowForward />
             </Link>
@@ -864,25 +875,22 @@ const Home = () => {
                 <div className="mentor-card-top-bar">
                   <div className="mentor-avatar-wrap">
                     <img src={mentor.avatar} alt={mentor.name} />
-                    <span
-                      className="verified-shield-icon"
-                      title="Verified Mentor"
-                    >
+                    <span className="verified-shield-icon" title="Project team member">
                       <IoShieldCheckmarkOutline />
                     </span>
                   </div>
-                  <div className="mentor-rating-pill">
-                    <IoStar />
-                    <span>{mentor.rating}</span>
+                  <div className="mentor-team-pill">
+                    <IoPeopleOutline />
+                    <span>Team</span>
                   </div>
                 </div>
 
                 <div className="mentor-card-body">
                   <h4>{mentor.name}</h4>
+                  <p className="mentor-role">{mentor.role}</p>
                   <p className="mentor-company">{mentor.company}</p>
-                  <span className="mentor-exp">
-                    {t("home.mentorExperience", { years: mentor.years })}
-                  </span>
+                  <span className="mentor-exp">{mentor.focus}</span>
+                  <p className="mentor-summary">{mentor.summary}</p>
 
                   <div className="mentor-skills-tags">
                     {mentor.tags.map((tag) => (
@@ -895,7 +903,7 @@ const Home = () => {
 
                 <div className="mentor-card-actions">
                   <Link
-                    to={`/mentorship/${mentor.id}`}
+                    to="/community"
                     className="mentor-book-btn"
                   >
                     {t("home.bookSessionBtn")}
@@ -944,45 +952,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 8. TESTIMONIALS & SUCCESS STORIES */}
-      <section className="home-section testimonials-section">
-        <div className="home-container">
-          <div className="section-heading text-center reveal">
-            <span className="section-kicker">{t("home.storiesKicker")}</span>
-            <h2>{t("home.storiesTitle")}</h2>
-            <p className="section-desc">{t("home.storiesSubtitle")}</p>
-          </div>
-
-          <div className="testimonials-grid reveal">
-            {testimonials.map((story, i) => (
-              <div className="testimonial-card" key={i}>
-                <div className="stars-row">
-                  {[...Array(story.stars)].map((_, idx) => (
-                    <IoStar key={idx} className="star-icon" />
-                  ))}
-                  <span className="badge-story-pill">{story.badge}</span>
-                </div>
-
-                <p className="story-quote">"{t(`home.${story.quoteKey}`)}"</p>
-
-                <div className="story-author-row">
-                  <img
-                    src={story.avatar}
-                    alt={t(`home.${story.authorKey}`)}
-                    className="author-avatar"
-                  />
-                  <div>
-                    <strong>{t(`home.${story.authorKey}`)}</strong>
-                    <span>{t(`home.${story.roleKey}`)}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 9. INTERACTIVE FAQ ACCORDION */}
+      {/* 8. INTERACTIVE FAQ ACCORDION */}
       <section className="home-section faq-section">
         <div className="home-container faq-container">
           <div className="section-heading text-center reveal">

@@ -180,3 +180,15 @@ export const SkeletonGrid = ({
     ))}
   </div>
 );
+
+export const RouteLoader = ({ label = "Loading page" }) => (
+  <main className="route-loader" aria-label={label} aria-busy="true">
+    <div className="route-loader-card">
+      <span className="route-loader-mark" aria-hidden="true">
+        <span />
+      </span>
+      <strong>{label}</strong>
+      <span className="route-loader-line" aria-hidden="true" />
+    </div>
+  </main>
+);

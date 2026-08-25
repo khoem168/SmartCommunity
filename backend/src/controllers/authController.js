@@ -178,9 +178,12 @@ const login = async (req, res, next) => {
 
     const user = sanitizeUser(account);
     const placeholder = isPlaceholderHash(account.password_hash);
+    const allowDemoPasswords = process.env.NODE_ENV !== "production";
     const validPassword =
       (await verifyPassword(password, account.password_hash)) ||
-      (placeholder && password === demoPasswordForRole(user.role));
+      (allowDemoPasswords &&
+        placeholder &&
+        password === demoPasswordForRole(user.role));
     if (!validPassword) {
       return res.status(401).json({ error: "Invalid email or password." });
     }

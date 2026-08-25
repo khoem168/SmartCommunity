@@ -89,8 +89,9 @@ body {
 }
 
 .navbar-inner {
+  width: min(1380px, calc(100% - 40px));
   min-height: 68px;
-  gap: 18px;
+  gap: 14px;
 }
 
 .navbar-logo img {
@@ -98,10 +99,13 @@ body {
 }
 
 .nav-content {
-  gap: 12px;
+  flex: 1 1 auto;
+  gap: 10px;
 }
 
 .navlink {
+  flex: 1 1 auto;
+  justify-content: flex-end;
   gap: 2px;
 }
 
@@ -113,6 +117,17 @@ body {
   font-weight: 650;
 }
 
+.navlink a.nav-icon-link {
+  width: 38px;
+}
+
+.auth-actions {
+  gap: 8px;
+  margin-left: 2px;
+  padding-left: 12px;
+  border-left: 1px solid var(--ck-line);
+}
+
 .navlink a:hover,
 .navlink a.active {
   background: var(--ck-blue-soft);
@@ -121,8 +136,9 @@ body {
 }
 
 .language-switcher {
-  min-height: 42px;
-  grid-template-columns: repeat(2, 54px);
+  min-height: 40px;
+  grid-template-columns: repeat(2, 48px);
+  padding: 3px;
   border-color: var(--ck-line);
   border-radius: 12px;
   background: #f8fafc;
@@ -131,6 +147,7 @@ body {
 
 .language-switcher button {
   min-height: 32px;
+  padding-inline: 7px;
   border-radius: 8px;
 }
 
@@ -151,6 +168,15 @@ body {
   border-radius: 12px;
   color: var(--ck-blue-dark);
   box-shadow: none;
+}
+
+.profile-pill {
+  min-width: 205px;
+  max-width: 224px;
+}
+
+.profile-text {
+  max-width: 158px;
 }
 
 .nav-signin-button:hover,
@@ -1004,6 +1030,18 @@ html[data-language="km"] :where(.section-kicker, .eyebrow, .courses-kicker) {
     border-color: var(--ck-line);
     border-radius: 10px;
     background: #fff;
+  }
+}
+
+@media (max-width: 1320px) {
+  .auth-actions {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .profile-pill {
+    max-width: none;
   }
 }
 

@@ -55,9 +55,10 @@ const toMysqlDateTime = (value) => {
 
 const getStats = async (req, res, next) => {
   try {
-    const [users, mentors, internships, exchanges] = await Promise.all([
+    const [users, mentors, courses, internships, exchanges] = await Promise.all([
       countTable("users", "is_active = 1"),
       countTable("users", "role = 'mentor' AND is_active = 1"),
+      countTable("courses", "is_published = 1"),
       countTable("internships", "status = 'open'"),
       countTable("skill_exchanges", "status IN ('pending', 'accepted')"),
     ]);
@@ -65,7 +66,7 @@ const getStats = async (req, res, next) => {
     return res.json({
       users,
       mentors,
-      courses: 3,
+      courses,
       jobs: internships,
       skillExchanges: exchanges,
     });

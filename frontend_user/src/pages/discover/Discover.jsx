@@ -10,6 +10,7 @@ import {
   IoSwapHorizontalOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import { skillCategories } from "../../data/registerData";
 import {
   createSkillExchangeRequest,
@@ -61,6 +62,7 @@ const normalizeMember = (member) => {
 
 const Discover = () => {
   const { user } = useGlobleContext();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [grid, setGrid] = useState("grid");
   const [query, setQuery] = useState("");
@@ -93,12 +95,12 @@ const Discover = () => {
             .filter((member) => member.id !== currentUserId),
         );
       } catch (err) {
-        setError(err.message || "Unable to load community members.");
+        setError(err.message || t("discoverPage.loadError"));
       }
     };
 
     loadMembers();
-  }, [currentUserId]);
+  }, [currentUserId, t]);
 
   useEffect(() => {
     const loadExchanges = async () => {
@@ -110,16 +112,12 @@ const Discover = () => {
       try {
         setExchangeRequests(await fetchSkillExchanges());
       } catch (err) {
-        setError(err.message || "Unable to load skill exchange requests.");
+        setError(err.message || t("discoverPage.requestsError"));
       }
     };
 
     loadExchanges();
-  }, [user]);
-
-  useState;
-
-  useMemo;
+  }, [t, user]);
 
   const activeCategory = useMemo(
     () =>
@@ -174,7 +172,7 @@ const Discover = () => {
     if (!user) {
       navigate("/register", {
         state: {
-          message: "Create an account to request a skill exchange.",
+          message: t("discoverPage.accountRequired"),
         },
       });
       return;
@@ -192,7 +190,7 @@ const Discover = () => {
       skillOffered: userTeachSkills.length
         ? findBestSkill(userTeachSkills, member.learnSkills, "")
         : "General support",
-      message: `Hi ${member.name}, I would like to exchange skills with you.`,
+      message: t("discoverPage.defaultMessage", { name: member.name }),
     });
   };
 
@@ -219,7 +217,7 @@ const Discover = () => {
       setExchangeRequests(await fetchSkillExchanges());
       closeRequestForm();
     } catch (err) {
-      setError(err.message || "Unable to send skill exchange request.");
+      setError(err.message || t("discoverPage.sendError"));
     }
   };
 
@@ -230,17 +228,14 @@ const Discover = () => {
           <div>
             <p className="eyebrow">
               <IoSparklesOutline aria-hidden="true" />
-              Discover
+              {t("discoverPage.eyebrow")}
             </p>
-            <h1>Find the right skill exchange match.</h1>
-            <p>
-              Choose a category, narrow by skill, and connect with people who
-              can teach what you want to learn.
-            </p>
+            <h1>{t("discoverPage.title")}</h1>
+            <p>{t("discoverPage.description")}</p>
           </div>
           {!user && (
             <Link className="btn primary" to="/register">
-              Create account
+              {t("discoverPage.createAccount")}
             </Link>
           )}
         </div>
@@ -254,7 +249,7 @@ const Discover = () => {
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search by name, skill, or role"
+              placeholder={t("discoverPage.searchPlaceholder")}
             />
           </label>
 
@@ -266,7 +261,7 @@ const Discover = () => {
                 setSelectedSkill("");
               }}
             >
-              <option value="">All categories</option>
+              <option value="">{t("discoverPage.allCategories")}</option>
               {skillCategories.map((category) => (
                 <option key={category.name} value={category.name}>
                   {category.name}
@@ -280,18 +275,23 @@ const Discover = () => {
           <div className="category-picker-header">
             <span>
               <IoFilterOutline aria-hidden="true" />
-              {activeCategory ? activeCategory.name : "Select a category"}
+              {activeCategory
+                ? activeCategory.name
+                : t("discoverPage.selectCategory")}
             </span>
             {(query || selectedCategory || selectedSkill) && (
               <button type="button" onClick={clearFilters}>
                 <IoCloseOutline aria-hidden="true" />
-                Clear
+                {t("discoverPage.clear")}
               </button>
             )}
           </div>
 
           {activeCategory ? (
-            <div className="discover-filters" aria-label="Skill filters">
+            <div
+              className="discover-filters"
+              aria-label={t("discoverPage.skillFilters")}
+            >
               <button
                 type="button"
                 className={
@@ -299,7 +299,9 @@ const Discover = () => {
                 }
                 onClick={() => setSelectedSkill("")}
               >
-                All {activeCategory.name}
+                {t("discoverPage.allInCategory", {
+                  category: activeCategory.name,
+                })}
               </button>
               {availableSkills.map((skill) => (
                 <button
@@ -318,8 +320,7 @@ const Discover = () => {
             </div>
           ) : (
             <p className="category-empty">
-              Pick a category to show related skill chips, just like the
-              registration flow.
+              {t("discoverPage.categoryHint")}
             </p>
           )}
         </div>
@@ -328,11 +329,11 @@ const Discover = () => {
       <section className="section container">
         <div className="section-header mg-t50">
           <div>
-            <h2>Skill exchange matches</h2>
+            <h2>{t("discoverPage.matchesTitle")}</h2>
             <p>
-              Showing {filteredMembers.length}{" "}
-              {filteredMembers.length === 1 ? "match" : "matches"} based on your
-              current filters.
+              {t("discoverPage.matchesCount", {
+                count: filteredMembers.length,
+              })}
             </p>
           </div>
           <div className="icon-wrap flex gap-10">
@@ -376,7 +377,7 @@ const Discover = () => {
 
                   <div className="discover-swap">
                     <div>
-                      <span>Can teach</span>
+                      <span>{t("discoverPage.canTeach")}</span>
                       <div className="skill-list">
                         {member.teachSkills.map((skill) => (
                           <span className="skill-pill teach" key={skill}>
@@ -389,7 +390,7 @@ const Discover = () => {
                     <IoSwapHorizontalOutline aria-hidden="true" />
 
                     <div>
-                      <span>Wants to learn</span>
+                      <span>{t("discoverPage.wantsLearn")}</span>
                       <div className="skill-list">
                         {member.learnSkills.map((skill) => (
                           <span className="skill-pill learn" key={skill}>
@@ -407,7 +408,9 @@ const Discover = () => {
                       onClick={() => openRequestForm(member)}
                       disabled={wasRequested}
                     >
-                      {wasRequested ? existingRequest.status : "Request"}
+                      {wasRequested
+                        ? t(`discoverPage.status.${existingRequest.status}`)
+                        : t("discoverPage.request")}
                     </button>
                     {/* <button
                       type="button"
@@ -420,7 +423,7 @@ const Discover = () => {
                       className="btn outline small"
                       to={`/discover/${member.id}`}
                     >
-                      View profile
+                      {t("discoverPage.viewProfile")}
                     </Link>
                   </div>
                 </article>
@@ -429,14 +432,14 @@ const Discover = () => {
           </div>
         ) : (
           <div className="discover-empty-state">
-            <h3>No matches found</h3>
-            <p>Try another category, skill, or search keyword.</p>
+            <h3>{t("discoverPage.noMatches")}</h3>
+            <p>{t("discoverPage.noMatchesDescription")}</p>
             <button
               type="button"
               className="btn primary small"
               onClick={clearFilters}
             >
-              Reset filters
+              {t("discoverPage.resetFilters")}
             </button>
           </div>
         )}
@@ -453,20 +456,22 @@ const Discover = () => {
           >
             <div className="request-form-header">
               <div>
-                <h4>Request skill exchange</h4>
+                <h4>{t("discoverPage.requestTitle")}</h4>
                 <p>{activeRequestMember.name}</p>
               </div>
               <button
                 type="button"
                 onClick={closeRequestForm}
-                aria-label="Close request form"
+                aria-label={t("discoverPage.closeRequest")}
               >
                 <IoCloseOutline aria-hidden="true" />
               </button>
             </div>
 
             <label>
-              Skill you want to learn from {activeRequestMember.name}
+              {t("discoverPage.learnFrom", {
+                name: activeRequestMember.name,
+              })}
               <select
                 value={requestForm.skillRequested}
                 onChange={(event) =>
@@ -476,7 +481,7 @@ const Discover = () => {
                   }))
                 }
               >
-                <option value="">Select skill</option>
+                <option value="">{t("discoverPage.selectSkill")}</option>
                 {activeRequestMember.teachSkills.map((skill) => (
                   <option key={skill} value={skill}>
                     {skill}
@@ -486,7 +491,7 @@ const Discover = () => {
             </label>
 
             <label>
-              Skill you offer back
+              {t("discoverPage.offerBack")}
               <select
                 value={requestForm.skillOffered}
                 onChange={(event) =>
@@ -496,7 +501,7 @@ const Discover = () => {
                   }))
                 }
               >
-                <option value="">Select your skill</option>
+                <option value="">{t("discoverPage.selectYourSkill")}</option>
                 {getUserOfferSkills(user).length ? (
                   getUserOfferSkills(user).map((skill) => (
                     <option key={skill} value={skill}>
@@ -504,13 +509,15 @@ const Discover = () => {
                     </option>
                   ))
                 ) : (
-                  <option value="General support">General support</option>
+                  <option value="General support">
+                    {t("discoverPage.generalSupport")}
+                  </option>
                 )}
               </select>
             </label>
 
             <label>
-              Message
+              {t("discoverPage.message")}
               <textarea
                 value={requestForm.message}
                 onChange={(event) =>
@@ -519,7 +526,7 @@ const Discover = () => {
                     message: event.target.value,
                   }))
                 }
-                placeholder="Write a short message"
+                placeholder={t("discoverPage.messagePlaceholder")}
               />
             </label>
 
@@ -529,7 +536,7 @@ const Discover = () => {
                 className="btn outline small"
                 onClick={closeRequestForm}
               >
-                Cancel
+                {t("discoverPage.cancel")}
               </button>
               <button
                 type="submit"
@@ -538,7 +545,7 @@ const Discover = () => {
                   !requestForm.skillRequested || !requestForm.skillOffered
                 }
               >
-                Send request
+                {t("discoverPage.sendRequest")}
               </button>
             </div>
           </form>

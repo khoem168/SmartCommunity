@@ -31,7 +31,7 @@ const Navbar = () => {
       if (event.key === "Escape") setMenuOpen(false);
     };
     const closeOnDesktop = () => {
-      if (window.innerWidth > 1240) setMenuOpen(false);
+      if (window.innerWidth > 1320) setMenuOpen(false);
     };
 
     document.body.style.overflow = "hidden";

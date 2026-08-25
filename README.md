@@ -51,6 +51,23 @@ The frontend can be deployed independently, but authentication and data
 features require a publicly reachable backend and database. A Docker service
 running only on a development computer cannot be reached from Vercel.
 
+### Production safety checklist
+
+Before starting the public backend, copy `backend/.env.example` to the hosting
+provider's private environment settings and replace every example value. In
+production the server intentionally refuses to start unless all of these are
+safe:
+
+- `NODE_ENV=production`
+- `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` use hosted database values
+- `JWT_SECRET` is a unique random secret with at least 32 characters
+- `CLIENT_URL` lists the exact HTTPS frontend origin (never `*`)
+- `APP_URL` is the public HTTPS frontend URL
+
+The `/db-check` diagnostic endpoint and placeholder demo passwords are disabled
+in production. Do not publish `backend/.env`; environment files are excluded by
+the repository `.gitignore`.
+
 ## Backend setup
 
 ```bash
