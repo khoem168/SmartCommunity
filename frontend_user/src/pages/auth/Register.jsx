@@ -314,7 +314,9 @@ const Register = () => {
     try {
       setSubmitting(true);
       const response = await registerUser(registerPayload);
-      if (response.devVerificationUrl) {
+      if (response.requiresVerification === false) {
+        navigate(loginPath);
+      } else if (response.devVerificationUrl) {
         const verificationUrl = new URL(response.devVerificationUrl);
         navigate(
           `${verificationUrl.pathname}${verificationUrl.search}${redirectQuery}`,

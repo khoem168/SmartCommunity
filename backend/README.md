@@ -79,6 +79,18 @@ but it can deliver only to the email address that owns the Resend account.
 Never add `RESEND_API_KEY` to Git, Vercel, or a `VITE_*` variable. SMTP remains
 available as a fallback when `RESEND_API_KEY` is empty.
 
+For a controlled classroom testing period, email verification can be bypassed
+without removing the feature from the codebase:
+
+```env
+REQUIRE_EMAIL_VERIFICATION=false
+```
+
+With this switch disabled, new local-password accounts are marked verified,
+existing unverified accounts are marked verified after their first successful
+password login, and registration goes directly to the login page. Restore the
+value to `true` before enabling public registration.
+
 Validate the HTTPS email adapter without sending a real email:
 
 ```bash

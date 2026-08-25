@@ -19,7 +19,8 @@
     "test:analytics": "node src/scripts/testAnalytics.js",
     "test:admin": "node src/scripts/testAdmin.js",
     "test:courses": "node src/scripts/testCourses.js",
-    "test:email": "node src/scripts/testEmailService.js"
+    "test:email": "node src/scripts/testEmailService.js",
+    "test:auth-features": "node src/scripts/testAuthFeatures.js"
   },
   "dependencies": {
     "bakong-khqr": "^1.0.20",

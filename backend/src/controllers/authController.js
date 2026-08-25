@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const { OAuth2Client } = require("google-auth-library");
 const db = require("../config/db");
+const { isEmailVerificationRequired } = require("../config/authFeatures");
 const {
   demoPasswordForRole,
   hashPassword,
@@ -52,6 +53,7 @@ const developmentUrl = (key, delivery) =>
 
 const register = async (req, res, next) => {
   try {
+    const verificationRequired = isEmailVerificationRequired();
     const {
       fullName,
       password,
@@ -99,8 +101,8 @@ const register = async (req, res, next) => {
     const [result] = await db.query(
       `INSERT INTO users
        (email, password_hash, full_name, role, bio, skills, profession, company, location,
-        is_verified, is_active, auth_provider)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 1, 'local')`,
+        is_verified, is_active, auth_provider, email_verified_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 'local', ?)`,
       [
         email,
         passwordHash,
@@ -111,6 +113,8 @@ const register = async (req, res, next) => {
         jobTitle || experienceLevel || null,
         recruiterCompany || null,
         location || null,
+        verificationRequired ? 0 : 1,
+        verificationRequired ? null : new Date(),
       ],
     );
 
@@ -132,6 +136,14 @@ const register = async (req, res, next) => {
           String(availability || "Flexible schedule").slice(0, 150),
         ],
       );
+    }
+
+    if (!verificationRequired) {
+      return res.status(201).json({
+        message: "Account created. You can now log in.",
+        email,
+        requiresVerification: false,
+      });
     }
 
     const token = await createAuthToken(result.insertId, "email_verification");
@@ -177,6 +189,7 @@ const login = async (req, res, next) => {
     if (!account) return res.status(401).json({ error: "Invalid email or password." });
 
     const user = sanitizeUser(account);
+    const verificationRequired = isEmailVerificationRequired();
     const placeholder = isPlaceholderHash(account.password_hash);
     const allowDemoPasswords = process.env.NODE_ENV !== "production";
     const validPassword =
@@ -187,12 +200,22 @@ const login = async (req, res, next) => {
     if (!validPassword) {
       return res.status(401).json({ error: "Invalid email or password." });
     }
-    if (!user.isVerified) {
+    if (verificationRequired && !user.isVerified) {
       return res.status(403).json({
         error: "Verify your email before logging in.",
         code: "EMAIL_NOT_VERIFIED",
         email,
       });
+    }
+
+    if (!verificationRequired && !user.isVerified) {
+      await db.query(
+        `UPDATE users
+         SET is_verified = 1, email_verified_at = COALESCE(email_verified_at, NOW())
+         WHERE id = ?`,
+        [account.id],
+      );
+      account.is_verified = 1;
     }
 
     if (placeholder || passwordHashNeedsUpgrade(account.password_hash)) {
@@ -213,6 +236,13 @@ const login = async (req, res, next) => {
 
 const resendVerification = async (req, res, next) => {
   try {
+    if (!isEmailVerificationRequired()) {
+      return res.json({
+        message: "Email verification is disabled for this environment.",
+        requiresVerification: false,
+      });
+    }
+
     const email = normalizeEmail(req.body.email);
     const [rows] = await db.query(
       "SELECT id, email, full_name, is_verified, is_active FROM users WHERE email = ?",
