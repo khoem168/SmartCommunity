@@ -61,6 +61,30 @@ PBKDF2/demo accounts are upgraded to bcrypt after a successful login. When SMTP
 is not configured in development, register/forgot-password responses include a
 one-time development URL so the complete flow can still be tested locally.
 
+### Production email verification
+
+Hosted deployments can send verification and password-reset email through the
+Resend HTTPS API without relying on SMTP ports. Set these environment variables
+on the backend service:
+
+```env
+RESEND_API_KEY=re_your_private_api_key
+EMAIL_FROM=Smart Community <verify@your-verified-domain.example>
+APP_URL=https://your-frontend.example
+```
+
+`EMAIL_FROM` must be accepted by the Resend account. The Resend test sender
+`Smart Community <onboarding@resend.dev>` is useful before domain verification,
+but it can deliver only to the email address that owns the Resend account.
+Never add `RESEND_API_KEY` to Git, Vercel, or a `VITE_*` variable. SMTP remains
+available as a fallback when `RESEND_API_KEY` is empty.
+
+Validate the HTTPS email adapter without sending a real email:
+
+```bash
+npm run test:email
+```
+
 Skill exchange endpoints (all require authentication except the public list):
 
 - `GET /api/skill-exchanges/community` - public, sanitized community activity

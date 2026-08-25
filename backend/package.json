@@ -2,6 +2,9 @@
   "name": "smart-community-backend",
   "version": "0.1.0",
   "main": "src/server.js",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
@@ -15,7 +18,8 @@
     "test:notifications": "node src/scripts/testNotifications.js",
     "test:analytics": "node src/scripts/testAnalytics.js",
     "test:admin": "node src/scripts/testAdmin.js",
-    "test:courses": "node src/scripts/testCourses.js"
+    "test:courses": "node src/scripts/testCourses.js",
+    "test:email": "node src/scripts/testEmailService.js"
   },
   "dependencies": {
     "bakong-khqr": "^1.0.20",
