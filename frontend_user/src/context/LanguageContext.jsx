@@ -2,7 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
 } from "react";
@@ -63,7 +63,7 @@ const LanguageProvider = ({ children }) => {
     [language],
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, language);
     document.documentElement.lang = language;
     document.documentElement.dir = "ltr";

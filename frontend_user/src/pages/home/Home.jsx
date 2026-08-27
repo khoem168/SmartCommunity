@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   IoArrowForward,
+  IoArrowBack,
   IoBriefcaseOutline,
   IoCheckmarkCircle,
   IoFlashOutline,
@@ -33,7 +34,7 @@ import samrithRatanaPhoto from "../../assets/team/samrith-ratana.jpg";
 import "./Home.css";
 
 const heroImage =
-  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80";
+  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=2200&q=88";
 
 const personaData = {
   student: {
@@ -261,6 +262,8 @@ const Home = () => {
   const [activeTrackFilter] = useState("all");
   const [openFaq, setOpenFaq] = useState(0);
   const [platformStats, setPlatformStats] = useState(null);
+  const [activeMentorIndex, setActiveMentorIndex] = useState(0);
+  const [mentorCarouselPaused, setMentorCarouselPaused] = useState(false);
   const heroVisualRef = useRef(null);
 
   const heroTitleLines = splitHeroLines(t("home.heroTitle"));
@@ -386,12 +389,31 @@ const Home = () => {
     };
   }, []);
 
+  useEffect(() => {
+    featuredMentors.forEach((mentor) => {
+      const image = new Image();
+      image.src = mentor.avatar;
+      image.decode?.().catch(() => undefined);
+    });
+  }, []);
+
   const filteredTracks =
     activeTrackFilter === "all"
       ? tracksList
       : tracksList.filter((track) => track.id === activeTrackFilter);
 
   const currentPersona = personaData[activePersona] || personaData.student;
+  const activeMentor = featuredMentors[activeMentorIndex];
+  const showPreviousMentor = () => {
+    setActiveMentorIndex((current) =>
+      (current - 1 + featuredMentors.length) % featuredMentors.length,
+    );
+  };
+  const showNextMentor = () => {
+    setActiveMentorIndex((current) =>
+      (current + 1) % featuredMentors.length,
+    );
+  };
   const formatPlatformStat = (value) => {
     const numericValue = Number(value);
     if (!Number.isFinite(numericValue)) return "—";
@@ -401,7 +423,10 @@ const Home = () => {
   return (
     <main className="home-page">
       {/* 1. HERO SECTION */}
-      <section className="home-hero">
+      <section
+        className="home-hero"
+        style={{ "--hero-background-image": `url(${heroImage})` }}
+      >
         <div className="hero-glow-sphere hero-glow-1" aria-hidden="true" />
         <div className="hero-glow-sphere hero-glow-2" aria-hidden="true" />
 
@@ -434,6 +459,10 @@ const Home = () => {
             </h1>
 
             <p>{t("home.heroDescription")}</p>
+
+            <span className="hero-discover-label">
+              {language === "km" ? "ស្វែងរក និងរៀន" : "Discover & Learn"}
+            </span>
 
             {/* Interactive Search Bar */}
             <form className="hero-search-bar" onSubmit={handleSearchSubmit}>
@@ -915,49 +944,104 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="mentors-grid reveal">
-            {featuredMentors.map((mentor) => (
-              <article className="mentor-card-modern" key={mentor.id}>
-                <div className="mentor-card-top-bar">
-                  <div className="mentor-avatar-wrap">
-                    <img src={mentor.avatar} alt={mentor.name} />
-                    <span className="verified-shield-icon" title="Project team member">
-                      <IoShieldCheckmarkOutline />
+          <div
+            className={`mentor-carousel ${mentorCarouselPaused ? "is-paused" : ""}`}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Smart Community project team"
+            onMouseEnter={() => setMentorCarouselPaused(true)}
+            onMouseLeave={() => setMentorCarouselPaused(false)}
+            onFocusCapture={() => setMentorCarouselPaused(true)}
+            onBlurCapture={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget)) {
+                setMentorCarouselPaused(false);
+              }
+            }}
+          >
+            <div className="mentor-carousel-stage" aria-live="polite">
+              <article className="mentor-showcase-card" key={activeMentor.id}>
+                <div className="mentor-showcase-media">
+                  <img
+                    src={activeMentor.avatar}
+                    alt={`${activeMentor.name} — Smart Community team member`}
+                    width="260"
+                    height="320"
+                    decoding="async"
+                    draggable="false"
+                  />
+                  <span className="mentor-showcase-verified">
+                    <IoShieldCheckmarkOutline /> Verified team member
+                  </span>
+                </div>
+
+                <div className="mentor-showcase-content">
+                  <div className="mentor-showcase-meta">
+                    <span className="mentor-team-pill">
+                      <IoPeopleOutline /> Project team
+                    </span>
+                    <span className="mentor-slide-count">
+                      {String(activeMentorIndex + 1).padStart(2, "0")} / {String(featuredMentors.length).padStart(2, "0")}
                     </span>
                   </div>
-                  <div className="mentor-team-pill">
-                    <IoPeopleOutline />
-                    <span>Team</span>
-                  </div>
-                </div>
 
-                <div className="mentor-card-body">
-                  <h4>{mentor.name}</h4>
-                  <p className="mentor-role">{mentor.role}</p>
-                  <p className="mentor-company">{mentor.company}</p>
-                  <span className="mentor-exp">{mentor.focus}</span>
-                  <p className="mentor-summary">{mentor.summary}</p>
+                  <h3>{activeMentor.name}</h3>
+                  <p className="mentor-showcase-role">{activeMentor.role}</p>
+                  <p className="mentor-showcase-company">{activeMentor.company}</p>
+                  <p className="mentor-showcase-summary">{activeMentor.summary}</p>
+
+                  <div className="mentor-showcase-focus">
+                    <span>Focus</span>
+                    <strong>{activeMentor.focus}</strong>
+                  </div>
 
                   <div className="mentor-skills-tags">
-                    {mentor.tags.map((tag) => (
-                      <span className="mentor-tag" key={tag}>
-                        {tag}
-                      </span>
+                    {activeMentor.tags.map((tag) => (
+                      <span className="mentor-tag" key={tag}>{tag}</span>
                     ))}
                   </div>
-                </div>
 
-                <div className="mentor-card-actions">
-                  <Link
-                    to="/community"
-                    className="mentor-book-btn"
-                  >
+                  <Link to="/community" className="mentor-book-btn">
                     {t("home.bookSessionBtn")}
                     <IoArrowForward />
                   </Link>
                 </div>
               </article>
-            ))}
+            </div>
+
+            <div className="mentor-carousel-controls">
+              <div className="mentor-carousel-arrows">
+                <button type="button" onClick={showPreviousMentor} aria-label="Previous team member">
+                  <IoArrowBack />
+                </button>
+                <button type="button" onClick={showNextMentor} aria-label="Next team member">
+                  <IoArrowForward />
+                </button>
+              </div>
+
+              <div className="mentor-carousel-dots" aria-label="Choose a team member">
+                {featuredMentors.map((mentor, index) => (
+                  <button
+                    type="button"
+                    key={mentor.id}
+                    className={index === activeMentorIndex ? "active" : ""}
+                    onClick={() => setActiveMentorIndex(index)}
+                    aria-label={`Show ${mentor.name}`}
+                    aria-current={index === activeMentorIndex ? "true" : undefined}
+                  />
+                ))}
+              </div>
+
+              <div className="mentor-carousel-progress" aria-hidden="true">
+                <span
+                  key={activeMentor.id}
+                  onAnimationEnd={() => {
+                    setActiveMentorIndex(
+                      (current) => (current + 1) % featuredMentors.length,
+                    );
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>

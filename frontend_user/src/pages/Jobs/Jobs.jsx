@@ -1,8 +1,11 @@
 ﻿import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  IoArrowForwardOutline,
   IoBriefcaseOutline,
   IoCalendarOutline,
+  IoCheckmarkCircleOutline,
+  IoCloudUploadOutline,
   IoLocationOutline,
   IoSearchOutline,
 } from "react-icons/io5";
@@ -150,10 +153,50 @@ const Jobs = () => {
         <div className="hero-content">
           <p className="eyebrow">{t("jobsPage.eyebrow")}</p>
           <h1>{t("jobsPage.heroTitle")}</h1>
-          <p>{t("jobsPage.heroDescription")}</p>
+          <p className="jobs-hero-description">
+            {t("jobsPage.heroDescription")}
+          </p>
+
+          <div
+            className="jobs-hero-features"
+            aria-label={t("jobsPage.heroFeaturesLabel")}
+          >
+            <article className="jobs-hero-feature">
+              <span className="jobs-hero-feature-icon" aria-hidden="true">
+                <IoSearchOutline />
+              </span>
+              <span className="jobs-hero-feature-copy">
+                <strong>{t("jobsPage.exploreFeature")}</strong>
+                <small>{t("jobsPage.filterFeature")}</small>
+              </span>
+            </article>
+            <article className="jobs-hero-feature">
+              <span className="jobs-hero-feature-icon" aria-hidden="true">
+                <IoCloudUploadOutline />
+              </span>
+              <span className="jobs-hero-feature-copy">
+                <strong>{t("jobsPage.uploadFeature")}</strong>
+                <small>{t("jobsPage.uploadFeatureDescription")}</small>
+              </span>
+            </article>
+            <article className="jobs-hero-feature">
+              <span className="jobs-hero-feature-icon" aria-hidden="true">
+                <IoCheckmarkCircleOutline />
+              </span>
+              <span className="jobs-hero-feature-copy">
+                <strong>{t("jobsPage.statusFeature")}</strong>
+                <small>{t("jobsPage.statusFeatureDescription")}</small>
+              </span>
+            </article>
+          </div>
+
           <div className="jobs-hero-actions">
+            <a href="#internship-search" className="btn primary jobs-hero-primary">
+              {t("jobsPage.findOpportunity")}
+              <IoArrowForwardOutline aria-hidden="true" />
+            </a>
             {user?.role === "recruiter" && (
-              <Link to="/post-job" className="btn primary">
+              <Link to="/post-job" className="btn outline">
                 {t("jobsPage.postInternship")}
               </Link>
             )}
@@ -190,7 +233,7 @@ const Jobs = () => {
           </article>
         </div>
 
-        <div className="internship-search-panel">
+        <div className="internship-search-panel" id="internship-search">
           <label>
             <IoSearchOutline />
             <input
