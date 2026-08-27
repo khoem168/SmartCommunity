@@ -13,6 +13,7 @@
     "seed:demo": "node src/scripts/seedDemoContent.js",
     "seed:community-users": "node src/scripts/seedCommunityUsers.js",
     "seed:community-exchanges": "node src/scripts/seedCommunityExchanges.js",
+    "seed:showcase": "npm run seed:community-users && npm run seed:community-exchanges && npm run seed:demo",
     "test:chat": "node src/scripts/testChat.js",
     "test:sessions": "node src/scripts/testLearningSessions.js",
     "test:notifications": "node src/scripts/testNotifications.js",
@@ -20,7 +21,8 @@
     "test:admin": "node src/scripts/testAdmin.js",
     "test:courses": "node src/scripts/testCourses.js",
     "test:email": "node src/scripts/testEmailService.js",
-    "test:auth-features": "node src/scripts/testAuthFeatures.js"
+    "test:auth-features": "node src/scripts/testAuthFeatures.js",
+    "test": "npm run test:auth-features && npm run test:email"
   },
   "dependencies": {
     "bakong-khqr": "^1.0.20",
@@ -41,6 +43,8 @@
     "nodemon": "^3.1.14"
   },
   "overrides": {
-    "axios": "1.19.0"
+    "axios": "1.19.0",
+    "ip-address": "10.5.0",
+    "socket.io-parser": "4.2.7"
   }
 }

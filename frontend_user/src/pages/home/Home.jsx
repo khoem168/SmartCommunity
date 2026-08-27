@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   IoArrowForward,
@@ -261,6 +261,7 @@ const Home = () => {
   const [activeTrackFilter] = useState("all");
   const [openFaq, setOpenFaq] = useState(0);
   const [platformStats, setPlatformStats] = useState(null);
+  const heroVisualRef = useRef(null);
 
   const heroTitleLines = splitHeroLines(t("home.heroTitle"));
   const heroAccentLines = splitHeroLines(t("home.heroAccent"));
@@ -339,6 +340,51 @@ const Home = () => {
       navbar?.classList.remove("landing-header-scrolled");
     };
   }, [language]);
+
+  useEffect(() => {
+    const visual = heroVisualRef.current;
+    if (!visual) return undefined;
+
+    const supportsTilt = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (!supportsTilt || reduceMotion) return undefined;
+
+    let frameId = 0;
+    const updateTilt = (event) => {
+      const bounds = visual.getBoundingClientRect();
+      const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+      const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+
+      window.cancelAnimationFrame(frameId);
+      frameId = window.requestAnimationFrame(() => {
+        visual.style.setProperty("--hero-tilt-x", `${(-y * 4).toFixed(2)}deg`);
+        visual.style.setProperty("--hero-tilt-y", `${(x * 5).toFixed(2)}deg`);
+        visual.style.setProperty("--hero-shift-x", `${(x * 4).toFixed(2)}px`);
+        visual.style.setProperty("--hero-shift-y", `${(y * 3).toFixed(2)}px`);
+      });
+    };
+    const resetTilt = () => {
+      window.cancelAnimationFrame(frameId);
+      visual.style.removeProperty("--hero-tilt-x");
+      visual.style.removeProperty("--hero-tilt-y");
+      visual.style.removeProperty("--hero-shift-x");
+      visual.style.removeProperty("--hero-shift-y");
+    };
+
+    visual.addEventListener("pointermove", updateTilt, { passive: true });
+    visual.addEventListener("pointerleave", resetTilt);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      visual.removeEventListener("pointermove", updateTilt);
+      visual.removeEventListener("pointerleave", resetTilt);
+    };
+  }, []);
 
   const filteredTracks =
     activeTrackFilter === "all"
@@ -481,7 +527,7 @@ const Home = () => {
           </div>
 
           {/* Interactive Hero Visual with Floating Live Cards */}
-          <div className="hero-visual">
+          <div className="hero-visual" ref={heroVisualRef}>
             <div className="hero-visual-card">
               <img
                 src={heroImage}

@@ -50,6 +50,15 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: "1mb" }));
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
+app.get("/", (req, res) => {
+  res.json({
+    status: "ok",
+    service: "Smart Community Skill & Career Development API",
+    health: "/health",
+    api: "/api",
+  });
+});
+
 app.get("/health", (req, res) => {
   res.json({ status: "ok", service: "smart-community-api" });
 });

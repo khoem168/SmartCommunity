@@ -360,7 +360,7 @@ const Community = () => {
             label={t("communityPage.loadingExchanges")}
             variant="community"
           />
-        ) : (
+        ) : recentExchanges.length ? (
           <div className="community-grid">
             {recentExchanges.map((exchange) => {
               const isParticipant =
@@ -418,6 +418,19 @@ const Community = () => {
                 </article>
               );
             })}
+          </div>
+        ) : (
+          <div className="community-empty-card community-public-empty">
+            <span className="community-empty-icon" aria-hidden="true">
+              <IoSwapHorizontalOutline />
+            </span>
+            <div>
+              <h3>{t("communityPage.noRecentTitle")}</h3>
+              <p>{t("communityPage.noRecentDescription")}</p>
+            </div>
+            <Link className="btn primary" to="/discover">
+              {t("communityPage.exploreMembers")}
+            </Link>
           </div>
         )}
       </section>

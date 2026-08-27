@@ -134,7 +134,6 @@ const seedCommunityUsers = async () => {
   }
 
   console.log(`Seeded ${communityUsers.length} community users.`);
-  console.log(`Default password: ${defaultPassword}`);
 };
 
 seedCommunityUsers()

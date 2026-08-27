@@ -730,6 +730,10 @@ export const translations = {
       details: "Details",
       recent: "Recent community exchanges",
       recentDescription: "See what members are teaching and learning.",
+      noRecentTitle: "The next skill exchange starts here",
+      noRecentDescription:
+        "Explore community members, add the skills you can teach, and send the first exchange request.",
+      exploreMembers: "Explore members",
       loadingExchanges: "Loading community exchanges",
       wantsExchange: "{name} wants to exchange community skills.",
       offeredBy: "Offered by",
@@ -1682,6 +1686,10 @@ export const translations = {
       details: "ព័ត៌មានលម្អិត",
       recent: "ការប្ដូរជំនាញថ្មីៗក្នុងសហគមន៍",
       recentDescription: "មើលថាសមាជិកកំពុងបង្រៀន និងរៀនអ្វីខ្លះ។",
+      noRecentTitle: "ការប្ដូរជំនាញបន្ទាប់ចាប់ផ្ដើមពីទីនេះ",
+      noRecentDescription:
+        "ស្វែងរកសមាជិក បន្ថែមជំនាញដែលអ្នកអាចបង្រៀន ហើយផ្ញើសំណើប្ដូរជំនាញដំបូង។",
+      exploreMembers: "ស្វែងរកសមាជិក",
       loadingExchanges: "កំពុងផ្ទុកការប្ដូរជំនាញក្នុងសហគមន៍",
       wantsExchange: "{name} ចង់ប្ដូរជំនាញក្នុងសហគមន៍។",
       offeredBy: "ផ្តល់ដោយ",

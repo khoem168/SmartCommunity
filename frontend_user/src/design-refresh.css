@@ -1993,3 +1993,247 @@ html[lang="km"] .site-footer {
     gap: 34px;
   }
 }
+
+/* ========================================================================== */
+/* Final presentation system: shared rhythm, responsive safety and calm depth */
+/* ========================================================================== */
+
+:root {
+  --presentation-bg: #f7f9fc;
+  --presentation-surface: #ffffff;
+  --presentation-ink: #0f172a;
+  --presentation-muted: #64748b;
+  --presentation-line: #dfe7f1;
+  --presentation-blue: #2563eb;
+  --presentation-blue-strong: #1d4ed8;
+  --presentation-teal: #0f766e;
+  --presentation-radius-sm: 10px;
+  --presentation-radius-md: 14px;
+  --presentation-radius-lg: 20px;
+  --presentation-shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.055);
+  --presentation-shadow-md: 0 18px 48px rgba(15, 23, 42, 0.09);
+}
+
+.app-shell {
+  min-width: 320px;
+  color: var(--presentation-ink);
+  background: var(--presentation-bg);
+}
+
+.app-shell :where(button, input, select, textarea, a) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app-shell :where(button, .btn, a) {
+  transition-duration: 180ms;
+}
+
+.app-shell :where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .dashboard-hero,
+    .admin-hero,
+    .analytics-hero,
+    .page-hero
+  ) {
+  border-bottom: 1px solid var(--presentation-line) !important;
+  background: var(--presentation-bg) !important;
+}
+
+.app-shell :where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .dashboard-hero,
+    .admin-hero,
+    .analytics-hero,
+    .page-hero
+  )::before,
+.app-shell :where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .dashboard-hero,
+    .admin-hero,
+    .analytics-hero,
+    .page-hero
+  )::after {
+  opacity: 0.45;
+}
+
+.app-shell :where(
+    .courses-hero h1,
+    .career-hero h1,
+    .community-hero h1,
+    .mentorship-hero h1,
+    .jobs-hero h1,
+    .sessions-hero h1,
+    .forum-hero h1,
+    .discover-hero h1,
+    .dashboard-hero h1,
+    .admin-hero h1,
+    .analytics-hero h1,
+    .page-hero h1
+  ) {
+  color: var(--presentation-ink);
+  text-wrap: balance;
+}
+
+.app-shell :where(
+    .course-card,
+    .mentor-card,
+    .job-card,
+    .session-card,
+    .exchange-card,
+    .discover-card,
+    .career-path-card,
+    .dashboard-panel,
+    .analytics-card,
+    .admin-card
+  ) {
+  border-color: var(--presentation-line);
+  border-radius: var(--presentation-radius-lg);
+  box-shadow: var(--presentation-shadow-sm);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .app-shell :where(
+      .course-card,
+      .mentor-card,
+      .job-card,
+      .session-card,
+      .exchange-card,
+      .discover-card,
+      .career-path-card
+    ):hover {
+    border-color: #bfdbfe;
+    box-shadow: var(--presentation-shadow-md);
+    transform: translateY(-3px);
+  }
+}
+
+.app-shell :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.32);
+  outline-offset: 3px;
+}
+
+.app-shell :where(button, [role="button"]):disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+@media (max-width: 640px) {
+  .app-content,
+  .route-transition,
+  .app-shell main,
+  .app-shell section,
+  .app-shell :where(.container, .home-container) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .app-shell :where(
+      .courses-hero,
+      .career-hero,
+      .community-hero,
+      .mentorship-hero,
+      .jobs-hero,
+      .sessions-hero,
+      .forum-hero,
+      .discover-hero,
+      .dashboard-hero,
+      .admin-hero,
+      .analytics-hero,
+      .page-hero
+    ) {
+    padding: 38px 14px 42px !important;
+  }
+
+  .app-shell :where(
+      .courses-hero h1,
+      .career-hero h1,
+      .community-hero h1,
+      .mentorship-hero h1,
+      .jobs-hero h1,
+      .sessions-hero h1,
+      .forum-hero h1,
+      .discover-hero h1,
+      .dashboard-hero h1,
+      .admin-hero h1,
+      .analytics-hero h1,
+      .page-hero h1
+    ) {
+    width: 100%;
+    max-width: 16ch !important;
+    font-size: clamp(2rem, 10vw, 2.65rem) !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.035em;
+    overflow-wrap: anywhere;
+  }
+
+  .app-shell :where(
+      .courses-hero p,
+      .career-hero p,
+      .community-hero p,
+      .mentorship-hero p,
+      .jobs-hero p,
+      .sessions-hero p,
+      .forum-hero p,
+      .discover-hero p,
+      .dashboard-hero p,
+      .admin-hero p,
+      .analytics-hero p,
+      .page-hero p
+    ) {
+    max-width: 42ch;
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
+
+  .app-shell :where(.btn, button[type="submit"]) {
+    min-height: 44px;
+  }
+
+  .site-footer .footer-main,
+  .site-footer .footer-nav-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .site-footer .site-footer-bottom,
+  .site-footer .site-footer-bottom > div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell :where(
+      .course-card,
+      .mentor-card,
+      .job-card,
+      .session-card,
+      .exchange-card,
+      .discover-card,
+      .career-path-card
+    ) {
+    transform: none !important;
+    transition: none !important;
+  }
+}

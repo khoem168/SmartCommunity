@@ -3376,3 +3376,102 @@ html[lang="km"] .search-submit-btn {
     animation: none !important;
   }
 }
+
+/* Lightweight depth: pointer-driven on capable devices, static everywhere else. */
+.home-page .hero-visual {
+  --hero-tilt-x: 0deg;
+  --hero-tilt-y: 0deg;
+  --hero-shift-x: 0px;
+  --hero-shift-y: 0px;
+  min-width: 0;
+  transform: perspective(1100px) translate3d(
+      var(--hero-shift-x),
+      var(--hero-shift-y),
+      0
+    )
+    rotateX(var(--hero-tilt-x)) rotateY(var(--hero-tilt-y));
+  transform-style: preserve-3d;
+  transition: transform 180ms cubic-bezier(0.2, 0.75, 0.25, 1);
+  will-change: transform;
+}
+
+.home-page .hero-visual-card {
+  transform-style: preserve-3d;
+}
+
+.home-page .hero-float-widget {
+  backface-visibility: hidden;
+  transform: translateZ(34px);
+}
+
+@media (max-width: 768px), (hover: none), (pointer: coarse) {
+  .home-page .hero-visual {
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+
+  .home-page .hero-float-widget {
+    transform: none;
+  }
+}
+
+/* Narrow-screen hardening: never let search controls or chips widen the grid. */
+@media (max-width: 520px) {
+  .home-page .hero-grid,
+  .home-page .hero-copy,
+  .home-page .hero-search-bar,
+  .home-page .search-input-wrap,
+  .home-page .hero-actions,
+  .home-page .hero-proof,
+  .home-page .hero-trending-tags {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .home-page .hero-copy h1 {
+    max-width: 100%;
+    font-size: clamp(2.25rem, 11.5vw, 3rem);
+    letter-spacing: -0.04em;
+  }
+
+  .home-page .hero-search-bar {
+    display: grid;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .home-page .search-input-wrap {
+    min-height: 42px;
+    padding-inline: 8px;
+  }
+
+  .home-page .search-submit-btn {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .home-page .hero-trending-tags {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+
+  .home-page .hero-proof span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page .hero-visual,
+  .home-page .hero-visual-card,
+  .home-page .hero-float-widget {
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+}
