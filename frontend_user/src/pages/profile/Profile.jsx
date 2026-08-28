@@ -13,6 +13,7 @@ import {
   IoTrashOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import UserAvatar from "../../components/ui/UserAvatar";
 import {
   createProfileItemRequest,
   deleteProfileItemRequest,
@@ -37,14 +38,6 @@ const formatDate = (value) => {
     year: "numeric",
   }).format(new Date(value));
 };
-
-const getInitials = (name = "") =>
-  name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
 
 const educationFields = [
   { name: "institution", label: "School or institution", required: true },
@@ -419,17 +412,10 @@ const Profile = () => {
         <div className="container profile-hero-inner">
           <div className="profile-identity">
             <div className="profile-avatar-wrap">
-              {profileUser.avatarUrl ? (
-                <img
-                  className="profile-large-avatar image"
-                  src={profileUser.avatarUrl}
-                  alt={profileUser.fullName}
-                />
-              ) : (
-                <span className="profile-large-avatar">
-                  {getInitials(profileUser.fullName || profileUser.email)}
-                </span>
-              )}
+              <UserAvatar
+                user={profileUser}
+                className="profile-large-avatar"
+              />
               <label
                 className="profile-avatar-upload"
                 title="Upload profile picture"

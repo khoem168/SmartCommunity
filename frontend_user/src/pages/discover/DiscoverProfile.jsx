@@ -12,15 +12,9 @@ import {
   fetchSkillExchanges,
 } from "../../services/platformService";
 import { createConversation } from "../../services/messageService";
+import MemberAvatar from "./MemberAvatar";
+import { presentMember } from "./memberPresentation";
 import "./Discover.css";
-
-const initials = (name) =>
-  name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
 
 const findBestSkill = (sourceSkills = [], targetSkills = [], fallback = "") =>
   sourceSkills.find((skill) => targetSkills.includes(skill)) ||
@@ -29,12 +23,13 @@ const findBestSkill = (sourceSkills = [], targetSkills = [], fallback = "") =>
   fallback;
 
 const normalizeMember = (member) => {
-  const skills = member.skills || {};
+  const presentedMember = presentMember(member);
+  const skills = presentedMember.skills || {};
   const teachSkills = skills.teach || skills.candidate || [];
   const learnSkills = skills.learn || [];
 
   return {
-    ...member,
+    ...presentedMember,
     availability: skills.availability || "Flexible schedule",
     teachSkills,
     learnSkills,
@@ -67,7 +62,13 @@ const DiscoverProfile = () => {
     const loadProfile = async () => {
       try {
         const rows = await fetchMembers();
-        setMembers(rows.map(normalizeMember));
+        setMembers(
+          rows
+            .filter(
+              (item) => !["admin", "recruiter"].includes(item.role),
+            )
+            .map(normalizeMember),
+        );
       } catch (err) {
         setError(err.message || "Unable to load profile.");
       }
@@ -146,9 +147,7 @@ const DiscoverProfile = () => {
       <section className="discover-profile-hero">
         <div className="container discover-profile-layout">
           <aside className="discover-profile-card">
-            <span className="discover-profile-avatar">
-              {initials(member.name)}
-            </span>
+            <MemberAvatar member={member} profile />
             <p className="eyebrow">{member.role}</p>
             <h1>{member.name}</h1>
             <p>{member.title}</p>

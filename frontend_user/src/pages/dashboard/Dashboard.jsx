@@ -21,6 +21,7 @@ import {
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
+import UserAvatar from "../../components/ui/UserAvatar";
 import { sampleCourses } from "../courses/courseData";
 import "./Dashboard.css";
 
@@ -344,17 +345,12 @@ const Dashboard = () => {
             aria-label={t("dashboard.readinessLabel")}
           >
             <div className="readiness-header">
-              <div className="readiness-avatar-box">
-                {user.avatarUrl ? (
-                  <img
-                    src={user.avatarUrl}
-                    alt={firstName}
-                    className="user-avatar-img"
-                  />
-                ) : (
-                  <IoPersonCircleOutline />
-                )}
-              </div>
+              <UserAvatar
+                user={user}
+                className="readiness-avatar-box"
+                icon={<IoPersonCircleOutline />}
+                alt={firstName}
+              />
               <div>
                 <span className="readiness-sub">
                   {t("dashboard.readinessLabel")}

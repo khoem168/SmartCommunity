@@ -419,8 +419,8 @@ html[data-language="km"] .nav-signin-button {
   font-weight: 800;
 }
 
-.profile-avatar.image {
-  object-fit: cover;
+.profile-avatar.has-image {
+  padding: 0;
 }
 
 .profile-text {

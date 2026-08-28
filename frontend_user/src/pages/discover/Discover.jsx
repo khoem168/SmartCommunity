@@ -17,15 +17,9 @@ import {
   fetchMembers,
   fetchSkillExchanges,
 } from "../../services/platformService";
+import MemberAvatar from "./MemberAvatar";
+import { presentMember } from "./memberPresentation";
 import "./Discover.css";
-
-const initials = (name) =>
-  name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
 
 const findBestSkill = (sourceSkills = [], targetSkills = [], fallback = "") =>
   sourceSkills.find((skill) => targetSkills.includes(skill)) ||
@@ -41,15 +35,42 @@ const getUserOfferSkills = (user) => {
   return [...new Set(skills)];
 };
 
+const CompactSkillList = ({ skills, tone }) => {
+  const visibleSkills = skills.slice(0, 4);
+  const remaining = skills.length - visibleSkills.length;
+
+  return (
+    <div className="skill-list compact">
+      {visibleSkills.map((skill) => (
+        <span className={`skill-pill ${tone}`} key={skill}>
+          {skill}
+        </span>
+      ))}
+      {remaining > 0 && (
+        <span
+          className="skill-pill more"
+          aria-label={`${remaining} additional skills`}
+        >
+          +{remaining}
+        </span>
+      )}
+    </div>
+  );
+};
+
 const normalizeMember = (member) => {
-  const skills = member.skills || {};
+  const presentedMember = presentMember(member);
+  const skills = presentedMember.skills || {};
   const teachSkills = skills.teach || skills.candidate || [];
   const learnSkills = skills.learn || [];
 
   return {
-    ...member,
-    role: member.role || "student",
-    title: member.title || member.profession || "Community member",
+    ...presentedMember,
+    role: presentedMember.role || "student",
+    title:
+      presentedMember.title ||
+      presentedMember.profession ||
+      "Community member",
     availability: skills.availability || "Flexible schedule",
     teachSkills,
     learnSkills,
@@ -90,7 +111,9 @@ const Discover = () => {
         const rows = await fetchMembers();
         setMembers(
           rows
-            .filter((member) => member.role !== "recruiter")
+            .filter(
+              (member) => !["admin", "recruiter"].includes(member.role),
+            )
             .map(normalizeMember)
             .filter((member) => member.id !== currentUserId),
         );
@@ -363,41 +386,31 @@ const Discover = () => {
               return (
                 <article className="discover-card" key={member.id}>
                   <div className="discover-card-header">
-                    <span className="discover-avatar">
-                      {initials(member.name)}
-                    </span>
+                    <MemberAvatar member={member} />
                     <div>
                       <h3>{member.name}</h3>
                       <p>{member.title}</p>
                     </div>
-                    <strong style={{ color: "#f59e0b" }}>
-                      {member.matchScore}%
-                    </strong>
+                    <strong>{member.matchScore}%</strong>
                   </div>
 
                   <div className="discover-swap">
                     <div>
                       <span>{t("discoverPage.canTeach")}</span>
-                      <div className="skill-list">
-                        {member.teachSkills.map((skill) => (
-                          <span className="skill-pill teach" key={skill}>
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
+                      <CompactSkillList
+                        skills={member.teachSkills}
+                        tone="teach"
+                      />
                     </div>
 
                     <IoSwapHorizontalOutline aria-hidden="true" />
 
                     <div>
                       <span>{t("discoverPage.wantsLearn")}</span>
-                      <div className="skill-list">
-                        {member.learnSkills.map((skill) => (
-                          <span className="skill-pill learn" key={skill}>
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
+                      <CompactSkillList
+                        skills={member.learnSkills}
+                        tone="learn"
+                      />
                     </div>
                   </div>
 

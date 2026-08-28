@@ -464,10 +464,9 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  object-fit: cover;
 }
 
-.forum-avatar.fallback {
+.forum-avatar.is-fallback {
   display: grid;
   place-items: center;
   color: #fff;

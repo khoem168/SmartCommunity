@@ -22,6 +22,7 @@ import {
 import { getSocket } from "../../services/realtimeService";
 import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
 import { useLanguage } from "../../context/LanguageContext";
+import UserAvatar from "../../components/ui/UserAvatar";
 import "./Mentorship.css";
 
 const formatDate = (value) =>
@@ -31,14 +32,6 @@ const formatDate = (value) =>
         timeStyle: "short",
       }).format(new Date(String(value).replace(" ", "T")))
     : "Time not selected";
-
-const initials = (name = "") =>
-  name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
 
 const Mentorship = () => {
   const { user } = useGlobleContext();
@@ -733,11 +726,7 @@ const Mentorship = () => {
               {filteredMentors.map((mentor) => (
                 <article className="mentor-card" key={mentor.id}>
                   <div className="mentor-card-person">
-                    {mentor.avatarUrl ? (
-                      <img src={mentor.avatarUrl} alt="" />
-                    ) : (
-                      <span>{initials(mentor.name)}</span>
-                    )}
+                    <UserAvatar user={mentor} />
                     <div>
                       <h3>{mentor.name}</h3>
                       <p className="mentor-title">

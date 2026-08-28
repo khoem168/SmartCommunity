@@ -10,6 +10,7 @@ import {
   IoTrashOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import UserAvatar from "../../components/ui/UserAvatar";
 import {
   acceptForumAnswerRequest,
   createForumAnswerRequest,
@@ -30,14 +31,12 @@ const formatDate = (value) =>
     timeStyle: "short",
   }).format(new Date(value));
 
-const Avatar = ({ name, image }) =>
-  image ? (
-    <img className="forum-avatar" src={image} alt="" />
-  ) : (
-    <span className="forum-avatar fallback">
-      {name?.charAt(0)?.toUpperCase() || "U"}
-    </span>
-  );
+const Avatar = ({ name, image }) => (
+  <UserAvatar
+    user={{ name, avatarUrl: image }}
+    className="forum-avatar"
+  />
+);
 
 const ForumDetail = () => {
   const { postId } = useParams();

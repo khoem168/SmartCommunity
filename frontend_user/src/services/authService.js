@@ -5,14 +5,34 @@ const saveSession = (response, rememberMe = false) => {
   return response;
 };
 
-export const loginRequest = async ({ email, password, rememberMe = false }) =>
-  saveSession(
-    await apiFetch("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password, rememberMe }),
-    }),
-    rememberMe,
-  );
+const wait = (milliseconds) =>
+  new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+
+export const loginRequest = async ({ email, password, rememberMe = false }) => {
+  const retryDelays = [0, 1500, 3000];
+  let lastError;
+
+  for (const delay of retryDelays) {
+    if (delay) await wait(delay);
+    try {
+      const response = await apiFetch("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password, rememberMe }),
+      });
+      return saveSession(response, rememberMe);
+    } catch (error) {
+      lastError = error;
+      const isTemporaryServerError = [502, 503, 504].includes(
+        error.response?.status,
+      );
+      if (error.code !== "NETWORK_ERROR" && !isTemporaryServerError) {
+        throw error;
+      }
+    }
+  }
+
+  throw lastError;
+};
 
 export const googleLoginRequest = async ({ credential, rememberMe = false }) =>
   saveSession(

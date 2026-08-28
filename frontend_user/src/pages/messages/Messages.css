@@ -304,7 +304,18 @@
 
 .message-row {
   display: flex;
+  align-items: flex-end;
+  gap: 8px;
   max-width: min(76%, 680px);
+}
+
+.message-author-avatar {
+  width: 34px;
+  height: 34px;
+  border: 2px solid #ffffff;
+  border-radius: 11px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+  font-size: 0.7rem;
 }
 
 .message-row-live .message-bubble {

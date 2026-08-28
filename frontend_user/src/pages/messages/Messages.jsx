@@ -22,15 +22,9 @@ import {
   sendMessage,
 } from "../../services/messageService";
 import { getSocket } from "../../services/realtimeService";
+import UserAvatar from "../../components/ui/UserAvatar";
+import { resolveMediaUrl } from "../../utils/userPresentation";
 import "./Messages.css";
-
-const getInitials = (name = "") =>
-  name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0].toUpperCase())
-    .join("");
 
 const formatFileSize = (bytes) => {
   if (!bytes) return "";
@@ -338,15 +332,18 @@ const Messages = () => {
                         }`}
                         onClick={() => openConversation(conversation.id)}
                       >
-                        <span
+                        <UserAvatar
+                          user={{
+                            name: conversation.displayName,
+                            avatarUrl: conversation.avatarUrl,
+                          }}
                           className={`conversation-avatar ${conversation.type}`}
-                        >
-                          {conversation.type === "group" ? (
-                            <IoPeopleOutline />
-                          ) : (
-                            getInitials(conversation.displayName)
-                          )}
-                        </span>
+                          icon={
+                            conversation.type === "group" ? (
+                              <IoPeopleOutline />
+                            ) : null
+                          }
+                        />
                         <span className="conversation-info">
                           <span className="conversation-title-line">
                             <strong>{conversation.displayName}</strong>
@@ -396,15 +393,18 @@ const Messages = () => {
           <div className="thread-header">
             <div className="thread-person">
               {activeConversation && (
-                <span
+                <UserAvatar
+                  user={{
+                    name: activeConversation.displayName,
+                    avatarUrl: activeConversation.avatarUrl,
+                  }}
                   className={`conversation-avatar ${activeConversation.type}`}
-                >
-                  {activeConversation.type === "group" ? (
-                    <IoPeopleOutline />
-                  ) : (
-                    getInitials(activeConversation.displayName)
-                  )}
-                </span>
+                  icon={
+                    activeConversation.type === "group" ? (
+                      <IoPeopleOutline />
+                    ) : null
+                  }
+                />
               )}
               <div>
                 <h2>
@@ -466,6 +466,17 @@ const Messages = () => {
                           : ""
                       }`}
                     >
+                      {Number(message.senderId) !== Number(user.id) && (
+                        <UserAvatar
+                          user={{
+                            name: message.senderName,
+                            avatarUrl:
+                              message.senderAvatarUrl ||
+                              activeConversation.avatarUrl,
+                          }}
+                          className="message-author-avatar"
+                        />
+                      )}
                       <div className="message-bubble">
                         {activeConversation.type === "group" &&
                           Number(message.senderId) !== Number(user.id) && (
@@ -477,20 +488,20 @@ const Messages = () => {
                         {message.attachmentUrl &&
                           (message.messageType === "image" ? (
                             <a
-                              href={message.attachmentUrl}
+                              href={resolveMediaUrl(message.attachmentUrl)}
                               target="_blank"
                               rel="noreferrer"
                               className="message-image-link"
                             >
                               <img
-                                src={message.attachmentUrl}
+                                src={resolveMediaUrl(message.attachmentUrl)}
                                 alt={message.attachmentName || "Shared image"}
                               />
                             </a>
                           ) : (
                             <a
                               className="message-document"
-                              href={message.attachmentUrl}
+                              href={resolveMediaUrl(message.attachmentUrl)}
                               target="_blank"
                               rel="noreferrer"
                             >
@@ -656,9 +667,7 @@ const Messages = () => {
                       checked={groupForm.memberIds.includes(member.id)}
                       onChange={() => toggleGroupMember(member.id)}
                     />
-                    <span className="mini-avatar">
-                      {getInitials(member.name)}
-                    </span>
+                    <UserAvatar user={member} className="mini-avatar" />
                     <span>
                       <strong>{member.name}</strong>
                       <small>{member.title || member.role}</small>

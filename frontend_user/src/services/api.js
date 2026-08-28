@@ -1,5 +1,7 @@
-export const API_BASE_URL =
+const configuredApiUrl =
   import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+
+export const API_BASE_URL = configuredApiUrl.replace(/\/+$/, "");
 const TOKEN_STORAGE_KEY = "smartCommunityToken";
 
 export const getAuthToken = () => {
@@ -42,10 +44,13 @@ export const apiFetch = async (path, options = {}) => {
       ...options,
       headers,
     });
-  } catch {
-    throw new Error(
+  } catch (cause) {
+    const error = new Error(
       "Cannot connect to the server. Check your internet connection and try again.",
     );
+    error.code = "NETWORK_ERROR";
+    error.cause = cause;
+    throw error;
   }
 
   const isJson = response.headers

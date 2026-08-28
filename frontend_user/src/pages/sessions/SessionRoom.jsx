@@ -6,6 +6,7 @@ import {
   IoVideocamOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import UserAvatar from "../../components/ui/UserAvatar";
 import {
   joinLearningSession,
   leaveLearningSession,
@@ -70,9 +71,12 @@ const SessionRoom = () => {
   return (
     <main className="session-room-page">
       <header className="session-room-header">
-        <div>
-          <strong>Smart Community Live Session</strong>
-          <span>Jitsi provides video, audio, chat, and screen sharing.</span>
+        <div className="session-room-identity">
+          <UserAvatar user={user} className="session-room-avatar" />
+          <div className="session-room-copy">
+            <strong>{user.fullName || "Smart Community member"}</strong>
+            <span>Smart Community live session · Jitsi meeting room</span>
+          </div>
         </div>
         <div>
           <a

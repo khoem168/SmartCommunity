@@ -49,10 +49,11 @@ const uploadLocally = async (file, folder, publicId) => {
 
   const fileName = `${publicId}-${crypto.randomBytes(5).toString("hex")}${extension}`;
   await fs.writeFile(path.join(absoluteDirectory, fileName), file.buffer);
-  const publicBaseUrl = (process.env.API_PUBLIC_URL || "http://localhost:4000").replace(
-    /\/$/,
-    "",
-  );
+  const publicBaseUrl = (
+    process.env.API_PUBLIC_URL ||
+    process.env.RENDER_EXTERNAL_URL ||
+    "http://localhost:4000"
+  ).replace(/\/$/, "");
   const relativeUrl = `${relativeDirectory.replace(/\\/g, "/")}/${fileName}`;
   return { url: `${publicBaseUrl}/${relativeUrl}`, provider: "local" };
 };

@@ -3,20 +3,11 @@ import { Link } from "react-router-dom";
 import { fetchSkillExchanges } from "../../services/platformService";
 import { getSocket } from "../../services/realtimeService";
 import { useLanguage } from "../../context/LanguageContext";
-
-const getInitials = (name) => {
-  return (name || "")
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0].toUpperCase())
-    .join("");
-};
+import UserAvatar from "../ui/UserAvatar";
 
 export const NavProfile = ({ user = {}, onLogout }) => {
   const [open, setOpen] = useState(false);
   const [pendingSkillRequests, setPendingSkillRequests] = useState(0);
-  const initials = getInitials(user.fullName || user.email || "User");
   const role = user.role || "member";
   const { t } = useLanguage();
   const roleLabel = t(`profile.${role}`);
@@ -82,11 +73,7 @@ export const NavProfile = ({ user = {}, onLogout }) => {
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
       >
-        {user.avatarUrl ? (
-          <img className="profile-avatar image" src={user.avatarUrl} alt="" />
-        ) : (
-          <span className="profile-avatar">{initials}</span>
-        )}
+        <UserAvatar user={user} className="profile-avatar" />
         <div className="profile-text">
           <strong>{user.fullName || user.email}</strong>
           <small>{roleLabel}</small>

@@ -209,7 +209,7 @@ const getMembers = async (req, res, next) => {
     const [rows] = await db.query(
       `SELECT id, full_name, role, bio, skills, profession, company, location, avatar_url
        FROM users
-       WHERE is_active = 1
+       WHERE is_active = 1 AND role <> 'admin'
        ORDER BY full_name ASC`,
     );
 
@@ -389,7 +389,9 @@ const getSkillExchanges = async (req, res, next) => {
               se.requester_completed_at, se.provider_completed_at,
               se.completed_at, se.created_at,
               requester.id AS requester_id, requester.full_name AS requester_name,
+              requester.avatar_url AS requester_avatar,
               provider.id AS provider_id, provider.full_name AS provider_name,
+              provider.avatar_url AS provider_avatar,
               c.id AS conversation_id
        FROM skill_exchanges se
        JOIN users requester ON requester.id = se.requester_id
@@ -407,9 +409,11 @@ const getSkillExchanges = async (req, res, next) => {
         id: row.id,
         title: `${row.skill_offered || "Skill"} for ${row.skill_requested || "learning"}`,
         offeredBy: row.requester_name,
+        offeredByAvatar: row.requester_avatar,
         requesterId: row.requester_id,
         providerId: row.provider_id,
         providerName: row.provider_name,
+        providerAvatar: row.provider_avatar,
         offeredSkill: row.skill_offered,
         requestedSkill: row.skill_requested,
         details: row.message,
@@ -438,7 +442,8 @@ const getCommunitySkillExchanges = async (req, res, next) => {
     const [rows] = await db.query(
       `SELECT se.id, se.skill_offered, se.skill_requested, se.status,
               se.progress_percent, se.completed_at, se.created_at,
-              requester.full_name AS requester_name
+              requester.full_name AS requester_name,
+              requester.avatar_url AS requester_avatar
        FROM skill_exchanges se
        JOIN users requester ON requester.id = se.requester_id
        WHERE se.status IN ('accepted', 'completed')
@@ -450,6 +455,7 @@ const getCommunitySkillExchanges = async (req, res, next) => {
       exchanges: rows.map((row) => ({
         id: row.id,
         offeredBy: row.requester_name,
+        offeredByAvatar: row.requester_avatar,
         offeredSkill: row.skill_offered,
         requestedSkill: row.skill_requested,
         status: row.status,

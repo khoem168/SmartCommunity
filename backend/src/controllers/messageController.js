@@ -440,6 +440,7 @@ const sendMessage = async (req, res, next) => {
       conversationId: conversation.id,
       senderId: req.user.id,
       senderName: req.user.fullName,
+      senderAvatarUrl: req.user.avatarUrl || "",
       receiverId,
       text: message,
       message,

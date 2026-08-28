@@ -24,6 +24,7 @@ import {
   updateLearningSessionStatus,
 } from "../../services/learningSessionService";
 import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
+import UserAvatar from "../../components/ui/UserAvatar";
 import "./LearningSessions.css";
 
 const emptyForm = {
@@ -46,15 +47,6 @@ const formatDate = (value, locale) =>
     hour: "2-digit",
     minute: "2-digit",
   });
-
-const initials = (name = "") =>
-  name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
 
 const LearningSessions = () => {
   const { user } = useGlobleContext();
@@ -323,7 +315,12 @@ const LearningSessions = () => {
                     {session.description || t("sessionsPage.defaultDescription")}
                   </p>
                   <div className="session-host">
-                    <span>{initials(session.hostName)}</span>
+                    <UserAvatar
+                      user={{
+                        name: session.hostName,
+                        avatarUrl: session.hostAvatarUrl,
+                      }}
+                    />
                     <div>
                       <strong>{session.hostName}</strong>
                       <small>{session.hostTitle || t("sessionsPage.host")}</small>
@@ -537,9 +534,10 @@ const LearningSessions = () => {
                 {participants.length ? (
                   participants.map((participant) => (
                     <div className="attendance-row" key={participant.id}>
-                      <span className="attendance-avatar">
-                        {initials(participant.name)}
-                      </span>
+                      <UserAvatar
+                        user={participant}
+                        className="attendance-avatar"
+                      />
                       <span>
                         <strong>{participant.name}</strong>
                         <small>{participant.email}</small>

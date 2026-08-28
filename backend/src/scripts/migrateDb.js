@@ -1175,6 +1175,12 @@ const run = async () => {
     ],
   );
 
+  await db.query(
+    `UPDATE users
+     SET full_name = 'MUY KALIN'
+     WHERE LOWER(REPLACE(full_name, ' ', '')) = 'mutkalin'`,
+  );
+
   console.log("Database migration completed.");
   await db.end();
 };

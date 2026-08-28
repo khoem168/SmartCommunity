@@ -45,6 +45,7 @@ const getSkillMatches = async (req, res, next) => {
               skills, interested_skills
        FROM users
        WHERE id <> ? AND is_active = 1 AND is_verified = 1
+         AND role NOT IN ('admin', 'recruiter')
        ORDER BY full_name`,
       [req.user.id],
     );

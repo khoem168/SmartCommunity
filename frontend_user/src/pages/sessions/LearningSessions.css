@@ -570,6 +570,20 @@
 }
 
 .session-room-header > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.session-room-avatar {
+  width: 42px;
+  height: 42px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 13px;
+  font-size: 0.78rem;
+}
+
+.session-room-copy {
   display: grid;
   gap: 2px;
 }

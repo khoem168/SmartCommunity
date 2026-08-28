@@ -515,10 +515,15 @@ const CourseDetail = () => {
             aria-modal="true"
             aria-label="Bakong KHQR payment"
           >
-            <header>
-              <div>
-                <span>KHQR</span>
-                <small>Bakong secure course payment</small>
+            <header className="khqr-modal-header">
+              <div className="khqr-brand-lockup">
+                <span className="khqr-brand-mark" aria-hidden="true">
+                  KHQR
+                </span>
+                <div>
+                  <strong>Secure course payment</strong>
+                  <small>Powered by Bakong</small>
+                </div>
               </div>
               <button
                 type="button"
@@ -565,28 +570,53 @@ const CourseDetail = () => {
               </div>
             ) : (
               <div className="payment-body">
-                <div className="payment-summary">
-                  <div>
-                    <small>Course</small>
-                    <strong>{course.title}</strong>
+                <div className="khqr-receipt">
+                  <div className="khqr-receiver">
+                    <small>PAY TO</small>
+                    <strong>
+                      {payment?.merchantName || "Smart Community"}
+                    </strong>
+                    <span>Smart Community Skill &amp; Career</span>
                   </div>
-                  <strong>{money(payment?.amount, payment?.currency)}</strong>
+
+                  <div className="payment-summary">
+                    <div>
+                      <small>COURSE</small>
+                      <strong>{course.title}</strong>
+                    </div>
+                    <div className="payment-amount">
+                      <small>AMOUNT</small>
+                      <strong>
+                        {money(payment?.amount, payment?.currency)}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className="khqr-box">
+                    {payment?.qrCode && (
+                      <QRCodeSVG
+                        value={payment.qrCode}
+                        size={272}
+                        level="H"
+                        title="Bakong KHQR payment code"
+                      />
+                    )}
+                  </div>
+
+                  <div className="payment-timer">
+                    <span
+                      className={paymentState === "pending" ? "pulse" : ""}
+                    />
+                    {paymentState === "expired"
+                      ? "QR expired"
+                      : `Waiting for payment · ${countdown}`}
+                  </div>
                 </div>
-                <div className="khqr-box">
-                  {payment?.qrCode && (
-                    <QRCodeSVG value={payment.qrCode} size={250} level="H" />
-                  )}
-                </div>
-                <div className="payment-timer">
-                  <span className={paymentState === "pending" ? "pulse" : ""} />
-                  {paymentState === "expired"
-                    ? "QR expired"
-                    : `Waiting for payment · ${countdown}`}
-                </div>
-                <h2>Scan with your banking app</h2>
+
+                <h2>Scan to pay securely</h2>
                 <p>
-                  Open Bakong or a KHQR-supported bank, scan this code, and
-                  confirm the exact amount.
+                  Open Bakong or any KHQR-supported banking app, scan the code,
+                  and confirm the amount shown above.
                 </p>
                 {paymentError && (
                   <div className="payment-error">{paymentError}</div>
@@ -602,17 +632,27 @@ const CourseDetail = () => {
                 ) : (
                   <div className="payment-safe-note">
                     <FiShield />
-                    Access unlocks only after Bakong confirms the transaction.
+                    Course access unlocks only after payment is confirmed.
                   </div>
                 )}
-                <a
-                  href="https://bakong.nbc.gov.kh/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="payment-help"
-                >
-                  About Bakong KHQR <FiExternalLink />
-                </a>
+                <div className="khqr-support-row">
+                  <div>
+                    <small>MEMBER OF</small>
+                    <strong>BAKONG</strong>
+                  </div>
+                  <div>
+                    <small>ACCEPTED BY</small>
+                    <span>KHQR-enabled banks</span>
+                  </div>
+                  <a
+                    href="https://bakong.nbc.gov.kh/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="payment-help"
+                  >
+                    Learn more <FiExternalLink />
+                  </a>
+                </div>
               </div>
             )}
           </section>

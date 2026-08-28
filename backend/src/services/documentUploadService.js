@@ -41,7 +41,11 @@ const uploadLocally = async (file, folder, publicId) => {
   await fs.mkdir(absoluteDirectory, { recursive: true });
   const fileName = `${publicId}-${crypto.randomBytes(5).toString("hex")}.pdf`;
   await fs.writeFile(path.join(absoluteDirectory, fileName), file.buffer);
-  const baseUrl = (process.env.API_PUBLIC_URL || "http://localhost:4000").replace(/\/$/, "");
+  const baseUrl = (
+    process.env.API_PUBLIC_URL ||
+    process.env.RENDER_EXTERNAL_URL ||
+    "http://localhost:4000"
+  ).replace(/\/$/, "");
   const relativeUrl = `${relativeDirectory.replace(/\\/g, "/")}/${fileName}`;
   return { url: `${baseUrl}/${relativeUrl}`, provider: "local" };
 };

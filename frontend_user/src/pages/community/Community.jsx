@@ -16,15 +16,8 @@ import {
 } from "../../services/platformService";
 import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
 import { useLanguage } from "../../context/LanguageContext";
+import UserAvatar from "../../components/ui/UserAvatar";
 import "./Community.css";
-
-const initials = (name = "") =>
-  name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
 
 const Community = () => {
   const { user } = useGlobleContext();
@@ -177,11 +170,7 @@ const Community = () => {
                 {matches.map((match) => (
                   <article className="skill-match-card" key={match.id}>
                     <div className="skill-match-person">
-                      {match.avatarUrl ? (
-                        <img src={match.avatarUrl} alt="" />
-                      ) : (
-                        <span>{initials(match.name)}</span>
-                      )}
+                      <UserAvatar user={match} />
                       <div>
                         <h3>{match.name}</h3>
                         <p>{match.profession || match.role}</p>
@@ -388,7 +377,12 @@ const Community = () => {
                       })}
                   </p>
                   <div className="exchange-owner">
-                    <span>{initials(exchange.offeredBy)}</span>
+                    <UserAvatar
+                      user={{
+                        name: exchange.offeredBy,
+                        avatarUrl: exchange.offeredByAvatar,
+                      }}
+                    />
                     <div>
                       <small>{t("communityPage.offeredBy")}</small>
                       <strong>{exchange.offeredBy}</strong>
