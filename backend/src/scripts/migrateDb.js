@@ -1160,6 +1160,21 @@ const run = async () => {
            52, 0 FROM courses WHERE slug = 'ui-ux-design-essentials'
   `);
 
+  // Remove the original placeholder accounts from existing installations.
+  // Their example.com addresses identify only the demo records shipped in the
+  // first SQL dump; foreign-key cascades clean up their related demo content.
+  await db.query(
+    `DELETE FROM users
+     WHERE email IN (?, ?, ?, ?, ?)`,
+    [
+      "john.mentor@example.com",
+      "jane.mentor@example.com",
+      "mike.mentor@example.com",
+      "alice.student@example.com",
+      "bob.student@example.com",
+    ],
+  );
+
   console.log("Database migration completed.");
   await db.end();
 };

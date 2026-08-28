@@ -116,15 +116,6 @@ CREATE TABLE `learning_sessions` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `learning_sessions`
---
-
-INSERT INTO `learning_sessions` (`id`, `title`, `description`, `mentor_id`, `scheduled_time`, `duration_minutes`, `max_participants`, `meeting_link`, `recording_url`, `materials`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Introduction to React Hooks', 'Learn how to use React Hooks effectively', 2, '2026-06-05 19:33:02', 90, 50, NULL, NULL, NULL, 'scheduled', '2026-06-03 12:33:02', '2026-06-03 12:33:02'),
-(2, 'Python for Data Analysis', 'Master pandas and numpy for data analysis', 3, '2026-06-06 19:33:02', 120, 40, NULL, NULL, NULL, 'scheduled', '2026-06-03 12:33:02', '2026-06-03 12:33:02'),
-(3, 'Career Development in Tech', 'Tips for building a successful tech career', 4, '2026-06-08 19:33:02', 60, 100, NULL, NULL, NULL, 'scheduled', '2026-06-03 12:33:02', '2026-06-03 12:33:02');
-
 -- --------------------------------------------------------
 
 --
@@ -269,14 +260,6 @@ CREATE TABLE `skill_exchanges` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `skill_exchanges`
---
-
-INSERT INTO `skill_exchanges` (`id`, `requester_id`, `provider_id`, `skill_offered`, `skill_requested`, `message`, `status`, `scheduled_date`, `created_at`, `updated_at`) VALUES
-(1, 5, 2, 'UI Design', 'JavaScript', 'I can teach UI design in exchange for JavaScript lessons', 'pending', NULL, '2026-06-03 12:33:02', '2026-06-03 12:33:02'),
-(2, 6, 3, 'Social Media Marketing', 'Python', 'Want to learn Python, can teach social media marketing', 'pending', NULL, '2026-06-03 12:33:02', '2026-06-03 12:33:02');
-
 -- --------------------------------------------------------
 
 --
@@ -309,12 +292,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `password_hash`, `full_name`, `phone`, `role`, `bio`, `avatar_url`, `skills`, `profession`, `company`, `experience_years`, `location`, `is_verified`, `is_active`, `last_login`, `created_at`, `updated_at`) VALUES
-(1, 'admin@smartcommunity.com', '$2a$10$rVqCqKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'System Admin', NULL, 'admin', NULL, NULL, NULL, NULL, NULL, 0, NULL, 1, 1, NULL, '2026-06-03 12:33:02', '2026-06-03 12:33:02'),
-(2, 'john.mentor@example.com', '$2a$10$rVqCqKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'John Smith', '+1234567890', 'mentor', 'Expert in full-stack development and cloud computing', NULL, NULL, 'Senior Software Engineer', 'Google', 8, NULL, 1, 1, NULL, '2026-06-03 12:33:02', '2026-06-03 12:33:02'),
-(3, 'jane.mentor@example.com', '$2a$10$rVqCqKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Jane Doe', '+1234567891', 'mentor', 'Passionate about data science and AI', NULL, NULL, 'Data Scientist', 'Microsoft', 6, NULL, 1, 1, NULL, '2026-06-03 12:33:02', '2026-06-03 12:33:02'),
-(4, 'mike.mentor@example.com', '$2a$10$rVqCqKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Mike Johnson', '+1234567892', 'mentor', 'Helping students build successful product careers', NULL, NULL, 'Product Manager', 'Amazon', 5, NULL, 1, 1, NULL, '2026-06-03 12:33:02', '2026-06-03 12:33:02'),
-(5, 'alice.student@example.com', '$2a$10$rVqCqKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Alice Brown', '+1234567893', 'user', 'Looking to improve my programming skills', NULL, NULL, 'Computer Science Student', NULL, 0, NULL, 1, 1, NULL, '2026-06-03 12:33:02', '2026-06-03 12:33:02'),
-(6, 'bob.student@example.com', '$2a$10$rVqCqKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Bob Wilson', '+1234567894', 'user', 'Interested in digital marketing', NULL, NULL, 'Business Student', NULL, 0, NULL, 1, 1, NULL, '2026-06-03 12:33:02', '2026-06-03 12:33:02');
+(1, 'admin@smartcommunity.com', '$2a$10$rVqCqKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'System Admin', NULL, 'admin', NULL, NULL, NULL, NULL, NULL, 0, NULL, 1, 1, NULL, '2026-06-03 12:33:02', '2026-06-03 12:33:02');
 
 -- --------------------------------------------------------
 
