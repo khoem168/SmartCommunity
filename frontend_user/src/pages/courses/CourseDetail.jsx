@@ -596,7 +596,7 @@ const CourseDetail = () => {
                     {payment?.qrCode && (
                       <QRCodeSVG
                         value={payment.qrCode}
-                        size={272}
+                        size={210}
                         level="H"
                         title="Bakong KHQR payment code"
                       />
