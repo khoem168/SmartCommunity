@@ -126,6 +126,8 @@ const sanitizeUser = (row) => {
     bio: row.bio,
     avatarUrl: row.avatar_url || row.avatarUrl || "",
     skills: parseSkills(row.skills),
+    darkMode: Boolean(parseSkills(row.skills)?.preferences?.darkMode),
+    availability: parseSkills(row.skills)?.availability || "Flexible schedule",
     profession: row.profession,
     company: row.company,
     experienceYears: row.experience_years || 0,

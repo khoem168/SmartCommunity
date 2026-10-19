@@ -11,9 +11,14 @@ const run = async () => {
     );
     const mentors = users.filter((user) => user.role === "mentor");
     const members = users.filter((user) => ["student", "user"].includes(user.role));
-    if (!mentors.length || !members.length) {
-      throw new Error("Demo content needs at least one mentor and one student.");
+    if (!members.length) {
+      throw new Error("Demo content needs at least one active community member.");
     }
+    // A new showcase database intentionally contains no fabricated mentor
+    // accounts. Until a mentor is approved, verified community members can
+    // facilitate demo discussions and learning sessions without changing
+    // their real account role.
+    const facilitators = mentors.length ? mentors : members;
 
     const [categories] = await connection.query(
       "SELECT id, slug FROM forum_categories",
@@ -31,7 +36,7 @@ const run = async () => {
         views: 48,
       },
       {
-        authorId: mentors[0].id,
+        authorId: facilitators[0].id,
         category: "career",
         title: "A practical four-week plan for preparing for a junior developer interview",
         body: "This discussion shares a realistic weekly plan covering portfolio cleanup, JavaScript fundamentals, problem solving, mock interviews, communication practice, and thoughtful questions to ask an employer.",
@@ -47,7 +52,7 @@ const run = async () => {
         views: 35,
       },
       {
-        authorId: mentors[1]?.id || mentors[0].id,
+        authorId: facilitators[1]?.id || facilitators[0].id,
         category: "internship",
         title: "Internship application checklist: CV, portfolio, and follow-up",
         body: "Before applying, verify that your CV matches the role, portfolio links work, project descriptions explain your contribution, and contact details are current. After applying, track the status and follow up professionally.",
@@ -91,7 +96,13 @@ const run = async () => {
          WHERE NOT EXISTS (
            SELECT 1 FROM forum_answers WHERE post_id = ? AND body = ?
          )`,
-        [portfolioPost.id, mentors[0].id, answer, portfolioPost.id, answer],
+        [
+          portfolioPost.id,
+          facilitators[0].id,
+          answer,
+          portfolioPost.id,
+          answer,
+        ],
       );
     }
 
@@ -102,7 +113,7 @@ const run = async () => {
           "A practical workshop for turning student projects into clear portfolio case studies with responsive React components.",
         category: "Programming",
         level: "beginner",
-        mentorId: mentors[0].id,
+        mentorId: facilitators[0].id,
         dayOffset: 3,
         duration: 75,
         capacity: 35,
@@ -114,7 +125,7 @@ const run = async () => {
           "Review strong CV structure, prepare concise project stories, and practice common internship interview questions.",
         category: "Career",
         level: "all",
-        mentorId: mentors[1]?.id || mentors[0].id,
+        mentorId: facilitators[1]?.id || facilitators[0].id,
         dayOffset: 6,
         duration: 60,
         capacity: 45,
@@ -126,7 +137,7 @@ const run = async () => {
           "Learn how spacing, typography, hierarchy, color, and responsive layouts improve the clarity of a final-year project.",
         category: "Design",
         level: "intermediate",
-        mentorId: mentors[2]?.id || mentors[0].id,
+        mentorId: facilitators[2]?.id || facilitators[0].id,
         dayOffset: 9,
         duration: 90,
         capacity: 30,

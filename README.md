@@ -2,6 +2,10 @@
 
 A web-based platform designed to support learning, mentorship, skill exchange, real-time communication, and career development for students and communities.
 
+Read the [full website documentation](WEBSITE_DOCUMENTATION.md) for detailed functions, user permissions, pages, payments, architecture, database information, API groups, setup, and current limitations.
+
+Read the [complete website overview and user flows](WEBSITE_FLOWS.md) for the page map, role permissions, step-by-step feature journeys, diagrams, and current implementation limits.
+
 ## What it does
 
 - Exchange skills and knowledge through community-driven peer support.

@@ -222,6 +222,8 @@
 
 .course-card {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border: 1px solid #e2e8ec;
   border-radius: 21px;
@@ -301,6 +303,9 @@
 }
 
 .course-card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   padding: 21px;
 }
 
@@ -420,7 +425,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 15px;
-  margin-top: 17px;
+  margin-top: auto;
   padding-top: 17px;
   border-top: 1px solid #edf1f3;
 }

@@ -1,5 +1,8 @@
+import { refresh } from "./refresh";
+
 export const translations = {
   en: {
+    refresh: refresh.en,
     meta: {
       siteTitle: "Smart Community Skill & Career Development Platform",
     },
@@ -962,6 +965,7 @@ export const translations = {
     },
   },
   km: {
+    refresh: refresh.km,
     meta: {
       siteTitle: "សហគមន៍ឆ្លាតវៃសម្រាប់ជំនាញ និងការអភិវឌ្ឍអាជីព",
     },

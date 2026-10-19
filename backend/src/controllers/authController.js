@@ -398,48 +398,16 @@ const googleLogin = async (req, res, next) => {
 
 const updateProfile = async (req, res, next) => {
   try {
-    const {
-      fullName,
-      bio,
-      location,
-      skillsToTeach = [],
-      skillsToLearn = [],
-      candidateSkills = [],
-      availability,
-      experienceLevel,
-      recruiterCompany,
-      jobTitle,
-      githubUrl,
-      linkedinUrl,
-      careerGoal,
-      interestedSkills = [],
-    } = req.body;
-    const skills = JSON.stringify({
-      teach: skillsToTeach,
-      learn: skillsToLearn,
-      candidate: candidateSkills,
-      availability,
-      experienceLevel,
-    });
-
+    const { buildProfilePatch } = require("../utils/profilePatch");
+    let updates;
+    try {
+      updates = buildProfilePatch(req.body, req.user.skills);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
     await db.query(
-      `UPDATE users
-       SET full_name = ?, bio = ?, skills = ?, profession = ?, company = ?, location = ?,
-           github_url = ?, linkedin_url = ?, career_goal = ?, interested_skills = ?
-       WHERE id = ?`,
-      [
-        fullName || req.user.fullName,
-        bio || null,
-        skills,
-        jobTitle || null,
-        recruiterCompany || null,
-        location || null,
-        cleanUrl(githubUrl),
-        cleanUrl(linkedinUrl),
-        careerGoal || null,
-        JSON.stringify(interestedSkills),
-        req.user.id,
-      ],
+      'UPDATE users SET ' + Object.keys(updates).map(column => column + ' = ?').join(', ') + ' WHERE id = ?',
+      [...Object.values(updates), req.user.id],
     );
     const [rows] = await db.query(`SELECT ${userColumns} FROM users WHERE id = ?`, [
       req.user.id,

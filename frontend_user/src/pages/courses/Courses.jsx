@@ -75,7 +75,7 @@ const Courses = () => {
             </div>
           </div>
           <div className="courses-hero-stat">
-            <strong>{courses.length || 3}</strong>
+            <strong>{courses.length || 6}</strong>
             <span>{t("coursesPage.paths")}</span>
             <small>{t("coursesPage.anyDevice")}</small>
           </div>
@@ -117,7 +117,7 @@ const Courses = () => {
         {loading ? (
           <SkeletonGrid
             className="courses-grid"
-            count={3}
+            count={6}
             label={t("coursesPage.loading")}
             variant="course"
           />

@@ -78,97 +78,50 @@ const getStats = async (req, res, next) => {
 const getDashboard = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const [
-      [applications],
-      [sessions],
-      [notifications],
-      [jobMatches],
-      [exchanges],
-    ] = await Promise.all([
-      db.query(
-        `SELECT ia.*, i.title, i.company
-           FROM internship_applications ia
-           JOIN internships i ON i.id = ia.internship_id
-           WHERE ia.student_id = ?
-           ORDER BY ia.applied_at DESC
-           LIMIT 5`,
-        [userId],
-      ),
-      db.query(
-        `SELECT ls.id, ls.title, ls.scheduled_time, ls.duration_minutes,
-                  u.full_name AS mentor_name, ls.meeting_link, ls.status
-           FROM learning_sessions ls
-           JOIN users u ON u.id = ls.mentor_id
-           WHERE ls.status IN ('scheduled', 'ongoing')
-           ORDER BY ls.scheduled_time ASC
-           LIMIT 4`,
-      ),
-      db.query(
-        `SELECT id, type, title, message, link, is_read, created_at
-           FROM notifications
-           WHERE user_id = ?
-           ORDER BY created_at DESC
-           LIMIT 5`,
-        [userId],
-      ),
-      db.query(
-        `SELECT id, title, company, location, internship_type, stipend, application_deadline
-           FROM internships
-           WHERE status = 'open'
-           ORDER BY created_at DESC
-           LIMIT 5`,
-      ),
-      db.query(
-        `SELECT se.id, se.skill_offered, se.skill_requested, se.status,
-                  requester.full_name AS requester_name,
-                  provider.full_name AS provider_name
-           FROM skill_exchanges se
-           JOIN users requester ON requester.id = se.requester_id
-           LEFT JOIN users provider ON provider.id = se.provider_id
-           WHERE se.requester_id = ? OR se.provider_id = ?
-           ORDER BY se.created_at DESC
-           LIMIT 5`,
-        [userId, userId],
-      ),
+    const recruiter = req.user.role === "recruiter";
+    const [[applications], [sessions], [notifications], [opportunities], [exchanges], [courses], [counts], [roadmaps]] = await Promise.all([
+      db.query(`SELECT ia.id, ia.status, ia.applied_at, i.title, i.company
+        FROM internship_applications ia JOIN internships i ON i.id = ia.internship_id
+        WHERE ${recruiter ? "i.posted_by" : "ia.student_id"} = ? ORDER BY ia.applied_at DESC LIMIT 6`, [userId]),
+      db.query(`SELECT ls.id, ls.title, ls.scheduled_time, ls.duration_minutes, ls.status,
+        u.full_name AS mentor_name FROM learning_sessions ls JOIN users u ON u.id = ls.mentor_id
+        WHERE ls.status IN ('scheduled', 'ongoing')
+        AND DATE_ADD(ls.scheduled_time, INTERVAL ls.duration_minutes MINUTE) >= NOW()
+        AND (ls.mentor_id = ? OR EXISTS (SELECT 1 FROM session_participants sp
+          WHERE sp.session_id = ls.id AND sp.user_id = ? AND sp.attendance_status <> 'cancelled'))
+        ORDER BY ls.scheduled_time ASC LIMIT 4`, [userId, userId]),
+      db.query(`SELECT id, type, title, message, link, is_read, created_at FROM notifications
+        WHERE user_id = ? ORDER BY created_at DESC LIMIT 5`, [userId]),
+      db.query(`SELECT id, title, company, location, internship_type, stipend FROM internships
+        WHERE status = 'open' AND (application_deadline IS NULL OR application_deadline >= CURDATE())
+        ORDER BY created_at DESC LIMIT 4`),
+      db.query(`SELECT se.id, se.skill_offered, se.skill_requested, se.status,
+        requester.full_name AS requester_name, provider.full_name AS provider_name
+        FROM skill_exchanges se JOIN users requester ON requester.id = se.requester_id
+        LEFT JOIN users provider ON provider.id = se.provider_id
+        WHERE se.requester_id = ? OR se.provider_id = ? ORDER BY se.created_at DESC LIMIT 4`, [userId, userId]),
+      db.query(`SELECT c.id, c.slug, c.title, c.category, c.thumbnail_url AS thumbnailUrl,
+        e.progress_percent AS progress FROM course_enrollments e JOIN courses c ON c.id = e.course_id
+        WHERE e.user_id = ? AND c.is_published = 1 ORDER BY e.id DESC LIMIT 4`, [userId]),
+      db.query(`SELECT
+        (SELECT COUNT(*) FROM course_enrollments e JOIN courses c ON c.id=e.course_id WHERE e.user_id=? AND c.is_published=1) AS enrolledCourses,
+        (SELECT COUNT(*) FROM skill_exchanges WHERE (requester_id=? OR provider_id=?) AND status='accepted') AS activeExchanges,
+        (SELECT COUNT(*) FROM internship_applications ia JOIN internships i ON i.id=ia.internship_id
+          WHERE ${recruiter ? "i.posted_by" : "ia.student_id"}=?) AS applications,
+        (SELECT COUNT(*) FROM notifications WHERE user_id=? AND is_read=0) AS unreadNotifications`, [userId, userId, userId, userId, userId]),
+      db.query(`SELECT r.id, p.title,
+        (SELECT COUNT(*) FROM career_path_steps s WHERE s.path_id=p.id) AS totalSteps,
+        (SELECT COUNT(*) FROM user_roadmap_steps done JOIN career_path_steps s ON s.id=done.step_id
+          WHERE done.roadmap_id=r.id AND s.path_id=p.id) AS completedSteps
+        FROM user_career_roadmaps r JOIN career_paths p ON p.id=r.path_id
+        WHERE r.user_id=? AND r.is_current=1 ORDER BY r.started_at DESC LIMIT 1`, [userId]),
     ]);
-
     return res.json({
-      profile: req.user,
-      widgets: {
-        learningProgress: 68,
-        skillScore: 82,
-        completedCourses: 4,
-        jobMatches: jobMatches.length,
-      },
-      roadmap: [
-        "Complete one focused course",
-        "Book a mentorship session",
-        "Create a skill exchange request",
-        "Apply to matched internships",
-      ],
-      applications,
-      exchanges,
-      jobMatches,
-      notifications,
-      upcomingEvents: sessions,
-      recommendedCourses: [
-        {
-          id: "react-modern-web",
-          title: "React for Modern Web",
-          category: "Frontend",
-          progress: 72,
-        },
-        {
-          id: "node-api-development",
-          title: "Node.js API Development",
-          category: "Backend",
-          progress: 40,
-        },
-      ],
+      profile: req.user, widgets: Object.fromEntries(Object.entries(counts[0]).map(([key, value]) => [key, Number(value)])),
+      applications, exchanges, opportunities, notifications, upcomingEvents: sessions, courses,
+      roadmap: roadmaps[0] || null,
     });
-  } catch (err) {
-    return next(err);
-  }
+  } catch (err) { return next(err); }
 };
 
 const getMentors = async (req, res, next) => {

@@ -1064,7 +1064,25 @@ const run = async () => {
        'Design', 'beginner', 'Smart Community Academy',
        'https://i.ytimg.com/vi/c9Wg6Cb_YlU/hqdefault.jpg',
        '["Design thinking","Wireframes","Visual hierarchy","Usability testing"]',
-       1.50, 'USD', '4 hours', 3)
+       1.50, 'USD', '4 hours', 3),
+      ('python-data-foundations', 'Python Data Foundations',
+       'Learn practical Python fundamentals and turn raw information into useful, understandable data insights.',
+       'Data', 'beginner', 'Smart Community Academy',
+       'https://i.ytimg.com/vi/rfscVS0vtbw/hqdefault.jpg',
+       '["Python fundamentals","Data structures","File processing","Practical analysis"]',
+       1.50, 'USD', '5 hours', 4),
+      ('sql-database-essentials', 'SQL Database Essentials',
+       'Design relational data, write useful SQL queries, and work confidently with databases in real applications.',
+       'Backend', 'beginner', 'Smart Community Academy',
+       'https://i.ytimg.com/vi/HXV3zeQKqGY/hqdefault.jpg',
+       '["Relational design","SQL queries","Joins and reports","Database safety"]',
+       2.00, 'USD', '5 hours', 5),
+      ('git-github-collaboration', 'Git & GitHub Collaboration',
+       'Build a professional Git workflow for team projects, code reviews, branches, and confident collaboration.',
+       'Career', 'beginner', 'Smart Community Academy',
+       'https://i.ytimg.com/vi/RGOj5yH7evk/hqdefault.jpg',
+       '["Git foundations","Branches and merges","Pull requests","Team workflow"]',
+       1.00, 'USD', '3 hours', 6)
   `);
 
   await db.query(`
@@ -1158,6 +1176,114 @@ const run = async () => {
            'https://www.youtube.com/watch?v=c9Wg6Cb_YlU',
            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
            52, 0 FROM courses WHERE slug = 'ui-ux-design-essentials'
+  `);
+
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 1, 'Python foundations and first program',
+           'Preview the Python workflow, core syntax, variables, and the learning roadmap.',
+           'https://www.youtube.com/watch?v=rfscVS0vtbw',
+           'https://bugs.python.org/file47781/Tutorial.pdf',
+           24, 1 FROM courses WHERE slug = 'python-data-foundations'
+  `);
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 2, 'Collections, functions, and reusable logic',
+           'Use lists, dictionaries, loops, and functions to solve repeatable data tasks.',
+           'https://www.youtube.com/watch?v=rfscVS0vtbw',
+           'https://bugs.python.org/file47781/Tutorial.pdf',
+           58, 0 FROM courses WHERE slug = 'python-data-foundations'
+  `);
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 3, 'Read, clean, and summarize data',
+           'Process files safely and turn a small dataset into clear, useful results.',
+           'https://www.youtube.com/watch?v=rfscVS0vtbw',
+           'https://bugs.python.org/file47781/Tutorial.pdf',
+           64, 0 FROM courses WHERE slug = 'python-data-foundations'
+  `);
+
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 1, 'Relational database foundations',
+           'Preview tables, keys, relationships, and the structure behind reliable application data.',
+           'https://www.youtube.com/watch?v=HXV3zeQKqGY',
+           'https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf',
+           21, 1 FROM courses WHERE slug = 'sql-database-essentials'
+  `);
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 2, 'Query, filter, group, and join data',
+           'Write practical SQL queries that answer real product and reporting questions.',
+           'https://www.youtube.com/watch?v=HXV3zeQKqGY',
+           'https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf',
+           56, 0 FROM courses WHERE slug = 'sql-database-essentials'
+  `);
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 3, 'Schema quality and database safety',
+           'Improve data integrity with constraints, indexes, transactions, and safe query practices.',
+           'https://www.youtube.com/watch?v=HXV3zeQKqGY',
+           'https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf',
+           62, 0 FROM courses WHERE slug = 'sql-database-essentials'
+  `);
+
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 1, 'Git and repository foundations',
+           'Preview repositories, commits, history, and the workflow used by development teams.',
+           'https://www.youtube.com/watch?v=RGOj5yH7evk',
+           'https://training.github.com/downloads/github-git-cheat-sheet.pdf',
+           18, 1 FROM courses WHERE slug = 'git-github-collaboration'
+  `);
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 2, 'Branches, merges, and conflict resolution',
+           'Work in focused branches and combine changes without losing team progress.',
+           'https://www.youtube.com/watch?v=RGOj5yH7evk',
+           'https://training.github.com/downloads/github-git-cheat-sheet.pdf',
+           42, 0 FROM courses WHERE slug = 'git-github-collaboration'
+  `);
+  await db.query(`
+    INSERT IGNORE INTO course_lessons
+      (course_id, position, title, description, video_url, pdf_url,
+       duration_minutes, is_preview)
+    SELECT id, 3, 'Pull requests and professional teamwork',
+           'Publish a branch, review changes, respond to feedback, and maintain a clear project history.',
+           'https://www.youtube.com/watch?v=RGOj5yH7evk',
+           'https://training.github.com/downloads/github-git-cheat-sheet.pdf',
+           48, 0 FROM courses WHERE slug = 'git-github-collaboration'
+  `);
+
+  // Keep resource links current for installations where these idempotent
+  // course rows were already created by an earlier migration run.
+  await db.query(`
+    UPDATE course_lessons l
+    JOIN courses c ON c.id = l.course_id
+    SET l.pdf_url = 'https://bugs.python.org/file47781/Tutorial.pdf'
+    WHERE c.slug = 'python-data-foundations'
+  `);
+  await db.query(`
+    UPDATE course_lessons l
+    JOIN courses c ON c.id = l.course_id
+    SET l.pdf_url = 'https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-A4.pdf'
+    WHERE c.slug = 'sql-database-essentials'
   `);
 
   // Remove the original placeholder accounts from existing installations.
