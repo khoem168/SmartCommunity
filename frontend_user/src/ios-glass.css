@@ -1,0 +1,102 @@
+/* iOS-inspired glass chrome. Content stays opaque enough for Khmer readability. */
+:root {
+  --glass-panel: rgba(255, 255, 255, 0.88);
+  --glass-edge: rgba(255, 255, 255, 0.95);
+  --glass-ink: #18263e;
+  --glass-shadow: 0 16px 44px -20px #233d6852, inset 0 1px 0 #fff;
+}
+html[data-theme="dark"] {
+  --glass-panel: rgba(25, 35, 54, 0.94);
+  --glass-edge: rgba(190, 209, 244, 0.22);
+  --glass-ink: #f1f5ff;
+  --glass-shadow: 0 16px 44px -20px #0009, inset 0 1px 0 #ffffff18;
+}
+html .app-shell .navbar {
+  background: var(--glass-panel);
+  border-bottom: 1px solid #e7ecf4;
+  box-shadow: 0 4px 16px #1e3a8a04;
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+}
+html .app-shell .navlink a {
+  border-radius: 999px;
+}
+html .app-shell .navlink a.active {
+  background: #e5efff;
+  color: #174db5;
+  box-shadow: inset 0 1px 2px #fff, 0 3px 10px #1e3a8a0c;
+}
+html .app-shell :is(.btn, .home-btn, .search-submit-btn, .course-filters button) {
+  border-radius: 999px;
+  min-height: 44px;
+}
+html .app-shell :is(.btn.primary, .home-btn.primary, .search-submit-btn) {
+  background: linear-gradient(180deg, #287dff, #1754d6) !important;
+  color: #fff !important;
+  border: 1px solid #286be1;
+  box-shadow: inset 0 1px 0 #ffffff70, 0 6px 16px #2563eb28 !important;
+}
+html .app-shell :is(.course-card, .mentor-card, .job-card, .session-card, .discover-card, .sc-panel, .settings-card) {
+  border-radius: 26px;
+  border-color: #dce5f2;
+  box-shadow: 0 12px 34px -22px #203f6d45, inset 0 1px 0 #fff;
+}
+html .app-shell .home-page .home-hero {
+  background:
+    radial-gradient(ellipse at 90% 10%, #d8e5ff 0, transparent 50%),
+    radial-gradient(ellipse at 12% 85%, #e7dcfa 0, transparent 42%),
+    radial-gradient(ellipse at 85% 90%, #d6f4f3 0, transparent 42%), #f7f9ff;
+}
+html .app-shell .home-page .home-hero :is(.hero-visual-card, .hero-search-bar, .hero-float-widget, .hero-badge-pill) {
+  background: var(--glass-panel);
+  border: 1px solid var(--glass-edge);
+  color: var(--glass-ink);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+}
+html .app-shell .home-page .home-hero .hero-visual-card { border-radius: 36px; padding: 12px; }
+html .app-shell .home-page .home-hero .hero-main-img { border-radius: 26px; }
+html .app-shell .home-page .home-hero .hero-search-bar { border-radius: 28px; }
+html .app-shell .home-page .home-hero .hero-float-widget { border-radius: 24px; }
+html .app-shell .home-page .home-hero .trending-tag {
+  border-radius: 999px;
+  background: #ffffffde;
+  color: #364865;
+  border: 1px solid #d8e3f3;
+}
+html .app-shell :is(.course-filters, .filters) { gap: 8px; }
+html .app-shell .course-filters button.active { background: #1754d6; color: #fff; }
+html .app-shell :is(.scroll-up, .course-arrow) {
+  border-radius: 50%;
+  box-shadow: 0 5px 18px #1e3a8a20;
+}
+html .app-shell :is(button, a):active { transition-duration: 80ms; }
+html[data-theme="dark"] .app-shell .navlink a { color: #dce7fa; }
+html[data-theme="dark"] .app-shell .navlink a.active { color: #fff; background: #234477; }
+html[data-theme="dark"] .app-shell .home-page .home-hero {
+  background: radial-gradient(ellipse at 90% 15%, #203b66, transparent 60%), #101a2d;
+}
+html[data-theme="dark"] .app-shell .home-page .home-hero :is(h1, .hero-copy > p, .hero-discover-label) { color: #f0f5ff; }
+html[data-theme="dark"] .app-shell .home-page .home-hero .hero-line-accent .hero-line-inner { color: #a6c8ff; }
+html[data-theme="dark"] .app-shell .home-page .home-hero .hero-float-widget :is(strong, span) { color: #e0eaff; }
+html[data-theme="dark"] .app-shell .home-page .home-hero input { color: #f0f5ff; }
+@media (max-width: 1000px) {
+  html .app-shell .navbar .nav-content {
+    background: var(--glass-panel);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :root { --glass-panel: #fff; --glass-edge: #bdcbe0; }
+  html[data-theme="dark"] { --glass-panel: #192336; --glass-edge: #7b8ca7; }
+  html .app-shell .navbar,
+  html .app-shell .home-page .home-hero :is(.hero-visual-card, .hero-search-bar, .hero-float-widget, .hero-badge-pill) {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html .app-shell .sc-tilt { transform: none !important; transition: none; }
+}

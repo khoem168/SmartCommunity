@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Community Skill & Career - Full Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=Koulen&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#1E3A8A; --primary-2:#3B82F6; --accent:#F5B301; --teal:#14B8A6; --red:#E21E2B;
+  --bg:#F8FAFC; --surface:#fff; --text:#0F172A; --muted:#64748b; --border:#e2e8f0;
+  --radius:20px; --shadow:0 10px 30px rgba(30,58,138,.12);
+}
+[data-theme="dark"]{
+  --bg:#0B0F19; --surface:#151D2F; --text:#F1F5F9; --muted:#94a3b8; --border:#1E293B;
+  --shadow:0 10px 30px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:"Kantumruy Pro","Noto Sans Khmer",system-ui,sans-serif;line-height:1.7;background:var(--bg);color:var(--text);transition:background .3s,color .3s}
+.container{width:min(1200px,100% - 48px);margin-inline:auto}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* Navbar */
+header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 85%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:24px;height:68px}
+.logo{font-weight:700;color:var(--primary);white-space:nowrap}
+[data-theme="dark"] .logo{color:#93c5fd}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{text-decoration:none;font-weight:600;font-size:.95rem;white-space:nowrap;color:var(--muted)}
+.nav-links a:hover{color:var(--primary-2)}
+.nav-actions{display:flex;gap:10px;align-items:center}
+.icon-btn{position:relative;min-width:44px;height:44px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:1.1rem;padding:0 12px;font-weight:700}
+.badge-dot{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border-radius:999px;font-size:.7rem;min-width:20px;height:20px;display:grid;place-items:center;padding:0 5px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 24px;border-radius:999px;font-weight:700;text-decoration:none;border:2px solid transparent;transition:transform .2s,box-shadow .2s;font-size:.95rem}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:var(--shadow)}
+.btn-accent{background:var(--accent);color:#1f1600}
+.btn-outline{border-color:currentColor;background:transparent}
+.btn-sm{min-height:38px;padding:6px 16px;font-size:.85rem}
+.btn-ghost{background:transparent;color:var(--primary-2)}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;padding:56px 0 64px;background:linear-gradient(135deg,#1E3A8A 0%,#2f5fd0 60%,#3B82F6 100%);color:#fff}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 15%,rgba(245,179,1,.35),transparent 45%),repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 2px,transparent 2px 22px)}
+.hero-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center}
+.hero-text{min-width:0}
+.eyebrow{display:inline-block;padding:6px 16px;border-radius:999px;background:rgba(255,255,255,.15);font-weight:600;font-size:.9rem;margin-bottom:16px}
+.hero h1{font-family:"Koulen","Kantumruy Pro",sans-serif;font-weight:400;font-size:clamp(2rem,4.2vw,3.4rem);line-height:1.2}
+html[lang="km"] .hero h1{line-height:1.5}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p.lead{margin:14px 0 24px;opacity:.92;font-size:1.05rem;max-width:520px}
+.search{display:flex;gap:8px;background:#fff;border-radius:999px;padding:6px;box-shadow:var(--shadow);max-width:560px}
+.search input{flex:1;min-width:0;border:0;outline:0;padding:0 16px;font-size:1rem;font-family:inherit;background:transparent;color:#0F172A}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 24px}
+.chip{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:4px 14px;font-size:.85rem}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+/* 3D scene */
+.scene{perspective:1000px;padding:24px 16px;min-width:0}
+.hero-card{position:relative;background:var(--surface);color:var(--text);border-radius:24px;box-shadow:0 30px 60px rgba(0,0,0,.3);padding:14px 14px 22px;transform-style:preserve-3d;transition:transform .15s ease-out;animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -12px}}
+.hero-img{position:relative;height:200px;border-radius:16px;background:linear-gradient(135deg,#1E3A8A,#3B82F6 55%,#14B8A6);display:grid;place-items:center;font-size:4rem}
+.hero-img .tag-left{position:absolute;left:12px;top:12px;background:rgba(255,255,255,.9);color:#1E3A8A;border-radius:999px;font-size:.75rem;font-weight:700;padding:2px 12px}
+.pill-live{position:absolute;right:-10px;top:-18px;background:var(--surface);color:var(--text);border-radius:16px;padding:8px 14px;box-shadow:var(--shadow);font-size:.8rem;transform:translateZ(60px)}
+.pill-live b{display:flex;gap:6px;align-items:center}
+.dot{width:9px;height:9px;border-radius:50%;background:#22c55e;animation:pulse 1.5s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.hero-body{padding:14px 8px 0}
+.kicker{font-size:.75rem;font-weight:700;letter-spacing:.06em;color:var(--primary-2);text-transform:uppercase}
+.hero-body h3{font-size:1.15rem;margin:2px 0}
+.hero-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--muted);font-size:.9rem;flex-wrap:wrap}
+.mentor-chip{display:flex;align-items:center;gap:10px;background:var(--surface);color:var(--text);border-radius:16px;padding:8px 14px;box-shadow:var(--shadow);width:max-content;max-width:90%;margin:-18px 0 0 -6px;position:relative;transform:translateZ(50px)}
+.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#f97316);display:grid;place-items:center;color:#fff;font-weight:700;flex:none}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:999px;font-size:.75rem;font-weight:700}
+.b-bakong{background:#fee2e2;color:var(--red)}
+.b-free{background:#ccfbf1;color:#0f766e}
+.b-level{background:#e0e7ff;color:var(--primary)}
+.b-pending{background:#fef3c7;color:#92400e}
+.b-active,.b-approved{background:#dcfce7;color:#166534}
+.b-completed,.b-reviewed{background:#dbeafe;color:#1e40af}
+.b-rejected,.b-cancelled{background:#fee2e2;color:#991b1b}
+.b-shortlisted{background:#ede9fe;color:#5b21b6}
+
+/* Sections */
+section{padding:72px 0}
+.alt{background:color-mix(in srgb,var(--primary-2) 6%,var(--bg))}
+.sec-title{text-align:center;margin-bottom:36px}
+.sec-title h2{font-size:clamp(1.5rem,3vw,2rem);color:var(--primary)}
+[data-theme="dark"] .sec-title h2{color:#93c5fd}
+.sec-title p{color:var(--muted)}
+.grid{display:grid;gap:22px}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;border:1px solid var(--border);min-width:0}
+.tilt{transition:transform .15s ease-out;transform-style:preserve-3d;will-change:transform}
+.thumb{height:130px;border-radius:14px;display:grid;place-items:center;font-size:3rem;color:#fff;margin-bottom:14px}
+.card h3{font-size:1.05rem;margin:6px 0 2px}
+.muted{color:var(--muted);font-size:.9rem}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
+.price{font-weight:700;color:var(--primary);font-size:1.1rem}
+[data-theme="dark"] .price{color:#93c5fd}
+.progress{height:8px;border-radius:99px;background:var(--border);overflow:hidden;margin-top:10px}
+.progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--primary-2));transition:width .4s}
+
+/* Stats + journey */
+.stats{margin-top:-32px;position:relative;z-index:2}
+.stats .card{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;text-align:center}
+.stats b{display:block;font-size:1.8rem;color:var(--primary)}
+[data-theme="dark"] .stats b{color:#93c5fd}
+.step{text-align:center}
+.step .ico{font-size:2rem}
+.step small{color:var(--muted)}
+
+/* Filters */
+.filters{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;margin-bottom:22px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.pill{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:6px 18px;min-height:40px;font-weight:600}
+.pill.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.field{width:100%;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;font-size:1rem;margin-top:4px}
+label{font-weight:600;font-size:.9rem;display:block;margin-top:12px}
+
+/* Roadmap */
+.timeline{list-style:none;border-left:3px solid var(--border);margin-left:14px}
+.timeline li{position:relative;padding:0 0 18px 28px}
+.timeline li::before{content:"";position:absolute;left:-11px;top:4px;width:19px;height:19px;border-radius:50%;background:var(--surface);border:3px solid var(--border)}
+.timeline li.done::before{background:var(--teal);border-color:var(--teal)}
+.timeline label{margin:0;display:flex;gap:10px;align-items:center;cursor:pointer;font-weight:600}
+.ring{--p:0;width:110px;height:110px;border-radius:50%;background:conic-gradient(var(--teal) calc(var(--p)*1%),var(--border) 0);display:grid;place-items:center;margin:0 auto 14px}
+.ring span{width:84px;height:84px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-weight:700;font-size:1.3rem}
+
+/* Tracker */
+.tracker{display:flex;gap:6px;margin-top:12px}
+.tracker i{flex:1;height:8px;border-radius:99px;background:var(--border)}
+.tracker i.on{background:var(--teal)}
+.tracker-labels{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-top:4px}
+
+/* Chat */
+.chat{display:flex;flex-direction:column;height:320px}
+.msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:6px}
+.msg{max-width:80%;padding:8px 14px;border-radius:16px;background:var(--border);align-self:flex-start;font-size:.92rem}
+.msg.me{background:var(--primary);color:#fff;align-self:flex-end}
+.chat-form{display:flex;gap:8px;margin-top:8px}
+.notif{padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;font-size:.92rem}
+.notif.unread b::before{content:"● ";color:var(--primary-2)}
+.bar{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:.9rem}
+.bar i{display:block;height:14px;border-radius:99px;background:linear-gradient(90deg,var(--primary-2),var(--teal))}
+details{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:10px}
+summary{font-weight:700;cursor:pointer}
+footer{background:var(--primary);color:#fff;text-align:center;padding:28px 0}
+
+/* Modal + toast */
+.overlay{position:fixed;inset:0;background:rgba(2,6,23,.6);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.overlay.open{display:flex}
+.modal{background:var(--surface);color:var(--text);border-radius:24px;padding:26px;width:min(460px,100%);max-height:92vh;overflow:auto;animation:pop .25s}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.qr{display:grid;grid-template-columns:repeat(21,1fr);width:210px;margin:12px auto;background:#fff;padding:8px;border-radius:12px;border:4px solid var(--red)}
+.qr i{aspect-ratio:1;background:#fff}.qr i.k{background:#111}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(30px);background:#0F172A;color:#fff;padding:10px 22px;border-radius:999px;opacity:0;pointer-events:none;transition:.3s;z-index:200;font-size:.92rem}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s}
+.reveal.show{opacity:1;transform:none}
+.bottom-nav{display:none}
+
+@media(max-width:1000px){.nav-links{display:none}.hero-grid{grid-template-columns:1fr}.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){
+  .container{width:min(1200px,100% - 32px)}
+  .g3,.g4,.g2{grid-template-columns:1fr}
+  .stats .card{grid-template-columns:repeat(2,1fr)}
+  .pill-live,.mentor-chip{display:none}
+  .hero-actions .btn{flex:1}
+  body{padding-bottom:70px}
+  .bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--surface);border-top:1px solid var(--border);justify-content:space-around;padding:6px 0}
+  .bottom-nav a{text-decoration:none;font-size:.7rem;text-align:center;font-weight:600;min-width:56px;min-height:44px;color:var(--muted)}
+  .bottom-nav a span{display:block;font-size:1.3rem}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+/* iOS-inspired Liquid Glass: visual changes only; demo handlers stay intact. */
+:root {
+  --primary:#1754d6; --primary-2:#287dff; --bg:#f5f7fc;
+  --radius:26px; --shadow:0 16px 40px -20px #233d6852;
+  --glass:rgba(255,255,255,.9); --glass-edge:rgba(255,255,255,.95);
+}
+[data-theme="dark"] {
+  --primary:#a6c8ff; --primary-2:#90baff;
+  --glass:rgba(25,35,54,.94); --glass-edge:rgba(190,209,244,.22);
+}
+header {
+  background:var(--glass); border-color:var(--glass-edge);
+  backdrop-filter:blur(24px) saturate(1.5); -webkit-backdrop-filter:blur(24px) saturate(1.5);
+  box-shadow:var(--shadow);
+}
+.hero {
+  color:var(--text);
+  background:radial-gradient(ellipse at 90% 10%,#d8e5ff,transparent 55%),
+    radial-gradient(ellipse at 12% 85%,#e7dcfa,transparent 45%),
+    radial-gradient(ellipse at 85% 90%,#d6f4f3,transparent 40%),#f7f9ff;
+}
+.hero::before { background:none; }
+.hero h1 em { color:#1754d6; }
+.eyebrow,.chip { background:var(--glass); color:var(--text); border:1px solid var(--border); }
+.hero-card,.pill-live,.pill-bottom,.search {
+  background:var(--glass); border:1px solid var(--glass-edge);
+  box-shadow:var(--shadow),inset 0 1px 0 #ffffff70;
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+}
+.hero-card { border-radius:32px; }
+.hero-img { border-radius:22px; }
+.card { border-radius:26px; box-shadow:0 12px 34px -22px #203f6d45; }
+.btn-primary { background:linear-gradient(180deg,#287dff,#1754d6); color:#fff; box-shadow:inset 0 1px 0 #ffffff70,0 6px 16px #2563eb28; }
+.icon-btn { border-radius:50%; background:var(--glass); }
+.pill { min-height:44px; }
+.pill.on { background:#1754d6; color:#fff; }
+.field { border-radius:16px; }
+@media (max-width:600px) {
+  .nav { height:auto; min-height:68px; flex-wrap:wrap; justify-content:center; gap:8px; padding-block:10px; }
+  .nav .logo { text-align:center; flex-basis:100%; }
+  .nav-actions { flex-wrap:wrap; justify-content:center; gap:8px; max-width:100%; }
+  html { scroll-padding-top:130px; }
+}
+[data-theme="dark"] .hero { background:radial-gradient(ellipse at 90% 15%,#203b66,transparent 60%),#101a2d; }
+[data-theme="dark"] .hero h1 em { color:#a6c8ff; }
+[data-theme="dark"] .search input { color:var(--text); }
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  .hero-card,.pill-live,.pill-bottom { animation:none!important; transform:none!important; translate:none!important; }
+  .btn { transition:none; }
+}
+@media (prefers-reduced-transparency:reduce),(prefers-contrast:more) {
+  :root { --glass:#fff; --glass-edge:#bdcbe0; }
+  [data-theme="dark"] { --glass:#192336; --glass-edge:#7b8ca7; }
+  header,.hero-card,.pill-live,.pill-bottom,.search { backdrop-filter:none; -webkit-backdrop-filter:none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a class="logo" href="#top">Smart <span>Community</span></a>
+    <nav class="nav-links">
+      <a href="#courses" data-i18n="n_courses"></a>
+      <a href="#exchange" data-i18n="n_exchange"></a>
+      <a href="#mentors" data-i18n="n_mentors"></a>
+      <a href="#sessions" data-i18n="n_sessions"></a>
+      <a href="#career" data-i18n="n_career"></a>
+      <a href="#jobs" data-i18n="n_jobs"></a>
+      <a href="#forum" data-i18n="n_forum"></a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="bell" aria-label="Notifications">🔔<span class="badge-dot" id="bellCount">0</span></button>
+      <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+      <button class="icon-btn" id="langBtn" aria-label="Language">EN</button>
+      <button class="btn btn-primary btn-sm" id="signBtn" data-i18n="signin"></button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <div class="container hero-grid">
+    <div class="hero-text">
+      <span class="eyebrow" data-i18n="eyebrow"></span>
+      <h1 data-i18n="h1"></h1>
+      <p class="lead" data-i18n="lead"></p>
+      <form class="search" id="heroSearch">
+        <input id="heroInput" type="search" aria-label="Search" data-i18n-ph="ph_search">
+        <button class="btn btn-accent btn-sm" type="submit" data-i18n="search"></button>
+      </form>
+      <div class="chips"><span class="chip">React</span><span class="chip">UI/UX Design</span><span class="chip">Python</span><span class="chip">Data</span></div>
+      <div class="hero-actions">
+        <a class="btn btn-accent" href="#courses" data-i18n="start"></a>
+        <a class="btn btn-outline" href="#journey" data-i18n="explore"></a>
+      </div>
+    </div>
+    <div class="scene">
+      <div class="hero-card tilt-hero">
+        <div class="pill-live"><b><span class="dot"></span>Live Session Room</b><span class="muted">Interactive Q&amp;A</span></div>
+        <div class="hero-img"><span class="tag-left">Practical Academy</span>💻</div>
+        <div class="hero-body">
+          <div class="kicker">Web &amp; Cloud Engineering</div>
+          <h3>Full-Stack Application Development</h3>
+          <div class="hero-meta"><span>28 Lessons · Certificate</span><span><span class="badge b-bakong">Bakong KHQR</span> <b>$15</b></span></div>
+        </div>
+      </div>
+      <div class="mentor-chip"><div class="avatar">M</div><div><b>Muy Kalin ✔</b><div class="muted" style="font-size:.78rem">Full-Stack Lead · ★ 5.0</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="container stats reveal">
+  <div class="card">
+    <div><b data-count="1250">0</b><span class="muted" data-i18n="st1"></span></div>
+    <div><b data-count="48">0</b><span class="muted" data-i18n="st2"></span></div>
+    <div><b data-count="32">0</b><span class="muted" data-i18n="st3"></span></div>
+    <div><b data-count="75">0</b><span class="muted" data-i18n="st4"></span></div>
+  </div>
+</div>
+
+<!-- JOURNEY -->
+<section id="journey">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-i18n="j_title"></h2><p data-i18n="j_sub"></p></div>
+    <div class="grid reveal" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+      <div class="card step"><div class="ico">👤</div><b data-i18n="j1"></b><br><small data-i18n="j1d"></small></div>
+      <div class="card step"><div class="ico">📚</div><b data-i18n="j2"></b><br><small data-i18n="j2d"></small></div>
+      <div class="card step"><div class="ico">🤝</div><b data-i18n="j3"></b><br><small data-i18n="j3d"></small></div>
+      <div class="card step"><div class="ico">🧭</div><b data-i18n="j4"></b><br><small data-i18n="j4d"></small></div>
+      <div class="card step"><div class="ico">💼</div><b data-i18n="j5"></b><br><small data-i18n="j5d"></small></div>
+    </div>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section id="courses" class="alt">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-i18n="c_title"></h2><p data-i18n="c_sub"></p></div>
+    <input class="field" id="courseSearch" type="search" data-i18n-ph="ph_course" style="margin-bottom:14px">
+    <div class="filters" id="catFilters"></div>
+    <div class="grid g3" id="courseGrid"></div>
+  </div>
+</section>
+
+<!-- SKILL EXCHANGE -->
+<section id="exchange">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-i18n="x_title"></h2><p data-i18n="x_sub"></p></div>
+    <div class="grid g3" id="matchGrid"></div>
+  </div>
+</section>
+
+<!-- MENTORS -->
+<section id="mentors" class="alt">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-i18n="m_title"></h2><p data-i18n="m_sub"></p></div>
+    <div class="grid g3" id="mentorGrid"></div>
+    <h3 style="margin:36px 0 12px" data-i18n="m_my"></h3>
+    <div class="grid g2" id="bookingList"></div>
+  </div>
+</section>
+
+<!-- SESSIONS -->
+<section id="sessions">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-i18n="s_title"></h2><p data-i18n="s_sub"></p></div>
+    <div class="grid g3" id="sessionGrid"></div>
+  </div>
+</section>
+
+<!-- CAREER -->
+<section id="career" class="alt">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-i18n="car_title"></h2><p data-i18n="car_sub"></p></div>
+    <div class="grid g2">
+      <div class="card">
+        <div class="ring" id="ring"><span id="ringTxt">0%</span></div>
+        <h3 style="text-align:center;margin-bottom:14px">Web Developer Roadmap</h3>
+        <ul class="timeline" id="roadmap"></ul>
+      </div>
+      <div class="card">
+        <h3 data-i18n="assess"></h3>
+        <svg viewBox="0 0 240 240" width="100%" style="max-width:280px;display:block;margin:6px auto" id="radar"></svg>
+        <div id="sliders"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOBS -->
+<section id="jobs">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-i18n="job_title"></h2><p data-i18n="job_sub"></p></div>
+    <div class="grid g3" id="jobGrid"></div>
+    <h3 style="margin:36px 0 12px" data-i18n="job_my"></h3>
+    <div class="grid g2" id="appList"></div>
+  </div>
+</section>
+
+<!-- FORUM -->
+<section id="forum" class="alt">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-i18n="f_title"></h2><p data-i18n="f_sub"></p></div>
+    <form class="card" id="postForm" style="margin-bottom:18px">
+      <input class="field" id="postInput" data-i18n-ph="ph_post" required>
+      <div class="row"><select class="field" id="postCat" style="width:auto"><option>Programming</option><option>Design</option><option>Career</option><option>Internship</option></select>
+      <button class="btn btn-primary btn-sm" data-i18n="post"></button></div>
+    </form>
+    <div class="grid" id="postList"></div>
+  </div>
+</section>
+
+<!-- COMMUNITY: chat + notifications + admin -->
+<section id="community">
+  <div class="container">
+    <div class="sec-title reveal"><h2 data-i18n="com_title"></h2></div>
+    <div class="grid g3">
+      <div class="card"><h3 data-i18n="chat"></h3>
+        <div class="chat"><div class="msgs" id="msgs"><div class="msg">Hi! Ready for our skill exchange?</div></div>
+        <form class="chat-form" id="chatForm"><input class="field" id="chatInput" style="margin:0" data-i18n-ph="ph_msg"><button class="btn btn-primary btn-sm">➤</button></form></div>
+      </div>
+      <div class="card"><h3 data-i18n="notifs"></h3>
+        <div id="notifList"></div>
+        <button class="btn btn-ghost btn-sm" id="readAll" data-i18n="readall"></button>
+      </div>
+      <div class="card"><h3 data-i18n="admin"></h3>
+        <div id="adminBars"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="container" style="max-width:760px">
+    <div class="sec-title reveal"><h2>FAQ</h2></div>
+    <details><summary data-i18n="q1"></summary><p class="muted" data-i18n="a1"></p></details>
+    <details><summary data-i18n="q2"></summary><p class="muted" data-i18n="a2"></p></details>
+    <details><summary data-i18n="q3"></summary><p class="muted" data-i18n="a3"></p></details>
+  </div>
+</section>
+
+<footer><div class="container">© 2026 Smart Community Skill &amp; Career Development Platform · Demo</div></footer>
+
+<nav class="bottom-nav">
+  <a href="#top"><span>🏠</span>Home</a>
+  <a href="#courses"><span>📚</span>Courses</a>
+  <a href="#career"><span>🧭</span>Career</a>
+  <a href="#jobs"><span>💼</span>Jobs</a>
+  <a href="#community"><span>💬</span>Chat</a>
+</nav>
+
+<div class="overlay" id="overlay"><div class="modal" id="modal" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ i18n ============ */
+const I = {
+km:{n_courses:"វគ្គសិក្សា",n_exchange:"ប្តូរជំនាញ",n_mentors:"អ្នកណែនាំ",n_sessions:"Live",n_career:"អាជីព",n_jobs:"កម្មសិក្សា",n_forum:"ហ្វូរ៉ុម",signin:"ចូលគណនី",signout:"ចាកចេញ",
+eyebrow:"រៀន • ភ្ជាប់ • រីកចម្រើនក្នុងសហគមន៍តែមួយ",h1:"បង្កើតជំនាញពិត <em>ចាប់ផ្តើមអាជីពក្តីសុបិន្ត</em>",
+lead:"រៀនជំនាញជាក់ស្តែង ជួបអ្នកណែនាំដែលអាចទុកចិត្តបាន ហើយឆ្ពោះទៅរកឱកាសការងារពិត។",
+search:"ស្វែងរក",start:"ចាប់ផ្តើមរៀន",explore:"ស្វែងយល់បន្ថែម",ph_search:"តើអ្នកចង់រៀនអ្វី?",
+st1:"អ្នកសិក្សា",st2:"វគ្គសិក្សា",st3:"អ្នកណែនាំ",st4:"កម្មសិក្សា",
+j_title:"ដំណើរសិក្សារបស់អ្នក",j_sub:"៥ជំហានពីអ្នកចាប់ផ្តើម ដល់ការងារ",j1:"ប្រវត្តិរូប",j1d:"បង្កើតគណនី",j2:"រៀន",j2d:"វគ្គសិក្សា",j3:"សហការ",j3d:"ប្តូរជំនាញ",j4:"អាជីព",j4d:"ផែនទីអាជីព",j5:"ដាក់ពាក្យ",j5d:"កម្មសិក្សា",
+c_title:"វគ្គសិក្សា",c_sub:"បង់ប្រាក់ដោយ Bakong KHQR ឬចូលរៀនឥតគិតថ្លៃ",ph_course:"ស្វែងរកវគ្គសិក្សា...",
+x_title:"ប្តូរជំនាញជាមួយមិត្តភក្តិ",x_sub:"ប្រព័ន្ធផ្គូផ្គងតាមជំនាញដែលអ្នកអាចបង្រៀន និងចង់រៀន",
+m_title:"អ្នកណែនាំដែលបានផ្ទៀងផ្ទាត់",m_sub:"ផ្ញើសំណើ រង់ចាំ Mentor យល់ព្រម បន្ទាប់មកទទួលតំណ Jitsi",m_my:"ការកក់របស់ខ្ញុំ",
+s_title:"វគ្គសិក្សាផ្ទាល់ (Live)",s_sub:"ចុះឈ្មោះចូលរួមតាមអនឡាញ",
+car_title:"ផែនទីអាជីព និងការវាយតម្លៃ",car_sub:"ធីកជំហាននីមួយៗ ដើម្បីមើលវឌ្ឍនភាព",assess:"វាយតម្លៃសមត្ថភាពខ្លួនឯង",
+job_title:"កម្មសិក្សា",job_sub:"ដាក់ពាក្យជាមួយ CV (PDF) និងតាមដានស្ថានភាព",job_my:"ពាក្យសុំរបស់ខ្ញុំ",
+f_title:"ហ្វូរ៉ុមសហគមន៍",f_sub:"សួរ ឆ្លើយ និងចែករំលែកចំណេះដឹង",ph_post:"សួរសំណួររបស់អ្នក...",post:"ផុសសំណួរ",
+com_title:"សហគមន៍ ការជូនដំណឹង និងរបាយការណ៍",chat:"សារ",ph_msg:"វាយសារ...",notifs:"ការជូនដំណឹង",readall:"សម្គាល់ថាអានហើយ",admin:"វិភាគ Admin",
+q1:"តើវាឥតគិតថ្លៃទេ?",a1:"មានវគ្គឥតគិតថ្លៃ និងវគ្គបង់ប្រាក់តាម Bakong KHQR។",q2:"តើខ្ញុំអាចក្លាយជា Mentor បានទេ?",a2:"ដាក់ពាក្យ ហើយរង់ចាំ Admin អនុម័ត។",q3:"តើមានការធានាការងារទេ?",a3:"មិនមានការធានាទេ វេទិកានេះគាំទ្រការរៀន និងការសម្រេចចិត្តជ្រើសរើស។",
+request:"ស្នើសុំម៉ោង",enroll:"ចូលរៀន",pay:"បង់ប្រាក់",free:"ឥតគិតថ្លៃ",apply:"ដាក់ពាក្យ",register:"ចុះឈ្មោះ",cancel:"បោះបង់",send:"ផ្ញើសំណើ"},
+en:{n_courses:"Courses",n_exchange:"Exchange",n_mentors:"Mentors",n_sessions:"Live",n_career:"Career",n_jobs:"Internships",n_forum:"Forum",signin:"Sign in",signout:"Sign out",
+eyebrow:"Learn • Connect • Grow in one community",h1:"Build real-world skills. <em>Launch your dream career.</em>",
+lead:"Learn practical skills, meet trusted mentors, and move toward real career opportunities.",
+search:"Search",start:"Start learning",explore:"Explore",ph_search:"What do you want to learn?",
+st1:"Learners",st2:"Courses",st3:"Mentors",st4:"Internships",
+j_title:"Your learning journey",j_sub:"5 steps from beginner to job-ready",j1:"Profile",j1d:"Create account",j2:"Learn",j2d:"Courses",j3:"Collaborate",j3d:"Skill exchange",j4:"Career",j4d:"Roadmap",j5:"Apply",j5d:"Internships",
+c_title:"Courses",c_sub:"Pay with Bakong KHQR or enroll for free",ph_course:"Search courses...",
+x_title:"Skill exchange with peers",x_sub:"Matched by skills you can teach and want to learn",
+m_title:"Verified mentors",m_sub:"Send a request, wait for approval, then get the Jitsi link",m_my:"My bookings",
+s_title:"Live learning sessions",s_sub:"Register to join online",
+car_title:"Career roadmap & self-assessment",car_sub:"Tick each step to see your progress",assess:"Career-readiness self-assessment",
+job_title:"Internships",job_sub:"Apply with a PDF CV and track the status",job_my:"My applications",
+f_title:"Community forum",f_sub:"Ask, answer and share knowledge",ph_post:"Ask your question...",post:"Post",
+com_title:"Community, notifications & reports",chat:"Messages",ph_msg:"Type a message...",notifs:"Notifications",readall:"Mark all read",admin:"Admin analytics",
+q1:"Is it free?",a1:"There are free courses and paid courses via Bakong KHQR.",q2:"Can I become a mentor?",a2:"Apply and wait for administrator approval.",q3:"Does it guarantee a job?",a3:"No. The platform supports learning and recruitment, but it cannot guarantee employment.",
+request:"Request session",enroll:"Enroll",pay:"Pay now",free:"Free",apply:"Apply",register:"Register",cancel:"Cancel",send:"Send request"}
+};
+let lang = localStorage.getItem("lang") || "km";
+const t = k => (I[lang][k] ?? k);
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach(e=>e.innerHTML=t(e.dataset.i18n));
+  document.querySelectorAll("[data-i18n-ph]").forEach(e=>e.placeholder=t(e.dataset.i18nPh));
+  document.getElementById("langBtn").textContent = lang==="km"?"EN":"ខ្មែរ";
+  document.getElementById("signBtn").textContent = signed?t("signout"):t("signin");
+  renderAll();
+}
+
+/* ============ helpers ============ */
+const $ = s=>document.querySelector(s);
+let signed = false;
+function toast(m){const e=$("#toast");e.textContent=m;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),2600)}
+function openModal(h){$("#modal").innerHTML=h;$("#overlay").classList.add("open")}
+function closeModal(){$("#overlay").classList.remove("open");clearInterval(closeModal.timer)}
+$("#overlay").addEventListener("click",e=>{if(e.target.id==="overlay")closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+function needLogin(){ if(signed) return false; toast(lang==="km"?"សូមចូលគណនីជាមុន":"Please sign in first"); return true; }
+function notify(text){ notifs.unshift({text,read:false}); renderNotifs(); }
+
+/* ============ data ============ */
+const courses=[
+ {id:1,title:"Web Development",cat:"Technology",level:"Beginner",price:15,lessons:28,icon:"💻",g:"linear-gradient(135deg,#3B82F6,#1E3A8A)"},
+ {id:2,title:"UX/UI Design",cat:"Design",level:"Beginner",price:0,lessons:18,icon:"🎨",g:"linear-gradient(135deg,#F5B301,#f97316)"},
+ {id:3,title:"Data Analysis",cat:"Technology",level:"Intermediate",price:20,lessons:22,icon:"📊",g:"linear-gradient(135deg,#14B8A6,#0f766e)"},
+ {id:4,title:"Digital Marketing",cat:"Business",level:"Beginner",price:0,lessons:14,icon:"📣",g:"linear-gradient(135deg,#ec4899,#be185d)"},
+ {id:5,title:"Python Programming",cat:"Technology",level:"Intermediate",price:18,lessons:30,icon:"🐍",g:"linear-gradient(135deg,#22c55e,#166534)"},
+ {id:6,title:"Interview Skills",cat:"Career",level:"Advanced",price:0,lessons:10,icon:"🎤",g:"linear-gradient(135deg,#8b5cf6,#5b21b6)"}];
+const mentors=[
+ {id:1,name:"Muy Kalin",role:"Full-Stack Developer",skills:["React","Node.js"],rating:5.0,reviews:24},
+ {id:2,name:"Sophea Chan",role:"UX/UI Designer",skills:["Figma","Research"],rating:4.8,reviews:17},
+ {id:3,name:"Dara Sok",role:"Data Analyst",skills:["Python","SQL"],rating:4.7,reviews:12}];
+const matches=[
+ {name:"Vanna",teach:"Photoshop",learn:"JavaScript",score:92},
+ {name:"Rina",teach:"English",learn:"UI Design",score:85},
+ {name:"Sokha",teach:"Excel",learn:"Python",score:78}];
+const sessions=[
+ {id:1,title:"React Q&A Night",host:"Muy Kalin",when:"Tomorrow 19:00",cap:30,reg:18},
+ {id:2,title:"Portfolio Review",host:"Sophea Chan",when:"Friday 20:00",cap:20,reg:20},
+ {id:3,title:"SQL for Beginners",host:"Dara Sok",when:"Saturday 09:00",cap:40,reg:12}];
+const steps=[{t:"Learn HTML & CSS",d:true},{t:"Learn JavaScript",d:false},{t:"Build 3 portfolio projects",d:false},{t:"Learn React",d:false},{t:"Apply for internships",d:false}];
+const axes=[["Technical",60],["Problem solving",50],["Projects",40],["Readiness",55]];
+const jobs=[
+ {id:1,title:"Frontend Intern",company:"Angkor Tech",loc:"Phnom Penh",type:"Hybrid",stipend:"$150/mo"},
+ {id:2,title:"UX Design Intern",company:"Khmer Studio",loc:"Siem Reap",type:"On-site",stipend:"$120/mo"},
+ {id:3,title:"Data Intern",company:"Mekong Data",loc:"Remote",type:"Remote",stipend:"$140/mo"}];
+const posts=[{q:"How do I start learning React?",cat:"Programming",likes:5,ans:3},{q:"Tips for my first CV?",cat:"Career",likes:9,ans:4}];
+const stages=["pending","reviewed","shortlisted","approved"];
+let cat="All",enrolled={},bookings=[],apps=[],regs={},exch={},notifs=[{text:"Welcome to Smart Community!",read:false}];
+
+/* ============ render ============ */
+function renderCourses(){
+  const cats=["All",...new Set(courses.map(c=>c.cat))];
+  $("#catFilters").innerHTML=cats.map(c=>`<button class="pill ${c===cat?"on":""}" data-cat="${c}">${c}</button>`).join("");
+  const q=$("#courseSearch").value.toLowerCase();
+  const list=courses.filter(c=>(cat==="All"||c.cat===cat)&&c.title.toLowerCase().includes(q));
+  $("#courseGrid").innerHTML=list.length?list.map(c=>`
+   <div class="card tilt"><div class="thumb" style="background:${c.g}">${c.icon}</div>
+    <span class="badge b-level">${c.level}</span>
+    <h3>${c.title}</h3><div class="muted">${c.lessons} lessons · ${c.cat}</div>
+    ${enrolled[c.id]?`<div class="progress"><i style="width:${enrolled[c.id]}%"></i></div>`:""}
+    <div class="row"><span>${c.price?`<span class="price">$${c.price}</span> <span class="badge b-bakong">Bakong KHQR</span>`:`<span class="badge b-free">${t("free")}</span>`}</span>
+    ${enrolled[c.id]?`<button class="btn btn-primary btn-sm" data-learn="${c.id}">▶ Continue</button>`:`<button class="btn btn-primary btn-sm" data-enroll="${c.id}">${c.price?t("pay"):t("enroll")}</button>`}</div></div>`).join("")
+   :`<div class="card" style="grid-column:1/-1;text-align:center"><div style="font-size:2.5rem">🔍</div><b>No courses found</b><br><button class="btn btn-outline btn-sm" id="clearF" style="margin-top:10px">Clear filters</button></div>`;
+  bindTilt();
+}
+function renderMatches(){
+  $("#matchGrid").innerHTML=matches.map((m,i)=>`<div class="card tilt"><div class="row" style="margin:0"><div style="display:flex;gap:10px;align-items:center"><div class="avatar">${m.name[0]}</div><b>${m.name}</b></div><span class="badge b-approved">${m.score}% match</span></div>
+   <p class="muted" style="margin-top:10px">Teaches <b>${m.teach}</b><br>Wants <b>${m.learn}</b></p>
+   <div class="row">${exch[i]?`<span class="badge b-${exch[i]}">${exch[i]}</span><button class="btn btn-ghost btn-sm" data-xnext="${i}">Demo: next</button>`:`<button class="btn btn-primary btn-sm" data-xreq="${i}">${t("send")}</button>`}</div></div>`).join("");
+  bindTilt();
+}
+function stars(n){return "★".repeat(Math.round(n))+"☆".repeat(5-Math.round(n))}
+function renderMentors(){
+  $("#mentorGrid").innerHTML=mentors.map(m=>`<div class="card tilt"><div style="display:flex;gap:12px;align-items:center"><div class="avatar" style="width:52px;height:52px">${m.name[0]}</div><div><b>${m.name} <span style="color:#22c55e">✔</span></b><div class="muted">${m.role}</div></div></div>
+   <div style="margin:10px 0">${m.skills.map(s=>`<span class="badge b-level" style="margin-right:4px">${s}</span>`).join("")}</div>
+   <div class="muted"><span style="color:var(--accent)">${stars(m.rating)}</span> ${m.rating} (${m.reviews})</div>
+   <div class="row"><span></span><button class="btn btn-primary btn-sm" data-mreq="${m.id}">${t("request")}</button></div></div>`).join("");
+  bindTilt();
+}
+function renderBookings(){
+  $("#bookingList").innerHTML=bookings.length?bookings.map((b,i)=>`<div class="card"><div class="row" style="margin:0"><b>${b.mentor}</b><span class="badge b-${b.status}">${b.status}</span></div>
+   <p class="muted">${b.topic} · ${b.when} · ${b.dur} min · ${b.freq}</p>
+   <div class="row">
+   ${b.status==="pending"?`<button class="btn btn-outline btn-sm" data-bcancel="${i}">${t("cancel")}</button><button class="btn btn-ghost btn-sm" data-bnext="${i}">Demo: mentor approves</button>`:""}
+   ${b.status==="active"?`<a class="btn btn-accent btn-sm" target="_blank" rel="noopener" href="https://meet.jit.si/SmartCommunity-${b.id}">Join meeting</a><button class="btn btn-ghost btn-sm" data-bnext="${i}">Demo: complete</button>`:""}
+   ${b.status==="completed"&&!b.review?`<select class="field" style="width:auto;margin:0" data-rate="${i}"><option value="">Rate…</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select>`:""}
+   ${b.review?`<span class="muted">Your review: <span style="color:var(--accent)">${stars(b.review)}</span></span>`:""}
+   </div></div>`).join(""):`<div class="card muted" style="grid-column:1/-1;text-align:center">No bookings yet. Request a session from a mentor above.</div>`;
+}
+function renderSessions(){
+  $("#sessionGrid").innerHTML=sessions.map(s=>{const full=s.reg>=s.cap&&!regs[s.id];const n=s.reg+(regs[s.id]?1:0);
+   return `<div class="card tilt"><span class="badge b-active">scheduled</span><h3>${s.title}</h3><div class="muted">Host: ${s.host}<br>🕒 ${s.when}</div>
+   <div class="progress"><i style="width:${n/s.cap*100}%"></i></div><div class="muted" style="font-size:.8rem">${n}/${s.cap} places</div>
+   <div class="row"><span></span>${full?`<button class="btn btn-outline btn-sm" disabled>Full</button>`:regs[s.id]?`<button class="btn btn-outline btn-sm" data-sreg="${s.id}">${t("cancel")}</button>`:`<button class="btn btn-primary btn-sm" data-sreg="${s.id}">${t("register")}</button>`}</div></div>`}).join("");
+  bindTilt();
+}
+function renderRoadmap(){
+  $("#roadmap").innerHTML=steps.map((s,i)=>`<li class="${s.d?"done":""}"><label><input type="checkbox" data-step="${i}" ${s.d?"checked":""}> ${s.t}</label></li>`).join("");
+  const p=Math.round(steps.filter(s=>s.d).length/steps.length*100);
+  $("#ring").style.setProperty("--p",p);$("#ringTxt").textContent=p+"%";
+}
+function renderRadar(){
+  const c=120,R=90,n=axes.length;let g="";
+  [.25,.5,.75,1].forEach(k=>g+=`<polygon fill="none" stroke="#94a3b8" stroke-opacity=".35" points="${axes.map((_,i)=>pt(i,R*k)).join(" ")}"/>`);
+  axes.forEach((a,i)=>{g+=`<line x1="${c}" y1="${c}" x2="${pt(i,R).split(",")[0]}" y2="${pt(i,R).split(",")[1]}" stroke="#94a3b8" stroke-opacity=".35"/><text x="${pt(i,R+14).split(",")[0]}" y="${pt(i,R+14).split(",")[1]}" font-size="9" text-anchor="middle" fill="currentColor">${a[0]}</text>`});
+  g+=`<polygon fill="rgba(20,184,166,.35)" stroke="#14B8A6" stroke-width="2" points="${axes.map((a,i)=>pt(i,R*a[1]/100)).join(" ")}"/>`;
+  function pt(i,r){const ang=-Math.PI/2+i*2*Math.PI/n;return (c+r*Math.cos(ang)).toFixed(1)+","+(c+r*Math.sin(ang)).toFixed(1)}
+  $("#radar").innerHTML=g;
+  $("#sliders").innerHTML=axes.map((a,i)=>`<label>${a[0]}: <b>${a[1]}</b><input type="range" min="0" max="100" value="${a[1]}" data-axis="${i}" style="width:100%"></label>`).join("");
+}
+function renderJobs(){
+  $("#jobGrid").innerHTML=jobs.map(j=>`<div class="card tilt"><span class="badge b-level">${j.type}</span><h3>${j.title}</h3><div class="muted">${j.company} · ${j.loc}<br>💰 ${j.stipend}</div>
+   <div class="row"><span></span>${apps.find(a=>a.job.id===j.id)?`<button class="btn btn-outline btn-sm" disabled>Applied ✔</button>`:`<button class="btn btn-primary btn-sm" data-apply="${j.id}">${t("apply")}</button>`}</div></div>`).join("");
+  $("#appList").innerHTML=apps.length?apps.map((a,i)=>`<div class="card"><div class="row" style="margin:0"><b>${a.job.title}</b><span class="badge b-${a.status}">${a.status}</span></div>
+   <div class="muted">${a.job.company} · CV: ${a.cv}</div>
+   <div class="tracker">${stages.map((s,k)=>`<i class="${k<=stages.indexOf(a.status)?"on":""}"></i>`).join("")}</div>
+   <div class="tracker-labels">${stages.map(s=>`<span>${s}</span>`).join("")}</div>
+   ${a.status!=="approved"?`<button class="btn btn-ghost btn-sm" style="margin-top:8px" data-anext="${i}">Demo: recruiter moves next</button>`:""}</div>`).join(""):`<div class="card muted" style="grid-column:1/-1;text-align:center">No applications yet.</div>`;
+  bindTilt();
+}
+function renderForum(){
+  $("#postList").innerHTML=posts.map((p,i)=>`<div class="card"><span class="badge b-level">${p.cat}</span><h3>${p.q}</h3><div class="row" style="margin-top:6px"><span class="muted">💬 ${p.ans} answers</span><button class="btn btn-outline btn-sm" data-like="${i}">👍 ${p.likes}</button></div></div>`).join("");
+}
+function renderNotifs(){
+  const u=notifs.filter(n=>!n.read).length;$("#bellCount").textContent=u;$("#bellCount").style.display=u?"grid":"none";
+  $("#notifList").innerHTML=notifs.slice(0,6).map(n=>`<div class="notif ${n.read?"":"unread"}"><b>${n.text}</b></div>`).join("");
+}
+function renderAdmin(){
+  const rows=[["Students",820,"#3B82F6"],["Mentors",32,"#F5B301"],["Recruiters",18,"#14B8A6"],["Applications",140,"#8b5cf6"]];
+  const mx=820;$("#adminBars").innerHTML=rows.map(r=>`<div class="bar"><span style="width:90px">${r[0]}</span><i style="width:${Math.max(r[1]/mx*100,6)}%;background:${r[2]}"></i><b>${r[1]}</b></div>`).join("")+`<p class="muted" style="font-size:.8rem">Sample data for demo.</p>`;
+}
+function renderAll(){renderCourses();renderMatches();renderMentors();renderBookings();renderSessions();renderRoadmap();renderRadar();renderJobs();renderForum();renderNotifs();renderAdmin()}
+
+/* ============ KHQR modal ============ */
+function qrHTML(seed){let s=seed*9301+49297,h="";for(let y=0;y<21;y++)for(let x=0;x<21;x++){const f=(x<7&&y<7)||(x>13&&y<7)||(x<7&&y>13);let k;
+  if(f){const dx=x>13?x-14:x,dy=y>13?y-14:y;k=dx===0||dx===6||dy===0||dy===6||(dx>=2&&dx<=4&&dy>=2&&dy<=4)}else{s=(s*9301+49297)%233280;k=s/233280>.5}
+  h+=`<i class="${k?"k":""}"></i>`}return h}
+function payModal(c){
+  let left=300;
+  openModal(`<h3 style="color:var(--red)">Bakong KHQR</h3><p class="muted">${c.title} · <b>$${c.price}</b></p>
+   <div class="qr" id="qrBox">${qrHTML(c.id)}</div>
+   <p style="text-align:center">Expires in <b id="cd">05:00</b></p>
+   <ol class="muted" style="margin:10px 0 14px 18px"><li>Open ABA / Wing / ACLEDA / any bank app</li><li>Scan the QR code</li><li>Return here and tap "I have paid"</li></ol>
+   <p class="muted" style="font-size:.78rem">Demo only: this is not a real payment QR.</p>
+   <div class="row"><button class="btn btn-outline btn-sm" onclick="closeModal()">${t("cancel")}</button><button class="btn btn-primary btn-sm" id="paidBtn">I have paid</button></div>`);
+  closeModal.timer=setInterval(()=>{left--;const m=String(Math.floor(left/60)).padStart(2,"0"),s=String(left%60).padStart(2,"0");const e=$("#cd");if(e)e.textContent=m+":"+s;
+    if(left<=0){clearInterval(closeModal.timer);$("#qrBox").style.opacity=.2;$("#cd").textContent="Expired";$("#paidBtn").textContent="New QR";$("#paidBtn").onclick=()=>payModal(c)}},1000);
+  $("#paidBtn").onclick=()=>{clearInterval(closeModal.timer);closeModal();enrolled[c.id]=5;renderCourses();toast("Payment confirmed ✔ Course unlocked");notify("Course unlocked: "+c.title)};
+}
+
+/* ============ events ============ */
+document.addEventListener("click",e=>{
+  const d=e.target.closest("[data-cat],[data-enroll],[data-learn],[data-xreq],[data-xnext],[data-mreq],[data-bcancel],[data-bnext],[data-sreg],[data-apply],[data-anext],[data-like]");
+  if(e.target.id==="clearF"){cat="All";$("#courseSearch").value="";renderCourses();return}
+  if(!d)return;const D=d.dataset;
+  if(D.cat){cat=D.cat;renderCourses()}
+  else if(D.enroll){if(needLogin())return;const c=courses.find(x=>x.id==D.enroll);if(c.price)payModal(c);else{enrolled[c.id]=5;renderCourses();toast("Enrolled ✔");notify("Enrolled: "+c.title)}}
+  else if(D.learn){const c=courses.find(x=>x.id==D.learn);enrolled[c.id]=Math.min(100,enrolled[c.id]+15);renderCourses();toast("Lesson completed (demo)")}
+  else if(D.xreq){if(needLogin())return;exch[D.xreq]="pending";renderMatches();notify("Skill request sent to "+matches[D.xreq].name)}
+  else if(D.xnext){const o=["pending","accepted","completed"];const i=o.indexOf(exch[D.xnext]);if(i<2){exch[D.xnext]=o[i+1];renderMatches();notify("Exchange "+o[i+1]+": "+matches[D.xnext].name)}}
+  else if(D.mreq){if(needLogin())return;const m=mentors.find(x=>x.id==D.mreq);
+    openModal(`<h3>${t("request")} · ${m.name}</h3><form id="bkForm"><label>Topic<input class="field" name="topic" required></label>
+     <label>Date & time<input class="field" type="datetime-local" name="when" required></label>
+     <label>Duration<select class="field" name="dur"><option>30</option><option>60</option><option>90</option></select></label>
+     <label>Frequency<select class="field" name="freq"><option>One time</option><option>Weekly</option><option>Monthly</option></select></label>
+     <div class="row"><button type="button" class="btn btn-outline btn-sm" onclick="closeModal()">${t("cancel")}</button><button class="btn btn-primary btn-sm">${t("send")}</button></div></form>`);
+    $("#bkForm").onsubmit=ev=>{ev.preventDefault();const f=new FormData(ev.target);
+      if(new Date(f.get("when"))<=new Date()){toast("Please choose a future date");return}
+      if(bookings.some(b=>b.mentor===m.name&&["pending","active"].includes(b.status))){toast("You already have an open booking with this mentor");return}
+      bookings.push({id:Date.now(),mentor:m.name,topic:f.get("topic"),when:f.get("when").replace("T"," "),dur:f.get("dur"),freq:f.get("freq"),status:"pending"});
+      closeModal();renderBookings();toast("Request sent. Waiting for mentor approval");notify("Mentorship request sent to "+m.name)}}
+  else if(D.bcancel){bookings[D.bcancel].status="cancelled";renderBookings()}
+  else if(D.bnext){const b=bookings[D.bnext];b.status=b.status==="pending"?"active":"completed";renderBookings();notify("Booking "+b.status+": "+b.mentor)}
+  else if(D.sreg){if(needLogin())return;regs[D.sreg]=!regs[D.sreg];renderSessions();notify(regs[D.sreg]?"Registered for a live session":"Registration cancelled")}
+  else if(D.apply){if(needLogin())return;const j=jobs.find(x=>x.id==D.apply);
+    openModal(`<h3>${t("apply")} · ${j.title}</h3><form id="apForm"><label>CV (PDF, max 10MB)<input class="field" type="file" accept="application/pdf" name="cv" required></label>
+     <label>Portfolio URL (optional)<input class="field" type="url" name="url"></label><label>Cover letter<textarea class="field" rows="3" name="cl"></textarea></label>
+     <div class="row"><button type="button" class="btn btn-outline btn-sm" onclick="closeModal()">${t("cancel")}</button><button class="btn btn-primary btn-sm">${t("apply")}</button></div></form>`);
+    $("#apForm").onsubmit=ev=>{ev.preventDefault();const file=ev.target.cv.files[0];
+      if(!file||file.type!=="application/pdf"){toast("CV must be a PDF");return}
+      if(file.size>10*1024*1024){toast("CV is larger than 10MB");return}
+      apps.push({job:j,cv:file.name,status:"pending"});closeModal();renderJobs();toast("Application submitted ✔");notify("Application sent: "+j.title)}}
+  else if(D.anext){const a=apps[D.anext];a.status=stages[stages.indexOf(a.status)+1];renderJobs();notify(`Application ${a.status}: ${a.job.title}`)}
+  else if(D.like){posts[D.like].likes++;renderForum()}
+});
+document.addEventListener("change",e=>{
+  if(e.target.dataset.step!==undefined){steps[e.target.dataset.step].d=e.target.checked;renderRoadmap()}
+  if(e.target.dataset.rate!==undefined&&e.target.value){bookings[e.target.dataset.rate].review=+e.target.value;renderBookings();toast("Thanks for your review ✔")}
+});
+document.addEventListener("input",e=>{
+  if(e.target.dataset.axis!==undefined){axes[e.target.dataset.axis][1]=+e.target.value;renderRadar();const s=document.querySelector(`[data-axis="${e.target.dataset.axis}"]`);if(s)s.focus()}
+  if(e.target.id==="courseSearch")renderCourses();
+});
+$("#heroSearch").addEventListener("submit",e=>{e.preventDefault();$("#courseSearch").value=$("#heroInput").value;renderCourses();location.hash="#courses"});
+$("#postForm").addEventListener("submit",e=>{e.preventDefault();if(needLogin())return;posts.unshift({q:$("#postInput").value,cat:$("#postCat").value,likes:0,ans:0});$("#postInput").value="";renderForum();toast("Posted ✔")});
+$("#chatForm").addEventListener("submit",e=>{e.preventDefault();if(needLogin())return;const v=$("#chatInput").value.trim();if(!v)return;
+  const m=$("#msgs");m.insertAdjacentHTML("beforeend",`<div class="msg me"></div>`);m.lastChild.textContent=v;$("#chatInput").value="";m.scrollTop=m.scrollHeight;
+  setTimeout(()=>{m.insertAdjacentHTML("beforeend",`<div class="msg">Sounds great! 👍</div>`);m.scrollTop=m.scrollHeight;notify("New message from Vanna")},900)});
+$("#readAll").onclick=()=>{notifs.forEach(n=>n.read=true);renderNotifs()};
+$("#bell").onclick=()=>{location.hash="#community"};
+$("#signBtn").onclick=()=>{signed=!signed;$("#signBtn").textContent=signed?t("signout"):t("signin");toast(signed?"Signed in as Student (demo)":"Signed out")};
+$("#langBtn").onclick=()=>{lang=lang==="km"?"en":"km";localStorage.setItem("lang",lang);applyLang()};
+function setTheme(d){document.documentElement.dataset.theme=d?"dark":"light";$("#themeBtn").textContent=d?"☀️":"🌙";localStorage.setItem("dark",d?"1":"0")}
+$("#themeBtn").onclick=()=>setTheme(document.documentElement.dataset.theme!=="dark");
+setTheme(localStorage.getItem("dark")==="1"||(localStorage.getItem("dark")===null&&matchMedia("(prefers-color-scheme:dark)").matches));
+
+/* ============ 3D tilt (mouse only) ============ */
+const canTilt=matchMedia("(hover:hover) and (pointer:fine)").matches&&!matchMedia("(prefers-reduced-motion:reduce)").matches;
+function bindTilt(){ if(!canTilt)return;
+  document.querySelectorAll(".tilt").forEach(c=>{ if(c._t)return;c._t=1;
+    c.addEventListener("mousemove",e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(900px) rotateX(${-y*10}deg) rotateY(${x*10}deg) scale(1.03)`});
+    c.addEventListener("mouseleave",()=>c.style.transform="")})}
+if(canTilt){const h=document.querySelector(".tilt-hero"),sc=document.querySelector(".scene");
+  sc.addEventListener("mousemove",e=>{const r=sc.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;h.style.transform=`rotateX(${-y*12}deg) rotateY(${x*14}deg)`});
+  sc.addEventListener("mouseleave",()=>h.style.transform="")}
+
+/* ============ reveal + count-up ============ */
+const io=new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;en.target.classList.add("show");
+  en.target.querySelectorAll("[data-count]").forEach(n=>{const to=+n.dataset.count;let v=0;const st=to/40;const id=setInterval(()=>{v+=st;if(v>=to){v=to;clearInterval(id)}n.textContent=Math.round(v).toLocaleString()+"+"},30)});io.unobserve(en.target)}),{threshold:.15});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+
+applyLang();
+</script>
+</body>
+</html>

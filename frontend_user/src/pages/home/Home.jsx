@@ -26,15 +26,15 @@ import {
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { fetchStats } from "../../services/platformService";
+import LearningScene from "../../components/ui/LearningScene";
+import FeatureDirectory from "../../components/ui/FeatureDirectory";
 import heangChhengKhoemPhoto from "../../assets/team/heang-chheng-khoem.jpg";
 import hornPiseyPhoto from "../../assets/team/horn-pisey.jpg";
 import krySoranuthPhoto from "../../assets/team/kry-soranuth.jpg";
 import muyKalinPhoto from "../../assets/team/muy-kalin.jpg";
 import samrithRatanaPhoto from "../../assets/team/samrith-ratana.jpg";
 import "./Home.css";
-
-const heroImage =
-  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=2200&q=88";
+import "./CampusHome.css";
 
 const personaData = {
   student: {
@@ -424,8 +424,7 @@ const Home = () => {
     <main className="home-page">
       {/* 1. HERO SECTION */}
       <section
-        className="home-hero"
-        style={{ "--hero-background-image": `url(${heroImage})` }}
+        className="home-hero campus-hero"
       >
         <div className="hero-glow-sphere hero-glow-1" aria-hidden="true" />
         <div className="hero-glow-sphere hero-glow-2" aria-hidden="true" />
@@ -483,10 +482,12 @@ const Home = () => {
             </form>
 
             {/* Trending Quick Tags */}
-            <div className="hero-trending-tags">
-              <span className="trending-label">
+            <details className="hero-search-suggestions">
+              <summary>
                 <IoFlameOutline /> {t("home.trendingSearches")}
-              </span>
+                <IoChevronDownOutline />
+              </summary>
+              <div className="hero-trending-tags">
               <button
                 type="button"
                 className="trending-tag"
@@ -515,7 +516,8 @@ const Home = () => {
               >
                 {t("home.tagCloud")}
               </button>
-            </div>
+              </div>
+            </details>
 
             {/* Action Buttons */}
             <div className="hero-actions">
@@ -557,46 +559,12 @@ const Home = () => {
 
           {/* Interactive Hero Visual with Floating Live Cards */}
           <div className="hero-visual" ref={heroVisualRef}>
-            <div className="hero-visual-card">
-              <img
-                src={heroImage}
-                alt={t("home.heroImageAlt")}
-                className="hero-main-img"
-              />
-
-              {/* Floating career readiness indicator */}
-              <div className="hero-float-widget progress-widget">
-                <div className="widget-icon-box">
-                  <IoTrendingUpOutline />
-                </div>
-                <div>
-                  <div className="widget-score-row">
-                    <strong>{t("home.careerMatchScore")}</strong>
-                    <span className="pulse-pill">Active</span>
-                  </div>
-                  <span className="widget-sub">
-                    {t("home.careerMatchLabel")}
-                  </span>
-                  <div className="widget-progress-bar">
-                    <div className="bar-fill" style={{ width: "94%" }} />
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Widget 3: 12 Modules Unified */}
-              <div className="hero-float-widget modules-widget">
-                <div className="widget-icon-box flash">
-                  <IoFlashOutline />
-                </div>
-                <div>
-                  <strong>{t("home.modulesStrong")}</strong>
-                  <span>{t("home.modulesText")}</span>
-                </div>
-              </div>
-            </div>
+            <LearningScene />
           </div>
         </div>
       </section>
+
+      <FeatureDirectory />
 
       {/* 2. STATS & LIVE PLATFORM METRICS */}
       <section
@@ -657,6 +625,7 @@ const Home = () => {
             <button
               type="button"
               className={`persona-tab-btn ${activePersona === "student" ? "active" : ""}`}
+              aria-pressed={activePersona === "student"}
               onClick={() => setActivePersona("student")}
             >
               {t("home.personaTabStudent")}
@@ -664,6 +633,7 @@ const Home = () => {
             <button
               type="button"
               className={`persona-tab-btn ${activePersona === "switcher" ? "active" : ""}`}
+              aria-pressed={activePersona === "switcher"}
               onClick={() => setActivePersona("switcher")}
             >
               {t("home.personaTabSwitcher")}
@@ -671,6 +641,7 @@ const Home = () => {
             <button
               type="button"
               className={`persona-tab-btn ${activePersona === "seeker" ? "active" : ""}`}
+              aria-pressed={activePersona === "seeker"}
               onClick={() => setActivePersona("seeker")}
             >
               {t("home.personaTabSeeker")}
@@ -678,6 +649,7 @@ const Home = () => {
             <button
               type="button"
               className={`persona-tab-btn ${activePersona === "mentor" ? "active" : ""}`}
+              aria-pressed={activePersona === "mentor"}
               onClick={() => setActivePersona("mentor")}
             >
               {t("home.personaTabMentor")}

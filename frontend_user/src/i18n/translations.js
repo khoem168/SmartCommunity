@@ -282,8 +282,8 @@ export const translations = {
     home: {
       eyebrow: "One community. Every career step.",
       heroBadge: "Learn • Connect • Grow in one community",
-      heroTitle: "Build real-world skills.",
-      heroAccent: "Launch your dream career.",
+      heroTitle: "Learn to build.",
+      heroAccent: "Build your future.",
       heroDescription:
         "Learn practical skills, meet trusted mentors, and move toward real career opportunities.",
       openDashboard: "Open my dashboard",
@@ -1246,8 +1246,8 @@ export const translations = {
       eyebrow: "សហគមន៍តែមួយ សម្រាប់គ្រប់ជំហានអាជីព",
       heroBadge:
         "រៀន • ភ្ជាប់ • រីកចម្រើនជាមួយគ្នា",
-      heroTitle: "កសាងជំនាញពិត",
-      heroAccent: "ឈានទៅអាជីពក្នុងក្តីស្រមៃ",
+      heroTitle: "រៀនជំនាញថ្មី",
+      heroAccent: "កសាងអនាគត",
       heroDescription:
         "រៀនជំនាញអនុវត្ត ជួបអ្នកណែនាំ និងឈានទៅរកឱកាសការងារពិតប្រាកដ។",
       openDashboard: "បើកផ្ទាំងគ្រប់គ្រងរបស់ខ្ញុំ",

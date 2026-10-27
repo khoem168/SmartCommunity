@@ -36,6 +36,7 @@ const ScrollEngagementPopup = () => {
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(wasRecentlyDismissed);
   const [imageState, setImageState] = useState("loading");
+  const [expanded, setExpanded] = useState(false);
 
   const isExcludedRoute =
     [
@@ -111,6 +112,18 @@ const ScrollEngagementPopup = () => {
   };
 
   if (!visible || dismissed || isExcludedRoute) return null;
+
+  if (!expanded) return (
+    <div className="scroll-engagement-invitation">
+      <button type="button" onClick={() => setExpanded(true)} aria-expanded="false">
+        <IoSparklesOutline aria-hidden="true" />
+        {user ? t("popup.continueLearning") : t("popup.exploreCourses")}
+      </button>
+      <button type="button" onClick={dismissPopup} aria-label={t("popup.close")}>
+        <IoClose aria-hidden="true" />
+      </button>
+    </div>
+  );
 
   const firstName = user?.fullName?.trim().split(/\s+/)[0];
   const content = user

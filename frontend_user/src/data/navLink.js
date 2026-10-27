@@ -38,6 +38,11 @@ export const privateNavLinks = [
     link: "/dashboard",
   },
   {
+    label: "Learning",
+    labelKey: "learning",
+    link: "/courses",
+  },
+  {
     label: "Discover",
     labelKey: "discover",
     link: "/discover",

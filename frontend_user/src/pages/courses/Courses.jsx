@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   FiArrowRight,
   FiBookOpen,
@@ -10,6 +10,7 @@ import {
   FiSearch,
 } from "react-icons/fi";
 import { SkeletonGrid } from "../../components/ui/LoadingStates";
+import TiltCard from "../../components/ui/TiltCard";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { fetchCourses } from "../../services/courseService";
@@ -28,7 +29,16 @@ const Courses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [query, setQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("search") || "";
+  const setQuery = (value) => {
+    setSearchParams((previous) => {
+      const next = new URLSearchParams(previous);
+      if (value) next.set("search", value);
+      else next.delete("search");
+      return next;
+    }, { replace: true });
+  };
   const [category, setCategory] = useState("All");
 
   useEffect(() => {
@@ -75,7 +85,7 @@ const Courses = () => {
             </div>
           </div>
           <div className="courses-hero-stat">
-            <strong>{courses.length || 6}</strong>
+            <strong>{loading || error ? "—" : courses.length}</strong>
             <span>{t("coursesPage.paths")}</span>
             <small>{t("coursesPage.anyDevice")}</small>
           </div>
@@ -92,6 +102,7 @@ const Courses = () => {
             <FiSearch />
             <input
               value={query}
+              aria-label={t("coursesPage.searchPlaceholder")}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={t("coursesPage.searchPlaceholder")}
             />
@@ -107,6 +118,7 @@ const Courses = () => {
               type="button"
               key={item}
               className={category === item ? "active" : ""}
+              aria-pressed={category === item}
               onClick={() => setCategory(item)}
             >
               {item === "All" ? t("coursesPage.all") : item}
@@ -135,7 +147,7 @@ const Courses = () => {
                 : `/register?redirect=${encodeURIComponent(coursePath)}`;
 
               return (
-                <article key={course.id} className="course-card">
+                <TiltCard key={course.id} className="course-card">
                   <Link
                     to={accessPath}
                     className="course-cover"
@@ -143,7 +155,7 @@ const Courses = () => {
                       title: course.title,
                     })}
                   >
-                    <img src={course.thumbnailUrl} alt="" />
+                    <img src={course.thumbnailUrl} alt="" loading="lazy" decoding="async" />
                     <span className="course-level">{course.level}</span>
                     <span className="course-play">
                       <FiPlayCircle />
@@ -213,12 +225,12 @@ const Courses = () => {
                               : t("coursesPage.createToView")}
                         </strong>
                       </div>
-                      <Link to={accessPath} className="course-arrow">
+                      <Link to={accessPath} className="course-arrow" aria-label={t("coursesPage.viewCourse", { title: course.title })}>
                         {course.isEnrolled ? <FiArrowRight /> : <FiLock />}
                       </Link>
                     </footer>
                   </div>
-                </article>
+                </TiltCard>
               );
             })}
           </div>

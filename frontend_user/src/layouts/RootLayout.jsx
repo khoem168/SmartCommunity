@@ -16,7 +16,7 @@ const RootLayout = () => {
   const scrollUpPage = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: reduceMotion ? "instant" : "smooth",
     });
   };
   const [showButton, setShowButton] = useState(false);

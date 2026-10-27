@@ -1,5 +1,5 @@
 /*
- * CodeKhmer-inspired presentation refresh
+ * Smart Community presentation system
  * Visual-only overrides: no routes, data flow, or component behaviour changed.
  */
 
@@ -36,6 +36,30 @@
   --ck-line: #e2e8f0;
   --ck-ink: #0f172a;
   --ck-muted: #64748b;
+}
+
+/* Shared interaction polish; scoped to existing cards, never modal containers. */
+.app-shell .sc-tilt {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  transform-style: preserve-3d;
+}
+.app-shell .sc-tilt:focus-within {
+  border-color: #93c5fd;
+  box-shadow: 0 12px 36px #1e3a8a14;
+}
+.app-shell :is(.course-card, .mentor-card, .job-card, .session-card, .discover-card) {
+  border-radius: 22px;
+}
+.app-shell :is(.course-arrow, .course-filters button, .trending-tag) {
+  min-height: 44px;
+}
+.app-shell :where(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid #d99a00;
+  outline-offset: 4px;
+}
+html[lang="km"] .app-shell :is(h1, h2, h3) {
+  letter-spacing: 0;
+  line-height: 1.6;
 }
 
 html {

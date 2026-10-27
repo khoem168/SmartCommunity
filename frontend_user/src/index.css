@@ -55,6 +55,17 @@
   --page-gutter: clamp(14px, 2.5vw, 20px);
 }
 
+html[data-theme="dark"] {
+  --color-bg: #0b0f19;
+  --color-surface: #151d2f;
+  --color-surface-soft: #111827;
+  --text-main: #f1f5f9;
+  --text-body: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border: #1e293b;
+  --border-strong: #334155;
+}
+
 html[lang="km"] {
   --font-body: "Battambang Local", "Noto Sans Khmer", sans-serif;
   --font-display: "Kantumruy Pro Local", "Noto Sans Khmer", sans-serif;

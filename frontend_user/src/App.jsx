@@ -13,6 +13,7 @@ import {
   RouteErrorBoundary,
 } from "./pages/errors/RouteErrorPage";
 import "./design-refresh.css";
+import "./ios-glass.css";
 
 const Home = lazy(() => import("./pages/home/Home"));
 const Dashboard = lazy(() => import("./pages/dashboard/Dashboard"));

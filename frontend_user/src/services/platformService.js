@@ -2,6 +2,8 @@ import { apiFetch } from "./api";
 
 export const fetchStats = async () => apiFetch("/stats");
 
+export const fetchDashboard = () => apiFetch("/dashboard");
+
 export const fetchMembers = async () => {
   const response = await apiFetch("/members");
   return response.members || [];

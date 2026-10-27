@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="km" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smart Community - Skill & Career Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Kantumruy+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7fb;--text:#0b0d12;--soft:#6b7280;--line:rgba(15,23,42,.09);--glass:rgba(255,255,255,.58);--glass2:rgba(255,255,255,.88);--edge:rgba(255,255,255,.8);--ink:#111318;--inkt:#fff;--chip:rgba(15,23,42,.06);--blue:#3B6BFF;--gold:#F5B301;--teal:#14B8A6;--red:#E21E2B;--r:28px;--spring:cubic-bezier(.2,.9,.3,1.15);--sh:0 10px 40px rgba(31,41,80,.10)}
+[data-theme=dark]{--bg:#05070c;--text:#f3f5f9;--soft:#9aa3b2;--line:rgba(255,255,255,.1);--glass:rgba(28,35,54,.55);--glass2:rgba(22,28,46,.9);--edge:rgba(255,255,255,.1);--ink:#fff;--inkt:#0b0d12;--chip:rgba(255,255,255,.08);--sh:0 10px 40px rgba(0,0,0,.55)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:96px;-webkit-text-size-adjust:100%}
+body{font-family:"Inter","Kantumruy Pro","Noto Sans Khmer",system-ui,sans-serif;line-height:1.65;background:var(--bg);color:var(--text);transition:background .4s,color .4s;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body.lock{overflow:hidden}
+.container{width:min(1180px,100% - 48px);margin-inline:auto}
+a{color:inherit}button,input,select,textarea{font-family:inherit;font-size:1rem;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+/* glass */
+.glass{position:relative;background:radial-gradient(520px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.38),transparent 45%),var(--glass);backdrop-filter:blur(26px) saturate(190%);-webkit-backdrop-filter:blur(26px) saturate(190%);border:1px solid var(--edge);box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.55)}
+[data-theme=dark] .glass{background:radial-gradient(520px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.07),transparent 45%),var(--glass);box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.06)}
+@supports not (backdrop-filter:blur(1px)){.glass{background:var(--glass2)}}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.4;animation:drift 26s ease-in-out infinite alternate}
+.b1{width:46vw;height:46vw;left:-10vw;top:-12vw;background:#7aa2ff}.b2{width:38vw;height:38vw;right:-8vw;top:18vh;background:#ffd36b;animation-delay:-8s}.b3{width:42vw;height:42vw;left:30vw;bottom:-18vw;background:#5eead4;animation-delay:-15s}
+[data-theme=dark] .blob{opacity:.2}
+@keyframes drift{to{transform:translate3d(6vw,4vh,0) scale(1.12)}}
+/* nav */
+.nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:60;width:min(1180px,100% - 24px);height:64px;border-radius:999px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 10px 0 22px}
+.logo{font-weight:600;letter-spacing:-.02em;white-space:nowrap;text-decoration:none}.logo span{color:var(--blue)}
+.nav-links{position:relative;display:flex;gap:4px}
+.nav-links a{position:relative;z-index:1;text-decoration:none;font-size:.9rem;color:var(--soft);white-space:nowrap;padding:6px 13px;border-radius:999px;transition:color .25s}
+.nav-links a.on,.nav-links a:hover{color:var(--text)}
+.nav-links .ind{position:absolute;top:0;bottom:0;left:0;width:0;border-radius:999px;background:var(--chip);transition:left .45s var(--spring),width .45s var(--spring);opacity:0}
+.nav-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{position:relative;min-width:44px;height:44px;border-radius:999px;border:0;background:var(--chip);font-size:1rem;padding:0 12px;font-weight:600;transition:transform .3s var(--spring)}
+.icon-btn:hover{transform:scale(1.08)}.icon-btn:active{transform:scale(.94)}
+.badge-dot{position:absolute;top:-2px;right:-2px;background:var(--red);color:#fff;border-radius:999px;font-size:.66rem;min-width:19px;height:19px;display:grid;place-items:center;padding:0 5px}
+.acct{border:0;background:none;border-radius:50%;padding:2px}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 28px;border-radius:999px;font-weight:500;text-decoration:none;border:0;transition:transform .35s var(--spring),box-shadow .2s;white-space:nowrap}
+.btn:hover{transform:translateY(-2px) scale(1.02)}.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--ink);color:var(--inkt)}.btn-soft{background:var(--chip);color:var(--text)}.btn-gold{background:var(--gold);color:#1f1600}.btn-red{background:rgba(226,30,43,.12);color:var(--red)}.btn-ghost{background:transparent;color:var(--blue);padding-inline:12px}
+.btn-sm{min-height:40px;padding:6px 18px;font-size:.88rem}.btn[disabled]{opacity:.45;pointer-events:none}
+/* hero */
+.hero{position:relative;min-height:100svh;display:grid;place-items:center;text-align:center;padding:130px 0 80px;overflow:hidden}
+.hero canvas{position:absolute;inset:0;pointer-events:none}.hero-inner{position:relative;z-index:2;width:min(1100px,100% - 48px)}
+.tag{display:inline-block;padding:4px 16px;border-radius:12px;border:1px solid var(--line);background:var(--glass2);font-size:.82rem;margin-bottom:22px}
+.hero h1{font-size:clamp(2.3rem,6.2vw,4.7rem);font-weight:400;letter-spacing:-.035em;line-height:1.08}
+html[lang=km] .hero h1{font-weight:600;line-height:1.45;letter-spacing:0}
+.soft{color:var(--soft)}
+.lead{margin:22px auto 30px;max-width:560px;color:var(--soft);font-size:1.1rem}
+.search{display:flex;gap:6px;max-width:540px;margin:0 auto 14px;padding:6px;border-radius:999px}
+.search input{flex:1;min-width:0;border:0;outline:0;background:transparent;padding:0 18px}
+.chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
+.chip{border-radius:999px;padding:3px 14px;font-size:.82rem;background:var(--chip);color:var(--soft);border:0}
+.chip:hover{color:var(--text)}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+/* 3D stage */
+.stage{position:relative;max-width:940px;height:450px;margin:60px auto 0;perspective:1400px}
+.stage-in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .3s ease-out}
+.w{position:absolute;border-radius:26px;padding:16px 18px;text-align:left;background:var(--glass2);border:1px solid var(--edge);box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.5)}
+.w small{color:var(--soft);display:block;font-size:.78rem}
+.w-main{left:50%;top:34px;width:min(390px,90%);margin-left:-195px;padding:22px}
+.w-ring{left:1%;top:0;width:180px;transform:translateZ(70px);animation:bob 7s ease-in-out infinite}
+.w-next{right:1%;top:30px;width:240px;transform:translateZ(90px);animation:bob 8s ease-in-out -2s infinite}
+.w-pay{left:5%;bottom:10px;width:240px;transform:translateZ(60px);animation:bob 9s ease-in-out -4s infinite}
+.w-mentor{right:4%;bottom:0;width:250px;transform:translateZ(100px);animation:bob 7.5s ease-in-out -1s infinite}
+@keyframes bob{50%{translate:0 -12px}}
+.mini-ring{--p:0;width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--teal) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;margin:6px auto}
+.mini-ring span{width:64px;height:64px;border-radius:50%;background:var(--glass2);display:grid;place-items:center;font-weight:600}
+/* sections */
+section{padding:92px 0;position:relative}
+.sec-title{text-align:center;margin-bottom:40px}
+.sec-title h2{font-size:clamp(1.8rem,4vw,2.9rem);font-weight:400;letter-spacing:-.03em;line-height:1.15}
+html[lang=km] .sec-title h2{font-weight:600;letter-spacing:0;line-height:1.5}
+.sec-title p{color:var(--soft);margin-top:8px}
+.grid{display:grid;gap:20px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{border-radius:var(--r);padding:22px;min-width:0}
+.tilt{transition:transform .25s ease-out;transform-style:preserve-3d;will-change:transform}
+.card h3{font-size:1.1rem;font-weight:600;margin:6px 0 2px;letter-spacing:-.01em}
+.muted{color:var(--soft);font-size:.9rem}.sm{font-size:.8rem}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+.row.l{justify-content:flex-start}
+.price{font-weight:600;font-size:1.1rem}
+.progress{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:12px}
+.progress>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal),var(--blue));transition:width .5s}
+.badge{display:inline-flex;align-items:center;padding:2px 11px;border-radius:999px;font-size:.74rem;font-weight:600;white-space:nowrap}
+.b-bakong{background:rgba(226,30,43,.12);color:var(--red)}.b-free{background:rgba(20,184,166,.16);color:#0f9488}.b-level{background:var(--chip);color:var(--soft)}
+.b-pending,.b-scheduled{background:rgba(245,179,1,.2);color:#a16207}
+.b-active,.b-approved,.b-accepted,.b-open,.b-ongoing,.b-paid{background:rgba(34,197,94,.16);color:#15803d}
+.b-completed,.b-reviewed,.b-filled{background:rgba(59,107,255,.14);color:var(--blue)}
+.b-shortlisted{background:rgba(139,92,246,.16);color:#7c3aed}
+.b-rejected,.b-cancelled,.b-closed,.b-expired,.b-suspended{background:rgba(239,68,68,.14);color:#dc2626}
+.avatar{border-radius:50%;background:linear-gradient(135deg,var(--gold),#f97316);display:grid;place-items:center;color:#fff;font-weight:600;flex:none;object-fit:cover}
+.flex{display:flex;gap:12px;align-items:center}
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:170px;gap:18px}
+.tile{position:relative;overflow:hidden;border-radius:var(--r);padding:22px;text-decoration:none;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .4s var(--spring)}
+.tile:hover{transform:translateY(-4px)}
+.tile h3{font-size:1.35rem;font-weight:500;letter-spacing:-.02em;position:relative;z-index:1}
+.tile p{color:var(--soft);font-size:.9rem;position:relative;z-index:1}
+.tile.big{grid-column:span 2;grid-row:span 2}.tile.wide{grid-column:span 2}
+.tile .orb{position:absolute;top:18px;right:18px;width:110px;height:110px;border-radius:50%;animation:bob 6s ease-in-out infinite;box-shadow:0 26px 36px -10px rgba(0,0,0,.28),inset -12px -16px 26px rgba(0,0,0,.25),inset 8px 10px 22px rgba(255,255,255,.55)}
+.tile.big .orb{width:190px;height:190px;top:28px;right:34px}
+.o1{background:radial-gradient(circle at 30% 28%,#a9c0ff,#3B6BFF 55%,#1b2f8f)}.o2{background:radial-gradient(circle at 30% 28%,#ffe49a,#F5B301 55%,#b45309);animation-delay:-2s}.o3{background:radial-gradient(circle at 30% 28%,#a5f5ea,#14B8A6 55%,#0b5f58);animation-delay:-3s}.o4{background:radial-gradient(circle at 30% 28%,#f9c5df,#ec4899 55%,#9d174d);animation-delay:-4s}.o5{background:radial-gradient(circle at 30% 28%,#d6c9ff,#8b5cf6 55%,#4c1d95);animation-delay:-5s}
+.tile.dark{background:#0a0c12;color:#fff;border:1px solid #1e2538}.tile.dark p{color:#9aa3b2}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);text-align:center;padding:26px;border-radius:var(--r);gap:10px;margin-top:20px}
+.stats b{display:block;font-size:2.2rem;font-weight:400;letter-spacing:-.03em}
+.step{text-align:center}.step .ico{font-size:2rem}
+/* controls */
+.seg{position:relative;display:inline-flex;padding:4px;border-radius:999px;max-width:100%;overflow-x:auto;scrollbar-width:none}.seg::-webkit-scrollbar{display:none}
+.seg button{position:relative;z-index:1;border:0;background:none;padding:6px 16px;min-height:38px;border-radius:999px;font-weight:500;color:var(--soft);white-space:nowrap;transition:color .25s}
+.seg button.on{color:var(--inkt)}
+.seg .thumb{position:absolute;top:4px;bottom:4px;left:0;width:0;border-radius:999px;background:var(--ink);transition:left .45s var(--spring),width .45s var(--spring)}
+.bar-filters{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:0 auto 24px}
+.field{width:100%;padding:12px 16px;border-radius:16px;border:1px solid var(--line);background:var(--chip);color:var(--text);margin-top:4px;outline:0;transition:.2s}
+.field:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(59,107,255,.18)}
+textarea.field{resize:vertical;min-height:84px}select.field option{color:#111}
+label{display:block;font-weight:500;font-size:.88rem;margin-top:12px}
+.switch{position:relative;width:52px;height:32px;flex:none}
+.switch input{opacity:0;position:absolute;inset:0;z-index:2;cursor:pointer;margin:0}
+.switch i{position:absolute;inset:0;border-radius:99px;background:var(--chip);border:1px solid var(--line);transition:.3s}
+.switch i::after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:.35s var(--spring)}
+.switch input:checked+i{background:#34c759;border-color:#34c759}.switch input:checked+i::after{transform:translateX(20px)}
+.setrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.thumb-img{height:130px;border-radius:20px;display:grid;place-items:center;font-size:3rem;margin-bottom:14px;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+.empty{text-align:center;padding:34px 16px;color:var(--soft)}.empty .big{font-size:2.4rem}
+.skel{height:200px;border-radius:var(--r);background:linear-gradient(100deg,var(--chip) 30%,rgba(255,255,255,.35) 50%,var(--chip) 70%);background-size:300% 100%;animation:sh 1.4s infinite}
+@keyframes sh{to{background-position:-100% 0}}
+/* lists */
+.timeline{list-style:none;border-left:2px solid var(--line);margin-left:12px}
+.timeline li{position:relative;padding:0 0 14px 26px}
+.timeline li::before{content:"";position:absolute;left:-10px;top:5px;width:18px;height:18px;border-radius:50%;background:var(--bg);border:2px solid var(--line);transition:.3s}
+.timeline li.done::before{background:var(--teal);border-color:var(--teal)}
+.timeline label{margin:0;display:flex;gap:10px;align-items:center;cursor:pointer;font-weight:500}
+.ring{--p:0;width:112px;height:112px;border-radius:50%;background:conic-gradient(var(--teal) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;margin:0 auto 14px}
+.ring span{width:88px;height:88px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-weight:500;font-size:1.4rem}
+.tracker{display:flex;gap:6px;margin-top:12px}.tracker i{flex:1;height:6px;border-radius:99px;background:var(--line)}.tracker i.on{background:var(--teal)}.tracker i.bad{background:#ef4444}
+.tl{display:flex;justify-content:space-between;font-size:.66rem;color:var(--soft);margin-top:4px}
+.li{padding:12px 0;border-bottom:1px solid var(--line)}.li:last-child{border:0}
+.pillset{display:flex;gap:6px;flex-wrap:wrap}
+.xchip{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border-radius:999px;padding:3px 6px 3px 12px;font-size:.85rem}
+.xchip button{border:0;background:none;color:var(--soft);width:22px;height:22px;border-radius:50%}
+.tblw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--soft);font-weight:500;font-size:.8rem}
+.kpi b{display:block;font-size:1.9rem;font-weight:400;letter-spacing:-.02em}
+.bars .b{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:.88rem}.bars i{display:block;height:10px;border-radius:99px;min-width:6px}
+/* class */
+.class{display:grid;grid-template-columns:1.5fr 1fr;gap:20px}
+.player{border-radius:24px;min-height:260px;display:grid;place-content:center;text-align:center;color:#fff;gap:8px;padding:20px}
+.play{font-size:2.6rem}
+.lesson{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:0;background:var(--chip);border-radius:16px;padding:10px 14px;margin-bottom:8px}
+.lesson.on{outline:2px solid var(--blue)}
+/* chat */
+.chatw{display:grid;grid-template-columns:260px 1fr;gap:16px;height:min(560px,70svh)}
+.convs{overflow:auto}.conv{display:flex;gap:10px;align-items:center;width:100%;border:0;background:none;text-align:left;padding:10px;border-radius:18px}
+.conv.on,.conv:hover{background:var(--chip)}
+.thread{display:flex;flex-direction:column;min-height:0}
+.msgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:6px}
+.msg{max-width:78%;padding:8px 14px;border-radius:20px;background:var(--chip);align-self:flex-start;font-size:.93rem;word-break:break-word}
+.msg.me{background:var(--blue);color:#fff;align-self:flex-end}.msg small{display:block;font-size:.7rem;opacity:.7}
+.qr{display:grid;grid-template-columns:repeat(21,1fr);width:210px;margin:12px auto;background:#fff;padding:8px;border-radius:16px;border:4px solid var(--red)}
+.qr i{aspect-ratio:1;background:#fff}.qr i.k{background:#111}
+/* cta */
+.cta{position:relative;overflow:hidden;border-radius:36px;background:#000;color:#fff;min-height:380px;display:flex;align-items:flex-end;padding:48px}
+.cta canvas{position:absolute;inset:0;width:100%;height:100%}.cta-in{position:relative;z-index:2}
+.cta h2{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:400;letter-spacing:-.03em;line-height:1.1;margin-bottom:24px}
+html[lang=km] .cta h2{font-weight:600;line-height:1.45;letter-spacing:0}
+.cta .btn-l{background:#fff;color:#000}.cta .btn-d{background:rgba(255,255,255,.14);color:#fff}
+details{border-radius:20px;padding:16px 22px;margin-bottom:10px}summary{font-weight:500;cursor:pointer}
+footer{text-align:center;padding:40px 0 130px;color:var(--soft);font-size:.9rem}
+/* sheet */
+.overlay{position:fixed;inset:0;background:rgba(5,8,18,.42);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}.overlay.open{display:flex}
+.sheet{width:min(520px,100%);max-height:min(90svh,880px);display:flex;flex-direction:column;border-radius:34px;background:var(--glass2);backdrop-filter:blur(30px) saturate(190%);border:1px solid var(--edge);box-shadow:0 30px 80px rgba(0,0,0,.35);animation:pop .45s var(--spring)}
+.sheet[data-size=sm]{width:min(430px,100%)}.sheet[data-size=lg]{width:min(1040px,100%)}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;padding:20px 24px 8px}.sheet-head h3{font-size:1.25rem;font-weight:600;letter-spacing:-.02em}
+.sheet-body{padding:8px 24px 26px;overflow:auto;overscroll-behavior:contain}
+@keyframes pop{from{transform:scale(.93) translateY(18px);opacity:0}}
+#toasts{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);z-index:300;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{padding:10px 22px;border-radius:999px;background:var(--ink);color:var(--inkt);font-size:.92rem;animation:tin .45s var(--spring);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.toast.err{background:#dc2626;color:#fff}.toast.ok{background:#16a34a;color:#fff}
+@keyframes tin{from{opacity:0;transform:translateY(20px) scale(.9)}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s var(--spring)}.reveal.show{opacity:1;transform:none}
+.tabbar{display:none}
+@media(max-width:1000px){.nav-links{display:none}.g3,.g4{grid-template-columns:repeat(2,1fr)}.bento{grid-template-columns:repeat(2,1fr)}.class{grid-template-columns:1fr}}
+@media(max-width:900px){.stage{height:auto;perspective:none;margin-top:40px}.stage-in{position:static;display:grid;gap:12px}.w{position:static;width:auto!important;margin:0!important;transform:none!important;animation:none!important}}
+@media(max-width:700px){
+.container{width:min(1180px,100% - 32px)}.g2,.g3,.g4{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}
+.nav{padding-left:16px}.nav-actions .btn{padding-inline:14px}.bento{grid-auto-rows:150px}.tile.big,.tile.wide{grid-column:span 2}
+.cta{padding:28px;min-height:320px}section{padding:60px 0}.chatw{grid-template-columns:1fr;height:auto}.convs{max-height:150px}
+.tabbar{display:flex;position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:70;border-radius:30px;padding:6px;justify-content:space-around}
+.tabbar a{position:relative;flex:1;text-decoration:none;text-align:center;font-size:.66rem;font-weight:500;min-height:48px;border-radius:24px;color:var(--soft);display:grid;align-content:center;transition:.3s var(--spring)}
+.tabbar a span{font-size:1.25rem;line-height:1.1}.tabbar a.on{background:var(--chip);color:var(--text)}
+.tb-badge{position:absolute;top:2px;right:18%;background:var(--red);color:#fff;border-radius:99px;font-size:.62rem;min-width:17px;padding:0 4px}
+#toasts{bottom:104px}.overlay{align-items:flex-end;padding:0}.sheet,.sheet[data-size]{width:100%;border-radius:34px 34px 0 0;max-height:92svh}
+.nav-actions [data-act=pal],.nav-actions [data-act=lang]{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="bg"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+
+<header class="nav glass" id="nav">
+  <a class="logo" href="#home">Smart <span>Community</span></a>
+  <nav class="nav-links" id="navLinks"><i class="ind"></i>
+    <a href="#courses" data-spy="courses" data-t="Courses">Courses</a><a href="#exchange" data-spy="exchange" data-t="Exchange">Exchange</a>
+    <a href="#mentors" data-spy="mentors" data-t="Mentors">Mentors</a><a href="#sessions" data-spy="sessions" data-t="Live">Live</a>
+    <a href="#career" data-spy="career" data-t="Career">Career</a><a href="#jobs" data-spy="jobs" data-t="Internships">Internships</a>
+    <a href="#forum" data-spy="forum" data-t="Forum">Forum</a>
+  </nav>
+  <div class="nav-actions" id="navAct"></div>
+</header>
+
+<main>
+<div class="hero" id="home">
+  <canvas id="dots"></canvas>
+  <div class="hero-inner">
+    <span class="tag" data-t="Learn • Connect • Grow">Learn • Connect • Grow</span>
+    <h1 data-t="h1">Build real-world skills.<br><span class="soft">Launch your dream career.</span></h1>
+    <p class="lead" data-t="lead">One place to learn, meet trusted mentors and apply for internships.</p>
+    <form class="search glass" data-form="heroSearch">
+      <input name="q" type="search" aria-label="Search" data-tp="What do you want to learn?" placeholder="What do you want to learn?">
+      <button class="btn btn-primary btn-sm" data-t="Search">Search</button>
+    </form>
+    <div class="chips" id="heroChips"></div>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#courses" data-t="Start learning">Start learning</a>
+      <a class="btn btn-soft" href="#showcase" data-t="Explore">Explore</a>
+    </div>
+    <div class="stage" id="stage"><div class="stage-in" id="stageIn"></div></div>
+  </div>
+</div>
+
+<section id="showcase" style="padding-top:30px"><div class="container">
+  <div class="bento reveal" id="bento"></div>
+  <div class="stats glass reveal" id="stats"></div>
+</div></section>
+
+<section id="journey" style="padding-top:10px"><div class="container">
+  <div class="sec-title reveal"><h2 data-t="Your learning journey">Your learning journey</h2><p data-t="5 steps from beginner to job-ready">5 steps from beginner to job-ready</p></div>
+  <div class="grid reveal" id="journeyGrid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))"></div>
+</div></section>
+
+<section id="courses"><div class="container">
+  <div class="sec-title reveal"><h2 data-t="Courses">Courses</h2><p data-t="Pay with Bakong KHQR or enroll for free">Pay with Bakong KHQR or enroll for free</p></div>
+  <input class="field glass" id="courseQ" type="search" data-tp="Search courses..." placeholder="Search courses..." data-in="cq" style="max-width:460px;margin:0 auto 18px;display:block">
+  <div class="bar-filters" id="courseFilters"></div>
+  <div class="grid g3" id="courseGrid"></div>
+</div></section>
+
+<section id="exchange"><div class="container">
+  <div class="sec-title reveal"><h2 data-t="Skill exchange with peers">Skill exchange with peers</h2><p data-t="Matched by skills you can teach and want to learn">Matched by skills you can teach and want to learn</p></div>
+  <div class="grid g3" id="matchGrid"></div>
+  <div id="exchMine"></div>
+</div></section>
+
+<section id="mentors"><div class="container">
+  <div class="sec-title reveal"><h2 data-t="Verified mentors">Verified mentors</h2><p data-t="Send a request, wait for approval, then get the Jitsi link">Send a request, wait for approval, then get the Jitsi link</p></div>
+  <div class="row l" style="justify-content:center;margin:0 0 20px;gap:12px"><input class="field glass" id="mentorQ" type="search" data-tp="Search mentors..." placeholder="Search mentors..." data-in="mq" style="max-width:320px;margin:0"><button class="btn btn-soft" data-act="mApply" data-t="Become a mentor">Become a mentor</button></div>
+  <div class="grid g3" id="mentorGrid"></div>
+  <div id="mentorMine"></div>
+</div></section>
+
+<section id="sessions"><div class="container">
+  <div class="sec-title reveal"><h2 data-t="Live learning sessions">Live learning sessions</h2><p data-t="Register to join online">Register to join online</p></div>
+  <div class="row l" style="justify-content:center;margin:0 0 20px" id="hostBtn"></div>
+  <div class="grid g3" id="sessionGrid"></div>
+</div></section>
+
+<section id="career"><div class="container">
+  <div class="sec-title reveal"><h2 data-t="Career roadmap & self-assessment">Career roadmap &amp; self-assessment</h2><p data-t="Tick each step to see your progress">Tick each step to see your progress</p></div>
+  <div id="careerBody"></div>
+</div></section>
+
+<section id="jobs"><div class="container">
+  <div class="sec-title reveal"><h2 data-t="Internships">Internships</h2><p data-t="Apply with a PDF CV and track the status">Apply with a PDF CV and track the status</p></div>
+  <input class="field glass" id="jobQ" type="search" data-tp="Search internships..." placeholder="Search internships..." data-in="jq" style="max-width:460px;margin:0 auto 18px;display:block">
+  <div class="bar-filters" id="jobFilters"></div>
+  <div class="grid g3" id="jobGrid"></div>
+  <div id="jobMine"></div>
+</div></section>
+
+<section id="forum"><div class="container" style="max-width:860px">
+  <div class="sec-title reveal"><h2 data-t="Community forum">Community forum</h2><p data-t="Ask, answer and share knowledge">Ask, answer and share knowledge</p></div>
+  <div class="bar-filters" id="forumFilters"></div>
+  <div class="row l" style="margin:0 0 16px;gap:12px"><input class="field glass" id="forumQ" type="search" data-tp="Search questions..." placeholder="Search questions..." data-in="fq" style="margin:0;flex:1"><button class="btn btn-primary" data-act="fNew" data-t="Ask a question">Ask a question</button></div>
+  <div class="grid" id="postList"></div>
+</div></section>
+
+<section id="community"><div class="container">
+  <div class="sec-title reveal"><h2 data-t="Community hub">Community hub</h2><p data-t="Messages, notifications and platform reports">Messages, notifications and platform reports</p></div>
+  <div class="grid g3" id="hub"></div>
+</div></section>
+
+<section><div class="container" style="max-width:760px">
+  <div class="sec-title reveal"><h2>FAQ</h2></div>
+  <details class="glass"><summary data-t="Is it free?">Is it free?</summary><p class="muted" data-t="a1">There are free courses and paid courses via Bakong KHQR.</p></details>
+  <details class="glass"><summary data-t="Can I become a mentor?">Can I become a mentor?</summary><p class="muted" data-t="a2">Apply and wait for administrator approval.</p></details>
+  <details class="glass"><summary data-t="Does it guarantee a job?">Does it guarantee a job?</summary><p class="muted" data-t="a3">No. The platform supports learning and recruitment, but it cannot guarantee employment.</p></details>
+</div></section>
+
+<section style="padding-top:0"><div class="container">
+  <div class="cta reveal"><canvas id="dashes"></canvas>
+    <div class="cta-in"><h2 data-t="Ready to start your journey?">Ready to start your journey?</h2>
+      <a class="btn btn-l" href="#courses" data-t="Start learning">Start learning</a> <a class="btn btn-d" href="#" data-act="auth" data-t="Create account">Create account</a></div></div>
+</div></section>
+</main>
+
+<footer><div class="container">© 2026 Smart Community Skill &amp; Career Development Platform · Demo data stays in your browser · <a href="#" data-act="reset" data-t="Reset demo">Reset demo</a></div></footer>
+<nav class="tabbar glass" id="tabbar"></nav>
+<div class="overlay" id="ov"><div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="sheet-head"><h3 id="sheetTitle"></h3><button class="icon-btn" data-act="close" aria-label="Close">✕</button></div><div class="sheet-body" id="sheetBody"></div></div></div>
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* =============== utilities =============== */
+const KEY="scs_v4",DAY=864e5,MIN=6e4;
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const rid=()=>Math.random().toString(36).slice(2,9);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const hash=p=>btoa(encodeURIComponent(p));
+let lang=localStorage.getItem("lang")||"km";
+const X={h1:['Build real-world skills.<br><span class="soft">Launch your dream career.</span>','បង្កើតជំនាញពិត<br><span class="soft">ចាប់ផ្តើមអាជីពក្តីសុបិន្ត</span>'],
+lead:["One place to learn, meet trusted mentors and apply for internships.","វេទិកាតែមួយសម្រាប់រៀន ជួបអ្នកណែនាំ និងដាក់ពាក្យចូលកម្មសិក្សា។"],
+a1:["There are free courses and paid courses via Bakong KHQR.","មានវគ្គឥតគិតថ្លៃ និងវគ្គបង់ប្រាក់តាម Bakong KHQR។"],a2:["Apply and wait for administrator approval.","ដាក់ពាក្យ ហើយរង់ចាំអ្នកគ្រប់គ្រងអនុម័ត។"],
+a3:["No. The platform supports learning and recruitment, but it cannot guarantee employment.","មិនមានការធានាទេ។ វេទិកានេះគាំទ្រការរៀន និងដំណើរការជ្រើសរើសប៉ុណ្ណោះ។"]};
+const KM={"Home":"ទំព័រដើម","Courses":"វគ្គសិក្សា","Exchange":"ប្តូរជំនាញ","Mentors":"អ្នកណែនាំ","Live":"Live","Career":"អាជីព","Jobs":"ការងារ","Internships":"កម្មសិក្សា","Forum":"ហ្វូរ៉ុម","Messages":"សារ","Notifications":"ការជូនដំណឹង","My profile":"ប្រវត្តិរូបខ្ញុំ","Profile":"ប្រវត្តិរូប","Settings":"ការកំណត់","Dashboard":"ផ្ទាំងគ្រប់គ្រង","Admin panel":"ផ្ទាំងអ្នកគ្រប់គ្រង","Account":"គណនី",
+"Sign in":"ចូលគណនី","Sign out":"ចាកចេញ","Create account":"បង្កើតគណនី","Search":"ស្វែងរក","Start learning":"ចាប់ផ្តើមរៀន","Explore":"ស្វែងយល់បន្ថែម","Free":"ឥតគិតថ្លៃ","Paid":"បង់ប្រាក់","All":"ទាំងអស់","Enroll":"ចូលរៀន","Pay now":"បង់ប្រាក់","Continue":"បន្តរៀន","Preview":"មើលសង្ខេប","Apply":"ដាក់ពាក្យ","Register":"ចុះឈ្មោះ","Cancel":"បោះបង់","Send request":"ផ្ញើសំណើ","Save":"រក្សាទុក","Close":"បិទ","Delete":"លុប","Back":"ត្រឡប់","Submit":"ដាក់ស្នើ","Add":"បន្ថែម","Open":"បើក","Post":"ផុស","Request session":"ស្នើសុំម៉ោង","Join":"ចូលរួម","Full":"ពេញ","Details":"ព័ត៌មានលម្អិត","Beginner":"ចាប់ផ្តើម","Intermediate":"មធ្យម","Advanced":"ខ្ពស់",
+"pending":"រង់ចាំ","active":"កំពុងដំណើរការ","completed":"បានបញ្ចប់","rejected":"បានបដិសេធ","cancelled":"បានលុបចោល","accepted":"បានទទួលយក","reviewed":"បានពិនិត្យ","shortlisted":"ក្នុងបញ្ជីខ្លី","approved":"បានអនុម័ត","open":"បើកទទួល","closed":"បានបិទ","filled":"ពេញ","scheduled":"បានកំណត់ពេល","ongoing":"កំពុងរៀន","paid":"បានបង់","expired":"ផុតកំណត់","suspended":"ផ្អាក",
+"Learn • Connect • Grow":"រៀន • ភ្ជាប់ • រីកចម្រើន","What do you want to learn?":"តើអ្នកចង់រៀនអ្វី?","Your learning journey":"ដំណើរសិក្សារបស់អ្នក","5 steps from beginner to job-ready":"៥ជំហានពីអ្នកចាប់ផ្តើម ដល់ការងារ",
+"Pay with Bakong KHQR or enroll for free":"បង់ប្រាក់ដោយ Bakong KHQR ឬចូលរៀនឥតគិតថ្លៃ","Search courses...":"ស្វែងរកវគ្គសិក្សា...","Skill exchange with peers":"ប្តូរជំនាញជាមួយមិត្តភក្តិ","Matched by skills you can teach and want to learn":"ផ្គូផ្គងតាមជំនាញដែលអ្នកអាចបង្រៀន និងចង់រៀន",
+"Verified mentors":"អ្នកណែនាំដែលបានផ្ទៀងផ្ទាត់","Send a request, wait for approval, then get the Jitsi link":"ផ្ញើសំណើ រង់ចាំការយល់ព្រម បន្ទាប់មកទទួលតំណ Jitsi","Search mentors...":"ស្វែងរកអ្នកណែនាំ...","Become a mentor":"ក្លាយជាអ្នកណែនាំ",
+"Live learning sessions":"វគ្គសិក្សាផ្ទាល់ (Live)","Register to join online":"ចុះឈ្មោះចូលរួមតាមអនឡាញ","Career roadmap & self-assessment":"ផែនទីអាជីព និងការវាយតម្លៃ","Tick each step to see your progress":"ធីកជំហាននីមួយៗ ដើម្បីមើលវឌ្ឍនភាព",
+"Apply with a PDF CV and track the status":"ដាក់ពាក្យជាមួយ CV (PDF) និងតាមដានស្ថានភាព","Search internships...":"ស្វែងរកកម្មសិក្សា...","Community forum":"ហ្វូរ៉ុមសហគមន៍","Ask, answer and share knowledge":"សួរ ឆ្លើយ និងចែករំលែកចំណេះដឹង","Search questions...":"ស្វែងរកសំណួរ...","Ask a question":"សួរសំណួរ",
+"Community hub":"មជ្ឈមណ្ឌលសហគមន៍","Messages, notifications and platform reports":"សារ ការជូនដំណឹង និងរបាយការណ៍វេទិកា","Is it free?":"តើវាឥតគិតថ្លៃទេ?","Can I become a mentor?":"តើខ្ញុំអាចក្លាយជាអ្នកណែនាំបានទេ?","Does it guarantee a job?":"តើមានការធានាការងារទេ?",
+"Ready to start your journey?":"ត្រៀមខ្លួនចាប់ផ្តើមដំណើរហើយឬនៅ?","Reset demo":"កំណត់ទិន្នន័យសាកល្បងឡើងវិញ","Profile":"ប្រវត្តិរូប","Create":"បង្កើត","Learners":"អ្នកសិក្សា","Open internships":"កម្មសិក្សាកំពុងបើក","Welcome":"សូមស្វាគមន៍","Locked lesson":"មេរៀនជាប់សោ","Free preview":"មើលសាកល្បងឥតគិតថ្លៃ","Host a session":"រៀបចំវគ្គ Live","Register":"ចុះឈ្មោះ","Join room":"ចូលបន្ទប់","Mark all read":"សម្គាល់ថាអានហើយ","Student":"និស្សិត","Mentor":"អ្នកណែនាំ","Recruiter":"អ្នកជ្រើសរើស","Email":"អ៊ីមែល","Password":"ពាក្យសម្ងាត់","Full name":"ឈ្មោះពេញ","My bookings":"ការកក់របស់ខ្ញុំ","My applications":"ពាក្យសុំរបស់ខ្ញុំ","Requests to me":"សំណើមកខ្ញុំ","My skill requests":"សំណើប្តូរជំនាញរបស់ខ្ញុំ","Post internship":"ផុសកម្មសិក្សា","Company profile":"ព័ត៌មានក្រុមហ៊ុន","Take the assessment":"ធ្វើការវាយតម្លៃ"};
+const t=s=>X[s]?X[s][lang==="km"?1:0]:(lang==="km"&&KM[s])||s;
+const fmt=ms=>{try{return new Date(ms).toLocaleString(lang==="km"?"km-KH":"en-GB",{dateStyle:"medium",timeStyle:"short"})}catch{return new Date(ms).toLocaleString()}};
+const cd=ms=>{const d=ms-Date.now();if(d<=0)return t("Started");const m=Math.ceil(d/MIN);return m<60?`${m} min`:m<1440?`${Math.floor(m/60)}h ${m%60}m`:`${Math.floor(m/1440)}d ${Math.floor(m%1440/60)}h`};
+const stars=n=>"★".repeat(Math.round(n))+"☆".repeat(5-Math.round(n));
+const badge=(s,c)=>`<span class="badge b-${c||s}">${esc(t(s))}</span>`;
+const has=(a,x)=>a.some(y=>y.toLowerCase()===String(x).toLowerCase());
+const dark=()=>document.documentElement.dataset.theme==="dark";
+/* =============== static data =============== */
+const COURSES=[
+{id:1,title:"Web Development",cat:"Technology",level:"Beginner",price:15,icon:"💻",by:"Muy Kalin",g:"linear-gradient(135deg,#8fa9ff,#3B6BFF 55%,#1b2f8f)",topics:["How the web works","HTML structure","CSS layouts","JavaScript basics","DOM & events","Build a project","Deploy online","Portfolio review"]},
+{id:2,title:"UX/UI Design",cat:"Design",level:"Beginner",price:0,icon:"🎨",by:"Sophea Chan",g:"linear-gradient(135deg,#ffd35c,#F5B301 55%,#c2570c)",topics:["Design thinking","User research","Wireframes","Visual design","Prototype in Figma","Usability testing"]},
+{id:3,title:"Data Analysis",cat:"Technology",level:"Intermediate",price:20,icon:"📊",by:"Dara Sok",g:"linear-gradient(135deg,#7ff0df,#14B8A6 55%,#0b5f58)",topics:["Data basics","Spreadsheets","SQL queries","Cleaning data","Charts","Storytelling","Case study"]},
+{id:4,title:"Digital Marketing",cat:"Business",level:"Beginner",price:0,icon:"📣",by:"Sophea Chan",g:"linear-gradient(135deg,#f9a8d4,#ec4899 55%,#9d174d)",topics:["Marketing basics","Social media","Content plan","Ads basics","Measure results"]},
+{id:5,title:"Python Programming",cat:"Technology",level:"Intermediate",price:18,icon:"🐍",by:"Dara Sok",g:"linear-gradient(135deg,#86efac,#22c55e 55%,#166534)",topics:["Setup","Variables & types","Control flow","Functions","Files","Libraries","Mini project","Testing"]},
+{id:6,title:"Interview Skills",cat:"Career",level:"Advanced",price:0,icon:"🎤",by:"Muy Kalin",g:"linear-gradient(135deg,#c4b5fd,#8b5cf6 55%,#5b21b6)",topics:["CV that works","Common questions","Behavioral answers","Mock interview","Salary talk"]}];
+const lessonsOf=c=>c.topics.map((x,i)=>({id:i+1,title:x,min:6+(i*4)%11,preview:i<2}));
+const PATHS=[
+{id:"web",title:"Web Developer",keys:["html","css","javascript","react","web","frontend","developer"],steps:["Learn HTML & CSS","Learn JavaScript","Build 3 portfolio projects","Learn React","Practice interviews","Apply for internships"],res:["MDN Web Docs","Course: Web Development"]},
+{id:"design",title:"UX/UI Designer",keys:["design","ui","ux","figma","photoshop"],steps:["Learn design basics","Practice in Figma","Build a case study","Get feedback from a mentor","Create a portfolio site","Apply for internships"],res:["Course: UX/UI Design","Figma Community"]},
+{id:"data",title:"Data Analyst",keys:["data","python","sql","excel","analysis"],steps:["Learn spreadsheets","Learn SQL","Learn Python","Build a dashboard","Write a data story","Apply for internships"],res:["Course: Data Analysis","Kaggle datasets"]}];
+const ARTICLES=[{id:1,title:"How to write a CV with no experience",min:4,body:"Lead with projects, not job titles. Put 2-3 real projects at the top, each with what you built, which tools you used and the result. Keep it to one page, save it as a PDF and name the file clearly."},
+{id:2,title:"Preparing for your first internship interview",min:5,body:"Practice a 60-second introduction, prepare two stories about teamwork and problem solving, and read the company website. Ask at least two questions at the end. Send a short thank-you message afterwards."},
+{id:3,title:"Building a portfolio that gets noticed",min:6,body:"Choose quality over quantity. Three finished projects with a clear description, a live link and the source code are better than ten unfinished ones. Write down what you learned and what you would improve."}];
+const QUIZ=[["Technical","I can build a small working project from scratch."],["Technical","I understand the core tools used in my chosen field."],["Problem solving","I can break a big problem into smaller steps."],["Problem solving","I search, read documentation and fix errors on my own."],["Projects","I have finished projects that I can show to others."],["Projects","My work is published online with a clear description."],["Readiness","I have an up-to-date CV and know how to apply."],["Readiness","I can explain my skills confidently in an interview."]];
+const TIPS={"Technical":"Practice daily with a small project and follow one course to the end.","Problem solving":"Solve one small challenge each day and explain your solution aloud.","Projects":"Finish and publish one project this month, then write about it.","Readiness":"Update your CV, practice a 60-second introduction and book a mentor session."};
+const CATS=["Programming","Design","Career","Internship"];
+const SKILLS=["HTML","CSS","JavaScript","React","Python","SQL","UI Design","Figma","Photoshop","English","Excel","Node.js"];
+/* =============== state =============== */
+function seed(){const n=Date.now();
+const mk=(id,name,role,o={})=>({id,name,email:id+"@demo.kh",role,bio:"",profession:"",location:"Phnom Penh",goal:"",avail:"Weekends",teach:[],want:[],edu:[],exp:[],cert:[],proj:[],avatar:"",active:true,verified:true,created:n-30*DAY,prefs:{email:true,matches:true,cats:{}},career:{pathId:null,done:{}},attempts:[],...o});
+const users=[mk("u1","Dara Student","student",{bio:"Final-year IT student.",profession:"Student",goal:"Frontend developer",teach:["HTML","English"],want:["JavaScript","UI Design","Python"]}),
+mk("m1","Muy Kalin","mentor",{profession:"Full-Stack Developer",bio:"10 years building web apps.",teach:["React","Node.js","JavaScript"],want:["Figma"],rb:[4.9,24]}),
+mk("m2","Sophea Chan","mentor",{profession:"UX/UI Designer",bio:"Design systems and user research.",teach:["Figma","UI Design"],want:["Python"],rb:[4.8,17]}),
+mk("m3","Dara Sok","mentor",{profession:"Data Analyst",bio:"Data storytelling and SQL.",teach:["Python","SQL"],want:["English"],rb:[4.7,12]}),
+mk("r1","Angkor Tech HR","recruiter",{profession:"Recruiter"}),mk("r2","Khmer Studio HR","recruiter",{profession:"Recruiter"}),mk("a1","Platform Admin","admin",{profession:"Administrator"}),
+mk("p1","Vanna","student",{teach:["JavaScript","Photoshop"],want:["English","HTML"],bio:"Loves front-end."}),mk("p2","Rina","student",{teach:["UI Design","English"],want:["JavaScript","HTML"]}),mk("p3","Sokha","student",{teach:["Python","Excel"],want:["English","UI Design"]})];
+const companies=[{id:"c1",ownerId:"r1",name:"Angkor Tech",desc:"Software studio in Phnom Penh.",contact:"hr@angkortech.kh",website:"https://example.com",verified:true},{id:"c2",ownerId:"r2",name:"Khmer Studio",desc:"Creative design agency.",contact:"hello@khmerstudio.kh",website:"https://example.com",verified:false}];
+const jobs=[{id:"j1",cid:"c1",ownerId:"r1",title:"Frontend Intern",type:"Hybrid",loc:"Phnom Penh",openings:2,stipend:"$150/mo",deadline:n+20*DAY,status:"open",desc:"Build user interfaces with React.",req:"HTML, CSS, JavaScript basics",resp:"Build components, fix bugs, join code reviews"},
+{id:"j2",cid:"c2",ownerId:"r2",title:"UX Design Intern",type:"On-site",loc:"Siem Reap",openings:1,stipend:"$120/mo",deadline:n+14*DAY,status:"open",desc:"Support the design team on client projects.",req:"Figma basics, a small portfolio",resp:"Wireframes, prototypes, user tests"},
+{id:"j3",cid:"c1",ownerId:"r1",title:"Data Intern",type:"Remote",loc:"Remote",openings:3,stipend:"$140/mo",deadline:n+30*DAY,status:"open",desc:"Clean and visualise business data.",req:"Excel or SQL, curiosity",resp:"Data cleaning, dashboards, reports"}];
+const sessions=[{id:"s1",title:"React Q&A Night",desc:"Live questions and answers about React.",cat:"Programming",level:"Beginner",hostId:"m1",start:n+8*MIN,dur:60,cap:30,deadline:n+MIN,status:"scheduled",regs:["p1","p2","p3"],att:{},fb:{}},
+{id:"s2",title:"Portfolio Review",desc:"Bring your portfolio and get feedback.",cat:"Design",level:"Intermediate",hostId:"m2",start:n+DAY,dur:90,cap:20,deadline:n+DAY-15*MIN,status:"scheduled",regs:Array.from({length:20},(_,i)=>"x"+i),att:{},fb:{}},
+{id:"s3",title:"SQL for Beginners",desc:"Learn SELECT, WHERE and JOIN in one hour.",cat:"Data",level:"Beginner",hostId:"m3",start:n+3*DAY,dur:60,cap:40,deadline:n+3*DAY-15*MIN,status:"scheduled",regs:["p1"],att:{},fb:{}}];
+const posts=[{id:"f1",uid:"p1",title:"How do I start learning React?",body:"I know basic JavaScript. What should I learn first before React?",cat:"Programming",ts:n-2*DAY,likes:["p2"],closed:false,comments:[],answers:[{id:"a1",uid:"m1",text:"Learn components, props and state first, then build a small to-do app.",likes:["p1","p2"],accepted:false}]},
+{id:"f2",uid:"p2",title:"Tips for my first CV?",body:"I have no work experience yet. What should I put on my CV?",cat:"Career",ts:n-DAY,likes:[],closed:false,comments:[],answers:[]},
+{id:"f3",uid:"p3",title:"Figma or Photoshop for UI?",body:"Which tool is better to start with for interface design?",cat:"Design",ts:n-5*3600e3,likes:["p1"],closed:false,comments:[],answers:[]}];
+const convs=[{id:"c1",type:"direct",name:"",members:["u1","p1"],owner:"u1",unread:{u1:1},msgs:[{uid:"p1",text:"Hi! Want to exchange JavaScript for English?",ts:n-3600e3}]},
+{id:"c2",type:"group",name:"Frontend Study Group",desc:"Weekly study and code reviews",members:["u1","p1","p2","m1"],owner:"p1",unread:{},msgs:[{uid:"m1",text:"Welcome everyone! Share your goals this week.",ts:n-DAY}]}];
+return{v:4,me:null,users,companies,jobs,apps:[],mentorApps:[],bookings:[],exch:[],sessions,posts,convs,notifs:[],audit:[],enroll:{},pays:[]}}
+function load(){try{const j=JSON.parse(localStorage.getItem(KEY));if(j&&j.v===4)return j}catch{}return seed()}
+let S=load();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch{}};
+const me=()=>S.users.find(u=>u.id===S.me)||null;
+const byId=id=>S.users.find(u=>u.id===id);
+const nm=id=>byId(id)?.name||"Member";
+const av=(u,sz=40)=>u&&u.avatar?`<img class="avatar" style="width:${sz}px;height:${sz}px" src="${u.avatar}" alt="">`:`<div class="avatar" style="width:${sz}px;height:${sz}px;font-size:${Math.round(sz*.42)}px">${esc((u?.name||"?")[0].toUpperCase())}</div>`;
+function notify(uid,cat,text){const u=byId(uid);if(!u||u.prefs.cats[cat]===false)return;S.notifs.unshift({id:rid(),uid,cat,text,ts:Date.now(),read:false})}
+const audit=a=>S.audit.unshift({ts:Date.now(),actor:me()?.name||"system",action:a});
+const nUnread=()=>S.me?S.notifs.filter(n=>n.uid===S.me&&!n.read).length:0;
+const mUnread=()=>S.me?S.convs.filter(c=>c.members.includes(S.me)).reduce((a,c)=>a+(c.unread[S.me]||0),0):0;
+const enr=cid=>S.me?S.enroll[S.me+":"+cid]:null;
+const prog=c=>{const e=enr(c.id);return e?Math.round(e.done.length/c.topics.length*100):0};
+const mRating=m=>{const rs=S.bookings.filter(b=>b.mentorId===m.id&&b.review).map(b=>b.review.rating);const[r0,n0]=m.rb||[0,0];const n=n0+rs.length;return{r:n?(r0*n0+rs.reduce((a,b)=>a+b,0))/n:0,n}};
+const mentorsList=()=>S.users.filter(u=>u.role==="mentor"&&u.verified&&u.active);
+const F={cat:"All",lvl:"All",price:"All",q:"",jt:"All",jq:"",fc:"All",fq:"",mq:"",pcid:null};
+/* =============== core UI helpers =============== */
+function toast(m,type=""){const e=document.createElement("div");e.className="toast "+type;e.textContent=t(m);$("#toasts").append(e);setTimeout(()=>e.remove(),2800)}
+const seg=(items,active,act)=>`<div class="seg glass"><i class="thumb"></i>${items.map(v=>`<button class="${v===active?"on":""}" data-act="${act}" data-id="${esc(v)}">${esc(t(v))}</button>`).join("")}</div>`;
+function segs(){$$(".seg").forEach(s=>{const b=$("button.on",s),th=$(".thumb",s);if(b&&th){th.style.left=b.offsetLeft+"px";th.style.width=b.offsetWidth+"px"}})}
+const empty=(ic,msg,btn="")=>`<div class="card glass empty" style="grid-column:1/-1"><div class="big">${ic}</div><p>${esc(t(msg))}</p>${btn}</div>`;
+const skel=n=>Array.from({length:n},()=>'<div class="skel"></div>').join("");
+function needAuth(msg="Please sign in first"){if(S.me)return false;toast(msg,"err");A.auth();return true}
+function needRole(...r){const u=me();if(u&&r.includes(u.role))return false;toast("This action needs a different account type","err");return true}
+let cur=null,payTimer=null;
+function openSheet(builder,size="md"){cur={builder,size};$("#sheet").dataset.size=size;$("#ov").classList.add("open");document.body.classList.add("lock");paintSheet(false)}
+function paintSheet(keep){const b=$("#sheetBody"),y=b.scrollTop,r=cur.builder();$("#sheetTitle").textContent=t(r.title);b.innerHTML=r.html;if(keep)b.scrollTop=y;segs();r.mount&&r.mount()}
+const refresh=()=>{if(cur&&$("#ov").classList.contains("open"))paintSheet(true)};
+function closeSheet(){$("#ov").classList.remove("open");document.body.classList.remove("lock");cur=null;clearInterval(payTimer)}
+const commit=()=>{save();renderAll();refresh()};
+const field=(name,label,o={})=>`<label>${esc(t(label))}${o.area?`<textarea class="field" name="${name}" rows="${o.rows||3}" ${o.req?"required":""} ${o.max?`maxlength="${o.max}"`:""}>${esc(o.v||"")}</textarea>`:`<input class="field" name="${name}" type="${o.type||"text"}" value="${esc(o.v??"")}" ${o.req?"required":""} ${o.min!=null?`min="${o.min}"`:""} ${o.max!=null?`max="${o.max}"`:""} ${o.ph?`placeholder="${esc(o.ph)}"`:""}>`}</label>`;
+const select=(name,label,opts,v="")=>`<label>${esc(t(label))}<select class="field" name="${name}">${opts.map(o=>{const[val,l]=Array.isArray(o)?o:[o,o];return`<option value="${esc(val)}" ${val===v?"selected":""}>${esc(t(l))}</option>`}).join("")}</select></label>`;
+const switchRow=(label,on,ch,id="")=>`<div class="setrow"><span>${esc(t(label))}</span><label class="switch" style="margin:0"><input type="checkbox" data-ch="${ch}" data-id="${id}" ${on?"checked":""}><i></i></label></div>`;
+function localInput(ms){const d=new Date(ms-new Date().getTimezoneOffset()*MIN);return d.toISOString().slice(0,16)}
+/* =============== render: header / hero / stats =============== */
+function renderHeader(){const u=me();
+$("#navAct").innerHTML=`<button class="icon-btn" data-act="pal" aria-label="Search">🔍</button><button class="icon-btn" data-act="notifs" aria-label="Notifications">🔔${nUnread()?`<span class="badge-dot">${nUnread()}</span>`:""}</button><button class="icon-btn" data-act="theme" aria-label="Theme">${dark()?"☀️":"🌙"}</button><button class="icon-btn" data-act="lang" aria-label="Language">${lang==="km"?"EN":"ខ្មែរ"}</button>${u?`<button class="acct" data-act="acct" aria-label="Account">${av(u,40)}</button>`:`<button class="btn btn-primary btn-sm" data-act="auth">${t("Sign in")}</button>`}`;
+const items=[["home","🏠","Home"],["courses","📚","Courses"],["career","🧭","Career"],["jobs","💼","Jobs"]];
+$("#tabbar").innerHTML=items.map(([id,ic,l])=>`<a href="#${id}" data-spy="${id}"><span>${ic}</span>${t(l)}</a>`).join("")+(u?`<a href="#" data-act="msgs"><span>💬</span>${t("Messages")}${mUnread()?`<b class="tb-badge">${mUnread()}</b>`:""}</a>`:`<a href="#" data-act="auth"><span>👤</span>${t("Sign in")}</a>`);
+spyApply()}
+function renderChips(){$("#heroChips").innerHTML=["Web","Design","Python","Data","Interview"].map(x=>`<button class="chip" data-act="chip" data-id="${x}">${x}</button>`).join("")}
+function nextSession(){return S.sessions.filter(s=>s.status!=="cancelled"&&s.status!=="completed"&&s.start+s.dur*MIN>Date.now()).sort((a,b)=>a.start-b.start)[0]}
+function renderStage(){const u=me();const mine=COURSES.filter(c=>enr(c.id));const list=(mine.length?mine:COURSES.slice(0,2)).slice(0,2);
+const rp=u?pathPct(u):0;const s=nextSession();const paid=COURSES.find(c=>c.price);const top=mentorsList().map(m=>({m,r:mRating(m)})).sort((a,b)=>b.r.r-a.r.r)[0];
+$("#stageIn").innerHTML=`<div class="w w-main"><b>${t("My learning")}</b>${mine.length?"":`<small>${t("Sample")}</small>`}${list.map(c=>`<div style="margin-top:14px"><div class="flex" style="justify-content:space-between"><span>${c.icon} ${esc(c.title)}</span><span class="muted">${mine.length?prog(c):[35,12][c.id-1]||10}%</span></div><div class="progress"><i style="width:${mine.length?prog(c):[35,12][c.id-1]||10}%"></i></div></div>`).join("")}</div>
+<div class="w w-ring"><small>${t("Career roadmap")}</small><div class="mini-ring" style="--p:${rp}"><span>${rp}%</span></div></div>
+<div class="w w-next"><small>${t("Next live session")}</small>${s?`<b>${esc(s.title)}</b><div class="muted sm">${esc(nm(s.hostId))} · <span data-cd="${s.start}">${cd(s.start)}</span></div><button class="btn btn-primary btn-sm" style="margin-top:8px" data-act="sOpen" data-id="${s.id}">${t("Details")}</button>`:`<b>—</b>`}</div>
+<div class="w w-pay"><small>Bakong KHQR</small><b>${paid?esc(paid.title):""}</b><div class="flex" style="margin-top:6px"><span class="price">$${paid?paid.price:0}</span><span class="badge b-bakong">KHQR</span></div></div>
+<div class="w w-mentor">${top?`<div class="flex">${av(top.m,44)}<div><b>${esc(top.m.name)} <span style="color:#22c55e">✔</span></b><small>${esc(top.m.profession)}</small><span style="color:var(--gold)">${stars(top.r.r)}</span> <span class="muted sm">${top.r.r.toFixed(1)}</span></div></div>`:""}</div>`}
+function renderBento(){const T=[["big","o1","#courses","Courses","Free, or paid with Bakong KHQR",""],["","o2","#mentors","Mentors","Book verified professionals",""],["","o3","#sessions","Live sessions","Learn together online",""],["wide","o4","#exchange","Skill exchange","Teach one skill, learn another",""],["","o5","#career","Career roadmap","Plan and track your growth",""],["wide","o1","#jobs","Internships","Apply and track your status","dark"]];
+$("#bento").innerHTML=T.map(([c,o,h,ti,d,dk])=>`<a class="tile glass ${c} ${dk}" href="${h}"><i class="orb ${o}"></i><h3>${t(ti)}</h3><p>${t(d)}</p></a>`).join("")}
+function renderStats(){const st=S.users.filter(u=>u.role==="student").length,mn=mentorsList().length,jb=S.jobs.filter(j=>j.status==="open").length;
+$("#stats").innerHTML=[[st,"Learners"],[COURSES.length,"Courses"],[mn,"Mentors"],[jb,"Open internships"]].map(([n,l])=>`<div><b data-count="${n}">${n}</b><span class="muted">${t(l)}</span></div>`).join("")}
+function renderJourney(){$("#journeyGrid").innerHTML=[["👤","Profile","Create account"],["📚","Learn","Courses"],["🤝","Collaborate","Skill exchange"],["🧭","Career","Roadmap"],["💼","Apply","Internships"]].map(([i,a,b])=>`<div class="card glass step"><div class="ico">${i}</div><b>${t(a)}</b><br><small class="muted">${t(b)}</small></div>`).join("")}
+/* =============== render: courses =============== */
+function courseCard(c){const e=enr(c.id);return`<div class="card glass tilt"><div class="thumb-img" style="background:${c.g}">${c.icon}</div><div class="flex">${badge(c.level,"level")}<span class="muted sm">${c.topics.length} lessons</span></div><h3>${esc(c.title)}</h3><div class="muted">${esc(c.by)} · ${esc(c.cat)}</div>${e?`<div class="progress"><i style="width:${prog(c)}%"></i></div>`:""}
+<div class="row"><span>${c.price?`<span class="price">$${c.price}</span> <span class="badge b-bakong">Bakong KHQR</span>`:`<span class="badge b-free">${t("Free")}</span>`}</span><span class="flex" style="gap:6px"><button class="btn btn-soft btn-sm" data-act="cOpen" data-id="${c.id}">${t("Preview")}</button>${e?`<button class="btn btn-primary btn-sm" data-act="cOpen" data-id="${c.id}">${t("Continue")}</button>`:`<button class="btn btn-primary btn-sm" data-act="${c.price?"pay":"enroll"}" data-id="${c.id}">${c.price?t("Pay now"):t("Enroll")}</button>`}</span></div></div>`}
+function renderCourses(){const cats=["All",...new Set(COURSES.map(c=>c.cat))];
+$("#courseFilters").innerHTML=seg(cats,F.cat,"fCat")+seg(["All","Beginner","Intermediate","Advanced"],F.lvl,"fLvl")+seg(["All","Free","Paid"],F.price,"fPrice");
+const l=COURSES.filter(c=>(F.cat==="All"||c.cat===F.cat)&&(F.lvl==="All"||c.level===F.lvl)&&(F.price==="All"||(F.price==="Free")===(c.price===0))&&c.title.toLowerCase().includes(F.q.toLowerCase()));
+$("#courseGrid").innerHTML=l.length?l.map(courseCard).join(""):empty("🔍","No courses found",`<button class="btn btn-soft btn-sm" data-act="fClear" style="margin-top:12px">${t("Clear filters")}</button>`)}
+/* =============== render: exchange =============== */
+function matchesFor(u){return S.users.filter(p=>p.id!==u.id&&["student","mentor"].includes(p.role)&&p.verified&&p.active).map(p=>{const a=u.want.filter(x=>has(p.teach,x)).length,b=u.teach.filter(x=>has(p.want,x)).length;return{p,a,b,score:Math.round(100*((u.want.length?a/u.want.length:0)*.5+(p.want.length?b/p.want.length:0)*.5))}}).sort((x,y)=>y.score-x.score)}
+const skillChips=a=>a.length?a.map(x=>`<span class="badge b-level" style="margin:0 4px 4px 0">${esc(x)}</span>`).join(""):`<span class="muted sm">—</span>`;
+function renderExchange(){const u=me();
+const list=u?matchesFor(u).slice(0,6):S.users.filter(p=>["p1","p2","p3"].includes(p.id)).map(p=>({p,score:null}));
+$("#matchGrid").innerHTML=list.map(({p,score})=>`<div class="card glass tilt"><div class="row" style="margin:0"><div class="flex">${av(p,44)}<b>${esc(p.name)}</b></div>${score!=null?`<span class="badge b-approved">${score}% match</span>`:""}</div><p class="muted" style="margin-top:12px">${t("Teaches")}: ${skillChips(p.teach)}<br>${t("Wants")}: ${skillChips(p.want)}</p><div class="row"><button class="btn btn-ghost btn-sm" data-act="dm" data-id="${p.id}">💬</button><button class="btn btn-primary btn-sm" data-act="exNew" data-id="${p.id}">${t("Send request")}</button></div></div>`).join("");
+if(!u){$("#exchMine").innerHTML=`<p class="muted" style="text-align:center;margin-top:18px">${t("Sign in to see your match score")}</p>`;return}
+const mine=S.exch.filter(e=>e.fromId===u.id||e.toId===u.id).sort((a,b)=>b.ts-a.ts);
+$("#exchMine").innerHTML=`<h3 style="margin:36px 0 14px;font-weight:500">${t("My skill requests")}</h3><div class="grid g2">${mine.length?mine.map(e=>{const o=nm(e.fromId===u.id?e.toId:e.fromId);return`<div class="card glass"><div class="row" style="margin:0"><b>${esc(o)}</b>${badge(e.status)}</div><p class="muted">${e.fromId===u.id?t("You learn"):t("You teach")}: <b>${esc(e.fromId===u.id?e.learn:e.offer)}</b> ⇄ <b>${esc(e.fromId===u.id?e.offer:e.learn)}</b></p>${e.status==="accepted"?`<div class="progress"><i style="width:${e.progress}%"></i></div>`:""}<div class="row"><span></span><button class="btn btn-soft btn-sm" data-act="exOpen" data-id="${e.id}">${t("Details")}</button></div></div>`}).join(""):empty("🤝","No requests yet. Send one from a match above.")}</div>`}
+/* =============== render: mentors =============== */
+function bookingCard(b,asMentor){const u=me(),who=asMentor?nm(b.learnerId):nm(b.mentorId);
+return`<div class="card glass"><div class="row" style="margin:0"><b>${esc(who)}</b>${badge(b.status)}</div><p class="muted">${esc(b.topic)} · ${fmt(b.when)} · ${b.dur} min · ${esc(b.freq)}</p>${b.reason?`<p class="muted sm">${t("Reason")}: ${esc(b.reason)}</p>`:""}<div class="row l">
+${asMentor&&b.status==="pending"?`<button class="btn btn-primary btn-sm" data-act="bApprove" data-id="${b.id}">${t("Approve")}</button><button class="btn btn-red btn-sm" data-act="bRejectForm" data-id="${b.id}">${t("Reject")}</button>`:""}
+${!asMentor&&["pending","active"].includes(b.status)?`<button class="btn btn-soft btn-sm" data-act="bCancel" data-id="${b.id}">${t("Cancel")}</button>`:""}
+${b.status==="active"?`<a class="btn btn-gold btn-sm" target="_blank" rel="noopener" href="${esc(b.link)}">${t("Join meeting")}</a>`:""}
+${asMentor&&b.status==="active"?`<button class="btn btn-soft btn-sm" data-act="bComplete" data-id="${b.id}">${t("Mark completed")}</button>`:""}
+${!asMentor&&b.status==="completed"&&!b.review?`<button class="btn btn-primary btn-sm" data-act="bReviewForm" data-id="${b.id}">${t("Leave a review")}</button>`:""}
+${b.review?`<span class="muted" style="color:var(--gold)">${stars(b.review.rating)}</span><span class="muted sm">${esc(b.review.text)}</span>`:""}</div></div>`}
+function renderMentors(){const q=F.mq.toLowerCase();
+const l=mentorsList().filter(m=>(m.name+m.profession+m.teach.join(" ")).toLowerCase().includes(q));
+$("#mentorGrid").innerHTML=l.length?l.map(m=>{const r=mRating(m);return`<div class="card glass tilt"><div class="flex">${av(m,54)}<div><b>${esc(m.name)} <span style="color:#22c55e" title="Verified">✔</span></b><div class="muted">${esc(m.profession)}</div></div></div><div style="margin:12px 0">${skillChips(m.teach)}</div><div class="muted"><span style="color:var(--gold)">${stars(r.r)}</span> ${r.r.toFixed(1)} (${r.n})</div><div class="row"><span class="muted sm">${t("Approval needed")}</span><button class="btn btn-primary btn-sm" data-act="mReq" data-id="${m.id}">${t("Request session")}</button></div></div>`}).join(""):empty("🧑‍🏫","No mentors found");
+const u=me();if(!u){$("#mentorMine").innerHTML="";return}
+const mine=S.bookings.filter(b=>b.learnerId===u.id).sort((a,b)=>b.ts-a.ts),inc=S.bookings.filter(b=>b.mentorId===u.id).sort((a,b)=>b.ts-a.ts);
+const app=S.mentorApps.find(a=>a.uid===u.id&&a.status==="pending");
+$("#mentorMine").innerHTML=(app?`<div class="card glass" style="margin-top:24px">${badge("pending")} ${t("Your mentor application is waiting for administrator review.")}</div>`:"")+(u.role==="mentor"?`<h3 style="margin:36px 0 14px;font-weight:500">${t("Requests to me")}</h3><div class="grid g2">${inc.length?inc.map(b=>bookingCard(b,true)).join(""):empty("📭","No requests yet")}</div>`:"")+`<h3 style="margin:36px 0 14px;font-weight:500">${t("My bookings")}</h3><div class="grid g2">${mine.length?mine.map(b=>bookingCard(b,false)).join(""):empty("📅","No bookings yet. Request a session from a mentor above.")}</div>`}
+/* =============== render: sessions =============== */
+const sess=id=>S.sessions.find(s=>s.id===id);
+const regOpen=s=>s.status==="scheduled"&&Date.now()<Math.min(s.deadline,s.start);
+const winOpen=s=>{const n=Date.now();return n>=s.start-30*MIN&&n<=s.start+(s.dur+120)*MIN&&!["completed","cancelled"].includes(s.status)};
+function renderSessions(){const u=me();$("#hostBtn").innerHTML=u&&["mentor","admin"].includes(u.role)?`<button class="btn btn-primary" data-act="sNew">＋ ${t("Host a session")}</button>`:"";
+const l=S.sessions.slice().sort((a,b)=>a.start-b.start);
+$("#sessionGrid").innerHTML=l.map(s=>{const on=u&&s.regs.includes(u.id),host=u&&s.hostId===u.id,full=s.regs.length>=s.cap&&!on;
+let btn;if(host||on){btn=winOpen(s)?`<button class="btn btn-gold btn-sm" data-act="sJoin" data-id="${s.id}">${t("Join room")}</button>`:`<button class="btn btn-soft btn-sm" data-act="sReg" data-id="${s.id}" ${host?"disabled":""}>${t("Cancel")}</button>`}else btn=full?`<button class="btn btn-soft btn-sm" disabled>${t("Full")}</button>`:regOpen(s)?`<button class="btn btn-primary btn-sm" data-act="sReg" data-id="${s.id}">${t("Register")}</button>`:`<button class="btn btn-soft btn-sm" disabled>${t("Closed")}</button>`;
+return`<div class="card glass tilt">${badge(s.status)} ${winOpen(s)?`<span class="badge b-open">${t("Room open")}</span>`:""}<h3>${esc(s.title)}</h3><div class="muted">${esc(nm(s.hostId))} · ${esc(s.cat)} · ${esc(s.level)}<br>🕒 ${fmt(s.start)} · ${s.dur} min<br>⏳ <span data-cd="${s.start}">${cd(s.start)}</span></div><div class="progress"><i style="width:${Math.min(100,s.regs.length/s.cap*100)}%"></i></div><div class="muted sm">${s.regs.length}/${s.cap}</div><div class="row"><button class="btn btn-ghost btn-sm" data-act="sOpen" data-id="${s.id}">${t("Details")}</button>${btn}</div></div>`}).join("")}
+/* =============== render: career =============== */
+const pathOf=id=>PATHS.find(p=>p.id===id);
+function pathPct(u){const p=pathOf(u.career.pathId);if(!p)return 0;const d=u.career.done[p.id]||{};return Math.round(p.steps.filter((_,i)=>d[i]).length/p.steps.length*100)}
+function recommend(u){const txt=((u?.want||[]).concat(u?.teach||[],[u?.goal||"",u?.profession||""])).join(" ").toLowerCase();return PATHS.map(p=>({p,s:p.keys.filter(k=>txt.includes(k)).length})).sort((a,b)=>b.s-a.s)[0]}
+function radarSVG(vals,labels){const c=120,R=88,n=labels.length;const pt=(i,r)=>{const a=-Math.PI/2+i*2*Math.PI/n;return[(c+r*Math.cos(a)).toFixed(1),(c+r*Math.sin(a)).toFixed(1)]};let g="";
+[.25,.5,.75,1].forEach(k=>g+=`<polygon fill="none" stroke="currentColor" stroke-opacity=".15" points="${labels.map((_,i)=>pt(i,R*k).join(",")).join(" ")}"/>`);
+labels.forEach((l,i)=>{const e=pt(i,R),p=pt(i,R+14);g+=`<line x1="${c}" y1="${c}" x2="${e[0]}" y2="${e[1]}" stroke="currentColor" stroke-opacity=".15"/><text x="${p[0]}" y="${p[1]}" font-size="9" text-anchor="middle" fill="currentColor">${esc(l)}</text>`});
+g+=`<polygon fill="rgba(59,107,255,.28)" stroke="#3B6BFF" stroke-width="2" points="${vals.map((v,i)=>pt(i,R*v/100).join(",")).join(" ")}"/>`;return`<svg viewBox="0 0 240 240" style="width:100%;max-width:300px;display:block;margin:auto">${g}</svg>`}
+function renderCareer(){const u=me();const rec=recommend(u);const sel=pathOf(u?.career.pathId)||(rec&&rec.s?rec.p:PATHS[0]);const done=(u&&u.career.done[sel.id])||{};const pct=Math.round(sel.steps.filter((_,i)=>done[i]).length/sel.steps.length*100);
+const last=u&&u.attempts[0];const labels=["Technical","Problem solving","Projects","Readiness"];
+$("#careerBody").innerHTML=`<div class="bar-filters">${seg(PATHS.map(p=>p.title),sel.title,"pPick")}</div><div class="grid g2"><div class="card glass"><div class="ring" style="--p:${pct}"><span>${pct}%</span></div><h3 style="text-align:center;margin-bottom:6px">${esc(t(sel.title))}</h3>${rec&&rec.s&&rec.p.id===sel.id?`<p class="muted" style="text-align:center">⭐ ${t("Recommended for your profile")}</p>`:""}<ul class="timeline" style="margin-top:14px">${sel.steps.map((s,i)=>`<li class="${done[i]?"done":""}"><label><input type="checkbox" data-ch="step" data-id="${sel.id}:${i}" ${done[i]?"checked":""}> ${esc(t(s))}</label></li>`).join("")}</ul><p class="muted sm">${t("Resources")}: ${sel.res.map(esc).join(" · ")}</p></div>
+<div class="card glass"><h3>${t("Career-readiness self-assessment")}</h3>${last?radarSVG(labels.map(l=>last.scores[l]),labels):`<div class="empty"><div class="big">🧭</div><p>${t("No attempts yet")}</p></div>`}<div class="row"><button class="btn btn-primary" data-act="quiz">${t("Take the assessment")}</button>${u&&u.attempts.length?`<span class="muted sm">${u.attempts.length} ${t("attempts")}</span>`:""}</div>${u&&u.attempts.length>1?`<div style="margin-top:10px">${u.attempts.slice(0,4).map(a=>`<div class="li muted sm">${fmt(a.ts)} — ${t("Average")} ${a.avg}%</div>`).join("")}</div>`:""}</div></div>
+<h3 style="margin:36px 0 14px;font-weight:500">${t("Career articles")}</h3><div class="grid g3">${ARTICLES.map(a=>`<div class="card glass tilt"><span class="badge b-level">${a.min} min</span><h3>${esc(a.title)}</h3><div class="row"><span></span><button class="btn btn-soft btn-sm" data-act="art" data-id="${a.id}">${t("Read")}</button></div></div>`).join("")}</div>`}
+/* =============== render: jobs =============== */
+const comp=id=>S.companies.find(c=>c.id===id);
+const appStages=["pending","reviewed","shortlisted","approved"];
+function jobCard(j){const u=me(),c=comp(j.cid),applied=u&&S.apps.find(a=>a.jobId===j.id&&a.uid===u.id);
+return`<div class="card glass tilt"><div class="flex">${badge(j.type,"level")}${badge(j.status)}</div><h3>${esc(j.title)}</h3><div class="muted">${esc(c?.name||"")} ${c?.verified?"✔":""} · ${esc(j.loc)}<br>💰 ${esc(j.stipend||"—")} · ${t("Deadline")}: ${new Date(j.deadline).toLocaleDateString()} · ${j.openings} ${t("openings")}</div><div class="row"><button class="btn btn-ghost btn-sm" data-act="jOpen" data-id="${j.id}">${t("Details")}</button>${applied?`<button class="btn btn-soft btn-sm" disabled>${t("Applied")} ✔</button>`:`<button class="btn btn-primary btn-sm" data-act="apply" data-id="${j.id}" ${j.status!=="open"?"disabled":""}>${t("Apply")}</button>`}</div></div>`}
+function appCard(a){const j=S.jobs.find(x=>x.id===a.jobId),c=comp(j?.cid);const idx=appStages.indexOf(a.status);
+return`<div class="card glass"><div class="row" style="margin:0"><b>${esc(j?.title)}</b>${badge(a.status)}</div><div class="muted">${esc(c?.name||"")} · CV: ${esc(a.cv)}</div><div class="tracker">${appStages.map((s,k)=>`<i class="${a.status==="rejected"?"bad":k<=idx?"on":""}"></i>`).join("")}</div><div class="tl">${appStages.map(s=>`<span>${t(s)}</span>`).join("")}</div></div>`}
+function renderJobs(){$("#jobFilters").innerHTML=seg(["All","Remote","Hybrid","On-site"],F.jt,"jType");
+const l=S.jobs.filter(j=>(F.jt==="All"||j.type===F.jt)&&(j.title+(comp(j.cid)?.name||"")).toLowerCase().includes(F.jq.toLowerCase())&&(j.status==="open"||(me()&&(j.ownerId===me().id||me().role==="admin"))));
+$("#jobGrid").innerHTML=l.length?l.map(jobCard).join(""):empty("💼","No internships found");
+const u=me();if(!u){$("#jobMine").innerHTML="";return}
+let h="";
+if(u.role==="student"){const m=S.apps.filter(a=>a.uid===u.id);h=`<h3 style="margin:36px 0 14px;font-weight:500">${t("My applications")}</h3><div class="grid g2">${m.length?m.map(appCard).join(""):empty("📄","No applications yet.")}</div>`}
+if(u.role==="recruiter"||u.role==="admin"){const co=S.companies.find(c=>c.ownerId===u.id),mine=S.jobs.filter(j=>j.ownerId===u.id||u.role==="admin");
+h=`<div class="row l" style="margin-top:36px;gap:12px"><h3 style="font-weight:500;margin-right:auto">${t("Recruiter workspace")}</h3><button class="btn btn-soft" data-act="coForm">${t("Company profile")}${co?" ✔":""}</button><button class="btn btn-primary" data-act="jNew">＋ ${t("Post internship")}</button></div><div class="grid g2" style="margin-top:14px">${mine.length?mine.map(j=>`<div class="card glass"><div class="row" style="margin:0"><b>${esc(j.title)}</b>${badge(j.status)}</div><p class="muted">${S.apps.filter(a=>a.jobId===j.id).length} ${t("applicants")}</p><div class="row"><select class="field" style="width:auto;margin:0" data-ch="jStatus" data-id="${j.id}">${["open","closed","filled"].map(s=>`<option value="${s}" ${j.status===s?"selected":""}>${t(s)}</option>`).join("")}</select><button class="btn btn-primary btn-sm" data-act="jManage" data-id="${j.id}">${t("Candidates")}</button></div></div>`).join(""):empty("📝","No listings yet.")}</div>`}
+$("#jobMine").innerHTML=h}
+/* =============== render: forum =============== */
+function renderForum(){$("#forumFilters").innerHTML=seg(["All",...CATS],F.fc,"fcat");
+const l=S.posts.filter(p=>(F.fc==="All"||p.cat===F.fc)&&(p.title+p.body).toLowerCase().includes(F.fq.toLowerCase())).sort((a,b)=>b.ts-a.ts);
+$("#postList").innerHTML=l.length?l.map(p=>`<div class="card glass"><div class="flex">${badge(p.cat,"level")}${p.closed?badge("closed"):""}${p.answers.some(a=>a.accepted)?`<span class="badge b-approved">✔ ${t("Answered")}</span>`:""}</div><h3>${esc(p.title)}</h3><p class="muted">${esc(p.body.slice(0,140))}</p><div class="row"><span class="muted sm">${esc(nm(p.uid))} · 💬 ${p.answers.length} · 👍 ${p.likes.length}</span><button class="btn btn-soft btn-sm" data-act="fOpen" data-id="${p.id}">${t("Open")}</button></div></div>`).join(""):empty("💬","No questions found")}
+/* =============== render: hub =============== */
+function renderHub(){const u=me(),ns=u?S.notifs.filter(n=>n.uid===u.id).slice(0,3):[];
+const roles={Students:S.users.filter(x=>x.role==="student").length,Mentors:S.users.filter(x=>x.role==="mentor").length,Recruiters:S.users.filter(x=>x.role==="recruiter").length,Applications:S.apps.length};const mx=Math.max(...Object.values(roles),1);
+$("#hub").innerHTML=`<div class="card glass"><h3>💬 ${t("Messages")}</h3><p class="muted">${u?`${mUnread()} ${t("unread")}`:t("Sign in to chat")}</p><div class="row"><span></span><button class="btn btn-primary btn-sm" data-act="msgs">${t("Open")}</button></div></div>
+<div class="card glass"><h3>🔔 ${t("Notifications")}</h3>${ns.length?ns.map(n=>`<div class="li sm">${n.read?"":"● "}${esc(n.text)}</div>`).join(""):`<p class="muted">${t("Nothing new")}</p>`}<div class="row"><span></span><button class="btn btn-primary btn-sm" data-act="notifs">${t("Open")}</button></div></div>
+<div class="card glass"><h3>📊 ${t("Platform snapshot")}</h3><div class="bars">${Object.entries(roles).map(([k,v],i)=>`<div class="b"><span style="width:96px">${t(k)}</span><i style="width:${Math.max(v/mx*60,6)}%;background:${["#3B6BFF","#F5B301","#14B8A6","#8b5cf6"][i]}"></i><b>${v}</b></div>`).join("")}</div>${u&&u.role==="admin"?`<div class="row"><span></span><button class="btn btn-primary btn-sm" data-act="admin">${t("Admin panel")}</button></div>`:""}</div>`}
+let loading=true;
+function renderAll(){renderHeader();renderChips();renderStage();renderBento();renderStats();renderJourney();
+if(loading){["#courseGrid","#matchGrid","#mentorGrid","#sessionGrid","#jobGrid"].forEach(s=>$(s).innerHTML=skel(3));applyStatic();segs();return}
+renderCourses();renderExchange();renderMentors();renderSessions();renderCareer();renderJobs();renderForum();renderHub();applyStatic();segs();bindTilt()}
+function applyStatic(){document.documentElement.lang=lang;$$("[data-t]").forEach(e=>e.innerHTML=t(e.dataset.t));$$("[data-tp]").forEach(e=>e.placeholder=t(e.dataset.tp))}
+/* =============== actions =============== */
+const A={},FM={},CH={},IN={};
+A.close=()=>closeSheet();
+A.theme=()=>{setTheme(!dark());renderHeader()};
+A.lang=()=>{lang=lang==="km"?"en":"km";localStorage.setItem("lang",lang);renderAll();refresh()};
+A.reset=()=>{if(confirm("Reset all demo data?")){localStorage.removeItem(KEY);S=seed();closeSheet();loading=false;renderAll();toast("Demo data reset","ok")}};
+A.chip=id=>{F.q=id==="Web"?"Web":id;$("#courseQ").value=F.q;renderCourses();location.hash="#courses"};
+A.fCat=id=>{F.cat=id;renderCourses();segs()};A.fLvl=id=>{F.lvl=id;renderCourses();segs()};A.fPrice=id=>{F.price=id;renderCourses();segs()};
+A.fClear=()=>{F.cat=F.lvl=F.price="All";F.q="";$("#courseQ").value="";renderCourses();segs()};
+A.jType=id=>{F.jt=id;renderJobs();segs()};A.fcat=id=>{F.fc=id;renderForum();segs()};
+IN.cq=el=>{F.q=el.value;renderCourses();segs();bindTilt()};IN.mq=el=>{F.mq=el.value;renderMentors()};IN.jq=el=>{F.jq=el.value;renderJobs()};IN.fq=el=>{F.fq=el.value;renderForum()};
+FM.heroSearch=fd=>{F.q=(fd.get("q")||"").trim();$("#courseQ").value=F.q;renderCourses();segs();location.hash="#courses"};
+/* ---- auth ---- */
+function loginAs(u){S.me=u.id;if(!S.notifs.some(n=>n.uid===u.id)&&u.id==="u1")notify(u.id,"system","Welcome to Smart Community!");save();closeSheet();renderAll();toast(`${t("Welcome")}, ${u.name}`,"ok")}
+A.auth=(tab)=>openSheet(()=>({title:tab==="reg"?"Create account":"Sign in",html:authHTML(tab==="reg")}),"sm");
+A.authTab=id=>openSheet(()=>({title:id==="reg"?"Create account":"Sign in",html:authHTML(id==="reg")}),"sm");
+function authHTML(reg){return`<div style="text-align:center;margin-bottom:12px">${seg(["Sign in","Create account"],reg?"Create account":"Sign in","authSeg")}</div>`+(reg?`<form data-form="reg">${field("name","Full name",{req:1})}${field("email","Email",{type:"email",req:1})}${field("password","Password",{type:"password",req:1,ph:"8+ characters"})}${field("confirm","Confirm password",{type:"password",req:1})}${select("role","I am a",[["student","Student"],["mentor","Mentor"],["recruiter","Recruiter"]])}<div id="mentorExtra" hidden>${field("expertise","Your expertise (for mentor review)")}</div><button class="btn btn-primary" style="width:100%;margin-top:18px">${t("Create account")}</button><p class="muted sm" style="margin-top:8px">${t("Mentor accounts start as student accounts until an administrator approves them.")}</p></form>`:`<form data-form="login">${field("email","Email",{type:"email",req:1})}${field("password","Password",{type:"password",req:1})}<button class="btn btn-primary" style="width:100%;margin-top:18px">${t("Sign in")}</button><p style="text-align:center;margin-top:8px"><a href="#" data-act="forgot" class="muted sm">${t("Forgot password?")}</a></p></form><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><p class="muted sm" style="text-align:center">${t("Quick demo accounts")}</p><div class="row l" style="justify-content:center;gap:8px">${[["u1","Student"],["m1","Mentor"],["r1","Recruiter"],["a1","Admin"]].map(([id,l])=>`<button class="btn btn-soft btn-sm" data-act="demo" data-id="${id}">${t(l)}</button>`).join("")}</div>`)}
+A.authSeg=id=>A.authTab(id==="Create account"?"reg":"login");
+A.demo=id=>loginAs(byId(id));
+CH.regRole=el=>{$("#mentorExtra").hidden=el.value!=="mentor"};
+document.addEventListener("change",e=>{if(e.target.name==="role"&&e.target.closest("[data-form=reg]"))CH.regRole(e.target)});
+FM.login=fd=>{const e=fd.get("email").trim().toLowerCase(),p=fd.get("password"),u=S.users.find(x=>x.email===e);
+if(!u||(u.pw&&u.pw!==hash(p)))return toast("Wrong email or password","err");
+if(!u.verified)return verifySheet(u.id);if(!u.active)return toast("This account is suspended","err");loginAs(u)};
+FM.reg=fd=>{const name=fd.get("name").trim(),email=fd.get("email").trim().toLowerCase(),pw=fd.get("password"),role=fd.get("role");
+if(name.length<2)return toast("Please enter your name","err");if(!/^\S+@\S+\.\S+$/.test(email))return toast("Enter a valid email","err");
+if(pw.length<8)return toast("Password must have at least 8 characters","err");if(pw!==fd.get("confirm"))return toast("Passwords do not match","err");
+if(S.users.some(u=>u.email===email))return toast("This email is already registered","err");
+const id="u"+rid();S.users.push({id,name,email,pw:hash(pw),role:role==="mentor"?"student":role,bio:"",profession:"",location:"",goal:"",avail:"Weekends",teach:[],want:[],edu:[],exp:[],cert:[],proj:[],avatar:"",active:true,verified:false,created:Date.now(),prefs:{email:true,matches:true,cats:{}},career:{pathId:null,done:{}},attempts:[]});
+if(role==="mentor")S.mentorApps.push({id:rid(),uid:id,expertise:fd.get("expertise")||"",bio:"",avail:"",status:"pending",ts:Date.now()});
+audit("Registered account "+email);save();verifySheet(id)};
+function verifySheet(id){openSheet(()=>({title:"Verify your email",html:`<div class="empty"><div class="big">✉️</div><p>${t("We sent a verification link to")} <b>${esc(byId(id).email)}</b></p><p class="sm">${t("Demo: no real email is sent.")}</p><button class="btn btn-primary" data-act="verify" data-id="${id}">${t("Open verification link")}</button></div>`}),"sm")}
+A.verify=id=>{const u=byId(id);u.verified=true;notify(id,"system","Email verified. Complete your profile to get better matches.");save();loginAs(u)};
+A.forgot=()=>openSheet(()=>({title:"Reset password",html:`<form data-form="forgot">${field("email","Email",{type:"email",req:1})}<button class="btn btn-primary" style="width:100%;margin-top:16px">${t("Send reset link")}</button></form>`}),"sm");
+FM.forgot=()=>{closeSheet();toast("If the email exists, a reset link was sent (demo)","ok")};
+A.logout=()=>{S.me=null;save();closeSheet();renderAll();toast("Signed out")};
+A.acct=()=>openSheet(()=>{const u=me();return{title:"Account",html:`<div class="flex">${av(u,56)}<div><b>${esc(u.name)}</b><div class="muted">${esc(u.email)} · ${badge(u.role,"level")}</div></div></div><div style="margin-top:14px" class="grid">${[["dash","📊","Dashboard"],["prof","👤","My profile"],["msgs","💬","Messages"],["notifs","🔔","Notifications"],["settings","⚙️","Settings"]].concat(u.role==="admin"?[["admin","🛡️","Admin panel"]]:[]).map(([a,i,l])=>`<button class="btn btn-soft" style="justify-content:flex-start" data-act="${a}">${i} ${t(l)}</button>`).join("")}</div><p class="muted sm" style="margin-top:16px">${t("Switch demo account")}</p><div class="row l" style="gap:8px;margin-top:6px">${[["u1","Student"],["m1","Mentor"],["r1","Recruiter"],["a1","Admin"]].map(([id,l])=>`<button class="btn btn-soft btn-sm" data-act="demo" data-id="${id}">${t(l)}</button>`).join("")}</div><button class="btn btn-red" style="width:100%;margin-top:18px" data-act="logout">${t("Sign out")}</button>`}},"sm");
+/* ---- command palette ---- */
+const PAL=[["#home","🏠","Home"],["#courses","📚","Courses"],["#exchange","🤝","Exchange"],["#mentors","🧑‍🏫","Mentors"],["#sessions","🎥","Live"],["#career","🧭","Career"],["#jobs","💼","Internships"],["#forum","💬","Forum"],["#community","🌐","Community hub"]];
+const palList=q=>PAL.filter(p=>t(p[2]).toLowerCase().includes(q.toLowerCase())||p[2].toLowerCase().includes(q.toLowerCase())).map(p=>`<button class="btn btn-soft" style="justify-content:flex-start;width:100%;margin-bottom:6px" data-act="go" data-id="${p[0]}">${p[1]} ${t(p[2])}</button>`).join("")||`<p class="muted">${t("No results")}</p>`;
+A.pal=()=>{openSheet(()=>({title:"Search",html:`<input class="field" id="palIn" data-in="pal" placeholder="${esc(t("Jump to…"))}" autocomplete="off"><div id="palList" style="margin-top:12px">${palList("")}</div>`,mount(){setTimeout(()=>$("#palIn")&&$("#palIn").focus(),30)}}),"sm")};
+IN.pal=el=>{$("#palList").innerHTML=palList(el.value)};A.go=id=>{closeSheet();location.hash=id};
+/* ---- courses / payment ---- */
+let CR={cid:1,lid:1};
+A.cOpen=id=>{CR={cid:+id,lid:1};openSheet(classSheet,"lg")};
+A.lSel=id=>{CR.lid=+id;refresh()};
+function classSheet(){const c=COURSES.find(x=>x.id===CR.cid),ls=lessonsOf(c),e=enr(c.id),l=ls.find(x=>x.id===CR.lid)||ls[0],open=l.preview||e;
+return{title:c.title,html:`<div class="class"><div><div class="player" style="background:${c.g}">${open?`<div class="play">▶</div><b>${esc(l.title)}</b><small>${l.min} min · Video</small>${e?`<button class="btn btn-l btn-sm" style="background:#fff;color:#000;margin:auto" data-act="lDone" data-id="${l.id}">${e.done.includes(l.id)?"✔ "+t("Done"):t("Mark as done")}</button>`:""}`:`<div class="play">🔒</div><b>${t("Locked lesson")}</b><div>${c.price?`<button class="btn btn-primary btn-sm" data-act="pay" data-id="${c.id}">${t("Pay now")} $${c.price}</button>`:`<button class="btn btn-primary btn-sm" data-act="enroll" data-id="${c.id}">${t("Enroll")}</button>`}</div>`}</div>
+<p class="muted" style="margin-top:12px">${esc(c.by)} · ${esc(c.level)} · ${ls.length} ${t("lessons")}</p>${e?`<div class="progress"><i style="width:${prog(c)}%"></i></div><p class="muted sm">${prog(c)}% ${t("complete")} <span>(${t("progress is demo-only")})</span></p>`:`<p class="muted sm">${t("Preview lessons are free. Enroll to unlock everything.")}</p>`}${open?`<div class="li">📄 ${t("Study notes (PDF)")} <span class="muted sm">— ${esc(l.title)}</span></div>`:""}</div>
+<div>${ls.map(x=>`<button class="lesson ${x.id===l.id?"on":""}" data-act="lSel" data-id="${x.id}"><span>${x.preview||e?"▶":"🔒"}</span><span style="flex:1">${x.id}. ${esc(x.title)}</span>${x.preview&&!e?`<span class="badge b-free">${t("Free preview")}</span>`:e&&e.done.includes(x.id)?"✔":`<span class="muted sm">${x.min}m</span>`}</button>`).join("")}</div></div>`}}
+A.lDone=id=>{const e=enr(CR.cid);if(!e)return;const i=e.done.indexOf(+id);i>=0?e.done.splice(i,1):e.done.push(+id);commit()};
+A.enroll=id=>{if(needAuth())return;const c=COURSES.find(x=>x.id===+id);if(enr(c.id))return A.cOpen(id);if(c.price)return A.pay(id);S.enroll[S.me+":"+c.id]={done:[]};notify(S.me,"system","Enrolled: "+c.title);toast("Enrolled ✔","ok");save();renderAll();A.cOpen(id)};
+A.pay=id=>{if(needAuth())return;const c=COURSES.find(x=>x.id===+id);if(enr(c.id))return A.cOpen(id);
+let p=S.pays.find(x=>x.uid===S.me&&x.cid===c.id&&x.status==="pending"&&x.exp>Date.now());
+if(!p){p={id:rid(),uid:S.me,cid:c.id,amount:c.price,cur:"USD",created:Date.now(),exp:Date.now()+5*MIN,status:"pending"};S.pays.push(p);save()}payOpen(p.id)};
+function qrHTML(seed){let s=seed*9301+49297,h="";for(let y=0;y<21;y++)for(let x=0;x<21;x++){const f=(x<7&&y<7)||(x>13&&y<7)||(x<7&&y>13);let k;if(f){const dx=x>13?x-14:x,dy=y>13?y-14:y;k=dx===0||dx===6||dy===0||dy===6||(dx>=2&&dx<=4&&dy>=2&&dy<=4)}else{s=(s*9301+49297)%233280;k=s/233280>.5}h+=`<i class="${k?"k":""}"></i>`}return h}
+function payOpen(pid){openSheet(()=>{const p=S.pays.find(x=>x.id===pid),c=COURSES.find(x=>x.id===p.cid),exp=p.status==="pending"&&p.exp<=Date.now();if(exp){p.status="expired";save()}
+return{title:"Bakong KHQR",html:`<div class="flex" style="justify-content:space-between"><div><b>${esc(c.title)}</b><div class="muted">$${p.amount} ${p.cur}</div></div>${badge(p.status)}</div>${p.status==="paid"?`<div class="empty"><div class="big">✅</div><p>${t("Payment confirmed. Course unlocked.")}</p><button class="btn btn-primary" data-act="cOpen" data-id="${c.id}">${t("Start learning")}</button></div>`:p.status==="expired"?`<div class="empty"><div class="big">⌛</div><p>${t("This QR code expired.")}</p><button class="btn btn-primary" data-act="payNew" data-id="${c.id}">${t("New QR")}</button></div>`:`<div class="qr">${qrHTML(c.id)}</div><p style="text-align:center">${t("Expires in")} <b id="cd">05:00</b></p><ol class="muted sm" style="margin:8px 0 12px 18px"><li>${t("Open ABA / Wing / ACLEDA / any bank app")}</li><li>${t("Scan the QR code")}</li><li>${t("Come back and tap Check payment")}</li></ol><p class="muted sm">${t("Demo only: this is not a real payment QR.")}</p><div class="row"><button class="btn btn-soft btn-sm" data-act="payCheck" data-id="${p.id}">${t("Check payment")}</button><button class="btn btn-primary btn-sm" data-act="paySim" data-id="${p.id}">${t("Demo: simulate paid")}</button></div><div class="row l"><button class="btn btn-ghost btn-sm" data-act="payBad" data-id="${p.id}">${t("Demo: wrong amount")}</button></div>`}`,mount(){clearInterval(payTimer);if(p.status!=="pending")return;payTimer=setInterval(()=>{const e=$("#cd");if(!e){clearInterval(payTimer);return}const left=Math.max(0,Math.round((p.exp-Date.now())/1e3));e.textContent=String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0");if(left<=0){clearInterval(payTimer);p.status="expired";save();refresh()}},1000)}}},"sm")}
+A.payNew=id=>{const c=COURSES.find(x=>x.id===+id);const p={id:rid(),uid:S.me,cid:c.id,amount:c.price,cur:"USD",created:Date.now(),exp:Date.now()+5*MIN,status:"pending"};S.pays.push(p);save();payOpen(p.id)};
+function payVerify(pid,sim,wrong){const p=S.pays.find(x=>x.id===pid);if(p.status!=="pending")return refresh();if(p.exp<=Date.now()){p.status="expired";save();return refresh()}
+if(!sim){toast("No payment found yet. Status stays pending.");return}
+const got={amount:wrong?p.amount-5:p.amount,cur:"USD"};if(got.amount!==p.amount||got.cur!==p.cur){toast("Amount mismatch. Access not granted.","err");return}
+p.status="paid";p.txn="TX"+rid().toUpperCase();S.enroll[p.uid+":"+p.cid]={done:[]};notify(p.uid,"system","Course unlocked: "+COURSES.find(c=>c.id===p.cid).title);clearInterval(payTimer);toast("Payment confirmed ✔","ok");commit()}
+A.payCheck=id=>payVerify(id,false);A.paySim=id=>payVerify(id,true);A.payBad=id=>payVerify(id,true,true);
+/* ---- skill exchange ---- */
+A.exNew=id=>{if(needAuth())return;const u=me(),p=byId(id);if(!u.teach.length||!p.teach.length)return toast("Add skills you can teach in your profile first","err");
+openSheet(()=>({title:"Request a skill exchange",html:`<div class="flex">${av(p,44)}<b>${esc(p.name)}</b></div><form data-form="exNew" data-id="${p.id}">${select("learn","I want to learn",p.teach)}${select("offer","I can teach",u.teach)}${field("msg","Introduction message",{area:1,req:1})}<button class="btn btn-primary" style="width:100%;margin-top:16px">${t("Send request")}</button></form>`}),"sm")};
+FM.exNew=(fd,f,id)=>{const u=me();if(id===u.id)return toast("You cannot request yourself","err");
+if(S.exch.some(e=>e.fromId===u.id&&e.toId===id&&["pending","accepted"].includes(e.status)))return toast("You already have an active request with this member","err");
+S.exch.push({id:rid(),fromId:u.id,toId:id,learn:fd.get("learn"),offer:fd.get("offer"),msg:fd.get("msg"),status:"pending",date:0,progress:0,notes:[],confirm:{},link:"",reason:"",ts:Date.now()});
+notify(id,"exchange",`${u.name} sent you a skill exchange request`);closeSheet();commit();toast("Request sent ✔","ok")};
+const exById=id=>S.exch.find(e=>e.id===id);
+A.exOpen=id=>openSheet(()=>{const e=exById(id),u=me(),other=e.fromId===u.id?e.toId:e.fromId,mineIsFrom=e.fromId===u.id;
+return{title:"Skill exchange",html:`<div class="flex" style="justify-content:space-between"><div class="flex">${av(byId(other),44)}<b>${esc(nm(other))}</b></div>${badge(e.status)}</div><p class="muted" style="margin-top:10px">${esc(nm(e.fromId))} → <b>${esc(e.learn)}</b> ⇄ <b>${esc(e.offer)}</b></p><p class="muted sm">“${esc(e.msg)}”</p>
+${e.status==="pending"&&!mineIsFrom?`<form data-form="exAccept" data-id="${e.id}">${field("date","Meeting date",{type:"datetime-local",req:1})}<div class="row"><button class="btn btn-primary btn-sm">${t("Accept")}</button><button type="button" class="btn btn-red btn-sm" data-act="exDeclineForm" data-id="${e.id}">${t("Decline")}</button></div></form>`:""}
+${e.status==="pending"&&mineIsFrom?`<div class="row l"><button class="btn btn-soft btn-sm" data-act="exCancel" data-id="${e.id}">${t("Cancel")}</button><button class="btn btn-ghost btn-sm" data-act="exDemoAccept" data-id="${e.id}">${t("Demo: recipient accepts")}</button></div>`:""}
+${e.status==="rejected"?`<p class="muted">${t("Reason")}: ${esc(e.reason)}</p>`:""}
+${["accepted","completed"].includes(e.status)?`<p class="muted">📅 ${fmt(e.date)} · <a href="${esc(e.link)}" target="_blank" rel="noopener">Jitsi</a> · <a href="#" data-act="dm" data-id="${other}">💬 ${t("Chat")}</a></p>
+<form data-form="exProg" data-id="${e.id}"><label>${t("Shared progress")}: <b id="pv">${e.progress}</b>%<input type="range" min="0" max="100" value="${e.progress}" data-in="pv" ${e.status==="completed"?"disabled":""} name="p" style="width:100%"></label>${e.status==="accepted"?`<button class="btn btn-soft btn-sm">${t("Save progress")}</button>`:""}</form>
+${e.notes.map(n=>`<div class="li sm"><b>${esc(nm(n.uid))}</b>: ${esc(n.text)}</div>`).join("")}
+${e.status==="accepted"?`<form data-form="exNote" data-id="${e.id}" class="flex" style="margin-top:8px"><input class="field" name="text" placeholder="${esc(t("Learning note…"))}" required style="margin:0"><button class="btn btn-soft btn-sm">${t("Add")}</button></form>
+<div class="row l"><span>${e.confirm[u.id]?"✔ "+t("You confirmed"):`<button class="btn btn-primary btn-sm" data-act="exConfirm" data-id="${e.id}">${t("Confirm completion")}</button>`}</span><span class="muted sm">${e.confirm[other]?"✔ "+t("Partner confirmed"):`<button class="btn btn-ghost btn-sm" data-act="exDemoConfirm" data-id="${e.id}">${t("Demo: partner confirms")}</button>`}</span></div>`:`<p class="muted">✔ ${t("Both participants confirmed. Saved in learning history.")}</p>`}`:""}`}},"md");
+IN.pv=el=>{$("#pv").textContent=el.value};
+FM.exAccept=(fd,f,id)=>{const d=new Date(fd.get("date")).getTime();if(d<=Date.now())return toast("Choose a future date","err");const e=exById(id);e.status="accepted";e.date=d;e.link="https://meet.jit.si/SmartCommunity-X"+e.id;notify(e.fromId,"exchange",`${me().name} accepted your skill exchange`);commit()};
+A.exDeclineForm=id=>openSheet(()=>({title:"Decline request",html:`<form data-form="exDecline" data-id="${id}">${field("reason","Reason",{area:1,req:1})}<button class="btn btn-red" style="width:100%;margin-top:16px">${t("Decline")}</button></form>`}),"sm");
+FM.exDecline=(fd,f,id)=>{const e=exById(id);e.status="rejected";e.reason=fd.get("reason");notify(e.fromId,"exchange","Your skill exchange request was declined");closeSheet();commit()};
+A.exCancel=id=>{exById(id).status="cancelled";commit()};
+A.exDemoAccept=id=>{const e=exById(id);e.status="accepted";e.date=Date.now()+2*DAY;e.link="https://meet.jit.si/SmartCommunity-X"+e.id;notify(e.fromId,"exchange",nm(e.toId)+" accepted your skill exchange");commit()};
+FM.exProg=(fd,f,id)=>{exById(id).progress=+fd.get("p");commit();toast("Progress saved ✔","ok")};
+FM.exNote=(fd,f,id)=>{exById(id).notes.push({uid:S.me,text:fd.get("text"),ts:Date.now()});commit()};
+function exFinish(e){if(e.confirm[e.fromId]&&e.confirm[e.toId]){e.status="completed";e.progress=100;notify(e.fromId,"exchange","Skill exchange completed");notify(e.toId,"exchange","Skill exchange completed")}}
+A.exConfirm=id=>{const e=exById(id);e.confirm[S.me]=true;exFinish(e);commit()};
+A.exDemoConfirm=id=>{const e=exById(id);const o=e.fromId===S.me?e.toId:e.fromId;e.confirm[o]=true;exFinish(e);commit()};
+/* ---- mentors ---- */
+A.mReq=id=>{if(needAuth())return;const m=byId(id),u=me();if(m.id===u.id)return toast("You cannot book yourself","err");
+openSheet(()=>({title:"Request session",html:`<div class="flex">${av(m,44)}<b>${esc(m.name)}</b></div><form data-form="bk" data-id="${m.id}">${field("topic","Topic",{req:1})}${field("when","Date & time",{type:"datetime-local",req:1,v:localInput(Date.now()+DAY)})}${select("dur","Duration (minutes)",["30","60","90"])}${select("freq","Frequency",["One time","Weekly","Monthly"])}<button class="btn btn-primary" style="width:100%;margin-top:16px">${t("Send request")}</button><p class="muted sm">${t("The mentor must approve before a meeting link is created.")}</p></form>`}),"sm")};
+FM.bk=(fd,f,id)=>{const when=new Date(fd.get("when")).getTime();if(!(when>Date.now()))return toast("Please choose a future date","err");
+if(S.bookings.some(b=>b.learnerId===S.me&&b.mentorId===id&&["pending","active"].includes(b.status)))return toast("You already have an open booking with this mentor","err");
+S.bookings.push({id:rid(),learnerId:S.me,mentorId:id,topic:fd.get("topic"),when,dur:+fd.get("dur"),freq:fd.get("freq"),status:"pending",ts:Date.now(),link:"",review:null,reason:""});
+notify(id,"mentorship",`${me().name} requested a mentoring session`);closeSheet();commit();toast("Request sent. Waiting for mentor approval","ok")};
+const bk=id=>S.bookings.find(b=>b.id===id);
+A.bApprove=id=>{const b=bk(id);b.status="active";b.link="https://meet.jit.si/SmartCommunity-M"+b.id;notify(b.learnerId,"mentorship",`${nm(b.mentorId)} approved your session. Link is ready.`);commit();toast("Approved ✔","ok")};
+A.bRejectForm=id=>openSheet(()=>({title:"Reject request",html:`<form data-form="bRej" data-id="${id}">${field("reason","Reason",{area:1,req:1})}<button class="btn btn-red" style="width:100%;margin-top:16px">${t("Reject")}</button></form>`}),"sm");
+FM.bRej=(fd,f,id)=>{const b=bk(id);b.status="rejected";b.reason=fd.get("reason");notify(b.learnerId,"mentorship",`${nm(b.mentorId)} declined your request`);closeSheet();commit()};
+A.bCancel=id=>{const b=bk(id);b.status="cancelled";notify(b.mentorId,"mentorship",`${nm(b.learnerId)} cancelled a session`);commit()};
+A.bComplete=id=>{const b=bk(id);b.status="completed";notify(b.learnerId,"mentorship","Session completed. You can leave a review.");commit()};
+A.bReviewForm=id=>openSheet(()=>({title:"Leave a review",html:`<form data-form="bRev" data-id="${id}">${select("rating","Rating",["5","4","3","2","1"])}${field("text","Your review",{area:1,req:1,max:300})}<button class="btn btn-primary" style="width:100%;margin-top:16px">${t("Submit")}</button></form>`}),"sm");
+FM.bRev=(fd,f,id)=>{const b=bk(id);if(b.learnerId!==S.me||b.status!=="completed"||b.review)return toast("Review not allowed","err");b.review={rating:+fd.get("rating"),text:fd.get("text")};closeSheet();commit();toast("Thanks for your review ✔","ok")};
+A.mApply=()=>{if(needAuth())return;const u=me();if(u.role==="mentor")return toast("You are already a mentor");if(S.mentorApps.some(a=>a.uid===u.id&&a.status==="pending"))return toast("Your application is already pending");
+openSheet(()=>({title:"Become a mentor",html:`<form data-form="mApply">${field("expertise","Expertise",{req:1})}${field("bio","Professional background",{area:1,req:1})}${field("avail","Availability",{req:1})}<button class="btn btn-primary" style="width:100%;margin-top:16px">${t("Submit")}</button></form>`}),"sm")};
+FM.mApply=fd=>{S.mentorApps.push({id:rid(),uid:S.me,expertise:fd.get("expertise"),bio:fd.get("bio"),avail:fd.get("avail"),status:"pending",ts:Date.now()});S.users.filter(x=>x.role==="admin").forEach(a=>notify(a.id,"system",`${me().name} applied to become a mentor`));closeSheet();commit();toast("Application submitted ✔","ok")};
+/* ---- sessions ---- */
+A.sReg=id=>{if(needAuth())return;const s=sess(id),u=me(),on=s.regs.includes(u.id);
+if(on){s.regs=s.regs.filter(x=>x!==u.id);toast("Registration cancelled")}else{if(!regOpen(s))return toast("Registration is closed","err");if(s.regs.length>=s.cap)return toast("Session is full","err");s.regs.push(u.id);notify(u.id,"sessions","Registered: "+s.title);toast("Registered ✔","ok")}commit()};
+A.sOpen=id=>openSheet(()=>{const s=sess(id),u=me(),host=u&&s.hostId===u.id,on=u&&s.regs.includes(u.id),att=u&&s.att[u.id];
+return{title:s.title,html:`<div class="flex">${badge(s.status)}${winOpen(s)?`<span class="badge b-open">${t("Room open")}</span>`:""}</div><p class="muted" style="margin-top:10px">${esc(s.desc)}<br>${esc(nm(s.hostId))} · ${esc(s.cat)} · ${esc(s.level)}<br>🕒 ${fmt(s.start)} · ${s.dur} min<br>${t("Registration closes")}: ${fmt(Math.min(s.deadline,s.start))}<br>👥 ${s.regs.length}/${s.cap}</p><p class="muted sm">${t("The room opens 30 minutes before the start and closes 2 hours after the scheduled end.")}</p>
+<div class="row l">${on||host?(winOpen(s)?`<button class="btn btn-gold" data-act="sJoin" data-id="${s.id}">${t("Join room")}</button>`:""):""}${!host&&regOpen(s)?`<button class="btn ${on?"btn-soft":"btn-primary"}" data-act="sReg" data-id="${s.id}">${on?t("Cancel registration"):t("Register")}</button>`:""}</div>
+${att?`<hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><p class="muted">${t("Attendance")}: ${att.leave?att.min+" min":t("in progress")}</p>${s.fb[u.id]?`<p class="muted">${t("Your feedback")}: <span style="color:var(--gold)">${stars(s.fb[u.id].rating)}</span></p>`:`<form data-form="sFb" data-id="${s.id}">${select("rating","Rating",["5","4","3","2","1"])}${field("text","Feedback",{area:1})}<button class="btn btn-primary btn-sm" style="margin-top:12px">${t("Send feedback")}</button></form>`}`:""}
+${host||(u&&u.role==="admin")?`<hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><b>${t("Host controls")}</b><div class="row l" style="gap:8px">${["ongoing","completed","cancelled"].map(x=>`<button class="btn btn-soft btn-sm" data-act="sStatus" data-id="${s.id}:${x}">${t(x)}</button>`).join("")}</div><b style="display:block;margin-top:14px">${t("Participants")} (${s.regs.length})</b>${s.regs.slice(0,30).map(r=>`<div class="li sm">${esc(byId(r)?.name||"Member")} ${s.att[r]?`· ${s.att[r].min||0} min`:""}</div>`).join("")}`:""}`}},"md");
+A.sStatus=id=>{const[sid,st]=id.split(":"),s=sess(sid);s.status=st;if(st==="cancelled")s.regs.forEach(r=>notify(r,"sessions","Session cancelled: "+s.title));commit()};
+A.sJoin=id=>{if(needAuth())return;const s=sess(id),u=me(),host=s.hostId===u.id;if(!host&&!s.regs.includes(u.id))return toast("Register first","err");
+if(["completed","cancelled"].includes(s.status))return toast("This session is not available","err");if(!winOpen(s))return toast("The room opens 30 minutes before the start","err");
+s.att[u.id]={join:Date.now(),leave:null,min:0};if(host&&s.status==="scheduled")s.status="ongoing";save();renderAll();
+openSheet(()=>({title:s.title,html:`<iframe src="https://meet.jit.si/SmartCommunity-${s.id}#config.prejoinPageEnabled=false" allow="camera; microphone; fullscreen; display-capture" style="width:100%;height:min(56svh,460px);border:0;border-radius:20px;background:#000"></iframe><div class="row"><a class="btn btn-soft btn-sm" target="_blank" rel="noopener" href="https://meet.jit.si/SmartCommunity-${s.id}">${t("Open in new tab")}</a><button class="btn btn-red btn-sm" data-act="sLeave" data-id="${s.id}">${t("Leave")}</button></div>`}),"lg")};
+A.sLeave=id=>{const s=sess(id),a=s.att[S.me];if(a){a.leave=Date.now();a.min=Math.max(1,Math.round((a.leave-a.join)/MIN))}save();renderAll();A.sOpen(id)};
+FM.sFb=(fd,f,id)=>{const s=sess(id);if(!s.att[S.me])return toast("Attendance is required for feedback","err");s.fb[S.me]={rating:+fd.get("rating"),text:fd.get("text")};commit();toast("Thanks for your feedback ✔","ok")};
+A.sNew=()=>{if(needAuth())return;if(needRole("mentor","admin"))return;
+openSheet(()=>({title:"Host a session",html:`<form data-form="sNew">${field("title","Title",{req:1})}${field("desc","Description",{area:1})}<div class="grid g2">${select("cat","Category",["Programming","Design","Data","Career"])}${select("level","Level",["Beginner","Intermediate","Advanced"])}</div>${field("start","Start",{type:"datetime-local",req:1,v:localInput(Date.now()+DAY)})}<div class="grid g2">${field("dur","Duration (15-480 min)",{type:"number",req:1,v:60,min:15,max:480})}${field("cap","Capacity (2-500)",{type:"number",req:1,v:30,min:2,max:500})}</div>${field("deadline","Registration deadline",{type:"datetime-local"})}<button class="btn btn-primary" style="width:100%;margin-top:16px">${t("Create")}</button></form>`}),"sm")};
+FM.sNew=fd=>{const start=new Date(fd.get("start")).getTime(),dur=+fd.get("dur"),cap=+fd.get("cap");let dl=fd.get("deadline")?new Date(fd.get("deadline")).getTime():start-15*MIN;
+if(!(start>Date.now()))return toast("Start time must be in the future","err");if(dur<15||dur>480)return toast("Duration must be 15 to 480 minutes","err");if(cap<2||cap>500)return toast("Capacity must be 2 to 500","err");if(dl>=start)return toast("Deadline must be before the start","err");
+S.sessions.push({id:"s"+rid(),title:fd.get("title"),desc:fd.get("desc"),cat:fd.get("cat"),level:fd.get("level"),hostId:S.me,start,dur,cap,deadline:dl,status:"scheduled",regs:[],att:{},fb:{}});audit("Created session "+fd.get("title"));closeSheet();commit();toast("Session created ✔","ok")};
+/* ---- career ---- */
+A.pPick=id=>{if(needAuth("Sign in to save your roadmap"))return;const p=PATHS.find(x=>x.title===id);me().career.pathId=p.id;commit()};
+CH.step=el=>{if(!S.me){el.checked=!el.checked;return needAuth("Sign in to save your roadmap")}const[pid,i]=el.dataset.id.split(":"),u=me();u.career.pathId=pid;(u.career.done[pid]=u.career.done[pid]||{})[i]=el.checked;commit()};
+A.art=id=>openSheet(()=>{const a=ARTICLES.find(x=>x.id===+id);return{title:a.title,html:`<p>${esc(a.body)}</p><p class="muted sm">${a.min} min</p>`}},"sm");
+A.quiz=()=>{if(needAuth("Sign in to save your assessment"))return;openSheet(()=>({title:"Career-readiness self-assessment",html:`<form data-form="quiz">${QUIZ.map(([c,q],i)=>`<div class="li"><p>${i+1}. ${esc(q)}</p><div class="pillset">${[1,2,3,4,5].map(v=>`<label style="margin:0"><input type="radio" name="q${i}" value="${v}" required> ${v}</label>`).join("")}</div></div>`).join("")}<p class="muted sm">1 = ${t("not yet")} · 5 = ${t("very confident")}. ${t("This is a self-reflection tool, not a certified test.")}</p><button class="btn btn-primary" style="width:100%;margin-top:12px">${t("Submit")}</button></form>`}),"md")};
+FM.quiz=fd=>{const sc={};QUIZ.forEach(([c],i)=>{sc[c]=(sc[c]||0)+ +fd.get("q"+i)});Object.keys(sc).forEach(k=>sc[k]=Math.round(sc[k]/10*100));const vals=Object.values(sc),avg=Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);const low=Object.entries(sc).sort((a,b)=>a[1]-b[1])[0][0];
+me().attempts.unshift({ts:Date.now(),scores:sc,avg,low});notify(S.me,"system","Assessment saved. Focus area: "+low);closeSheet();commit();
+openSheet(()=>({title:"Your results",html:`${radarSVG(Object.values(sc),Object.keys(sc))}<p style="text-align:center"><b>${avg}%</b> ${t("average")}</p><p class="muted">💡 ${t("Focus area")}: <b>${t(low)}</b>. ${esc(TIPS[low])}</p>`}),"sm")};
+/* ---- jobs ---- */
+A.jOpen=id=>openSheet(()=>{const j=S.jobs.find(x=>x.id===id),c=comp(j.cid);return{title:j.title,html:`<div class="flex">${badge(j.type,"level")}${badge(j.status)}</div><p class="muted" style="margin-top:8px"><b>${esc(c?.name)}</b> ${c?.verified?"✔":""} · ${esc(j.loc)} · 💰 ${esc(j.stipend)}<br>${t("Deadline")}: ${new Date(j.deadline).toLocaleDateString()} · ${j.openings} ${t("openings")}</p><p>${esc(j.desc)}</p><b>${t("Requirements")}</b><p class="muted">${esc(j.req)}</p><b>${t("Responsibilities")}</b><p class="muted">${esc(j.resp)}</p><button class="btn btn-primary" data-act="apply" data-id="${j.id}" ${j.status!=="open"?"disabled":""}>${t("Apply")}</button>`}},"sm");
+A.apply=id=>{if(needAuth())return;if(me().role!=="student")return toast("Only student accounts can apply","err");const j=S.jobs.find(x=>x.id===id);
+if(j.status!=="open")return toast("This listing is not open","err");if(j.deadline<Date.now())return toast("The deadline has passed","err");if(S.apps.some(a=>a.jobId===id&&a.uid===S.me))return toast("You already applied","err");
+openSheet(()=>({title:"Apply: "+j.title,html:`<form data-form="apply" data-id="${id}"><label>${t("CV (PDF, max 10 MB)")}<input class="field" type="file" name="cv" accept="application/pdf" required></label>${field("url","Portfolio URL (optional)",{type:"url"})}${field("cover","Cover letter",{area:1,max:1200})}<button class="btn btn-primary" style="width:100%;margin-top:16px">${t("Submit")}</button></form>`}),"sm")};
+FM.apply=(fd,f,id)=>{const file=fd.get("cv");if(!file||!file.name||file.type!=="application/pdf")return toast("CV must be a PDF","err");if(file.size>10*1048576)return toast("CV is larger than 10 MB","err");
+if(S.apps.some(a=>a.jobId===id&&a.uid===S.me))return toast("You already applied","err");const j=S.jobs.find(x=>x.id===id);
+S.apps.push({id:rid(),jobId:id,uid:S.me,cv:file.name,url:fd.get("url"),cover:fd.get("cover"),status:"pending",note:"",ts:Date.now()});notify(j.ownerId,"internships",`${me().name} applied for ${j.title}`);notify(S.me,"internships","Application sent: "+j.title);closeSheet();commit();toast("Application submitted ✔","ok")};
+A.coForm=()=>{if(needAuth())return;const co=S.companies.find(c=>c.ownerId===S.me)||{};openSheet(()=>({title:"Company profile",html:`<form data-form="co">${field("name","Company name",{req:1,v:co.name})}${field("desc","Description",{area:1,req:1,v:co.desc})}${field("contact","Contact email",{type:"email",req:1,v:co.contact})}${field("website","Website",{type:"url",v:co.website})}<button class="btn btn-primary" style="width:100%;margin-top:16px">${t("Save")}</button></form>`}),"sm")};
+FM.co=fd=>{let co=S.companies.find(c=>c.ownerId===S.me);if(!co){co={id:"c"+rid(),ownerId:S.me,verified:false};S.companies.push(co)}Object.assign(co,{name:fd.get("name"),desc:fd.get("desc"),contact:fd.get("contact"),website:fd.get("website")});closeSheet();commit();toast("Company saved ✔","ok")};
+A.jNew=()=>{if(needAuth())return;if(needRole("recruiter","admin"))return;if(me().role==="recruiter"&&!S.companies.some(c=>c.ownerId===S.me)){toast("Create your company profile first","err");return A.coForm()}
+openSheet(()=>({title:"Post internship",html:`<form data-form="jNew">${field("title","Title",{req:1})}<div class="grid g2">${select("type","Type",["Remote","Hybrid","On-site"])}${field("loc","Location",{req:1})}</div><div class="grid g2">${field("openings","Openings (1-50)",{type:"number",v:1,min:1,max:50,req:1})}${field("stipend","Stipend")}</div>${field("deadline","Deadline",{type:"date",req:1})}${field("desc","Description",{area:1,req:1})}${field("req","Requirements",{area:1})}${field("resp","Responsibilities",{area:1})}<button class="btn btn-primary" style="width:100%;margin-top:16px">${t("Post")}</button></form>`}),"sm")};
+FM.jNew=fd=>{const dl=new Date(fd.get("deadline")+"T23:59").getTime(),op=+fd.get("openings");if(!(dl>Date.now()))return toast("Deadline must be in the future","err");if(op<1||op>50)return toast("Openings must be 1 to 50","err");
+const co=S.companies.find(c=>c.ownerId===S.me);S.jobs.push({id:"j"+rid(),cid:co?co.id:"c1",ownerId:S.me,title:fd.get("title"),type:fd.get("type"),loc:fd.get("loc"),openings:op,stipend:fd.get("stipend"),deadline:dl,status:"open",desc:fd.get("desc"),req:fd.get("req"),resp:fd.get("resp")});audit("Posted internship "+fd.get("title"));closeSheet();commit();toast("Internship published ✔","ok")};
+CH.jStatus=el=>{const j=S.jobs.find(x=>x.id===el.dataset.id);j.status=el.value;commit();toast("Status updated","ok")};
+A.jManage=id=>openSheet(()=>{const j=S.jobs.find(x=>x.id===id),l=S.apps.filter(a=>a.jobId===id);return{title:"Candidates: "+j.title,html:l.length?l.map(a=>`<form class="card glass" style="margin-bottom:12px" data-form="appUpd" data-id="${a.id}"><div class="row" style="margin:0"><b>${esc(nm(a.uid))}</b>${badge(a.status)}</div><p class="muted sm">CV: ${esc(a.cv)} ${a.url?`· <a href="${esc(a.url)}" target="_blank" rel="noopener noreferrer">Portfolio</a>`:""}</p>${a.cover?`<p class="muted sm">“${esc(a.cover)}”</p>`:""}<div class="grid g2">${select("status","Status",["pending","reviewed","shortlisted","approved","rejected"],a.status)}<label>${t("Private note")}<input class="field" name="note" value="${esc(a.note)}"></label></div><button class="btn btn-primary btn-sm" style="margin-top:10px">${t("Save")}</button></form>`).join(""):empty("📭","No applicants yet.")}},"lg");
+FM.appUpd=(fd,f,id)=>{const a=S.apps.find(x=>x.id===id);a.status=fd.get("status");a.note=fd.get("note");notify(a.uid,"internships",`Your application is now ${a.status}`);commit();toast("Saved ✔","ok")};
+/* ---- forum ---- */
+A.fNew=()=>{if(needAuth())return;openSheet(()=>({title:"Ask a question",html:`<form data-form="fNew">${field("title","Title",{req:1,max:140})}${select("cat","Category",CATS)}${field("body","Details",{area:1,req:1,rows:4})}<button class="btn btn-primary" style="width:100%;margin-top:16px">${t("Post")}</button></form>`}),"sm")};
+FM.fNew=fd=>{S.posts.unshift({id:"f"+rid(),uid:S.me,title:fd.get("title"),body:fd.get("body"),cat:fd.get("cat"),ts:Date.now(),likes:[],closed:false,comments:[],answers:[]});closeSheet();commit();toast("Posted ✔","ok")};
+const post=id=>S.posts.find(p=>p.id===id);
+A.fOpen=id=>openSheet(()=>{const p=post(id),u=me(),own=u&&p.uid===u.id,adm=u&&u.role==="admin";
+return{title:p.cat,html:`<h3 style="font-size:1.3rem;font-weight:600">${esc(p.title)}</h3><p class="muted sm">${esc(nm(p.uid))} · ${fmt(p.ts)} ${p.closed?badge("closed"):""}</p><p>${esc(p.body)}</p><div class="row l"><button class="btn btn-soft btn-sm" data-act="pLike" data-id="${p.id}">${p.likes.includes(S.me)?"👍 ✔":"👍"} ${p.likes.length}</button>${own?`<button class="btn btn-soft btn-sm" data-act="pClose" data-id="${p.id}">${p.closed?t("Reopen"):t("Close")}</button>`:""}${own||adm?`<button class="btn btn-red btn-sm" data-act="pDel" data-id="${p.id}">${t("Delete")}</button>`:""}</div>
+<h4 style="margin:22px 0 6px">${p.answers.length} ${t("answers")}</h4>${p.answers.map(a=>`<div class="li"><div class="flex" style="justify-content:space-between"><b>${esc(nm(a.uid))} ${a.accepted?`<span class="badge b-approved">✔ ${t("Accepted")}</span>`:""}</b><span class="muted sm">${fmt(a.ts||p.ts)}</span></div><p>${esc(a.text)}</p><div class="row l" style="margin-top:4px"><button class="btn btn-ghost btn-sm" data-act="aLike" data-id="${p.id}:${a.id}">👍 ${a.likes.length}</button>${own&&!a.accepted?`<button class="btn btn-ghost btn-sm" data-act="aAccept" data-id="${p.id}:${a.id}">${t("Accept answer")}</button>`:""}${(u&&a.uid===u.id)||adm?`<button class="btn btn-ghost btn-sm" data-act="aDel" data-id="${p.id}:${a.id}">${t("Delete")}</button>`:""}</div></div>`).join("")}
+${p.closed?`<p class="muted">${t("This discussion is closed.")}</p>`:`<form data-form="ans" data-id="${p.id}" style="margin-top:12px">${field("text","Your answer",{area:1,req:1})}<button class="btn btn-primary btn-sm" style="margin-top:10px">${t("Post answer")}</button></form>`}
+<h4 style="margin:22px 0 6px">${t("Comments")}</h4>${p.comments.map(c=>`<div class="li sm"><b>${esc(nm(c.uid))}</b>: ${esc(c.text)}</div>`).join("")||`<p class="muted sm">—</p>`}${p.closed?"":`<form data-form="cmt" data-id="${p.id}" class="flex" style="margin-top:8px"><input class="field" name="text" required placeholder="${esc(t("Add a comment…"))}" style="margin:0"><button class="btn btn-soft btn-sm">${t("Add")}</button></form>`}`}},"md");
+A.pLike=id=>{if(needAuth())return;const p=post(id),i=p.likes.indexOf(S.me);i>=0?p.likes.splice(i,1):p.likes.push(S.me);if(i<0&&p.uid!==S.me)notify(p.uid,"forum",`${me().name} liked your question`);commit()};
+A.pClose=id=>{const p=post(id);p.closed=!p.closed;commit()};
+A.pDel=id=>{S.posts=S.posts.filter(p=>p.id!==id);closeSheet();commit();toast("Deleted")};
+FM.ans=(fd,f,id)=>{if(needAuth())return;const p=post(id);p.answers.push({id:rid(),uid:S.me,text:fd.get("text"),likes:[],accepted:false,ts:Date.now()});if(p.uid!==S.me)notify(p.uid,"forum",`${me().name} answered: ${p.title}`);commit()};
+FM.cmt=(fd,f,id)=>{if(needAuth())return;post(id).comments.push({id:rid(),uid:S.me,text:fd.get("text")});commit()};
+A.aLike=id=>{if(needAuth())return;const[pid,aid]=id.split(":"),a=post(pid).answers.find(x=>x.id===aid),i=a.likes.indexOf(S.me);i>=0?a.likes.splice(i,1):a.likes.push(S.me);commit()};
+A.aAccept=id=>{const[pid,aid]=id.split(":"),p=post(pid);p.answers.forEach(a=>a.accepted=a.id===aid);const a=p.answers.find(x=>x.id===aid);notify(a.uid,"forum","Your answer was accepted");commit()};
+A.aDel=id=>{const[pid,aid]=id.split(":"),p=post(pid);p.answers=p.answers.filter(a=>a.id!==aid);commit()};
+/* ---- messages ---- */
+let MS={id:null,info:false,typing:false};
+const convName=(c,u)=>c.type==="group"?c.name:nm(c.members.find(m=>m!==u.id));
+A.dm=id=>{if(needAuth())return;let c=S.convs.find(x=>x.type==="direct"&&x.members.includes(S.me)&&x.members.includes(id));if(!c){c={id:rid(),type:"direct",name:"",members:[S.me,id],owner:S.me,unread:{},msgs:[]};S.convs.push(c);save()}MS={id:c.id,info:false,typing:false};openMsgs()};
+A.msgs=()=>{if(needAuth())return;const first=S.convs.find(c=>c.members.includes(S.me));MS={id:MS.id&&S.convs.some(c=>c.id===MS.id&&c.members.includes(S.me))?MS.id:first?.id||null,info:false,typing:false};openMsgs()};
+function openMsgs(){const c=S.convs.find(x=>x.id===MS.id);if(c){c.unread[S.me]=0;save();renderHeader()}openSheet(msgSheet,"lg")}
+function msgSheet(){const u=me(),cs=S.convs.filter(c=>c.members.includes(u.id)).sort((a,b)=>(b.msgs.at(-1)?.ts||0)-(a.msgs.at(-1)?.ts||0)),c=cs.find(x=>x.id===MS.id);
+return{title:"Messages",html:`<div class="chatw"><div class="convs"><div class="row l" style="margin:0 0 8px;gap:6px"><button class="btn btn-soft btn-sm" data-act="gNew">＋ ${t("Group")}</button><select class="field" style="margin:0;flex:1;min-width:0" data-ch="dmPick"><option value="">${t("New chat…")}</option>${S.users.filter(x=>x.id!==u.id&&x.active&&!x.id.startsWith("x")).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join("")}</select></div>${cs.map(x=>`<button class="conv ${x.id===MS.id?"on":""}" data-act="cSel" data-id="${x.id}"><span class="avatar" style="width:38px;height:38px">${x.type==="group"?"👥":esc(convName(x,u)[0])}</span><span style="flex:1;min-width:0"><b>${esc(convName(x,u))}</b><br><span class="muted sm">${esc((x.msgs.at(-1)?.text||"").slice(0,28))}</span></span>${(x.unread[u.id]||0)?`<span class="badge-dot" style="position:static">${x.unread[u.id]}</span>`:""}</button>`).join("")||`<p class="muted sm">${t("No conversations yet.")}</p>`}</div>
+<div class="thread">${c?`<div class="row" style="margin:0 0 8px"><b>${esc(convName(c,u))}</b>${c.type==="group"?`<button class="btn btn-ghost btn-sm" data-act="cInfo">${t("Members")} (${c.members.length})</button>`:""}</div>${MS.info&&c.type==="group"?`<div class="card glass" style="padding:12px;margin-bottom:8px">${c.members.map(m=>`<div class="flex sm" style="justify-content:space-between"><span>${esc(nm(m))}${m===c.owner?" 👑":""}</span>${(u.id===c.owner&&m!==u.id)?`<button class="btn btn-ghost btn-sm" data-act="gRemove" data-id="${m}">${t("Remove")}</button>`:""}</div>`).join("")}${u.id===c.owner?`<select class="field" data-ch="gAdd" style="margin-top:8px"><option value="">${t("Add member…")}</option>${S.users.filter(x=>!c.members.includes(x.id)&&x.active&&!x.id.startsWith("x")).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join("")}</select>`:`<button class="btn btn-red btn-sm" data-act="gLeave">${t("Leave group")}</button>`}</div>`:""}
+<div class="msgs" id="msgBox">${c.msgs.map(m=>`<div class="msg ${m.uid===u.id?"me":""}">${c.type==="group"&&m.uid!==u.id?`<small>${esc(nm(m.uid))}</small>`:""}${esc(m.text)}${m.att?`<div class="sm">📎 ${esc(m.att.name)} (${Math.round(m.att.size/1024)} KB)</div>`:""}<small>${new Date(m.ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})}</small></div>`).join("")}${MS.typing?`<div class="msg"><small>${t("typing…")}</small>•••</div>`:""}</div>
+<form data-form="send" class="chat-form flex" style="margin-top:8px"><label class="btn btn-soft btn-sm" style="margin:0">📎<input type="file" name="att" hidden accept=".jpg,.jpeg,.png,.webp,.pdf,.txt,.doc,.docx"></label><input class="field" name="text" placeholder="${esc(t("Type a message…"))}" autocomplete="off" style="margin:0"><button class="btn btn-primary btn-sm">➤</button></form>`:`<div class="empty"><div class="big">💬</div><p>${t("Pick a conversation or start a new chat.")}</p></div>`}</div></div>`,mount(){const b=$("#msgBox");if(b)b.scrollTop=b.scrollHeight}}}
+A.cSel=id=>{MS={id,info:false,typing:false};const c=S.convs.find(x=>x.id===id);c.unread[S.me]=0;save();renderHeader();refresh()};
+A.cInfo=()=>{MS.info=!MS.info;refresh()};
+CH.dmPick=el=>{if(el.value)A.dm(el.value)};
+const REPLIES=["Sounds great!","Sure, let's do it 👍","Can we meet this weekend?","Thanks for the help!","Let me check and get back to you."];
+FM.send=(fd)=>{const c=S.convs.find(x=>x.id===MS.id),text=(fd.get("text")||"").trim(),f=fd.get("att");let att=null;
+if(f&&f.name){if(!/\.(jpe?g|png|webp|pdf|txt|docx?)$/i.test(f.name))return toast("Unsupported file type","err");if(f.size>10*1048576)return toast("File is larger than 10 MB","err");att={name:f.name,size:f.size}}
+if(!text&&!att)return;c.msgs.push({uid:S.me,text,ts:Date.now(),att});c.members.filter(m=>m!==S.me).forEach(m=>{c.unread[m]=(c.unread[m]||0)+1;notify(m,"messages",`New message from ${me().name}`)});save();renderHeader();refresh();
+const peer=c.members.find(m=>m!==S.me&&(byId(m)?.id||"").match(/^p|^m/));if(peer){const cid=c.id,me0=S.me;MS.typing=true;setTimeout(()=>{refresh()},50);setTimeout(()=>{const cc=S.convs.find(x=>x.id===cid);MS.typing=false;cc.msgs.push({uid:peer,text:REPLIES[Math.floor(Math.random()*REPLIES.length)],ts:Date.now()});const open=cur&&MS.id===cid&&$("#ov").classList.contains("open");if(open){cc.unread[me0]=0}else{cc.unread[me0]=(cc.unread[me0]||0)+1;notify(me0,"messages",`New message from ${nm(peer)}`)}save();renderHeader();refresh()},1300)}};
+A.gNew=()=>openSheet(()=>({title:"New group",html:`<form data-form="gNew">${field("name","Group name",{req:1})}${field("desc","Description")}<p class="muted sm" style="margin-top:12px">${t("Members")}</p>${S.users.filter(x=>x.id!==S.me&&x.active&&!x.id.startsWith("x")).map(x=>`<label style="display:flex;gap:8px;align-items:center;margin:4px 0"><input type="checkbox" name="m" value="${x.id}"> ${esc(x.name)}</label>`).join("")}<button class="btn btn-primary" style="width:100%;margin-top:14px">${t("Create")}</button></form>`}),"sm");
+FM.gNew=fd=>{const ms=fd.getAll("m");if(!ms.length)return toast("Pick at least one member","err");const c={id:rid(),type:"group",name:fd.get("name"),desc:fd.get("desc"),members:[S.me,...ms],owner:S.me,unread:{},msgs:[{uid:S.me,text:"Group created",ts:Date.now()}]};S.convs.push(c);ms.forEach(m=>notify(m,"messages",`You were added to ${c.name}`));MS={id:c.id,info:false,typing:false};save();renderAll();openSheet(msgSheet,"lg")};
+CH.gAdd=el=>{if(!el.value)return;const c=S.convs.find(x=>x.id===MS.id);c.members.push(el.value);notify(el.value,"messages",`You were added to ${c.name}`);commit()};
+A.gRemove=id=>{const c=S.convs.find(x=>x.id===MS.id);c.members=c.members.filter(m=>m!==id);commit()};
+A.gLeave=()=>{const c=S.convs.find(x=>x.id===MS.id);c.members=c.members.filter(m=>m!==S.me);MS.id=null;commit()};
+/* ---- notifications ---- */
+const NCATS=["messages","exchange","mentorship","internships","sessions","forum","system"];let NF={cat:"All",unread:false};
+A.notifs=()=>{if(needAuth())return;openSheet(notifSheet,"md")};
+function notifSheet(){const u=me();let l=S.notifs.filter(n=>n.uid===u.id&&(NF.cat==="All"||n.cat===NF.cat)&&(!NF.unread||!n.read));
+return{title:"Notifications",html:`<div style="margin-bottom:12px">${seg(["All",...NCATS],NF.cat,"nCat")}</div><div class="row l" style="margin:0 0 6px;gap:8px"><button class="btn btn-soft btn-sm" data-act="nUnread">${NF.unread?"✔ ":""}${t("Unread only")}</button><button class="btn btn-soft btn-sm" data-act="nAll">${t("Mark all read")}</button><button class="btn btn-soft btn-sm" data-act="nClear">${t("Clear read")}</button></div>${l.length?l.map(n=>`<div class="li flex" style="justify-content:space-between"><button class="btn-ghost" style="border:0;background:none;text-align:left;flex:1;padding:0" data-act="nRead" data-id="${n.id}">${n.read?"":"<b style='color:var(--blue)'>●</b> "}${esc(t(n.text))}<br><span class="muted sm">${t(n.cat)} · ${fmt(n.ts)}</span></button><button class="btn btn-ghost btn-sm" data-act="nDel" data-id="${n.id}" aria-label="Delete">✕</button></div>`).join(""):`<div class="empty"><div class="big">🔔</div><p>${t("Nothing new")}</p></div>`}<h4 style="margin:22px 0 4px">${t("Notification preferences")}</h4>${NCATS.map(c=>switchRow(c.charAt(0).toUpperCase()+c.slice(1),u.prefs.cats[c]!==false,"nPref",c)).join("")}`}}
+A.nCat=id=>{NF.cat=id;refresh()};A.nUnread=()=>{NF.unread=!NF.unread;refresh()};
+A.nRead=id=>{S.notifs.find(n=>n.id===id).read=true;commit()};A.nAll=()=>{S.notifs.filter(n=>n.uid===S.me).forEach(n=>n.read=true);commit()};
+A.nDel=id=>{S.notifs=S.notifs.filter(n=>n.id!==id);commit()};A.nClear=()=>{S.notifs=S.notifs.filter(n=>!(n.uid===S.me&&n.read));commit()};
+CH.nPref=el=>{me().prefs.cats[el.dataset.id]=el.checked;save();toast("Preference saved","ok")};
+/* ---- dashboard ---- */
+A.dash=()=>{if(needAuth())return;openSheet(()=>{const u=me(),en=COURSES.filter(c=>enr(c.id)),bks=S.bookings.filter(b=>b.learnerId===u.id||b.mentorId===u.id),ap=S.apps.filter(a=>a.uid===u.id),ss=S.sessions.filter(s=>s.regs.includes(u.id)&&s.start>Date.now()),comp=profPct(u),rp=pathPct(u);
+const steps=[];if(comp<100)steps.push(["👤",`${t("Complete your profile")} (${comp}%)`,"prof"]);if(!en.length)steps.push(["📚",t("Enroll in your first course"),"go:#courses"]);if(!rp)steps.push(["🧭",t("Choose a career roadmap"),"go:#career"]);if(!bks.length)steps.push(["🧑‍🏫",t("Book a mentor session"),"go:#mentors"]);if(u.role==="student"&&!ap.length)steps.push(["💼",t("Apply for an internship"),"go:#jobs"]);
+return{title:"Dashboard",html:`<div class="flex">${av(u,56)}<div><b style="font-size:1.2rem">${t("Welcome")}, ${esc(u.name)}</b><div class="muted">${badge(u.role,"level")}</div></div></div><div class="grid g2" style="margin-top:16px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">${[[en.length,"Courses"],[bks.length,"Bookings"],[ss.length,"Upcoming sessions"],[ap.length,"Applications"]].map(([n,l])=>`<div class="card glass kpi"><b>${n}</b><span class="muted sm">${t(l)}</span></div>`).join("")}</div>
+<div class="grid g2" style="margin-top:16px"><div class="card glass"><b>${t("Profile")}</b><div class="ring" style="--p:${comp};margin-top:10px"><span>${comp}%</span></div></div><div class="card glass"><b>${t("Career roadmap")}</b><div class="ring" style="--p:${rp};margin-top:10px"><span>${rp}%</span></div></div></div>
+<h4 style="margin:20px 0 8px">${t("Next steps")}</h4>${steps.length?steps.map(([i,x,a])=>`<button class="btn btn-soft" style="width:100%;justify-content:flex-start;margin-bottom:8px" data-act="${a.startsWith("go:")?"go":a}" ${a.startsWith("go:")?`data-id="${a.slice(3)}"`:""}>${i} ${x}</button>`).join("")}:`<p class="muted">🎉 ${t("You are all caught up!")}</p>`}
+${en.length?`<h4 style="margin:20px 0 8px">${t("My courses")}</h4>${en.map(c=>`<div class="li"><div class="row" style="margin:0"><span>${c.icon} ${esc(c.title)}</span><button class="btn btn-soft btn-sm" data-act="cOpen" data-id="${c.id}">${t("Continue")}</button></div><div class="progress"><i style="width:${prog(c)}%"></i></div></div>`).join("")}`:""}`}},"md")};
+/* ---- profile ---- */
+function profPct(u){const f=[u.name,u.bio,u.profession,u.location,u.goal,u.teach.length,u.want.length,u.edu.length,u.exp.length,u.proj.length,u.avatar];return Math.round(f.filter(Boolean).length/f.length*100)}
+const LISTS={edu:["Education",[["school","School"],["degree","Degree"],["year","Year"]]],exp:["Experience",[["company","Company"],["role","Role"],["years","Years"]]],cert:["Certificates",[["title","Certificate"],["issuer","Issuer"],["year","Year"]]],proj:["Portfolio",[["title","Project title"],["link","Link (https://…)"],["desc","Description"]]]};
+A.prof=()=>{if(needAuth())return;openSheet(()=>{const u=me();return{title:"My profile",html:`<div class="flex">${av(u,64)}<div style="flex:1"><label class="btn btn-soft btn-sm" style="margin:0">📷 ${t("Change photo")}<input type="file" accept="image/jpeg,image/png,image/webp" data-ch="avatar" hidden></label><div class="progress"><i style="width:${profPct(u)}%"></i></div><span class="muted sm">${profPct(u)}% ${t("complete")}</span></div></div>
+<form data-form="prof">${field("name","Full name",{req:1,v:u.name})}<div class="grid g2">${field("profession","Profession",{v:u.profession})}${field("location","Location",{v:u.location})}</div>${field("goal","Career goal",{v:u.goal})}${field("bio","Biography",{area:1,v:u.bio,max:400})}<button class="btn btn-primary btn-sm" style="margin-top:12px">${t("Save")}</button></form>
+${[["teach","Skills I can teach"],["want","Skills I want to learn"]].map(([k,l])=>`<h4 style="margin:20px 0 8px">${t(l)}</h4><div class="pillset">${u[k].map(s=>`<span class="xchip">${esc(s)}<button data-act="skDel" data-id="${k}:${esc(s)}" aria-label="Remove">✕</button></span>`).join("")}</div><form data-form="skAdd" data-id="${k}" class="flex" style="margin-top:8px"><input class="field" name="s" list="skl" placeholder="${esc(t("Add a skill"))}" required style="margin:0"><button class="btn btn-soft btn-sm">${t("Add")}</button></form>`).join("")}<datalist id="skl">${SKILLS.map(s=>`<option value="${s}">`).join("")}</datalist>
+${Object.entries(LISTS).map(([k,[title,fs]])=>`<h4 style="margin:22px 0 8px">${t(title)}</h4>${u[k].map(it=>`<div class="li flex" style="justify-content:space-between"><span>${fs.map(([f])=>esc(it[f]||"")).filter(Boolean).join(" · ")}</span><button class="btn btn-ghost btn-sm" data-act="liDel" data-id="${k}:${it.id}">✕</button></div>`).join("")}<form data-form="liAdd" data-id="${k}" class="grid" style="gap:6px;margin-top:8px">${fs.map(([f,l],i)=>`<input class="field" name="${f}" placeholder="${esc(t(l))}" ${i===0?"required":""} style="margin:0">`).join("")}<button class="btn btn-soft btn-sm">${t("Add")}</button></form>`).join("")}`}},"md")};
+FM.prof=fd=>{const u=me();["name","profession","location","goal","bio"].forEach(k=>{u[k]=fd.get(k).trim()});commit();toast("Profile saved ✔","ok")};
+FM.skAdd=(fd,f,k)=>{const u=me(),s=fd.get("s").trim();if(s&&!has(u[k],s))u[k].push(s);commit()};
+A.skDel=id=>{const[k,...r]=id.split(":"),s=r.join(":"),u=me();u[k]=u[k].filter(x=>x!==s);commit()};
+FM.liAdd=(fd,f,k)=>{const o={id:rid()};LISTS[k][1].forEach(([n])=>o[n]=(fd.get(n)||"").trim());if(o.link&&!/^https?:\/\//i.test(o.link))return toast("Links must start with http:// or https://","err");me()[k].push(o);commit()};
+A.liDel=id=>{const[k,i]=id.split(":"),u=me();u[k]=u[k].filter(x=>x.id!==i);commit()};
+CH.avatar=el=>{const f=el.files[0];if(!f)return;if(!/^image\/(jpeg|png|webp)$/.test(f.type))return toast("Use a JPG, PNG or WebP image","err");if(f.size>5*1048576)return toast("Image is larger than 5 MB","err");
+const img=new Image(),url=URL.createObjectURL(f);img.onload=()=>{const c=document.createElement("canvas");c.width=c.height=160;const x=c.getContext("2d"),s=Math.min(img.width,img.height);x.drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,160,160);me().avatar=c.toDataURL("image/jpeg",.8);URL.revokeObjectURL(url);commit();toast("Photo updated ✔","ok")};img.src=url};
+/* ---- settings ---- */
+A.settings=()=>{if(needAuth())return;openSheet(()=>{const u=me();return{title:"Settings",html:`<form data-form="settings">${field("name","Full name",{req:1,v:u.name})}<label>${t("Email")}<input class="field" value="${esc(u.email)}" disabled></label>${field("bio","Biography",{area:1,v:u.bio})}${select("avail","Availability",["Weekdays","Evenings","Weekends","Flexible"],u.avail)}<button class="btn btn-primary btn-sm" style="margin-top:12px" id="saveSet">${t("Save changes")}</button></form><div style="margin-top:16px">${switchRow("Dark mode",dark(),"sTheme")}${switchRow("Email notifications",u.prefs.email,"sEmail")}${switchRow("New mentorship matches",u.prefs.matches,"sMatch")}</div><div style="margin-top:14px">${seg(["English","ខ្មែរ"],lang==="km"?"ខ្មែរ":"English","sLang")}</div><p class="muted sm" style="margin-top:12px">${t("Switches save instantly. Profile fields are saved with the button and never reset other fields.")}</p>`}},"sm")};
+FM.settings=async(fd,f)=>{const b=$("#saveSet");b.disabled=true;b.textContent="…";await sleep(450);const u=me();u.name=fd.get("name").trim()||u.name;u.bio=fd.get("bio");u.avail=fd.get("avail");save();renderAll();refresh();toast("Settings saved ✔","ok")};
+CH.sTheme=el=>{setTheme(el.checked);renderHeader()};CH.sEmail=el=>{me().prefs.email=el.checked;save();toast("Saved","ok")};CH.sMatch=el=>{me().prefs.matches=el.checked;save();toast("Saved","ok")};
+A.sLang=id=>{lang=id==="ខ្មែរ"?"km":"en";localStorage.setItem("lang",lang);renderAll();refresh()};
+/* ---- admin ---- */
+let AD={tab:"Overview",range:"30d",uq:""};
+A.admin=()=>{if(needAuth())return;if(needRole("admin"))return;openSheet(adminSheet,"lg")};
+function spark(n,seedv){let s=seedv,pts=[];for(let i=0;i<n;i++){s=(s*9301+49297)%233280;pts.push(20+s/233280*60+i*(40/n))}const w=300,h=100;return`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:100px"><polyline fill="none" stroke="#3B6BFF" stroke-width="3" stroke-linecap="round" points="${pts.map((p,i)=>`${(i/(n-1)*w).toFixed(1)},${(h-p).toFixed(1)}`).join(" ")}"/></svg>`}
+function adminSheet(){let h="";const tab=AD.tab;
+if(tab==="Overview"){const k=[[S.users.length,"Users"],[mentorsList().length,"Mentors"],[S.jobs.length,"Internships"],[S.apps.length,"Applications"],[S.exch.length,"Skill exchanges"],[S.sessions.length,"Sessions"],[S.posts.length,"Forum posts"],[S.convs.reduce((a,c)=>a+c.msgs.length,0),"Messages"]];
+const st={};S.apps.forEach(a=>st[a.status]=(st[a.status]||0)+1);const mx=Math.max(...Object.values(st),1);
+h=`<div style="margin-bottom:14px">${seg(["7d","30d","90d","12m"],AD.range,"adRange")}</div><div class="grid g4" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">${k.map(([n,l])=>`<div class="card glass kpi"><b>${n}</b><span class="muted sm">${t(l)}</span></div>`).join("")}</div><div class="grid g2" style="margin-top:16px"><div class="card glass"><b>${t("Growth")} <span class="muted sm">(${t("sample data")})</span></b>${spark({"7d":7,"30d":15,"90d":24,"12m":12}[AD.range],AD.range.length*777)}</div><div class="card glass"><b>${t("Applications by status")}</b><div class="bars">${Object.keys(st).length?Object.entries(st).map(([a,b])=>`<div class="b"><span style="width:90px">${t(a)}</span><i style="width:${Math.max(b/mx*60,6)}%;background:var(--blue)"></i><b>${b}</b></div>`).join(""):`<p class="muted">—</p>`}</div></div></div>`}
+if(tab==="Users"){const l=S.users.filter(u=>!u.id.startsWith("x")&&(u.name+u.email).toLowerCase().includes(AD.uq.toLowerCase()));h=`<input class="field" data-in="adq" placeholder="${esc(t("Search users…"))}" value="${esc(AD.uq)}" style="margin-bottom:12px"><div class="tblw"><table><tr><th>${t("Name")}</th><th>Email</th><th>${t("Role")}</th><th>${t("Status")}</th><th></th></tr>${l.map(u=>`<tr><td>${esc(u.name)}</td><td>${esc(u.email)}</td><td><select class="field" style="margin:0;padding:6px 10px" data-ch="adRole" data-id="${u.id}" ${u.id===S.me?"disabled":""}>${["student","mentor","recruiter","admin"].map(r=>`<option ${u.role===r?"selected":""}>${r}</option>`).join("")}</select></td><td>${badge(u.active?"active":"suspended")}</td><td>${u.id===S.me?"":`<button class="btn btn-soft btn-sm" data-act="adSusp" data-id="${u.id}">${u.active?t("Suspend"):t("Activate")}</button>`}</td></tr>`).join("")}</table></div>`}
+if(tab==="Mentors"){const l=S.mentorApps.slice().sort((a,b)=>b.ts-a.ts);h=l.length?l.map(a=>`<div class="card glass" style="margin-bottom:12px"><div class="row" style="margin:0"><b>${esc(nm(a.uid))}</b>${badge(a.status)}</div><p class="muted sm">${esc(a.expertise)} · ${esc(a.bio)} · ${esc(a.avail)}</p>${a.status==="pending"?`<div class="row l"><button class="btn btn-primary btn-sm" data-act="maOk" data-id="${a.id}">${t("Approve")}</button><button class="btn btn-red btn-sm" data-act="maNo" data-id="${a.id}">${t("Reject")}</button></div>`:""}</div>`).join(""):empty("🧑‍🏫","No mentor applications")}
+if(tab==="Companies"){h=S.companies.map(c=>`<div class="card glass" style="margin-bottom:12px"><div class="row" style="margin:0"><b>${esc(c.name)}</b>${badge(c.verified?"approved":"pending")}</div><p class="muted sm">${esc(c.desc)} · ${esc(c.contact)}</p><button class="btn btn-soft btn-sm" data-act="coVer" data-id="${c.id}">${c.verified?t("Remove verification"):t("Verify company")}</button></div>`).join("")}
+if(tab==="Internships"){h=S.jobs.map(j=>`<div class="card glass" style="margin-bottom:12px"><div class="row" style="margin:0"><b>${esc(j.title)}</b>${badge(j.status)}</div><p class="muted sm">${esc(comp(j.cid)?.name||"")} · ${S.apps.filter(a=>a.jobId===j.id).length} ${t("applicants")}</p><button class="btn btn-soft btn-sm" data-act="adJob" data-id="${j.id}">${j.status==="open"?t("Close listing"):t("Reopen")}</button></div>`).join("")}
+if(tab==="Audit"){h=`<div class="row l" style="margin:0 0 12px;gap:8px"><button class="btn btn-soft btn-sm" data-act="csv" data-id="users">⬇ ${t("Users CSV")}</button><button class="btn btn-soft btn-sm" data-act="csv" data-id="apps">⬇ ${t("Applications CSV")}</button><button class="btn btn-soft btn-sm" data-act="csv" data-id="audit">⬇ ${t("Audit CSV")}</button></div>${S.audit.length?S.audit.slice(0,50).map(a=>`<div class="li sm">${fmt(a.ts)} · <b>${esc(a.actor)}</b> · ${esc(a.action)}</div>`).join(""):empty("🗒️","No audit records yet")}`}
+return{title:"Admin panel",html:`<div style="margin-bottom:14px">${seg(["Overview","Users","Mentors","Companies","Internships","Audit"],tab,"adTab")}</div>${h}`}}
+A.adTab=id=>{AD.tab=id;refresh()};A.adRange=id=>{AD.range=id;refresh()};IN.adq=el=>{AD.uq=el.value;const p=el.selectionStart;refresh();const n=$("[data-in=adq]");if(n){n.focus();n.setSelectionRange(p,p)}};
+CH.adRole=el=>{const u=byId(el.dataset.id);if(u.id===S.me)return;u.role=el.value;audit(`Changed role of ${u.name} to ${u.role}`);notify(u.id,"system","Your role changed to "+u.role);commit()};
+A.adSusp=id=>{const u=byId(id);if(u.id===S.me)return toast("You cannot suspend yourself","err");u.active=!u.active;audit(`${u.active?"Activated":"Suspended"} ${u.name}`);commit()};
+A.maOk=id=>{const a=S.mentorApps.find(x=>x.id===id),u=byId(a.uid);a.status="approved";u.role="mentor";u.verified=true;if(!u.profession)u.profession=a.expertise;u.rb=[0,0];audit("Approved mentor "+u.name);notify(u.id,"system","Your mentor application was approved");commit()};
+A.maNo=id=>{const a=S.mentorApps.find(x=>x.id===id);a.status="rejected";audit("Rejected mentor application of "+nm(a.uid));notify(a.uid,"system","Your mentor application was not approved");commit()};
+A.coVer=id=>{const c=S.companies.find(x=>x.id===id);c.verified=!c.verified;audit(`${c.verified?"Verified":"Unverified"} company ${c.name}`);commit()};
+A.adJob=id=>{const j=S.jobs.find(x=>x.id===id);j.status=j.status==="open"?"closed":"open";audit(`Moderated internship ${j.title} → ${j.status}`);commit()};
+function csv(name,rows){const e=v=>`"${String(v??"").replace(/"/g,'""')}"`;const b=new Blob(["\ufeff"+rows.map(r=>r.map(e).join(",")).join("\n")],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+A.csv=id=>{if(id==="users")csv("users.csv",[["id","name","email","role","active"],...S.users.map(u=>[u.id,u.name,u.email,u.role,u.active])]);if(id==="apps")csv("applications.csv",[["id","job","applicant","status","cv"],...S.apps.map(a=>[a.id,S.jobs.find(j=>j.id===a.jobId)?.title,nm(a.uid),a.status,a.cv])]);if(id==="audit")csv("audit.csv",[["time","actor","action"],...S.audit.map(a=>[new Date(a.ts).toISOString(),a.actor,a.action])]);toast("CSV exported ✔","ok")};
+/* =============== events =============== */
+document.addEventListener("click",e=>{const b=e.target.closest("[data-act]");if(b){const f=A[b.dataset.act];if(f){e.preventDefault();f(b.dataset.id,b,e)}return}
+if(e.target.id==="ov")closeSheet()});
+document.addEventListener("submit",e=>{const f=e.target.closest("[data-form]");if(!f)return;e.preventDefault();const h=FM[f.dataset.form];if(h)h(new FormData(f),f,f.dataset.id)});
+document.addEventListener("change",e=>{const b=e.target.closest("[data-ch]");if(b&&CH[b.dataset.ch])CH[b.dataset.ch](b,e)});
+document.addEventListener("input",e=>{const b=e.target.closest("[data-in]");if(b&&IN[b.dataset.in])IN[b.dataset.in](b,e)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet();if((e.key==="k"&&(e.ctrlKey||e.metaKey))||(e.key==="/"&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))){e.preventDefault();A.pal()}});
+/* theme */
+function setTheme(d){document.documentElement.dataset.theme=d?"dark":"light";localStorage.setItem("dark",d?"1":"0")}
+setTheme(localStorage.getItem("dark")==="1"||(localStorage.getItem("dark")===null&&matchMedia("(prefers-color-scheme:dark)").matches));
+/* effects */
+const fine=matchMedia("(hover:hover) and (pointer:fine)").matches,calm=matchMedia("(prefers-reduced-motion:reduce)").matches;
+function bindTilt(){if(!fine||calm)return;$$(".tilt").forEach(c=>{if(c._t)return;c._t=1;c.addEventListener("mousemove",e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(900px) rotateX(${-y*8}deg) rotateY(${x*8}deg) scale(1.02)`});c.addEventListener("mouseleave",()=>c.style.transform="")})}
+if(fine&&!calm){document.addEventListener("pointermove",e=>{const g=e.target.closest&&e.target.closest(".glass");if(g){const r=g.getBoundingClientRect();g.style.setProperty("--mx",e.clientX-r.left+"px");g.style.setProperty("--my",e.clientY-r.top+"px")}},{passive:true});
+const hero=$("#home"),sin=$("#stageIn");hero.addEventListener("pointermove",e=>{const r=hero.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;sin.style.transform=`rotateX(${-y*8}deg) rotateY(${x*12}deg)`});hero.addEventListener("pointerleave",()=>sin.style.transform="")}
+/* dot field */
+(function(){const cv=$("#dots"),ctx=cv.getContext("2d");let w=0,h=0,dots=[],mx=-999,my=-999;
+function size(){const r=cv.parentElement.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);w=r.width;h=r.height;cv.width=w*d;cv.height=h*d;cv.style.width=w+"px";cv.style.height=h+"px";ctx.setTransform(d,0,0,d,0,0);dots=[];const g=w<700?28:32;for(let y=g/2;y<h;y+=g)for(let x=g/2;x<w;x+=g)dots.push({bx:x,by:y,x,y})}
+cv.parentElement.addEventListener("pointermove",e=>{const r=cv.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});cv.parentElement.addEventListener("pointerleave",()=>{mx=my=-999});
+let vis=true;new IntersectionObserver(es=>{vis=es[0].isIntersecting;if(vis&&!calm)requestAnimationFrame(draw)}).observe(cv.parentElement);
+function draw(ts){if(!vis)return;ctx.clearRect(0,0,w,h);const dk=dark();for(const p of dots){const dx=p.bx-mx,dy=p.by-my,d=Math.hypot(dx,dy)||1,R=150,push=d<R?(1-d/R)*42:0,wave=calm?0:Math.sin((p.bx+p.by)*.012+ts*.0012)*2.2;p.x+=(p.bx+dx/d*push-p.x)*.12;p.y+=(p.by+dy/d*push+wave-p.y)*.12;ctx.beginPath();ctx.fillStyle=push>5?"#3B6BFF":(dk?"rgba(255,255,255,.22)":"rgba(15,23,42,.26)");ctx.arc(p.x,p.y,1.3+push*.035,0,6.283);ctx.fill()}if(!calm)requestAnimationFrame(draw)}
+size();addEventListener("resize",size);requestAnimationFrame(draw)})();
+/* dash banner */
+(function(){const cv=$("#dashes"),ctx=cv.getContext("2d");let w=0,h=0,vis=true;
+function size(){const r=cv.parentElement.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);w=r.width;h=r.height;cv.width=w*d;cv.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+new IntersectionObserver(es=>{vis=es[0].isIntersecting;if(vis&&!calm)requestAnimationFrame(draw)}).observe(cv.parentElement);
+function draw(ts){if(!vis)return;ctx.clearRect(0,0,w,h);const cx=w*.72,cy=h*.5;ctx.lineCap="round";ctx.lineWidth=3;for(let i=1;i<=16;i++){const r=i*28+10,n=Math.floor(r/10),dir=i%2?1:-1;for(let k=0;k<n;k++){const a=k/n*6.283+(calm?0:ts*.00018*dir),x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;ctx.strokeStyle=`rgba(80,112,255,${Math.max(.15,1-i/18)})`;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(a)*7,y+Math.sin(a)*7);ctx.stroke()}}if(!calm)requestAnimationFrame(draw)}
+size();addEventListener("resize",size);requestAnimationFrame(draw)})();
+/* reveal / count-up / scroll-spy / ticker */
+const io=new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;en.target.classList.add("show");$$("[data-count]",en.target).forEach(n=>{const to=+n.dataset.count;let v=0;const st=Math.max(to/30,.1),id=setInterval(()=>{v+=st;if(v>=to){v=to;clearInterval(id)}n.textContent=Math.round(v)},30)});io.unobserve(en.target)}),{threshold:.15});
+const watchReveal=()=>$$(".reveal:not(.show)").forEach(el=>io.observe(el));
+let spyId="home";
+function spyApply(){$$("[data-spy]").forEach(a=>a.classList.toggle("on",a.dataset.spy===spyId));const on=$("#navLinks a.on"),ind=$("#navLinks .ind");if(on&&ind){ind.style.opacity=1;ind.style.left=on.offsetLeft+"px";ind.style.width=on.offsetWidth+"px"}else if(ind)ind.style.opacity=0}
+const spy=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){spyId=en.target.id;spyApply()}}),{rootMargin:"-45% 0px -50% 0px"});
+["home","courses","exchange","mentors","sessions","career","jobs","forum"].forEach(id=>{const e=document.getElementById(id);e&&spy.observe(e)});
+setInterval(()=>$$("[data-cd]").forEach(e=>e.textContent=cd(+e.dataset.cd)),1000);
+addEventListener("resize",()=>{segs();spyApply()});
+/* boot */
+renderAll();watchReveal();
+setTimeout(()=>{loading=false;renderAll();watchReveal()},650);
+</script>
+</body>
+</html>

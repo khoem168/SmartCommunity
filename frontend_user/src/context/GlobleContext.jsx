@@ -39,6 +39,11 @@ const GlobleContext = ({ children }) => {
     socket.emit("join:user", user.id);
   }, [user]);
 
+  useEffect(() => {
+    if (!user) return;
+    document.documentElement.dataset.theme = user.darkMode ? "dark" : "light";
+  }, [user]);
+
   const loginUser = async (credentials) => {
     const response = await loginRequest(credentials);
     setUser(response.user);

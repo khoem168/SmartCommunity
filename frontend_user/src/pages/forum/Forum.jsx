@@ -8,6 +8,8 @@ import {
   IoSearchOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
+import { forumCopy } from "../../i18n/forumCopy";
 import {
   createForumPostRequest,
   fetchForumCategories,
@@ -15,13 +17,17 @@ import {
 } from "../../services/forumService";
 import "./Forum.css";
 
-const formatDate = (value) =>
-  new Intl.DateTimeFormat("en", { dateStyle: "medium" }).format(
-    new Date(value),
-  );
+const formatDate = (value, language) => {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : new Intl.DateTimeFormat(
+    language === "km" ? "km-KH" : "en", { dateStyle: "medium" },
+  ).format(date);
+};
 
 const Forum = () => {
   const { user } = useGlobleContext();
+  const { language } = useLanguage();
+  const copy = forumCopy[language] || forumCopy.en;
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [posts, setPosts] = useState([]);
@@ -60,11 +66,11 @@ const Forum = () => {
         categoryId: current.categoryId || String(categoryRows[0]?.id || ""),
       }));
     } catch (err) {
-      setError(err.message || "Unable to load the forum.");
+      setError(err.message || copy.loadError);
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [filters, copy]);
 
   useEffect(() => {
     Promise.resolve()
@@ -92,7 +98,7 @@ const Forum = () => {
       });
       navigate(`/forum/${response.post.id}`);
     } catch (err) {
-      setError(err.message || "Unable to publish your post.");
+      setError(err.message || copy.publishError);
     } finally {
       setBusy(false);
     }
@@ -103,11 +109,10 @@ const Forum = () => {
       <section className="forum-hero">
         <div className="container forum-hero-grid">
           <div>
-            <span className="forum-eyebrow">Learn together</span>
-            <h1>Community Forum</h1>
+            <span className="forum-eyebrow">{copy.eyebrow}</span>
+            <h1>{copy.title}</h1>
             <p>
-              Ask focused questions, share useful ideas, and learn from the
-              community.
+              {copy.intro}
             </p>
             <button
               className="btn primary"
@@ -116,21 +121,21 @@ const Forum = () => {
                 user ? setShowComposer((value) => !value) : navigate("/login")
               }
             >
-              {user ? "Create a post" : "Login to ask"}
+              {user ? copy.create : copy.login}
             </button>
           </div>
           <div className="forum-stat-grid">
             <div>
               <strong>{stats.posts || 0}</strong>
-              <span>Total posts</span>
+              <span>{copy.total}</span>
             </div>
             <div>
               <strong>{stats.questions || 0}</strong>
-              <span>Questions</span>
+              <span>{copy.questions}</span>
             </div>
             <div>
               <strong>{stats.discussions || 0}</strong>
-              <span>Discussions</span>
+              <span>{copy.discussions}</span>
             </div>
           </div>
         </div>
@@ -142,32 +147,32 @@ const Forum = () => {
           <form className="forum-composer" onSubmit={publishPost}>
             <div className="forum-section-heading">
               <div>
-                <span className="forum-eyebrow">Start a conversation</span>
-                <h2>Create a new post</h2>
+                <span className="forum-eyebrow">{copy.start}</span>
+                <h2>{copy.newPost}</h2>
               </div>
               <button
                 className="forum-text-button"
                 type="button"
                 onClick={() => setShowComposer(false)}
               >
-                Cancel
+                {copy.cancel}
               </button>
             </div>
             <div className="forum-form-row">
               <label>
-                Post type
+                {copy.type}
                 <select
                   value={form.postType}
                   onChange={(event) =>
                     setForm({ ...form, postType: event.target.value })
                   }
                 >
-                  <option value="question">Question</option>
-                  <option value="discussion">Discussion</option>
+                  <option value="question">{copy.question}</option>
+                  <option value="discussion">{copy.discussion}</option>
                 </select>
               </label>
               <label>
-                Category
+                {copy.category}
                 <select
                   value={form.categoryId}
                   onChange={(event) =>
@@ -183,7 +188,7 @@ const Forum = () => {
               </label>
             </div>
             <label>
-              Title
+              {copy.postTitle}
               <input
                 required
                 minLength="8"
@@ -192,11 +197,11 @@ const Forum = () => {
                 onChange={(event) =>
                   setForm({ ...form, title: event.target.value })
                 }
-                placeholder="What would you like to ask or discuss?"
+                placeholder={copy.titleHint}
               />
             </label>
             <label>
-              Details
+              {copy.details}
               <textarea
                 required
                 minLength="20"
@@ -205,11 +210,11 @@ const Forum = () => {
                 onChange={(event) =>
                   setForm({ ...form, body: event.target.value })
                 }
-                placeholder="Add context, what you tried, and the result you need."
+                placeholder={copy.detailsHint}
               />
             </label>
             <button className="btn primary" disabled={busy} type="submit">
-              {busy ? "Publishing..." : "Publish post"}
+              {busy ? copy.publishing : copy.publish}
             </button>
           </form>
         )}
@@ -218,18 +223,20 @@ const Forum = () => {
           <button
             className={`forum-category-card ${!filters.category ? "active" : ""}`}
             type="button"
+            aria-pressed={!filters.category}
             onClick={() =>
               setFilters((current) => ({ ...current, category: "" }))
             }
           >
             <span className="category-dot all" />
-            <strong>All topics</strong>
-            <span>{stats.posts || 0} posts</span>
+            <strong>{copy.allTopics}</strong>
+            <span>{stats.posts || 0} {copy.posts}</span>
           </button>
           {categories.map((category) => (
             <button
               className={`forum-category-card ${filters.category === category.slug ? "active" : ""}`}
               key={category.id}
+              aria-pressed={filters.category === category.slug}
               type="button"
               onClick={() =>
                 setFilters((current) => ({
@@ -245,7 +252,7 @@ const Forum = () => {
               <strong>{category.name}</strong>
               <span>
                 {category.postCount}{" "}
-                {Number(category.postCount) === 1 ? "post" : "posts"}
+                {copy.posts}
               </span>
             </button>
           ))}
@@ -257,12 +264,13 @@ const Forum = () => {
             <input
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}
-              placeholder="Search titles and posts"
+              placeholder={copy.searchHint}
+              aria-label={copy.searchHint}
             />
-            <button type="submit">Search</button>
+            <button type="submit">{copy.search}</button>
           </form>
           <select
-            aria-label="Post type"
+            aria-label={copy.type}
             value={filters.type}
             onChange={(event) =>
               setFilters((current) => ({
@@ -271,12 +279,12 @@ const Forum = () => {
               }))
             }
           >
-            <option value="">All types</option>
-            <option value="question">Questions</option>
-            <option value="discussion">Discussions</option>
+            <option value="">{copy.allTypes}</option>
+            <option value="question">{copy.questions}</option>
+            <option value="discussion">{copy.discussions}</option>
           </select>
           <select
-            aria-label="Sort posts"
+            aria-label={copy.sort}
             value={filters.sort}
             onChange={(event) =>
               setFilters((current) => ({
@@ -285,20 +293,22 @@ const Forum = () => {
               }))
             }
           >
-            <option value="latest">Latest</option>
-            <option value="popular">Popular</option>
-            <option value="unanswered">Unanswered</option>
+            <option value="latest">{copy.latest}</option>
+            <option value="popular">{copy.popular}</option>
+            <option value="unanswered">{copy.unanswered}</option>
           </select>
         </div>
 
         <div className="forum-feed">
           {loading ? (
-            <div className="forum-empty">Loading community posts...</div>
+            <div className="forum-empty" role="status">{copy.loading}</div>
+          ) : error && posts.length === 0 ? (
+            <div className="forum-empty"><h2>{copy.loadError}</h2><button type="button" className="btn primary" onClick={loadForum}>{copy.retry}</button></div>
           ) : posts.length === 0 ? (
             <div className="forum-empty">
               <IoChatbubblesOutline className="forum-empty-icon" />
-              <h2>No posts found</h2>
-              <p>Try another filter or start the first conversation.</p>
+              <h2>{copy.empty}</h2>
+              <p>{copy.emptyHint}</p>
               <button
                 className="btn primary small"
                 type="button"
@@ -307,8 +317,8 @@ const Forum = () => {
                 }
               >
                 {user
-                  ? "Start a conversation"
-                  : "Login to create the first post"}
+                  ? copy.start
+                  : copy.loginCreate}
               </button>
             </div>
           ) : (
@@ -317,12 +327,12 @@ const Forum = () => {
                 <div className="forum-vote-box">
                   <IoHeartOutline />
                   <strong>{post.likeCount}</strong>
-                  <span>likes</span>
+                  <span>{copy.likes}</span>
                 </div>
                 <div className="forum-post-main">
                   <div className="forum-post-meta">
                     <span className={`forum-type ${post.postType}`}>
-                      {post.postType}
+                      {copy[post.postType] || post.postType}
                     </span>
                     <span
                       className="forum-category-pill"
@@ -331,7 +341,7 @@ const Forum = () => {
                       {post.category.name}
                     </span>
                     {post.status === "closed" && (
-                      <span className="forum-closed">Closed</span>
+                      <span className="forum-closed">{copy.closed}</span>
                     )}
                   </div>
                   <Link to={`/forum/${post.id}`}>
@@ -344,18 +354,18 @@ const Forum = () => {
                   </p>
                   <div className="forum-post-footer">
                     <span>
-                      By {post.authorName} · {formatDate(post.createdAt)}
+                      {copy.by} {post.authorName} · {formatDate(post.createdAt, language)}
                     </span>
                     <div>
                       <span>
-                        <IoChatbubblesOutline /> {post.answerCount} answers
+                        <IoChatbubblesOutline /> {post.answerCount} {copy.answers}
                       </span>
                       <span>
-                        <IoEyeOutline /> {post.viewsCount} views
+                        <IoEyeOutline /> {post.viewsCount} {copy.views}
                       </span>
                       {post.hasAcceptedAnswer && (
                         <span className="forum-solved">
-                          <IoCheckmarkCircleOutline /> Solved
+                          <IoCheckmarkCircleOutline /> {copy.solved}
                         </span>
                       )}
                     </div>
