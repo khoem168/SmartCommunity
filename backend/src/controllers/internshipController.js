@@ -1,4 +1,9 @@
 const db = require("../config/db");
+const {
+  extractUserSkills,
+  findCourseForSkill,
+  matchSkills,
+} = require("../utils/skillMatcher");
 const { uploadImage } = require("../services/imageUploadService");
 const { uploadDocument } = require("../services/documentUploadService");
 const {
@@ -82,32 +87,95 @@ const internshipSelect = `
 
 const getInternships = async (req, res, next) => {
   try {
-    const [rows] = await db.query(
-      `${internshipSelect}
-       WHERE i.status = 'open'
-       GROUP BY i.id, cp.description
-       ORDER BY i.created_at DESC`,
-    );
+    const user = req.user || null;
+    const userSkills = extractUserSkills(user);
+
+    const [
+      [rows],
+      [courseRows],
+    ] = await Promise.all([
+      db.query(
+        `${internshipSelect}
+         WHERE i.status = 'open'
+         GROUP BY i.id, cp.description
+         ORDER BY i.created_at DESC`,
+      ),
+      db.query(
+        `SELECT id, slug, title, category, level, highlights, thumbnail_url, duration_text, price, currency
+         FROM courses WHERE is_published = 1 ORDER BY sort_order`,
+      ),
+    ]);
+
+    let appliedSet = new Set();
+    if (user?.id) {
+      const [appliedRows] = await db.query(
+        "SELECT internship_id FROM internship_applications WHERE student_id = ?",
+        [user.id],
+      );
+      appliedSet = new Set(appliedRows.map((r) => Number(r.internship_id)));
+    }
+
     const query = String(req.query.q || "").trim().toLowerCase();
     const type = String(req.query.type || "").trim();
     const remote = String(req.query.remote || "") === "true";
-    const internships = rows.map(formatInternship).filter((item) => {
-      const searchText = [
-        item.title,
-        item.company,
-        item.category,
-        item.description,
-        ...item.requirements,
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-      return (
-        (!query || searchText.includes(query)) &&
-        (!type || item.internshipType === type) &&
-        (!remote || item.isRemote)
-      );
-    });
+    const minMatch = req.query.minMatch ? Number(req.query.minMatch) : null;
+
+    const internships = rows
+      .map((row) => {
+        const item = formatInternship(row);
+        const hasApplied = appliedSet.has(Number(item.id));
+        const match = userSkills.length
+          ? matchSkills(userSkills, item.requirements)
+          : {
+              matchScore: null,
+              matched: [],
+              missing: item.requirements,
+              totalCount: item.requirements.length,
+            };
+
+        const bridges = (match.missing || []).map((skill) => {
+          const course = findCourseForSkill(courseRows, skill);
+          return {
+            skill,
+            course: course || null,
+            courseUrl: course
+              ? `/courses/${course.slug}`
+              : `/courses?q=${encodeURIComponent(skill)}`,
+            exchangeUrl: `/skill-exchange?learn=${encodeURIComponent(skill)}`,
+            careerUrl: "/career",
+          };
+        });
+
+        return {
+          ...item,
+          hasApplied,
+          matchScore: match.matchScore,
+          matchedSkills: match.matched,
+          missingSkills: match.missing,
+          bridges,
+        };
+      })
+      .filter((item) => {
+        const searchText = [
+          item.title,
+          item.company,
+          item.category,
+          item.description,
+          ...item.requirements,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        return (
+          (!query || searchText.includes(query)) &&
+          (!type || item.internshipType === type) &&
+          (!remote || item.isRemote) &&
+          (minMatch === null ||
+            (item.matchScore !== null && item.matchScore >= minMatch))
+        );
+      });
+
     return res.json({ internships });
   } catch (err) {
     return next(err);

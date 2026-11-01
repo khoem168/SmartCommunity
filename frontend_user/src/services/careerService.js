@@ -9,6 +9,8 @@ export const fetchCareerPath = (pathId) => apiFetch(`/career/paths/${pathId}`);
 
 export const fetchCareerOverview = () => apiFetch("/career/overview");
 
+export const fetchCareerBridge = () => apiFetch("/career/bridge");
+
 export const startCareerRoadmapRequest = (pathId) =>
   apiFetch("/career/roadmaps", {
     method: "POST",

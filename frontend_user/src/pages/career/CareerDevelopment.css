@@ -791,3 +791,389 @@
 [data-theme="dark"] .assessment-score strong {
   color: #f8fafc;
 }
+
+/* ==========================================================================
+   Feature 5: Career Bridge Milestone Courses & Matching Jobs
+   ========================================================================== */
+
+.milestone-learning-bridge {
+  margin-top: 24px;
+  padding: 22px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(20, 184, 166, 0.05) 100%);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  backdrop-filter: blur(12px);
+}
+
+[data-theme="dark"] .milestone-learning-bridge {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(20, 184, 166, 0.08) 100%);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.milestone-bridge-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.milestone-bridge-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.12);
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .milestone-bridge-icon {
+  background: rgba(37, 99, 235, 0.25);
+}
+
+.milestone-bridge-header h3 {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .milestone-bridge-header h3 {
+  color: #f8fafc;
+}
+
+.milestone-bridge-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.92rem;
+}
+
+[data-theme="dark"] .milestone-bridge-header p {
+  color: #94a3b8;
+}
+
+.milestone-courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.milestone-course-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-theme="dark"] .milestone-course-card {
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+.milestone-course-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
+}
+
+.milestone-course-thumb {
+  width: 72px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.milestone-course-thumb-placeholder {
+  width: 72px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  background: rgba(37, 99, 235, 0.1);
+  border-radius: 8px;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.milestone-course-details {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.milestone-course-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #2563eb;
+  letter-spacing: 0.03em;
+}
+
+[data-theme="dark"] .milestone-course-tag {
+  color: #60a5fa;
+}
+
+.milestone-course-details h4 {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .milestone-course-details h4 {
+  color: #f1f5f9;
+}
+
+.milestone-learn-btn {
+  align-self: flex-start;
+  margin-top: 4px;
+  font-size: 0.78rem;
+  padding: 4px 10px;
+}
+
+.milestone-courses-empty {
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px dashed rgba(148, 163, 184, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+[data-theme="dark"] .milestone-courses-empty {
+  background: rgba(30, 41, 59, 0.4);
+}
+
+.milestone-peers-callout {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(148, 163, 184, 0.25);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+[data-theme="dark"] .milestone-peers-callout {
+  color: #94a3b8;
+}
+
+.milestone-peer-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.peer-swap-chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(14, 165, 233, 0.1);
+  color: #0284c7;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  transition: all 0.2s ease;
+}
+
+.peer-swap-chip:hover {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+/* Matching Target Jobs */
+.roadmap-matching-jobs-section {
+  margin-top: 24px;
+  padding: 22px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  backdrop-filter: blur(12px);
+}
+
+[data-theme="dark"] .roadmap-matching-jobs-section {
+  background: rgba(18, 24, 38, 0.75);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.matching-jobs-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.matching-jobs-eyebrow {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #059669;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+[data-theme="dark"] .matching-jobs-eyebrow {
+  color: #34d399;
+}
+
+.matching-jobs-header h3 {
+  margin: 0 0 4px;
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .matching-jobs-header h3 {
+  color: #f8fafc;
+}
+
+.matching-jobs-header p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: #64748b;
+}
+
+[data-theme="dark"] .matching-jobs-header p {
+  color: #94a3b8;
+}
+
+.matching-jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.matching-job-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+[data-theme="dark"] .matching-job-card {
+  background: rgba(30, 41, 59, 0.5);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.matching-job-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(37, 99, 235, 0.35);
+}
+
+.matching-job-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.matching-job-top h4 {
+  margin: 0 0 3px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .matching-job-top h4 {
+  color: #f1f5f9;
+}
+
+.job-company-loc {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+[data-theme="dark"] .job-company-loc {
+  color: #94a3b8;
+}
+
+.matching-job-score {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.matching-job-score.score-high {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="dark"] .matching-job-score.score-high {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.matching-job-score.score-med {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+[data-theme="dark"] .matching-job-score.score-med {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.matching-job-reqs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.job-req-tag {
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563eb;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .job-req-tag {
+  background: rgba(37, 99, 235, 0.15);
+  color: #60a5fa;
+}
+
+.matching-job-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(148, 163, 184, 0.2);
+}
+
+.job-stipend-text {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #10b981;
+}
+

@@ -1,4 +1,10 @@
 const db = require("../config/db");
+const {
+  extractUserSkills,
+  findCourseForSkill,
+  isSkillMatch,
+  matchSkills,
+} = require("../utils/skillMatcher");
 
 const parseJson = (value, fallback) => {
   if (!value) return fallback;
@@ -415,11 +421,277 @@ const submitCareerAssessment = async (req, res, next) => {
   }
 };
 
+const splitList = (value) =>
+  Array.isArray(value)
+    ? value.map((item) => String(item).trim()).filter(Boolean)
+    : String(value || "")
+        .split(/[,\n]/)
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+const getCareerBridge = async (req, res, next) => {
+  try {
+    const user = req.user || null;
+    const userSkills = extractUserSkills(user);
+
+    const [
+      [roadmapRows],
+      [courseRows],
+      [internshipRows],
+      [exchangeRows],
+    ] = await Promise.all([
+      user?.id
+        ? db.query(
+            `SELECT ucr.id AS roadmap_id, ucr.started_at, ucr.completed_at,
+                    cp.*, COUNT(cps.id) AS step_count
+             FROM user_career_roadmaps ucr
+             JOIN career_paths cp ON cp.id = ucr.path_id
+             LEFT JOIN career_path_steps cps ON cps.path_id = cp.id
+             WHERE ucr.user_id = ? AND ucr.is_current = 1
+             GROUP BY ucr.id, cp.id
+             ORDER BY ucr.started_at DESC LIMIT 1`,
+            [user.id],
+          )
+        : [[]],
+      db.query(
+        `SELECT id, slug, title, description, category, level, instructor_name,
+                thumbnail_url, highlights, price, currency, duration_text
+         FROM courses
+         WHERE is_published = 1
+         ORDER BY sort_order, title`,
+      ),
+      db.query(
+        `SELECT i.*, cp.description AS company_description,
+                COUNT(DISTINCT ia.id) AS application_count
+         FROM internships i
+         LEFT JOIN company_profiles cp ON cp.id = i.company_profile_id
+         LEFT JOIN internship_applications ia ON ia.internship_id = i.id
+         WHERE i.status = 'open'
+         GROUP BY i.id, cp.description
+         ORDER BY i.created_at DESC`,
+      ),
+      db.query(
+        `SELECT se.id, se.provider_id AS user_id, u.full_name AS user_name,
+                se.skill_offered, se.skill_requested
+         FROM skill_exchanges se
+         LEFT JOIN users u ON u.id = se.provider_id
+         WHERE se.status IN ('open', 'accepted')
+         ORDER BY se.created_at DESC LIMIT 50`,
+      ),
+    ]);
+
+    let appliedSet = new Set();
+    if (user?.id) {
+      const [appRows] = await db.query(
+        "SELECT internship_id FROM internship_applications WHERE student_id = ?",
+        [user.id],
+      );
+      appliedSet = new Set(appRows.map((r) => Number(r.internship_id)));
+    }
+
+    let activeRoadmap = null;
+    let nextMilestone = null;
+    if (roadmapRows && roadmapRows[0]) {
+      const rRow = roadmapRows[0];
+      const [steps] = await db.query(
+        `SELECT cps.*, urs.completed_at,
+                CASE WHEN urs.id IS NULL THEN 0 ELSE 1 END AS completed
+         FROM career_path_steps cps
+         LEFT JOIN user_roadmap_steps urs
+           ON urs.step_id = cps.id AND urs.roadmap_id = ?
+         WHERE cps.path_id = ? ORDER BY cps.position`,
+        [rRow.roadmap_id, rRow.id],
+      );
+
+      const formattedSteps = steps.map(formatStep);
+      const completedCount = formattedSteps.filter((s) => s.completed).length;
+      const uncompletedStep =
+        formattedSteps.find((s) => !s.completed) ||
+        formattedSteps[formattedSteps.length - 1];
+
+      if (uncompletedStep) {
+        const matchedCourses = courseRows
+          .filter((c) => {
+            const hList = parseJson(c.highlights, []);
+            return (
+              isSkillMatch(c.title, uncompletedStep.skill) ||
+              isSkillMatch(c.category, uncompletedStep.skill) ||
+              isSkillMatch(c.title, uncompletedStep.title) ||
+              hList.some((h) => isSkillMatch(h, uncompletedStep.skill))
+            );
+          })
+          .map((c) => ({
+            id: c.id,
+            slug: c.slug,
+            title: c.title,
+            category: c.category,
+            level: c.level,
+            thumbnailUrl: c.thumbnail_url,
+            durationText: c.duration_text,
+          }));
+
+        const matchedPeers = exchangeRows
+          .filter((e) => isSkillMatch(e.skill_offered, uncompletedStep.skill))
+          .map((e) => ({
+            id: e.id,
+            userId: e.user_id,
+            userName: e.user_name || "Community Peer",
+            skillOffered: e.skill_offered,
+            category: e.category,
+            exchangeUrl: `/skill-exchange?learn=${encodeURIComponent(e.skill_offered)}`,
+          }))
+          .slice(0, 3);
+
+        nextMilestone = {
+          id: uncompletedStep.id,
+          position: uncompletedStep.position,
+          title: uncompletedStep.title,
+          skill: uncompletedStep.skill,
+          description: uncompletedStep.description,
+          estimatedHours: uncompletedStep.estimatedHours,
+          completed: uncompletedStep.completed,
+          recommendedCourses: matchedCourses.slice(0, 3),
+          recommendedPeers: matchedPeers,
+        };
+      }
+
+      activeRoadmap = {
+        id: rRow.roadmap_id,
+        pathId: rRow.id,
+        title: rRow.title,
+        targetRole: rRow.target_role,
+        level: rRow.level,
+        progressPercent: formattedSteps.length
+          ? Math.round((completedCount / formattedSteps.length) * 100)
+          : 0,
+        totalSteps: formattedSteps.length,
+        completedSteps: completedCount,
+        nextMilestone,
+      };
+    }
+
+    const internships = internshipRows.map((row) => {
+      const requirements = splitList(row.requirements);
+      const match = userSkills.length
+        ? matchSkills(userSkills, requirements)
+        : {
+            matchScore: null,
+            matched: [],
+            missing: requirements,
+            totalCount: requirements.length,
+          };
+
+      const bridges = (match.missing || []).map((skill) => {
+        const course = findCourseForSkill(courseRows, skill);
+        return {
+          skill,
+          course: course || null,
+          courseUrl: course
+            ? `/courses/${course.slug}`
+            : `/courses?q=${encodeURIComponent(skill)}`,
+          exchangeUrl: `/skill-exchange?learn=${encodeURIComponent(skill)}`,
+          careerUrl: "/career",
+        };
+      });
+
+      const isRoadmapTarget = Boolean(
+        activeRoadmap &&
+          (isSkillMatch(row.title, activeRoadmap.targetRole) ||
+            isSkillMatch(row.category, activeRoadmap.targetRole)),
+      );
+
+      return {
+        id: row.id,
+        title: row.title,
+        category: row.category,
+        company: row.company,
+        companyProfileId: row.company_profile_id,
+        companyLogo: row.company_logo,
+        description: row.description,
+        requirements,
+        responsibilities: splitList(row.responsibilities),
+        location: row.location,
+        isRemote: Boolean(row.is_remote),
+        internshipType: row.internship_type,
+        durationWeeks: row.duration_weeks,
+        stipend: row.stipend,
+        stipendAmount:
+          row.stipend_amount === null ? null : Number(row.stipend_amount),
+        openings: Number(row.openings || 1),
+        postedBy: row.posted_by,
+        applicationDeadline: row.application_deadline,
+        applicationCount: Number(row.application_count || 0),
+        hasApplied: appliedSet.has(Number(row.id)),
+        matchScore: match.matchScore,
+        matchedSkills: match.matched,
+        missingSkills: match.missing,
+        bridges,
+        isRoadmapTarget,
+        createdAt: row.created_at,
+      };
+    });
+
+    const topMatchingInternships = internships
+      .filter((item) => item.matchScore !== null)
+      .sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0))
+      .slice(0, 6);
+
+    const courseJobBridges = courseRows.map((course) => {
+      const hList = parseJson(course.highlights, []);
+      const matchingJobs = internships
+        .filter((job) =>
+          job.requirements.some(
+            (req) =>
+              isSkillMatch(course.title, req) ||
+              isSkillMatch(course.category, req) ||
+              hList.some((h) => isSkillMatch(h, req)),
+          ),
+        )
+        .map((job) => ({
+          id: job.id,
+          title: job.title,
+          company: job.company,
+          location: job.location,
+          isRemote: job.isRemote,
+          requirements: job.requirements,
+          matchScore: job.matchScore,
+          hasApplied: job.hasApplied,
+        }));
+
+      return {
+        courseId: course.id,
+        courseSlug: course.slug,
+        courseTitle: course.title,
+        courseCategory: course.category,
+        matchingJobsCount: matchingJobs.length,
+        jobs: matchingJobs.slice(0, 4),
+      };
+    });
+
+    return res.json({
+      user: {
+        id: user?.id || null,
+        role: user?.role || "guest",
+        userSkills,
+        careerGoal: user?.careerGoal || "",
+      },
+      activeRoadmap,
+      nextMilestone,
+      topMatchingInternships,
+      internships,
+      courseJobBridges,
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 module.exports = {
   getCareerArticle,
   getCareerArticles,
   getCareerAssessment,
   getCareerAssessments,
+  getCareerBridge,
   getCareerOverview,
   getCareerPath,
   getCareerPaths,

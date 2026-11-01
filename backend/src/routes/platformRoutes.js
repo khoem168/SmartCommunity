@@ -54,6 +54,7 @@ const {
   getCareerArticles,
   getCareerAssessment,
   getCareerAssessments,
+  getCareerBridge,
   getCareerOverview,
   getCareerPath,
   getCareerPaths,
@@ -113,7 +114,8 @@ router.get("/stats", getStats);
 router.get("/members", getMembers);
 router.get("/mentors", getMentors);
 router.get("/mentors/:mentorId", getMentorDetail);
-router.get("/internships", getInternships);
+router.get("/internships", optionalAuth, getInternships);
+router.get("/career/bridge", optionalAuth, getCareerBridge);
 router.get("/career/paths", getCareerPaths);
 router.get("/career/paths/:pathId", getCareerPath);
 router.get("/career/articles", getCareerArticles);

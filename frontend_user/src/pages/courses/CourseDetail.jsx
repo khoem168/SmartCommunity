@@ -23,6 +23,7 @@ import {
   fetchCourseLesson,
   verifyKhqrCoursePayment,
 } from "../../services/courseService";
+import { fetchCareerBridge } from "../../services/careerService";
 import { ButtonLoader, CardSkeleton } from "../../components/ui/LoadingStates";
 import { useLanguage } from "../../context/LanguageContext";
 import "./CourseDetail.css";
@@ -83,6 +84,7 @@ const CourseDetail = () => {
   const [paymentState, setPaymentState] = useState("idle");
   const [paymentError, setPaymentError] = useState("");
   const [countdown, setCountdown] = useState("05:00");
+  const [bridgeData, setBridgeData] = useState(null);
   const pollRef = useRef(null);
 
   const loadCourse = useCallback(async () => {
@@ -92,8 +94,12 @@ const CourseDetail = () => {
     setLoading(true);
     setError("");
     try {
-      const response = await fetchCourse(courseSlug);
+      const [response, bridge] = await Promise.all([
+        fetchCourse(courseSlug),
+        fetchCareerBridge().catch(() => null),
+      ]);
       setCourse(response.course);
+      setBridgeData(bridge);
       return response.course;
     } catch (err) {
       setError(err.message);
@@ -124,6 +130,37 @@ const CourseDetail = () => {
     },
     [courseSlug],
   );
+
+  const matchingJobs = useMemo(() => {
+    if (!course) return [];
+    const cSlug = course.slug?.toLowerCase();
+    const cTitle = course.title?.toLowerCase() || "";
+    const cCat = course.category?.toLowerCase() || "";
+    const highlights = (course.highlights || []).map((h) =>
+      String(h).toLowerCase(),
+    );
+
+    const preMapped = bridgeData?.courseJobBridges?.find(
+      (c) => c.courseSlug === cSlug || c.courseId === course.id,
+    );
+    if (preMapped?.jobs?.length) {
+      return preMapped.jobs;
+    }
+
+    if (!bridgeData?.internships?.length) return [];
+    return bridgeData.internships.filter((job) => {
+      const reqs = (job.requirements || []).map((r) =>
+        String(r).toLowerCase(),
+      );
+      return reqs.some(
+        (r) =>
+          cTitle.includes(r) ||
+          r.includes(cTitle) ||
+          cCat.includes(r) ||
+          highlights.some((h) => h.includes(r) || r.includes(h)),
+      );
+    });
+  }, [course, bridgeData]);
 
   useEffect(() => {
     if (userLoading) return undefined;
@@ -514,6 +551,52 @@ const CourseDetail = () => {
           ))}
         </div>
       </section>
+
+      {matchingJobs.length > 0 && (
+        <section className="container course-career-bridge-section">
+          <div className="course-career-bridge-card">
+            <div className="bridge-card-header">
+              <div className="bridge-icon-pill">💼</div>
+              <div className="bridge-card-heading">
+                <p className="courses-kicker">
+                  Career Bridge · Employment Opportunities
+                </p>
+                <h2>Jobs & Internships Requiring Skills in This Course</h2>
+                <p>
+                  Completing this course directly qualifies you for open
+                  positions on our platform:
+                </p>
+              </div>
+              <Link to="/jobs" className="learning-button secondary bridge-all-btn">
+                Explore All Jobs →
+              </Link>
+            </div>
+            <div className="course-jobs-list">
+              {matchingJobs.slice(0, 3).map((job) => (
+                <article key={job.id} className="course-job-item">
+                  <div className="course-job-main">
+                    <h4>{job.title}</h4>
+                    <p className="course-job-meta">
+                      {job.company} · {job.location}{" "}
+                      {job.isRemote ? "· Remote" : ""}
+                    </p>
+                  </div>
+                  <div className="course-job-reqs">
+                    {(job.requirements || []).slice(0, 4).map((r) => (
+                      <span key={r} className="course-req-pill">
+                        {r}
+                      </span>
+                    ))}
+                  </div>
+                  <Link to="/jobs" className="learning-button primary small">
+                    View in Jobs →
+                  </Link>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {(payment || paymentState === "creating" || paymentState === "error") && (
         <div className="payment-backdrop" role="presentation">

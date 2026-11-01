@@ -923,3 +923,158 @@
     padding-bottom: env(safe-area-inset-bottom, 20px);
   }
 }
+
+/* ==========================================================================
+   Feature 5: Course Career Bridge Section
+   ========================================================================== */
+
+.course-career-bridge-section {
+  margin-top: 48px;
+}
+
+.course-career-bridge-card {
+  padding: 32px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(240, 249, 255, 0.9) 100%);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  box-shadow: 0 16px 40px -12px rgba(37, 99, 235, 0.08);
+  backdrop-filter: blur(20px);
+}
+
+[data-theme="dark"] .course-career-bridge-card {
+  background: linear-gradient(135deg, rgba(18, 24, 38, 0.8) 0%, rgba(15, 23, 42, 0.85) 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.5);
+}
+
+.bridge-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.bridge-icon-pill {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(37, 99, 235, 0.12);
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .bridge-icon-pill {
+  background: rgba(37, 99, 235, 0.25);
+}
+
+.bridge-card-heading {
+  flex: 1;
+}
+
+.bridge-card-heading h2 {
+  margin: 4px 0 6px;
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  font-weight: 800;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .bridge-card-heading h2 {
+  color: #f8fafc;
+}
+
+.bridge-card-heading p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+[data-theme="dark"] .bridge-card-heading p {
+  color: #94a3b8;
+}
+
+.bridge-all-btn {
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+
+.course-jobs-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 16px;
+}
+
+.course-job-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+[data-theme="dark"] .course-job-item {
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.course-job-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(37, 99, 235, 0.4);
+}
+
+.course-job-main h4 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .course-job-main h4 {
+  color: #f1f5f9;
+}
+
+.course-job-meta {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+[data-theme="dark"] .course-job-meta {
+  color: #94a3b8;
+}
+
+.course-job-reqs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.course-req-pill {
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563eb;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .course-req-pill {
+  background: rgba(37, 99, 235, 0.2);
+  color: #60a5fa;
+}
+
+@media (max-width: 768px) {
+  .bridge-card-header {
+    flex-direction: column;
+  }
+  .bridge-all-btn {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+

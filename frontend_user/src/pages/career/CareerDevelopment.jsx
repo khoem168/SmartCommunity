@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   IoCheckmarkCircleOutline,
@@ -22,6 +22,7 @@ import {
   fetchCareerArticles,
   fetchCareerAssessment,
   fetchCareerAssessments,
+  fetchCareerBridge,
   fetchCareerOverview,
   fetchCareerPaths,
   startCareerRoadmapRequest,
@@ -39,6 +40,7 @@ const CareerDevelopment = () => {
   const [articles, setArticles] = useState([]);
   const [assessments, setAssessments] = useState([]);
   const [overview, setOverview] = useState(null);
+  const [bridgeData, setBridgeData] = useState(null);
   const [activeAssessment, setActiveAssessment] = useState(null);
   const [answers, setAnswers] = useState({});
   const [assessmentResult, setAssessmentResult] = useState(null);
@@ -61,8 +63,17 @@ const CareerDevelopment = () => {
       setPaths(pathRows);
       setArticles(articleRows);
       setAssessments(assessmentRows);
-      if (user) setOverview(await fetchCareerOverview());
-      else setOverview(null);
+      if (user) {
+        const [overviewData, bridge] = await Promise.all([
+          fetchCareerOverview(),
+          fetchCareerBridge().catch(() => null),
+        ]);
+        setOverview(overviewData);
+        setBridgeData(bridge);
+      } else {
+        setOverview(null);
+        setBridgeData(null);
+      }
     } catch (err) {
       setError(err.message || "Unable to load career development resources.");
     } finally {
@@ -287,6 +298,157 @@ const CareerDevelopment = () => {
                 </article>
               ))}
             </div>
+
+            {bridgeData?.nextMilestone && (
+              <div className="milestone-learning-bridge">
+                <div className="milestone-bridge-header">
+                  <div className="milestone-bridge-icon">📚</div>
+                  <div>
+                    <h3>
+                      Next Milestone: Step {bridgeData.nextMilestone.position} · {bridgeData.nextMilestone.title}
+                    </h3>
+                    <p>
+                      Recommended Academy courses to master{" "}
+                      <strong>{bridgeData.nextMilestone.skill}</strong> faster:
+                    </p>
+                  </div>
+                </div>
+
+                {bridgeData.nextMilestone.recommendedCourses?.length > 0 ? (
+                  <div className="milestone-courses-grid">
+                    {bridgeData.nextMilestone.recommendedCourses.map((c) => (
+                      <article key={c.id} className="milestone-course-card">
+                        {c.thumbnailUrl ? (
+                          <img
+                            src={c.thumbnailUrl}
+                            alt={c.title}
+                            className="milestone-course-thumb"
+                          />
+                        ) : (
+                          <div className="milestone-course-thumb-placeholder">
+                            📚
+                          </div>
+                        )}
+                        <div className="milestone-course-details">
+                          <span className="milestone-course-tag">
+                            {c.category} · {c.level}
+                          </span>
+                          <h4>{c.title}</h4>
+                          <Link
+                            to={`/courses/${c.slug}`}
+                            className="btn primary small milestone-learn-btn"
+                          >
+                            Start Course →
+                          </Link>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="milestone-courses-empty">
+                    <p>
+                      Explore Academy courses covering {bridgeData.nextMilestone.skill}:
+                    </p>
+                    <Link
+                      to={`/courses?q=${encodeURIComponent(bridgeData.nextMilestone.skill)}`}
+                      className="btn outline small"
+                    >
+                      Search Courses for {bridgeData.nextMilestone.skill} →
+                    </Link>
+                  </div>
+                )}
+
+                {bridgeData.nextMilestone.recommendedPeers?.length > 0 && (
+                  <div className="milestone-peers-callout">
+                    <span>
+                      🤝 Community Peers teaching {bridgeData.nextMilestone.skill}:
+                    </span>
+                    <div className="milestone-peer-tags">
+                      {bridgeData.nextMilestone.recommendedPeers.map((p) => (
+                        <Link
+                          key={p.id}
+                          to={p.exchangeUrl}
+                          className="peer-swap-chip"
+                        >
+                          {p.userName} ({p.skillOffered}) ➔
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {bridgeData?.internships &&
+              bridgeData.internships.filter((j) => j.isRoadmapTarget).length > 0 && (
+                <div className="roadmap-matching-jobs-section">
+                  <div className="matching-jobs-header">
+                    <div>
+                      <span className="matching-jobs-eyebrow">
+                        Direct Career Bridge
+                      </span>
+                      <h3>
+                        🎯 Open Opportunities for Your Target Role:{" "}
+                        {overview.roadmap.path.targetRole}
+                      </h3>
+                      <p>
+                        Real internships actively seeking candidates aligned
+                        with this roadmap:
+                      </p>
+                    </div>
+                    <Link to="/jobs" className="btn outline small">
+                      View All in Jobs →
+                    </Link>
+                  </div>
+
+                  <div className="matching-jobs-grid">
+                    {bridgeData.internships
+                      .filter((j) => j.isRoadmapTarget)
+                      .slice(0, 3)
+                      .map((job) => (
+                        <article key={job.id} className="matching-job-card">
+                          <div className="matching-job-top">
+                            <div>
+                              <h4>{job.title}</h4>
+                              <p className="job-company-loc">
+                                {job.company} · {job.location}
+                              </p>
+                            </div>
+                            {job.matchScore !== null && (
+                              <span
+                                className={`matching-job-score ${
+                                  job.matchScore >= 75
+                                    ? "score-high"
+                                    : "score-med"
+                                }`}
+                              >
+                                ✨ {job.matchScore}% Match
+                              </span>
+                            )}
+                          </div>
+                          <div className="matching-job-reqs">
+                            {(job.requirements || []).slice(0, 4).map((r) => (
+                              <span key={r} className="job-req-tag">
+                                {r}
+                              </span>
+                            ))}
+                          </div>
+                          <div className="matching-job-footer">
+                            <span className="job-stipend-text">
+                              {job.stipend ||
+                                (job.stipendAmount
+                                  ? `$${job.stipendAmount}`
+                                  : "Competitive")}
+                            </span>
+                            <Link to="/jobs" className="btn primary small">
+                              {job.hasApplied ? "Applied ✓" : "Apply in Jobs →"}
+                            </Link>
+                          </div>
+                        </article>
+                      ))}
+                  </div>
+                </div>
+              )}
           </section>
         )}
 

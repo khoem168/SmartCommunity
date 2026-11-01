@@ -37,6 +37,8 @@ const Jobs = () => {
   const [type, setType] = useState("");
   const [remoteOnly, setRemoteOnly] = useState(false);
   const [currentTime] = useState(() => Date.now());
+  const [matchFilter, setMatchFilter] = useState("");
+  const [expandedBridgeId, setExpandedBridgeId] = useState(null);
   const [applyingId, setApplyingId] = useState(null);
   const [applicationForm, setApplicationForm] = useState({
     resume: null,
@@ -86,13 +88,22 @@ const Jobs = () => {
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
+
+      const matchFilterPass =
+        matchFilter === "high"
+          ? item.matchScore !== null && item.matchScore >= 75
+          : matchFilter === "medium"
+            ? item.matchScore !== null && item.matchScore >= 50
+            : true;
+
       return (
         (!search || text.includes(search)) &&
         (!type || item.internshipType === type) &&
-        (!remoteOnly || item.isRemote)
+        (!remoteOnly || item.isRemote) &&
+        matchFilterPass
       );
     });
-  }, [internships, query, remoteOnly, type]);
+  }, [internships, matchFilter, query, remoteOnly, type]);
 
   const appliedIds = useMemo(
     () =>
@@ -264,6 +275,32 @@ const Jobs = () => {
           </label>
         </div>
 
+        {user?.role === "student" && (
+          <div className="match-filter-tabs" role="tablist" aria-label="Skill match filters">
+            <button
+              type="button"
+              className={`match-filter-tab ${matchFilter === "" ? "active" : ""}`}
+              onClick={() => setMatchFilter("")}
+            >
+              All Openings ({internships.length})
+            </button>
+            <button
+              type="button"
+              className={`match-filter-tab ${matchFilter === "medium" ? "active" : ""}`}
+              onClick={() => setMatchFilter((curr) => (curr === "medium" ? "" : "medium"))}
+            >
+              ⚡ Qualified (50%+)
+            </button>
+            <button
+              type="button"
+              className={`match-filter-tab ${matchFilter === "high" ? "active" : ""}`}
+              onClick={() => setMatchFilter((curr) => (curr === "high" ? "" : "high"))}
+            >
+              ✨ Best Match (75%+)
+            </button>
+          </div>
+        )}
+
         <div className="section-header">
           <div>
             <h2>{t("jobsPage.availableTitle")}</h2>
@@ -300,13 +337,43 @@ const Jobs = () => {
                     ) : (
                       <span>{internship.company?.[0]}</span>
                     )}
-                    <div>
+                    <div className="company-heading-info">
                       <span className="job-type">
                         {formatType(internship.internshipType)}
                       </span>
                       <h3>{internship.title}</h3>
                       <p className="company-name">{internship.company}</p>
                     </div>
+
+                    {internship.matchScore !== null ? (
+                      <div
+                        className={`skill-match-pill ${
+                          internship.matchScore >= 75
+                            ? "match-high"
+                            : internship.matchScore >= 50
+                              ? "match-medium"
+                              : "match-low"
+                        }`}
+                        title={`${internship.matchedSkills?.length || 0} of ${(internship.requirements || []).length} required skills match your profile`}
+                      >
+                        <span className="match-pill-sparkle">✨</span>
+                        <strong className="match-pill-pct">
+                          {internship.matchScore}% Match
+                        </strong>
+                        <span className="match-pill-meta">
+                          ({internship.matchedSkills?.length || 0}/
+                          {(internship.requirements || []).length})
+                        </span>
+                      </div>
+                    ) : user?.role === "student" ? (
+                      <Link
+                        to="/profile"
+                        className="skill-match-pill match-tip"
+                        title="Add skills to your profile to calculate your qualification match"
+                      >
+                        <span>⚡ Check Match</span>
+                      </Link>
+                    ) : null}
                   </div>
                   <p className="internship-description">
                     {internship.description}
@@ -345,6 +412,137 @@ const Jobs = () => {
                         <span key={requirement}>{requirement}</span>
                       ))}
                   </div>
+
+                  {user?.role === "student" && (
+                    <div className="career-bridge-container">
+                      <button
+                        type="button"
+                        className={`btn-toggle-bridge ${
+                          expandedBridgeId === internship.id ? "active" : ""
+                        }`}
+                        onClick={() =>
+                          setExpandedBridgeId((curr) =>
+                            curr === internship.id ? null : internship.id,
+                          )
+                        }
+                      >
+                        <span>🎯 Skill Alignment & Learning Bridge</span>
+                        <span className="bridge-toggle-indicator">
+                          {expandedBridgeId === internship.id
+                            ? "▲ Hide Details"
+                            : "▼ View Bridge Actions"}
+                        </span>
+                      </button>
+
+                      {expandedBridgeId === internship.id && (
+                        <div className="career-bridge-drawer">
+                          {internship.matchedSkills &&
+                            internship.matchedSkills.length > 0 && (
+                              <div className="bridge-skill-group matched">
+                                <span className="bridge-group-label">
+                                  ✓ Skills You Have (
+                                  {internship.matchedSkills.length}):
+                                </span>
+                                <div className="bridge-skill-chips">
+                                  {internship.matchedSkills.map((skill) => (
+                                    <span
+                                      key={skill}
+                                      className="skill-chip matched"
+                                    >
+                                      ✓ {skill}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                          {internship.missingSkills &&
+                          internship.missingSkills.length > 0 ? (
+                            <div className="bridge-skill-group missing">
+                              <span className="bridge-group-label">
+                                ⚠️ Missing Skills (
+                                {internship.missingSkills.length}) & Learning
+                                Bridges:
+                              </span>
+                              <div className="bridge-missing-list">
+                                {internship.bridges &&
+                                internship.bridges.length > 0
+                                  ? internship.bridges.map((b) => (
+                                      <div
+                                        key={b.skill}
+                                        className="bridge-card"
+                                      >
+                                        <span className="missing-skill-name">
+                                          ⚡ {b.skill}
+                                        </span>
+                                        <div className="bridge-links">
+                                          {b.course ? (
+                                            <Link
+                                              to={b.courseUrl}
+                                              className="bridge-btn course-bridge"
+                                              title={`Learn ${b.skill} in ${b.course.title}`}
+                                            >
+                                              📚 Course:{" "}
+                                              <strong>{b.course.title}</strong>
+                                            </Link>
+                                          ) : (
+                                            <Link
+                                              to={b.courseUrl}
+                                              className="bridge-btn course-search-bridge"
+                                            >
+                                              🔍 Find Courses for {b.skill}
+                                            </Link>
+                                          )}
+                                          <Link
+                                            to={b.exchangeUrl}
+                                            className="bridge-btn swap-bridge"
+                                            title={`Peer swap to learn ${b.skill}`}
+                                          >
+                                            🤝 Peer Swap
+                                          </Link>
+                                          <Link
+                                            to={b.careerUrl}
+                                            className="bridge-btn roadmap-bridge"
+                                            title="Add to Career Roadmap"
+                                          >
+                                            🚀 Roadmap
+                                          </Link>
+                                        </div>
+                                      </div>
+                                    ))
+                                  : internship.missingSkills.map((s) => (
+                                      <div key={s} className="bridge-card">
+                                        <span className="missing-skill-name">
+                                          ⚡ {s}
+                                        </span>
+                                        <div className="bridge-links">
+                                          <Link
+                                            to={`/courses?q=${encodeURIComponent(s)}`}
+                                            className="bridge-btn course-bridge"
+                                          >
+                                            📚 Find Courses
+                                          </Link>
+                                          <Link
+                                            to={`/skill-exchange?learn=${encodeURIComponent(s)}`}
+                                            className="bridge-btn swap-bridge"
+                                          >
+                                            🤝 Swap with Peer
+                                          </Link>
+                                        </div>
+                                      </div>
+                                    ))}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="bridge-all-matched">
+                              🎉 <strong>100% Match!</strong> You meet all
+                              required skills for this position.
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
                   <div className="internship-card-footer">
                     <small>
                       {t("jobsPage.openings", {
