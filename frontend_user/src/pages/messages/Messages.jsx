@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   IoAddOutline,
   IoArrowBackOutline,
@@ -10,10 +10,15 @@ import {
   IoPeopleOutline,
   IoSearchOutline,
   IoSend,
+  IoBriefcaseOutline,
+  IoSchoolOutline,
+  IoSwapHorizontalOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import { fetchMembers } from "../../services/platformService";
 import {
+  createConversation,
   createGroupConversation,
   listConversationMembers,
   listConversations,
@@ -24,6 +29,7 @@ import {
 import { getSocket } from "../../services/realtimeService";
 import UserAvatar from "../../components/ui/UserAvatar";
 import { resolveMediaUrl } from "../../utils/userPresentation";
+import ConversationContextCapsule from "./ConversationContextCapsule";
 import "./Messages.css";
 
 const formatFileSize = (bytes) => {
@@ -35,7 +41,14 @@ const formatFileSize = (bytes) => {
 
 const Messages = () => {
   const { user } = useGlobleContext();
+  const { language } = useLanguage();
+  const isKm = language === "km";
   const { conversationId } = useParams();
+  const [searchParams] = useSearchParams();
+  const targetUserId = searchParams.get("userId");
+  const targetCategory = searchParams.get("category");
+  const targetContextId = searchParams.get("contextId");
+
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const [conversations, setConversations] = useState([]);
@@ -74,13 +87,55 @@ const Messages = () => {
           setActiveId(conversationId);
           return;
         }
-        setActiveId((current) => current || convos[0]?.id || "");
+        if (!targetUserId) {
+          setActiveId((current) => current || convos[0]?.id || "");
+        }
       } catch (err) {
         setError(err.message || "Unable to load conversations.");
       }
     };
     loadConversations();
-  }, [user, conversationId, refreshConversations]);
+  }, [user, conversationId, targetUserId, refreshConversations]);
+
+  // Connect to target user if specified in search query (e.g., from ATS or Student Tracker)
+  useEffect(() => {
+    if (!user || !targetUserId) return;
+    let isMounted = true;
+    const connectTarget = async () => {
+      try {
+        const convos = await listConversations();
+        if (!isMounted) return;
+        setConversations(convos);
+        const existing = convos.find(
+          (c) =>
+            c.type === "direct" &&
+            (String(c.userId) === String(targetUserId) ||
+              String(c.otherUser?.id) === String(targetUserId)),
+        );
+        if (existing) {
+          setActiveId(existing.id);
+          navigate(`/messages/${existing.id}`, { replace: true });
+        } else {
+          const created = await createConversation({
+            userId: Number(targetUserId),
+            category: targetCategory || "general",
+            contextId: targetContextId ? Number(targetContextId) : null,
+          });
+          if (created?.conversationId && isMounted) {
+            await refreshConversations();
+            setActiveId(created.conversationId);
+            navigate(`/messages/${created.conversationId}`, { replace: true });
+          }
+        }
+      } catch (err) {
+        if (isMounted) setError(err.message || "Unable to start conversation.");
+      }
+    };
+    connectTarget();
+    return () => {
+      isMounted = false;
+    };
+  }, [targetUserId, targetCategory, targetContextId, user, navigate, refreshConversations]);
 
   const activeConversation = useMemo(
     () =>
@@ -90,17 +145,71 @@ const Messages = () => {
     [activeId, conversations],
   );
 
+  const categoryCounts = useMemo(() => {
+    const counts = { all: conversations.length, job_application: 0, mentorship: 0, skill_exchange: 0, group: 0 };
+    conversations.forEach((c) => {
+      const cat = c.category || (c.type === "group" ? "group" : "direct");
+      if (counts[cat] !== undefined) counts[cat]++;
+    });
+    return counts;
+  }, [conversations]);
+
+  const categoryUnread = useMemo(() => {
+    const unread = { all: 0, job_application: 0, mentorship: 0, skill_exchange: 0, group: 0 };
+    conversations.forEach((c) => {
+      const cat = c.category || (c.type === "group" ? "group" : "direct");
+      const count = Number(c.unreadCount || 0);
+      unread.all += count;
+      if (unread[cat] !== undefined) unread[cat] += count;
+    });
+    return unread;
+  }, [conversations]);
+
   const visibleConversations = useMemo(
     () =>
       conversations.filter((conversation) => {
-        const matchesType = filter === "all" || conversation.type === filter;
-        const matchesQuery = conversation.displayName
+        const cat = conversation.category || (conversation.type === "group" ? "group" : "direct");
+        const matchesType = filter === "all" || cat === filter;
+        const matchesQuery = (conversation.displayName || "")
           .toLowerCase()
           .includes(query.trim().toLowerCase());
         return matchesType && matchesQuery;
       }),
     [conversations, filter, query],
   );
+
+  const renderCategoryPill = (conv) => {
+    const cat = conv.category || (conv.type === "group" ? "group" : "direct");
+    if (cat === "job_application") {
+      return (
+        <span className="convo-cat-tag job">
+          <IoBriefcaseOutline /> {isKm ? "ការងារ" : "Job"}
+        </span>
+      );
+    }
+    if (cat === "mentorship") {
+      return (
+        <span className="convo-cat-tag mentor">
+          <IoSchoolOutline /> {isKm ? "គ្រូបង្វឹក" : "Mentor"}
+        </span>
+      );
+    }
+    if (cat === "skill_exchange") {
+      return (
+        <span className="convo-cat-tag swap">
+          <IoSwapHorizontalOutline /> {isKm ? "ប្តូរជំនាញ" : "Swap"}
+        </span>
+      );
+    }
+    if (cat === "group") {
+      return (
+        <span className="convo-cat-tag group">
+          <IoPeopleOutline /> {isKm ? "ក្រុម" : "Group"}
+        </span>
+      );
+    }
+    return null;
+  };
 
   useEffect(() => {
     const loadMessages = async () => {
@@ -303,16 +412,31 @@ const Messages = () => {
                 />
               </label>
               <div className="conversation-filters">
-                {["all", "direct", "group"].map((type) => (
-                  <button
-                    type="button"
-                    className={filter === type ? "active" : ""}
-                    onClick={() => setFilter(type)}
-                    key={type}
-                  >
-                    {type}
-                  </button>
-                ))}
+                {[
+                  { id: "all", label: isKm ? "ទាំងអស់" : "All" },
+                  { id: "job_application", label: isKm ? "💼 ការងារ" : "💼 Jobs" },
+                  { id: "mentorship", label: isKm ? "🎓 គ្រូបង្វឹក" : "🎓 Mentorship" },
+                  { id: "skill_exchange", label: isKm ? "🤝 ប្តូរជំនាញ" : "🤝 Skill Swap" },
+                  { id: "group", label: isKm ? "👥 ក្រុម" : "👥 Groups" },
+                ].map((tab) => {
+                  const unread = categoryUnread[tab.id] || 0;
+                  const count = categoryCounts[tab.id] || 0;
+                  return (
+                    <button
+                      type="button"
+                      className={`filter-pill-btn ${filter === tab.id ? "active" : ""}`}
+                      onClick={() => setFilter(tab.id)}
+                      key={tab.id}
+                    >
+                      <span>{tab.label}</span>
+                      {unread > 0 ? (
+                        <span className="filter-unread-dot">{unread}</span>
+                      ) : count > 0 ? (
+                        <span className="filter-count-badge">{count}</span>
+                      ) : null}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -347,6 +471,7 @@ const Messages = () => {
                         <span className="conversation-info">
                           <span className="conversation-title-line">
                             <strong>{conversation.displayName}</strong>
+                            {renderCategoryPill(conversation)}
                             {conversation.unreadCount > 0 && (
                               <span className="unread-badge">
                                 {conversation.unreadCount}
@@ -438,6 +563,14 @@ const Messages = () => {
               </button>
             </div>
           </div>
+
+          {/* Context Header Capsule (Feature 4) */}
+          {activeConversation && (
+            <ConversationContextCapsule
+              conversation={activeConversation}
+              user={user}
+            />
+          )}
 
           {error && <div className="message-error">{error}</div>}
           <div className="thread-body">

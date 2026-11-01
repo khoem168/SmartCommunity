@@ -15,6 +15,139 @@ const getConversation = async (conversationId, userId) => {
   return rows[0];
 };
 
+const resolveConversationContext = async (c, currentUserId) => {
+  let context = null;
+  if (c.context_data || c.contextData) {
+    try {
+      const raw = c.context_data || c.contextData;
+      context = typeof raw === "string" ? JSON.parse(raw) : raw;
+    } catch {
+      context = null;
+    }
+  }
+
+  let category = c.category && c.category !== "general" ? c.category : null;
+
+  if (!category && c.type === "group") {
+    category = "group";
+  }
+
+  const otherUserId =
+    c.userId ||
+    (c.type === "direct"
+      ? Number(c.participant1_id) === Number(currentUserId)
+        ? c.participant2_id
+        : c.participant1_id
+      : null);
+
+  if (otherUserId && (!category || !context)) {
+    // 1. Check Job Application context
+    try {
+      const [apps] = await db.query(
+        `SELECT ia.id, ia.internship_id, ia.status, ia.applied_at,
+                ia.interview_scheduled_at, ia.interview_meeting_link,
+                i.title AS internship_title, i.company, i.posted_by AS recruiter_id, ia.student_id
+         FROM internship_applications ia
+         JOIN internships i ON i.id = ia.internship_id
+         WHERE (ia.student_id = ? AND i.posted_by = ?) OR (ia.student_id = ? AND i.posted_by = ?)
+         ORDER BY ia.applied_at DESC
+         LIMIT 1`,
+        [currentUserId, otherUserId, otherUserId, currentUserId],
+      );
+
+      if (apps.length > 0) {
+        const app = apps[0];
+        category = category || "job_application";
+        context = context || {
+          type: "job_application",
+          applicationId: app.id,
+          internshipId: app.internship_id,
+          jobTitle: app.internship_title,
+          company: app.company,
+          status: app.status,
+          interviewScheduledAt: app.interview_scheduled_at,
+          interviewMeetingLink: app.interview_meeting_link,
+          isRecruiter: Number(currentUserId) === Number(app.recruiter_id),
+        };
+      }
+    } catch {
+      // fallback
+    }
+  }
+
+  if (otherUserId && (!category || !context)) {
+    // 2. Check Skill Exchange context
+    try {
+      const [swaps] = await db.query(
+        `SELECT se.id, se.skill_offered, se.skill_requested, se.status,
+                se.progress_percent, se.scheduled_date,
+                se.requester_id, se.provider_id
+         FROM skill_exchanges se
+         WHERE (se.requester_id = ? AND se.provider_id = ?) OR (se.requester_id = ? AND se.provider_id = ?)
+         ORDER BY se.updated_at DESC
+         LIMIT 1`,
+        [currentUserId, otherUserId, otherUserId, currentUserId],
+      );
+
+      if (swaps.length > 0) {
+        const swap = swaps[0];
+        category = category || "skill_exchange";
+        context = context || {
+          type: "skill_exchange",
+          exchangeId: swap.id,
+          skillOffered: swap.skill_offered,
+          skillWanted: swap.skill_requested,
+          status: swap.status,
+          progress: Number(swap.progress_percent || 0),
+          meetingLink: `https://meet.jit.si/smart-community-skill-exchange-${swap.id}`,
+          meetingDatetime: swap.scheduled_date,
+          isRequester: Number(currentUserId) === Number(swap.requester_id),
+        };
+      }
+    } catch {
+      // fallback
+    }
+  }
+
+  if (otherUserId && (!category || !context)) {
+    // 3. Check Mentorship context
+    try {
+      const [mentorings] = await db.query(
+        `SELECT m.id, m.mentor_id, m.student_id, m.topic, m.description,
+                m.status, m.requested_time, u.full_name AS mentor_name
+         FROM mentorships m
+         JOIN users u ON u.id = m.mentor_id
+         WHERE (m.student_id = ? AND m.mentor_id = ?) OR (m.student_id = ? AND m.mentor_id = ?)
+         ORDER BY m.updated_at DESC
+         LIMIT 1`,
+        [currentUserId, otherUserId, otherUserId, currentUserId],
+      );
+
+      if (mentorings.length > 0) {
+        const ment = mentorings[0];
+        category = category || "mentorship";
+        context = context || {
+          type: "mentorship",
+          mentorshipId: ment.id,
+          topic: ment.topic,
+          status: ment.status,
+          requestedTime: ment.requested_time,
+          mentorName: ment.mentor_name,
+          isMentor: Number(currentUserId) === Number(ment.mentor_id),
+        };
+      }
+    } catch {
+      // fallback
+    }
+  }
+
+  if (!category) {
+    category = c.type === "group" ? "group" : "direct";
+  }
+
+  return { category, context };
+};
+
 const getGroupManager = async (conversationId, userId) => {
   const conversation = await getConversation(conversationId, userId);
   if (
@@ -35,6 +168,9 @@ const listConversations = async (req, res, next) => {
               c.name,
               c.description,
               c.created_by AS createdBy,
+              c.category,
+              c.context_id AS contextId,
+              c.context_data AS contextData,
               c.last_message AS lastMessage,
               COALESCE(c.last_message_time, c.updated_at) AS updatedAt,
               mine.role AS memberRole,
@@ -65,13 +201,25 @@ const listConversations = async (req, res, next) => {
       [req.user.id, req.user.id, req.user.id],
     );
 
+    const enriched = await Promise.all(
+      rows.map(async (row) => {
+        const { category, context } = await resolveConversationContext(
+          row,
+          req.user.id,
+        );
+        return {
+          ...row,
+          name: row.type === "direct" ? row.nameForDirect : row.name,
+          unreadCount: Number(row.unreadCount || 0),
+          memberCount: Number(row.memberCount || 0),
+          category,
+          context,
+        };
+      }),
+    );
+
     return res.json({
-      conversations: rows.map((row) => ({
-        ...row,
-        name: row.type === "direct" ? row.nameForDirect : row.name,
-        unreadCount: Number(row.unreadCount || 0),
-        memberCount: Number(row.memberCount || 0),
-      })),
+      conversations: enriched,
     });
   } catch (err) {
     return next(err);
@@ -82,6 +230,14 @@ const createConversation = async (req, res, next) => {
   const connection = await db.getConnection();
   try {
     const otherUserId = Number(req.body.userId);
+    const category = req.body.category || "general";
+    const contextId = req.body.contextId ? Number(req.body.contextId) : null;
+    const contextData = req.body.contextData
+      ? typeof req.body.contextData === "string"
+        ? req.body.contextData
+        : JSON.stringify(req.body.contextData)
+      : null;
+
     if (!otherUserId || otherUserId === req.user.id) {
       return res.status(400).json({ error: "Choose another user to message." });
     }
@@ -98,10 +254,15 @@ const createConversation = async (req, res, next) => {
     const participant2 = Math.max(req.user.id, otherUserId);
     await connection.beginTransaction();
     const [result] = await connection.query(
-      `INSERT INTO conversations (type, participant1_id, participant2_id)
-       VALUES ('direct', ?, ?)
-       ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id), updated_at = CURRENT_TIMESTAMP`,
-      [participant1, participant2],
+      `INSERT INTO conversations (type, participant1_id, participant2_id, category, context_id, context_data)
+       VALUES ('direct', ?, ?, ?, ?, ?)
+       ON DUPLICATE KEY UPDATE
+         id = LAST_INSERT_ID(id),
+         category = CASE WHEN VALUES(category) <> 'general' THEN VALUES(category) ELSE category END,
+         context_id = COALESCE(VALUES(context_id), context_id),
+         context_data = COALESCE(VALUES(context_data), context_data),
+         updated_at = CURRENT_TIMESTAMP`,
+      [participant1, participant2, category, contextId, contextData],
     );
     await connection.query(
       `INSERT IGNORE INTO conversation_members (conversation_id, user_id, role)
@@ -109,7 +270,11 @@ const createConversation = async (req, res, next) => {
       [result.insertId, participant1, result.insertId, participant2],
     );
     await connection.commit();
-    return res.status(201).json({ conversationId: result.insertId, type: "direct" });
+    return res.status(201).json({
+      conversationId: result.insertId,
+      type: "direct",
+      category,
+    });
   } catch (err) {
     await connection.rollback();
     return next(err);
@@ -153,8 +318,8 @@ const createGroupConversation = async (req, res, next) => {
     await connection.beginTransaction();
     const [result] = await connection.query(
       `INSERT INTO conversations
-         (type, participant1_id, participant2_id, name, description, created_by)
-       VALUES ('group', NULL, NULL, ?, ?, ?)`,
+         (type, participant1_id, participant2_id, name, description, created_by, category)
+       VALUES ('group', NULL, NULL, ?, ?, ?, 'group')`,
       [name, description || null, req.user.id],
     );
     await connection.query(
@@ -351,7 +516,20 @@ const listMessages = async (req, res, next) => {
         userId: req.user.id,
       });
     }
-    return res.json({ messages: rows });
+
+    const { category, context } = await resolveConversationContext(
+      conversation,
+      req.user.id,
+    );
+
+    return res.json({
+      messages: rows,
+      conversation: {
+        ...conversation,
+        category,
+        context,
+      },
+    });
   } catch (err) {
     return next(err);
   }
@@ -472,5 +650,6 @@ module.exports = {
   listConversations,
   listMessages,
   removeConversationMember,
+  resolveConversationContext,
   sendMessage,
 };

@@ -4,6 +4,8 @@ const normalizeConversation = (conversation) => ({
   ...conversation,
   type: conversation.type || "direct",
   displayName: conversation.name || "Conversation",
+  category: conversation.category || "general",
+  context: conversation.context || null,
   unreadCount: Number(conversation.unreadCount || 0),
   memberCount: Number(conversation.memberCount || 0),
   otherUser:
@@ -22,10 +24,14 @@ export const listConversations = async () => {
   return (response.conversations || []).map(normalizeConversation);
 };
 
-export const createConversation = async (userId) => {
+export const createConversation = async (userIdOrPayload, options = {}) => {
+  const payload =
+    typeof userIdOrPayload === "object"
+      ? userIdOrPayload
+      : { userId: userIdOrPayload, ...options };
   const response = await apiFetch("/messages/conversations", {
     method: "POST",
-    body: JSON.stringify({ userId }),
+    body: JSON.stringify(payload),
   });
   return response;
 };
@@ -56,7 +62,21 @@ export const removeConversationMember = (conversationId, userId) =>
 
 export const listMessages = async (conversationId) => {
   const response = await apiFetch(`/messages/conversations/${conversationId}`);
-  return response.messages || [];
+  const messages = response.messages || [];
+  if (response.conversation) {
+    messages.conversation = normalizeConversation(response.conversation);
+  }
+  return messages;
+};
+
+export const getConversationDetail = async (conversationId) => {
+  const response = await apiFetch(`/messages/conversations/${conversationId}`);
+  return {
+    messages: response.messages || [],
+    conversation: response.conversation
+      ? normalizeConversation(response.conversation)
+      : null,
+  };
 };
 
 export const sendMessage = async (conversationId, payload) => {

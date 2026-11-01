@@ -20,19 +20,31 @@ const countTable = async (table, where = "1 = 1") => {
 const getMeetingLink = (exchangeId) =>
   `https://meet.jit.si/smart-community-skill-exchange-${exchangeId}`;
 
-const createConversationForUsers = async (leftUserId, rightUserId) => {
+const createConversationForUsers = async (leftUserId, rightUserId, context = null) => {
   const participant1 = Math.min(leftUserId, rightUserId);
   const participant2 = Math.max(leftUserId, rightUserId);
 
+  const contextData = context ? JSON.stringify(context) : null;
+  const contextId = context?.exchangeId ? Number(context.exchangeId) : null;
+
   const [result] = await db.query(
-    `INSERT INTO conversations (participant1_id, participant2_id, last_message, last_message_time)
-     VALUES (?, ?, 'Skill exchange accepted. Chat and meeting are ready.', CURRENT_TIMESTAMP)
+    `INSERT INTO conversations (type, participant1_id, participant2_id, category, context_id, context_data, last_message, last_message_time)
+     VALUES ('direct', ?, ?, 'skill_exchange', ?, ?, 'Skill exchange accepted. Chat and meeting are ready.', CURRENT_TIMESTAMP)
      ON DUPLICATE KEY UPDATE
        id = LAST_INSERT_ID(id),
+       category = 'skill_exchange',
+       context_id = COALESCE(VALUES(context_id), context_id),
+       context_data = COALESCE(VALUES(context_data), context_data),
        last_message = VALUES(last_message),
        last_message_time = CURRENT_TIMESTAMP,
        updated_at = CURRENT_TIMESTAMP`,
-    [participant1, participant2],
+    [participant1, participant2, contextId, contextData],
+  );
+
+  await db.query(
+    `INSERT IGNORE INTO conversation_members (conversation_id, user_id, role)
+     VALUES (?, ?, 'member'), (?, ?, 'member')`,
+    [result.insertId, participant1, result.insertId, participant2],
   );
 
   return result.insertId;
@@ -853,6 +865,13 @@ const updateSkillExchangeStatus = async (req, res, next) => {
       const conversationId = await createConversationForUsers(
         exchange.requester_id,
         exchange.provider_id,
+        {
+          type: "skill_exchange",
+          exchangeId,
+          skillOffered: exchange.skill_offered,
+          skillWanted: exchange.skill_wanted,
+          meetingLink: getMeetingLink(exchangeId),
+        },
       );
       const meetingLink = getMeetingLink(exchangeId);
 

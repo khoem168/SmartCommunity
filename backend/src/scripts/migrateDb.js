@@ -101,6 +101,21 @@ const run = async () => {
     "created_by",
     "created_by int(11) DEFAULT NULL AFTER description",
   );
+  await addColumn(
+    "conversations",
+    "category",
+    "category varchar(50) DEFAULT 'general' AFTER created_by",
+  );
+  await addColumn(
+    "conversations",
+    "context_id",
+    "context_id int(11) DEFAULT NULL AFTER category",
+  );
+  await addColumn(
+    "conversations",
+    "context_data",
+    "context_data text DEFAULT NULL AFTER context_id",
+  );
   await db.query(`
     ALTER TABLE conversations
     MODIFY participant1_id int(11) DEFAULT NULL,

@@ -410,6 +410,7 @@ const formatStudentApplication = (row) => ({
   interviewScheduledAt: row.interview_scheduled_at,
   interviewMeetingLink: row.interview_meeting_link,
   interviewNote: row.interview_note,
+  recruiterId: row.recruiter_id,
   // Note: recruiterNotes / admin_notes are STRICTLY excluded for student privacy
 });
 
@@ -461,7 +462,7 @@ const getInternshipApplications = async (req, res, next) => {
     // Student View: Object-level isolation to only own applications
     const [rows] = await db.query(
       `SELECT ia.*, i.title AS internship_title, i.company, i.company_logo,
-              i.location, i.internship_type, i.stipend
+              i.location, i.internship_type, i.stipend, i.posted_by AS recruiter_id
        FROM internship_applications ia
        JOIN internships i ON i.id = ia.internship_id
        WHERE ia.student_id = ?

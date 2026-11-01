@@ -14,6 +14,7 @@ import {
   FiMapPin,
   FiDollarSign,
   FiInbox,
+  FiMessageSquare,
 } from "react-icons/fi";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
@@ -393,6 +394,19 @@ export default function StudentApplicationTracker() {
                         >
                           <FiExternalLink /> Portfolio
                         </a>
+                      )}
+                      {app.recruiterId && (
+                        <Link
+                          to={`/messages?userId=${app.recruiterId}&category=job_application&contextId=${app.id}`}
+                          className="sc-app-cv-link"
+                          style={{
+                            color: "#2563eb",
+                            background: "rgba(37, 99, 235, 0.08)",
+                            borderColor: "rgba(37, 99, 235, 0.25)",
+                          }}
+                        >
+                          <FiMessageSquare /> {isKm ? "ផ្ញើសារទៅកាន់ក្រុមហ៊ុន" : "Message Employer"}
+                        </Link>
                       )}
                     </div>
                   </div>

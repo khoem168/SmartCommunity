@@ -14,6 +14,7 @@ import {
   FiAlertCircle,
   FiRefreshCw,
   FiFilter,
+  FiMessageSquare,
 } from "react-icons/fi";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
@@ -577,6 +578,23 @@ export default function RecruiterATS({ initialView = "candidates" }) {
                 >
                   <FiExternalLink /> Portfolio
                 </a>
+              )}
+              {selectedCandidate.studentId && (
+                <Link
+                  to={`/messages?userId=${selectedCandidate.studentId}&category=job_application&contextId=${selectedCandidate.id}`}
+                  className="btn outline"
+                  style={{
+                    display: "inline-flex",
+                    gap: "6px",
+                    alignItems: "center",
+                    fontSize: "0.86rem",
+                    color: "#2563eb",
+                    borderColor: "rgba(37, 99, 235, 0.35)",
+                    background: "rgba(37, 99, 235, 0.05)",
+                  }}
+                >
+                  <FiMessageSquare /> {isKm ? "ផ្ញើសារទៅកាន់បេក្ខជន" : "Message Candidate"}
+                </Link>
               )}
             </div>
 
