@@ -9,7 +9,13 @@ const {
   getStats,
   updateSkillExchangeStatus,
 } = require("../controllers/platformController");
-const { optionalAuth, requireAuth, requireRole } = require("../middleware/auth");
+const {
+  optionalAuth,
+  requireAuth,
+  requireRole,
+  requireVerifiedCompany,
+  requireVerifiedMentor,
+} = require("../middleware/auth");
 const {
   confirmSkillExchangeCompletion,
   getSkillExchangeDetail,
@@ -168,7 +174,7 @@ router.delete("/forum/comments/:commentId", requireAuth, deleteForumComment);
 router.post(
   "/learning-sessions",
   requireAuth,
-  requireRole("mentor", "admin"),
+  requireVerifiedMentor,
   createLearningSession,
 );
 router.post(
@@ -240,7 +246,12 @@ router.patch(
   reviewMentorApplication,
 );
 router.get("/mentorships", requireAuth, getMentorships);
-router.post("/mentorships", requireAuth, createMentorship);
+router.post(
+  "/mentorships",
+  requireAuth,
+  requireRole("student", "user", "admin"),
+  createMentorship,
+);
 router.patch(
   "/mentorships/:mentorshipId/status",
   requireAuth,
@@ -275,7 +286,7 @@ router.patch(
 router.post(
   "/internships",
   requireAuth,
-  requireRole("recruiter", "admin"),
+  requireVerifiedCompany,
   createInternship,
 );
 router.get(

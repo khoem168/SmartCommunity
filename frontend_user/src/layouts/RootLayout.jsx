@@ -2,11 +2,13 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocation, useOutlet } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer";
+import TabBar from "../components/Navbar/TabBar";
 import { FaChevronUp } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import ScrollEngagementPopup from "../components/ScrollEngagementPopup";
 import RealtimeToastHub from "../components/ui/RealtimeToastHub";
+import CommandPalette from "../components/ui/CommandPalette";
 
 const RootLayout = () => {
   const location = useLocation();
@@ -39,6 +41,12 @@ const RootLayout = () => {
 
   return (
     <div className="app-shell">
+      <div className="bg-blobs" aria-hidden="true">
+        <i className="blob b1" />
+        <i className="blob b2" />
+        <i className="blob b3" />
+      </div>
+
       <a className="skip-link" href="#main-content">
         {t("common.skipContent")}
       </a>
@@ -62,6 +70,8 @@ const RootLayout = () => {
         </AnimatePresence>
       </div>
       <Footer />
+      <TabBar />
+      <CommandPalette />
       <RealtimeToastHub />
       <ScrollEngagementPopup />
       {showButton && (

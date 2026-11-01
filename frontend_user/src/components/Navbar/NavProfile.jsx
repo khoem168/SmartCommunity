@@ -9,8 +9,9 @@ export const NavProfile = ({ user = {}, onLogout }) => {
   const [open, setOpen] = useState(false);
   const [pendingSkillRequests, setPendingSkillRequests] = useState(0);
   const role = user.role || "member";
-  const { t } = useLanguage();
-  const roleLabel = t(`profile.${role}`);
+  const { t, language } = useLanguage();
+  const isKm = language === "km";
+  const roleLabel = t(`profile.${role}`) || role;
 
   const refreshPendingSkillRequests = useCallback(async () => {
     if (!user?.id) {
@@ -83,6 +84,14 @@ export const NavProfile = ({ user = {}, onLogout }) => {
       {open && (
         <div className="profile-menu" role="menu">
           <Link
+            to="/dashboard"
+            className="profile-menu-item"
+            style={{ fontWeight: "700", color: "#2563eb" }}
+            onClick={() => setOpen(false)}
+          >
+            {isKm ? "ផ្ទាំងការងារ (Workspace)" : "Workspace"}
+          </Link>
+          <Link
             to="/profile"
             className="profile-menu-item"
             onClick={() => setOpen(false)}
@@ -109,6 +118,13 @@ export const NavProfile = ({ user = {}, onLogout }) => {
 
           {role === "recruiter" && (
             <>
+              <Link
+                to="/recruiter/candidates"
+                className="profile-menu-item"
+                onClick={() => setOpen(false)}
+              >
+                {isKm ? "បេក្ខជន (Candidate ATS)" : "Candidate ATS"}
+              </Link>
               <Link
                 to="/post-job"
                 className="profile-menu-item"
@@ -165,19 +181,18 @@ export const NavProfile = ({ user = {}, onLogout }) => {
                 {t("profile.exploreInternships")}
               </Link>
               <Link
+                to="/my-applications"
+                className="profile-menu-item"
+                onClick={() => setOpen(false)}
+              >
+                {t("profile.myApplications")}
+              </Link>
+              <Link
                 to="/courses"
                 className="profile-menu-item"
                 onClick={() => setOpen(false)}
               >
                 {t("profile.myCourses")}
-              </Link>
-
-              <Link
-                to="/applications"
-                className="profile-menu-item"
-                onClick={() => setOpen(false)}
-              >
-                {t("profile.myApplications")}
               </Link>
             </>
           )}

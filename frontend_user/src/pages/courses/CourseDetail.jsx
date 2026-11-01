@@ -37,14 +37,22 @@ const money = (amount, currency) =>
   }).format(Number(amount || 0));
 
 const youtubeEmbed = (value) => {
+  if (!value) return "";
+  const trimmed = String(value).trim();
+  if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) {
+    return `https://www.youtube-nocookie.com/embed/${trimmed}?autoplay=1&rel=0`;
+  }
   try {
-    const url = new URL(value);
+    const url = new URL(trimmed);
     let id = "";
-    if (url.hostname === "youtu.be") id = url.pathname.slice(1);
-    if (url.hostname.includes("youtube.com")) {
+    if (url.hostname === "youtu.be") {
+      id = url.pathname.slice(1);
+    } else if (url.hostname.includes("youtube.com") || url.hostname.includes("youtube-nocookie.com")) {
       id = url.searchParams.get("v") || url.pathname.split("/embed/")[1] || "";
     }
-    return id ? `https://www.youtube.com/embed/${id.split(/[?&/]/)[0]}` : "";
+    return id
+      ? `https://www.youtube-nocookie.com/embed/${id.split(/[?&/]/)[0]}?autoplay=1&rel=0`
+      : "";
   } catch {
     return "";
   }

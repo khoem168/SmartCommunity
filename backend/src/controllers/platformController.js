@@ -78,11 +78,227 @@ const getStats = async (req, res, next) => {
 const getDashboard = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const recruiter = req.user.role === "recruiter";
+    const role = req.user.role || "student";
+
+    // 1. Recruiter Workspace Data
+    if (role === "recruiter") {
+      const [
+        [companies],
+        [myInternships],
+        [pipelineRows],
+        [recentApplicants],
+        [notifications],
+      ] = await Promise.all([
+        db.query("SELECT * FROM company_profiles WHERE owner_id = ?", [userId]),
+        db.query(
+          `SELECT i.id, i.title, i.category, i.status, i.openings,
+                  i.application_deadline, i.created_at,
+                  COUNT(ia.id) AS applicants_count
+           FROM internships i
+           LEFT JOIN internship_applications ia ON ia.internship_id = i.id
+           WHERE i.posted_by = ?
+           GROUP BY i.id
+           ORDER BY i.created_at DESC LIMIT 5`,
+          [userId],
+        ),
+        db.query(
+          `SELECT ia.status, COUNT(*) AS count
+           FROM internship_applications ia
+           JOIN internships i ON i.id = ia.internship_id
+           WHERE i.posted_by = ?
+           GROUP BY ia.status`,
+          [userId],
+        ),
+        db.query(
+          `SELECT ia.id, ia.status, ia.applied_at, ia.resume_url,
+                  i.title AS internship_title,
+                  student.full_name AS student_name, student.email AS student_email,
+                  student.avatar_url AS student_avatar
+           FROM internship_applications ia
+           JOIN internships i ON i.id = ia.internship_id
+           JOIN users student ON student.id = ia.student_id
+           WHERE i.posted_by = ?
+           ORDER BY ia.applied_at DESC LIMIT 6`,
+          [userId],
+        ),
+        db.query(
+          `SELECT id, type, title, message, link, is_read, created_at
+           FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 5`,
+          [userId],
+        ),
+      ]);
+
+      const company = companies[0] || null;
+      const pipeline = {
+        pending: 0,
+        reviewed: 0,
+        shortlisted: 0,
+        approved: 0,
+        rejected: 0,
+      };
+      let totalApplicants = 0;
+      pipelineRows.forEach((r) => {
+        const s = r.status === "accepted" ? "approved" : r.status;
+        if (pipeline[s] !== undefined) pipeline[s] = Number(r.count || 0);
+        totalApplicants += Number(r.count || 0);
+      });
+
+      const activeInternships = myInternships.filter((item) => item.status === "open").length;
+      const [unreadRows] = await db.query(
+        "SELECT COUNT(*) AS total FROM notifications WHERE user_id = ? AND is_read = 0",
+        [userId],
+      );
+
+      return res.json({
+        role: "recruiter",
+        profile: req.user,
+        company: company ? {
+          id: company.id,
+          name: company.name,
+          description: company.description,
+          industry: company.industry,
+          website: company.website,
+          contactEmail: company.contact_email,
+          location: company.location,
+          isVerified: Boolean(company.is_verified) || company.verification_status === "verified",
+          verificationStatus: company.verification_status || "pending",
+          logoUrl: company.logo_url,
+        } : null,
+        widgets: {
+          activeInternships,
+          totalApplicants,
+          pendingApplicants: pipeline.pending,
+          shortlistedApplicants: pipeline.shortlisted,
+          unreadNotifications: Number(unreadRows[0]?.total || 0),
+        },
+        pipeline,
+        myInternships,
+        recentApplicants,
+        notifications,
+      });
+    }
+
+    // 2. Mentor Workspace Data
+    if (role === "mentor") {
+      const [
+        [mentorApps],
+        [bookings],
+        [hostedSessions],
+        [notifications],
+        [mentorStats],
+      ] = await Promise.all([
+        db.query(
+          "SELECT status, professional_title, availability FROM mentor_applications WHERE user_id = ? ORDER BY created_at DESC LIMIT 1",
+          [userId],
+        ),
+        db.query(
+          `SELECT m.id, m.topic, m.description, m.requested_time, m.duration_minutes,
+                  m.status, m.meeting_link,
+                  student.id AS student_id, student.full_name AS student_name,
+                  student.avatar_url AS student_avatar, student.email AS student_email
+           FROM mentorships m
+           JOIN users student ON student.id = m.student_id
+           WHERE m.mentor_id = ?
+           ORDER BY m.requested_time DESC LIMIT 6`,
+          [userId],
+        ),
+        db.query(
+          `SELECT ls.id, ls.title, ls.scheduled_time, ls.duration_minutes, ls.status, ls.meeting_link
+           FROM learning_sessions ls
+           WHERE ls.mentor_id = ? AND ls.status IN ('scheduled', 'ongoing')
+           ORDER BY ls.scheduled_time ASC LIMIT 4`,
+          [userId],
+        ),
+        db.query(
+          "SELECT id, type, title, message, link, is_read, created_at FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 5",
+          [userId],
+        ),
+        db.query(
+          `SELECT
+            (SELECT COUNT(*) FROM mentorships WHERE mentor_id = ? AND status = 'pending') AS pendingBookings,
+            (SELECT COUNT(DISTINCT student_id) FROM mentorships WHERE mentor_id = ? AND status = 'active') AS activeMentees,
+            (SELECT COUNT(*) FROM mentorships WHERE mentor_id = ? AND status = 'completed') AS completedSessions,
+            (SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0) AS unreadNotifications`,
+          [userId, userId, userId, userId],
+        ),
+      ]);
+
+      const counts = mentorStats[0] || {};
+      const mentorApplication = mentorApps[0] || { status: "approved" };
+
+      return res.json({
+        role: "mentor",
+        profile: req.user,
+        mentorApplication,
+        widgets: {
+          pendingBookings: Number(counts.pendingBookings || 0),
+          activeMentees: Number(counts.activeMentees || 0),
+          completedSessions: Number(counts.completedSessions || 0),
+          hostedSessions: hostedSessions.length,
+          unreadNotifications: Number(counts.unreadNotifications || 0),
+        },
+        bookings,
+        upcomingEvents: hostedSessions,
+        notifications,
+      });
+    }
+
+    // 3. Admin Overview Dashboard
+    if (role === "admin") {
+      const [
+        [[summary]],
+        [pendingMentorList],
+        [pendingCompanyList],
+        [notifications],
+      ] = await Promise.all([
+        db.query(
+          `SELECT
+            (SELECT COUNT(*) FROM users) AS users,
+            (SELECT COUNT(*) FROM mentor_applications WHERE status = 'pending') AS pendingMentors,
+            (SELECT COUNT(*) FROM company_profiles WHERE verification_status = 'pending') AS pendingCompanies,
+            (SELECT COUNT(*) FROM internships WHERE status = 'open') AS openInternships,
+            (SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0) AS unreadNotifications`,
+          [userId],
+        ),
+        db.query(
+          `SELECT ma.id, ma.professional_title, ma.company, u.full_name AS user_name, ma.created_at
+           FROM mentor_applications ma
+           JOIN users u ON u.id = ma.user_id
+           WHERE ma.status = 'pending' ORDER BY ma.created_at DESC LIMIT 5`,
+        ),
+        db.query(
+          `SELECT cp.id, cp.name, cp.industry, u.full_name AS owner_name, cp.created_at
+           FROM company_profiles cp
+           JOIN users u ON u.id = cp.owner_id
+           WHERE cp.verification_status = 'pending' ORDER BY cp.created_at DESC LIMIT 5`,
+        ),
+        db.query(
+          "SELECT id, type, title, message, link, is_read, created_at FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 5",
+          [userId],
+        ),
+      ]);
+
+      return res.json({
+        role: "admin",
+        profile: req.user,
+        widgets: {
+          totalUsers: Number(summary?.users || 0),
+          pendingMentors: Number(summary?.pendingMentors || 0),
+          pendingCompanies: Number(summary?.pendingCompanies || 0),
+          openInternships: Number(summary?.openInternships || 0),
+          unreadNotifications: Number(summary?.unreadNotifications || 0),
+        },
+        pendingMentors: pendingMentorList,
+        pendingCompanies: pendingCompanyList,
+        notifications,
+      });
+    }
+
+    // 4. Default / Student Dashboard (100% backward compatible)
     const [[applications], [sessions], [notifications], [opportunities], [exchanges], [courses], [counts], [roadmaps]] = await Promise.all([
       db.query(`SELECT ia.id, ia.status, ia.applied_at, i.title, i.company
         FROM internship_applications ia JOIN internships i ON i.id = ia.internship_id
-        WHERE ${recruiter ? "i.posted_by" : "ia.student_id"} = ? ORDER BY ia.applied_at DESC LIMIT 6`, [userId]),
+        WHERE ia.student_id = ? ORDER BY ia.applied_at DESC LIMIT 6`, [userId]),
       db.query(`SELECT ls.id, ls.title, ls.scheduled_time, ls.duration_minutes, ls.status,
         u.full_name AS mentor_name FROM learning_sessions ls JOIN users u ON u.id = ls.mentor_id
         WHERE ls.status IN ('scheduled', 'ongoing')
@@ -107,7 +323,7 @@ const getDashboard = async (req, res, next) => {
         (SELECT COUNT(*) FROM course_enrollments e JOIN courses c ON c.id=e.course_id WHERE e.user_id=? AND c.is_published=1) AS enrolledCourses,
         (SELECT COUNT(*) FROM skill_exchanges WHERE (requester_id=? OR provider_id=?) AND status='accepted') AS activeExchanges,
         (SELECT COUNT(*) FROM internship_applications ia JOIN internships i ON i.id=ia.internship_id
-          WHERE ${recruiter ? "i.posted_by" : "ia.student_id"}=?) AS applications,
+          WHERE ia.student_id=?) AS applications,
         (SELECT COUNT(*) FROM notifications WHERE user_id=? AND is_read=0) AS unreadNotifications`, [userId, userId, userId, userId, userId]),
       db.query(`SELECT r.id, p.title,
         (SELECT COUNT(*) FROM career_path_steps s WHERE s.path_id=p.id) AS totalSteps,
@@ -117,8 +333,15 @@ const getDashboard = async (req, res, next) => {
         WHERE r.user_id=? AND r.is_current=1 ORDER BY r.started_at DESC LIMIT 1`, [userId]),
     ]);
     return res.json({
-      profile: req.user, widgets: Object.fromEntries(Object.entries(counts[0]).map(([key, value]) => [key, Number(value)])),
-      applications, exchanges, opportunities, notifications, upcomingEvents: sessions, courses,
+      role: "student",
+      profile: req.user,
+      widgets: Object.fromEntries(Object.entries(counts[0]).map(([key, value]) => [key, Number(value)])),
+      applications,
+      exchanges,
+      opportunities,
+      notifications,
+      upcomingEvents: sessions,
+      courses,
       roadmap: roadmaps[0] || null,
     });
   } catch (err) { return next(err); }

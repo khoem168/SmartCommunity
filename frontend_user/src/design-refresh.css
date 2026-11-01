@@ -951,12 +951,7 @@ body {
   box-shadow: none !important;
 }
 
-/* Footer keeps contrast while using the same blue family. */
-.site-footer {
-  border-top: 1px solid #1e3a5f;
-  background: #0b1730 !important;
-}
-
+/* Footer styling handled dynamically by theme */
 .site-footer::before,
 .footer-orb {
   opacity: 0.16;
@@ -2164,11 +2159,55 @@ html[data-language="km"] .dashboard-page :where(
   }
 }
 
-/* Light footer aligned with the Home page visual system. */
+/* Liquid Glass Footer seamlessly harmonized with Home page visual system */
 .site-footer {
   color: #475569;
-  border-top: 1px solid #e2e8f0;
-  background: #f8fafc !important;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(248, 250, 252, 0.95);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+}
+
+[data-theme="dark"] .site-footer {
+  background: #090d16 !important;
+  border-top-color: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .footer-brand-name strong,
+[data-theme="dark"] .footer-column h3 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .footer-brand-name span,
+[data-theme="dark"] .footer-column h3 svg,
+[data-theme="dark"] .footer-location svg {
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .footer-identity > p,
+[data-theme="dark"] .footer-column a,
+[data-theme="dark"] .site-footer-bottom {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .footer-location span {
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .footer-column a:hover {
+  color: #93c5fd;
+  background: rgba(59, 107, 255, 0.14);
+}
+
+[data-theme="dark"] .site-footer-bottom a {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .site-footer-bottom a:hover {
+  color: #60a5fa;
 }
 
 .site-footer::before,

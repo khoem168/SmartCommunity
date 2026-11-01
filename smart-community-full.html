@@ -2,330 +2,673 @@
 <html lang="km">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Smart Community Skill & Career - Full Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smart Community - Skill &amp; Career Development Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=Koulen&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Kantumruy+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --primary:#1E3A8A; --primary-2:#3B82F6; --accent:#F5B301; --teal:#14B8A6; --red:#E21E2B;
-  --bg:#F8FAFC; --surface:#fff; --text:#0F172A; --muted:#64748b; --border:#e2e8f0;
-  --radius:20px; --shadow:0 10px 30px rgba(30,58,138,.12);
+  --bg:#fafafa; --text:#0b0d12; --soft:#6b7280; --line:rgba(15,23,42,.08);
+  --glass:rgba(255,255,255,.62); --glass-strong:rgba(255,255,255,.82); --glass-line:rgba(255,255,255,.75);
+  --ink:#111318; --ink-text:#fff; --chip:#f1f2f4;
+  --blue:#3B6BFF; --gold:#F5B301; --teal:#14B8A6; --red:#E21E2B;
+  --dot:rgba(15,23,42,.28);
+  --r:28px; --spring:cubic-bezier(.2,.9,.3,1.15);
+  --shadow:0 8px 32px rgba(15,23,42,.08);
 }
 [data-theme="dark"]{
-  --bg:#0B0F19; --surface:#151D2F; --text:#F1F5F9; --muted:#94a3b8; --border:#1E293B;
-  --shadow:0 10px 30px rgba(0,0,0,.4);
+  --bg:#05070c; --text:#f3f5f9; --soft:#9aa3b2; --line:rgba(255,255,255,.09);
+  --glass:rgba(30,38,56,.55); --glass-strong:rgba(30,38,56,.8); --glass-line:rgba(255,255,255,.1);
+  --ink:#fff; --ink-text:#0b0d12; --chip:#1a2030; --dot:rgba(255,255,255,.22);
+  --shadow:0 8px 32px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:80px}
-body{font-family:"Kantumruy Pro","Noto Sans Khmer",system-ui,sans-serif;line-height:1.7;background:var(--bg);color:var(--text);transition:background .3s,color .3s}
-.container{width:min(1200px,100% - 48px);margin-inline:auto}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{font-family:"Inter","Kantumruy Pro","Noto Sans Khmer",system-ui,sans-serif;font-weight:400;line-height:1.7;background:var(--bg);color:var(--text);transition:background .4s,color .4s;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:radial-gradient(40% 35% at 15% 20%,rgba(59,107,255,.14),transparent 70%),radial-gradient(35% 30% at 85% 30%,rgba(245,179,1,.12),transparent 70%),radial-gradient(40% 35% at 60% 85%,rgba(20,184,166,.12),transparent 70%)}
+.container{width:min(1180px,100% - 48px);margin-inline:auto}
 a{color:inherit}
-button{font-family:inherit;cursor:pointer}
-:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button{font-family:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 
-/* Navbar */
-header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 85%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-.nav{display:flex;align-items:center;justify-content:space-between;gap:24px;height:68px}
-.logo{font-weight:700;color:var(--primary);white-space:nowrap}
-[data-theme="dark"] .logo{color:#93c5fd}
-.logo span{color:var(--accent)}
-.nav-links{display:flex;gap:24px;align-items:center}
-.nav-links a{text-decoration:none;font-weight:600;font-size:.95rem;white-space:nowrap;color:var(--muted)}
-.nav-links a:hover{color:var(--primary-2)}
-.nav-actions{display:flex;gap:10px;align-items:center}
-.icon-btn{position:relative;min-width:44px;height:44px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:1.1rem;padding:0 12px;font-weight:700}
-.badge-dot{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border-radius:999px;font-size:.7rem;min-width:20px;height:20px;display:grid;place-items:center;padding:0 5px}
+/* Glass primitive */
+.glass{background:var(--glass);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border:1px solid var(--glass-line);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.5)}
+[data-theme="dark"] .glass{box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.06)}
 
-/* Buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 24px;border-radius:999px;font-weight:700;text-decoration:none;border:2px solid transparent;transition:transform .2s,box-shadow .2s;font-size:.95rem}
-.btn:hover{transform:translateY(-2px)}
-.btn-primary{background:var(--primary);color:#fff;box-shadow:var(--shadow)}
-.btn-accent{background:var(--accent);color:#1f1600}
-.btn-outline{border-color:currentColor;background:transparent}
-.btn-sm{min-height:38px;padding:6px 16px;font-size:.85rem}
-.btn-ghost{background:transparent;color:var(--primary-2)}
+/* Floating nav */
+.nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:60;width:min(1120px,100% - 28px);height:62px;border-radius:999px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 10px 0 22px}
+.logo{font-weight:600;letter-spacing:-.02em;white-space:nowrap;text-decoration:none}
+.logo span{color:var(--blue)}
+.nav-links{display:flex;gap:22px}
+.nav-links a{text-decoration:none;font-size:.92rem;color:var(--soft);white-space:nowrap;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{position:relative;min-width:44px;height:44px;border-radius:999px;border:0;background:var(--chip);font-size:1rem;padding:0 12px;font-weight:600}
+.badge-dot{position:absolute;top:-2px;right:-2px;background:var(--red);color:#fff;border-radius:999px;font-size:.68rem;min-width:19px;height:19px;display:grid;place-items:center;padding:0 5px}
+
+/* Buttons (Antigravity pills) */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 28px;border-radius:999px;font-weight:500;text-decoration:none;border:0;font-size:1rem;transition:transform .35s var(--spring),box-shadow .2s,background .2s}
+.btn:hover{transform:translateY(-2px) scale(1.02)}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--ink);color:var(--ink-text)}
+.btn-soft{background:var(--chip);color:var(--text)}
+.btn-gold{background:var(--gold);color:#1f1600}
+.btn-sm{min-height:40px;padding:6px 18px;font-size:.88rem}
+.btn-ghost{background:transparent;color:var(--blue)}
+.btn[disabled]{opacity:.5;pointer-events:none}
 
 /* Hero */
-.hero{position:relative;overflow:hidden;padding:56px 0 64px;background:linear-gradient(135deg,#1E3A8A 0%,#2f5fd0 60%,#3B82F6 100%);color:#fff}
-.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 15%,rgba(245,179,1,.35),transparent 45%),repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 2px,transparent 2px 22px)}
-.hero-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center}
-.hero-text{min-width:0}
-.eyebrow{display:inline-block;padding:6px 16px;border-radius:999px;background:rgba(255,255,255,.15);font-weight:600;font-size:.9rem;margin-bottom:16px}
-.hero h1{font-family:"Koulen","Kantumruy Pro",sans-serif;font-weight:400;font-size:clamp(2rem,4.2vw,3.4rem);line-height:1.2}
-html[lang="km"] .hero h1{line-height:1.5}
-.hero h1 em{font-style:normal;color:var(--accent)}
-.hero p.lead{margin:14px 0 24px;opacity:.92;font-size:1.05rem;max-width:520px}
-.search{display:flex;gap:8px;background:#fff;border-radius:999px;padding:6px;box-shadow:var(--shadow);max-width:560px}
-.search input{flex:1;min-width:0;border:0;outline:0;padding:0 16px;font-size:1rem;font-family:inherit;background:transparent;color:#0F172A}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 24px}
-.chip{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:4px 14px;font-size:.85rem}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.hero{position:relative;min-height:92vh;display:grid;place-items:center;text-align:center;padding:130px 0 70px;overflow:hidden}
+.hero::before{content:"";position:absolute;top:8%;left:50%;transform:translateX(-50%);width:760px;height:500px;background:radial-gradient(circle,rgba(59,107,255,.18) 0%,rgba(139,92,246,.1) 45%,transparent 70%);filter:blur(90px);pointer-events:none;z-index:0;animation:aura-float 12s ease-in-out infinite alternate}
+.hero::after{content:"";position:absolute;top:32%;left:18%;width:520px;height:420px;background:radial-gradient(circle,rgba(20,184,166,.14) 0%,rgba(59,107,255,.06) 50%,transparent 70%);filter:blur(100px);pointer-events:none;z-index:0}
+[data-theme="dark"] .hero::before{background:radial-gradient(circle,rgba(99,102,241,.25) 0%,rgba(168,85,247,.15) 45%,transparent 70%);filter:blur(110px)}
+[data-theme="dark"] .hero::after{background:radial-gradient(circle,rgba(20,184,166,.16) 0%,rgba(99,102,241,.08) 50%,transparent 70%)}
+@keyframes aura-float{0%{transform:translateX(-50%) translateY(0) scale(1)}100%{transform:translateX(-50%) translateY(25px) scale(1.08)}}
+.hero canvas{position:absolute;inset:0;pointer-events:none;z-index:1}
+.hero-inner{position:relative;z-index:2;max-width:900px;margin-inline:auto}
 
-/* 3D scene */
-.scene{perspective:1000px;padding:24px 16px;min-width:0}
-.hero-card{position:relative;background:var(--surface);color:var(--text);border-radius:24px;box-shadow:0 30px 60px rgba(0,0,0,.3);padding:14px 14px 22px;transform-style:preserve-3d;transition:transform .15s ease-out;animation:float 6s ease-in-out infinite}
-@keyframes float{0%,100%{translate:0 0}50%{translate:0 -12px}}
-.hero-img{position:relative;height:200px;border-radius:16px;background:linear-gradient(135deg,#1E3A8A,#3B82F6 55%,#14B8A6);display:grid;place-items:center;font-size:4rem}
-.hero-img .tag-left{position:absolute;left:12px;top:12px;background:rgba(255,255,255,.9);color:#1E3A8A;border-radius:999px;font-size:.75rem;font-weight:700;padding:2px 12px}
-.pill-live{position:absolute;right:-10px;top:-18px;background:var(--surface);color:var(--text);border-radius:16px;padding:8px 14px;box-shadow:var(--shadow);font-size:.8rem;transform:translateZ(60px)}
-.pill-live b{display:flex;gap:6px;align-items:center}
-.dot{width:9px;height:9px;border-radius:50%;background:#22c55e;animation:pulse 1.5s infinite}
-@keyframes pulse{50%{opacity:.35}}
-.hero-body{padding:14px 8px 0}
-.kicker{font-size:.75rem;font-weight:700;letter-spacing:.06em;color:var(--primary-2);text-transform:uppercase}
-.hero-body h3{font-size:1.15rem;margin:2px 0}
-.hero-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--muted);font-size:.9rem;flex-wrap:wrap}
-.mentor-chip{display:flex;align-items:center;gap:10px;background:var(--surface);color:var(--text);border-radius:16px;padding:8px 14px;box-shadow:var(--shadow);width:max-content;max-width:90%;margin:-18px 0 0 -6px;position:relative;transform:translateZ(50px)}
-.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#f97316);display:grid;place-items:center;color:#fff;font-weight:700;flex:none}
+/* Hero Eyebrow Pill */
+.hero-eyebrow-pill{display:inline-flex;align-items:center;gap:10px;padding:6px 18px;border-radius:999px;background:rgba(255,255,255,.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(255,255,255,.9);box-shadow:0 4px 20px -2px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.95);font-size:.84rem;font-weight:500;color:var(--text);margin-bottom:24px;transition:transform .25s ease,box-shadow .25s ease}
+.hero-eyebrow-pill:hover{transform:translateY(-2px);box-shadow:0 8px 24px -4px rgba(37,99,235,.15)}
+[data-theme="dark"] .hero-eyebrow-pill{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);box-shadow:0 4px 20px -2px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.1)}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 12px #10b981;animation:live-pulse 2s cubic-bezier(0.4,0,0.6,1) infinite}
+@keyframes live-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+.eyebrow-divider{opacity:.35}
+.eyebrow-highlight{color:#2563eb;font-weight:600;background:rgba(37,99,235,.08);padding:2px 10px;border-radius:999px;border:1px solid rgba(37,99,235,.18)}
+[data-theme="dark"] .eyebrow-highlight{color:#93c5fd;background:rgba(59,130,246,.18);border-color:rgba(99,102,241,.35)}
 
-/* Badges */
-.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:999px;font-size:.75rem;font-weight:700}
-.b-bakong{background:#fee2e2;color:var(--red)}
-.b-free{background:#ccfbf1;color:#0f766e}
-.b-level{background:#e0e7ff;color:var(--primary)}
-.b-pending{background:#fef3c7;color:#92400e}
-.b-active,.b-approved{background:#dcfce7;color:#166534}
-.b-completed,.b-reviewed{background:#dbeafe;color:#1e40af}
-.b-rejected,.b-cancelled{background:#fee2e2;color:#991b1b}
-.b-shortlisted{background:#ede9fe;color:#5b21b6}
+.hero h1,.hero-title{font-size:clamp(2.4rem,6.4vw,4.8rem);font-weight:500;letter-spacing:-.035em;line-height:1.1;margin-bottom:20px}
+html[lang="km"] .hero h1,html[lang="km"] .hero-title{font-weight:600;line-height:1.48;letter-spacing:0}
+.hero-gradient-text{background:linear-gradient(135deg,#1d4ed8 0%,#3b82f6 30%,#8b5cf6 70%,#ec4899 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;background-size:200% auto;animation:hero-gradient-shift 8s ease infinite}
+@keyframes hero-gradient-shift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+[data-theme="dark"] .hero-gradient-text{background:linear-gradient(135deg,#60a5fa 0%,#a78bfa 45%,#f472b6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 45px rgba(139,92,246,.35)}
+.hero p.lead,.hero-lead{margin:0 auto 30px;max-width:620px;color:var(--soft);font-size:clamp(1.05rem,2vw,1.22rem);line-height:1.68}
+
+/* iOS 27 Glass Search Console */
+.hero-search-glass{display:flex;align-items:center;gap:10px;max-width:620px;margin:0 auto 18px;padding:8px 10px 8px 18px;border-radius:999px;background:rgba(255,255,255,.78);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border:1px solid rgba(255,255,255,.95);box-shadow:0 20px 45px -15px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.03),inset 0 1px 0 rgba(255,255,255,.95);transition:all .3s cubic-bezier(.16,1,.3,1)}
+.hero-search-glass:focus-within{background:rgba(255,255,255,.96);border-color:rgba(59,107,255,.55);box-shadow:0 24px 50px -12px rgba(59,107,255,.25),0 0 0 4px rgba(59,107,255,.14);transform:translateY(-2px)}
+[data-theme="dark"] .hero-search-glass{background:rgba(18,24,38,.72);border-color:rgba(255,255,255,.14);box-shadow:0 20px 45px -15px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08)}
+[data-theme="dark"] .hero-search-glass:focus-within{background:rgba(24,32,50,.88);border-color:rgba(99,102,241,.65);box-shadow:0 24px 50px -12px rgba(99,102,241,.35),0 0 0 4px rgba(99,102,241,.22)}
+.search-icon-symbol{font-size:1.15rem;opacity:.6;flex-shrink:0}
+.hero-search-glass input{flex:1;min-width:0;border:0;outline:0;background:transparent;padding:4px 6px;font-size:.98rem;font-family:inherit;color:var(--text)}
+.search-kbd-hint{padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.05);font-size:.74rem;font-weight:600;color:var(--soft);letter-spacing:.05em;border:1px solid rgba(0,0,0,.06);flex-shrink:0}
+[data-theme="dark"] .search-kbd-hint{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12)}
+.search-submit-btn{padding:9px 22px;border-radius:999px;font-weight:500;font-size:.92rem;box-shadow:0 8px 18px -4px rgba(37,99,235,.4);flex-shrink:0}
+
+/* Chips */
+.hero-chips-wrap{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.hero-chip-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:999px;background:rgba(255,255,255,.65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(0,0,0,.06);color:var(--soft);font-size:.84rem;font-weight:500;cursor:pointer;transition:all .25s cubic-bezier(.16,1,.3,1)}
+.hero-chip-pill:hover{background:rgba(255,255,255,.95);color:var(--text);border-color:rgba(59,107,255,.35);transform:translateY(-2px);box-shadow:0 8px 20px -6px rgba(0,0,0,.1)}
+[data-theme="dark"] .hero-chip-pill{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#94a3b8}
+[data-theme="dark"] .hero-chip-pill:hover{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(99,102,241,.5);box-shadow:0 8px 20px -6px rgba(0,0,0,.5)}
+
+/* Hero Actions & Trust */
+.hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.hero-main-btn{padding:12px 28px;font-size:1rem;border-radius:999px;box-shadow:0 12px 28px -6px rgba(37,99,235,.45),inset 0 1px 0 rgba(255,255,255,.25);display:inline-flex;align-items:center;gap:8px;transition:all .25s cubic-bezier(.16,1,.3,1)}
+.hero-main-btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 16px 36px -6px rgba(37,99,235,.55)}
+.btn-arrow-icon{transition:transform .2s ease}
+.hero-main-btn:hover .btn-arrow-icon{transform:translateX(4px)}
+.hero-second-btn{padding:12px 26px;font-size:1rem;border-radius:999px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:all .25s ease}
+.hero-second-btn:hover{transform:translateY(-2px)}
+.hero-trust-bar{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:32px;font-size:.86rem;color:var(--soft);flex-wrap:wrap}
+.trust-icon{color:#10b981;font-weight:700;margin-right:4px}
+.trust-dot{opacity:.35}
 
 /* Sections */
-section{padding:72px 0}
-.alt{background:color-mix(in srgb,var(--primary-2) 6%,var(--bg))}
-.sec-title{text-align:center;margin-bottom:36px}
-.sec-title h2{font-size:clamp(1.5rem,3vw,2rem);color:var(--primary)}
-[data-theme="dark"] .sec-title h2{color:#93c5fd}
-.sec-title p{color:var(--muted)}
-.grid{display:grid;gap:22px}
+section{padding:96px 0;position:relative}
+.sec-title{text-align:center;margin-bottom:44px}
+.sec-title h2{font-size:clamp(1.8rem,4vw,2.9rem);font-weight:400;letter-spacing:-.03em;line-height:1.15}
+html[lang="km"] .sec-title h2{font-weight:600;letter-spacing:0;line-height:1.5}
+.sec-title p{color:var(--soft);margin-top:8px}
+.grid{display:grid;gap:20px}
 .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
 .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;border:1px solid var(--border);min-width:0}
-.tilt{transition:transform .15s ease-out;transform-style:preserve-3d;will-change:transform}
-.thumb{height:130px;border-radius:14px;display:grid;place-items:center;font-size:3rem;color:#fff;margin-bottom:14px}
-.card h3{font-size:1.05rem;margin:6px 0 2px}
-.muted{color:var(--muted);font-size:.9rem}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
-.price{font-weight:700;color:var(--primary);font-size:1.1rem}
-[data-theme="dark"] .price{color:#93c5fd}
-.progress{height:8px;border-radius:99px;background:var(--border);overflow:hidden;margin-top:10px}
-.progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--primary-2));transition:width .4s}
+.card{border-radius:var(--r);padding:22px;min-width:0}
+.tilt{transition:transform .25s ease-out;transform-style:preserve-3d;will-change:transform}
+.card h3{font-size:1.1rem;font-weight:600;margin:6px 0 2px;letter-spacing:-.01em}
+.muted{color:var(--soft);font-size:.9rem}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+.price{font-weight:600;font-size:1.1rem}
+.progress{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:12px}
+.progress>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal),var(--blue));transition:width .5s}
 
-/* Stats + journey */
-.stats{margin-top:-32px;position:relative;z-index:2}
-.stats .card{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;text-align:center}
-.stats b{display:block;font-size:1.8rem;color:var(--primary)}
-[data-theme="dark"] .stats b{color:#93c5fd}
-.step{text-align:center}
-.step .ico{font-size:2rem}
-.step small{color:var(--muted)}
+/* Badges */
+.badge{display:inline-flex;align-items:center;padding:2px 11px;border-radius:999px;font-size:.74rem;font-weight:600}
+.b-bakong{background:rgba(226,30,43,.12);color:var(--red)}
+.b-free{background:rgba(20,184,166,.15);color:#0f9488}
+.b-level{background:var(--chip);color:var(--soft)}
+.b-pending{background:rgba(245,179,1,.18);color:#a16207}
+.b-active,.b-approved,.b-accepted{background:rgba(34,197,94,.16);color:#15803d}
+.b-completed,.b-reviewed{background:rgba(59,107,255,.14);color:var(--blue)}
+.b-shortlisted{background:rgba(139,92,246,.16);color:#7c3aed}
+.b-rejected,.b-cancelled{background:rgba(239,68,68,.14);color:#dc2626}
 
-/* Filters */
-.filters{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;margin-bottom:22px;scrollbar-width:none}
+/* 3D Showcase cards */
+.showcase{perspective:1100px}
+/* 3D Showcase cards */
+.showcase{perspective:1100px}
+.show-card{min-height:auto;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative;border-radius:28px;padding:16px;background:rgba(255,255,255,.85);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border:1px solid rgba(255,255,255,.95);box-shadow:0 20px 45px -15px rgba(0,0,0,.07),inset 0 1px 0 rgba(255,255,255,1);transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .4s ease,border-color .4s ease}
+.show-card:hover{transform:translateY(-8px);box-shadow:0 32px 64px -16px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,1);border-color:rgba(255,255,255,1)}
+.show-card-academy::before{content:"";position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(59,107,255,.12) 0%,transparent 70%);filter:blur(40px);pointer-events:none;z-index:0}
+.show-card-mentors::before{content:"";position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(245,179,1,.14) 0%,transparent 70%);filter:blur(40px);pointer-events:none;z-index:0}
+.show-card-career::before{content:"";position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(20,184,166,.12) 0%,transparent 70%);filter:blur(40px);pointer-events:none;z-index:0}
+[data-theme="dark"] .show-card{background:rgba(18,24,38,.78);border-color:rgba(255,255,255,.12);box-shadow:0 20px 45px -15px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.08)}
+[data-theme="dark"] .show-card:hover{box-shadow:0 32px 64px -16px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.18);border-color:rgba(255,255,255,.22)}
+[data-theme="dark"] .show-card-academy::before{background:radial-gradient(circle,rgba(99,102,241,.22) 0%,transparent 70%)}
+[data-theme="dark"] .show-card-mentors::before{background:radial-gradient(circle,rgba(245,179,1,.2) 0%,transparent 70%)}
+[data-theme="dark"] .show-card-career::before{background:radial-gradient(circle,rgba(20,184,166,.2) 0%,transparent 70%)}
+
+/* Full-width Bento Banner */
+.show-bento-media{position:relative;width:100%;height:180px;border-radius:20px;overflow:hidden;background:#0b1120;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 8px 24px -6px rgba(0,0,0,.16);z-index:1;margin-bottom:14px}
+.show-bento-img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.show-card:hover .show-bento-img{transform:scale(1.06)}
+.show-bento-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,23,42,.42) 0%,rgba(15,23,42,.05) 50%,rgba(15,23,42,.58) 100%);pointer-events:none;transition:opacity .3s ease}
+.show-card:hover .show-bento-overlay{opacity:.85}
+.show-bento-badge-row{position:absolute;top:12px;left:12px;right:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;z-index:2;pointer-events:none}
+.show-tag{font-size:.78rem;font-weight:600;padding:5px 12px;border-radius:999px;letter-spacing:.02em;backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.tag-blue{background:rgba(37,99,235,.9);color:#fff;border:1px solid rgba(255,255,255,.35)}
+.tag-gold{background:rgba(217,119,6,.9);color:#fff;border:1px solid rgba(255,255,255,.35)}
+.tag-teal{background:rgba(13,148,136,.9);color:#fff;border:1px solid rgba(255,255,255,.35)}
+[data-theme="dark"] .tag-blue{background:rgba(37,99,235,.92);color:#fff;border-color:rgba(255,255,255,.3)}
+[data-theme="dark"] .tag-gold{background:rgba(217,119,6,.92);color:#fff;border-color:rgba(255,255,255,.3)}
+[data-theme="dark"] .tag-teal{background:rgba(13,148,136,.92);color:#fff;border-color:rgba(255,255,255,.3)}
+.badge.b-bakong{background:rgba(220,38,38,.92);color:#fff;border:1px solid rgba(255,255,255,.35);font-size:.76rem;font-weight:600;padding:5px 12px;border-radius:999px;box-shadow:0 4px 14px rgba(220,38,38,.35);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+[data-theme="dark"] .badge.b-bakong{background:rgba(220,38,38,.94);color:#fff;border-color:rgba(255,255,255,.3)}
+.badge.b-approved{background:rgba(16,185,129,.92);color:#fff;border:1px solid rgba(255,255,255,.35);font-size:.76rem;font-weight:600;padding:5px 12px;border-radius:999px;box-shadow:0 4px 14px rgba(16,185,129,.3);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+[data-theme="dark"] .badge.b-approved{background:rgba(16,185,129,.94);color:#fff;border-color:rgba(255,255,255,.3)}
+.badge.b-level{background:rgba(15,23,42,.82);color:#fff;border:1px solid rgba(255,255,255,.32);font-size:.76rem;font-weight:600;padding:5px 12px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.25);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+[data-theme="dark"] .badge.b-level{background:rgba(30,41,59,.88);color:#f1f5f9;border-color:rgba(255,255,255,.28)}
+.show-card-content{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:space-between;flex:1;padding:4px 6px 4px}
+.show-card-text h3{font-size:1.28rem;font-weight:700;letter-spacing:-.02em;color:var(--text);margin:2px 0 6px;line-height:1.35}
+.show-card-text p{font-size:.92rem;line-height:1.58;color:var(--soft);margin:0 0 14px}
+
+/* Card Micro-Widgets */
+.card-mini-progress{display:flex;align-items:center;gap:12px;margin-top:10px;padding:8px 12px;border-radius:12px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.04)}
+[data-theme="dark"] .card-mini-progress{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
+.card-mini-progress .progress{flex:1;height:6px;background:rgba(0,0,0,.08);border-radius:999px;overflow:hidden}
+[data-theme="dark"] .card-mini-progress .progress{background:rgba(255,255,255,.12)}
+.card-mini-progress .progress i{display:block;height:100%;background:linear-gradient(90deg,#3b82f6,#6366f1);border-radius:999px;box-shadow:0 0 10px rgba(59,130,246,.5)}
+.mini-progress-label{font-size:.78rem;font-weight:600;color:var(--soft);white-space:nowrap}
+
+.card-mini-team{display:flex;align-items:center;gap:12px;margin-top:10px;padding:6px 12px;border-radius:12px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.04)}
+[data-theme="dark"] .card-mini-team{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
+.mini-avatar-stack{display:flex;align-items:center}
+.mini-avatar-stack img{width:28px;height:28px;border-radius:50%;border:2px solid var(--bg);margin-left:-8px;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,.15);transition:transform .2s}
+.mini-avatar-stack img:first-child{margin-left:0}
+.mini-avatar-stack img:hover{transform:scale(1.3) translateY(-2px);z-index:10}
+.mini-team-text{font-size:.8rem;font-weight:600;color:var(--soft)}
+
+.card-mini-tracker{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:8px 12px;border-radius:12px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.04)}
+[data-theme="dark"] .card-mini-tracker{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
+.mini-step-dots{display:flex;align-items:center;gap:4px}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(0,0,0,.15)}
+.step-dot.on{background:#14b8a6;box-shadow:0 0 8px rgba(20,184,166,.6)}
+.step-line{width:14px;height:2px;background:rgba(0,0,0,.15)}
+.step-line.on{background:#14b8a6}
+[data-theme="dark"] .step-dot{background:rgba(255,255,255,.15)}
+[data-theme="dark"] .step-line{background:rgba(255,255,255,.15)}
+.mini-tracker-label{font-size:.78rem;font-weight:600;color:var(--soft)}
+
+/* Floating badges */
+.hero-floating-badge{position:absolute;display:flex;align-items:center;gap:14px;padding:10px 20px;border-radius:999px;background:rgba(255,255,255,.82);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border:1px solid rgba(255,255,255,.95);box-shadow:0 16px 36px -8px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,1);z-index:3;pointer-events:none;text-align:left;transition:transform .3s ease}
+.hero-floating-badge.badge-left{top:22%;left:-20px;animation:float-left 7s ease-in-out infinite alternate}
+.hero-floating-badge.badge-right{top:54%;right:-20px;animation:float-right 8s ease-in-out infinite alternate}
+@keyframes float-left{0%{transform:translateY(0) rotate(-1.5deg)}100%{transform:translateY(-14px) rotate(1deg)}}
+@keyframes float-right{0%{transform:translateY(0) rotate(1.5deg)}100%{transform:translateY(-16px) rotate(-1deg)}}
+.float-badge-icon{font-size:1.35rem;line-height:1;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.float-icon-blue{background:linear-gradient(135deg,rgba(59,107,255,.18),rgba(99,102,241,.22));color:#2563eb}
+.float-icon-red{background:linear-gradient(135deg,rgba(226,30,43,.16),rgba(245,179,1,.2));color:#dc2626}
+.float-badge-text{display:flex;flex-direction:column}
+.float-badge-top{display:flex;align-items:center;gap:8px}
+.float-badge-top b{font-size:.88rem;font-weight:600;color:var(--text);line-height:1.25}
+.mini-pill-status{font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:999px;line-height:1.1;letter-spacing:.02em}
+.float-badge-text small{font-size:.74rem;line-height:1.3;margin-top:2px}
+[data-theme="dark"] .hero-floating-badge{background:rgba(20,26,42,.82);border-color:rgba(255,255,255,.14);box-shadow:0 16px 36px -8px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.1)}
+@media(max-width:1024px){.hero-floating-badge{display:none}}
+
+/* Hero Chips & Shimmer Button */
+.hero-chip-pill.chip-web:hover{border-color:rgba(59,107,255,.45);box-shadow:0 8px 20px -4px rgba(59,107,255,.25);color:#2563eb}
+.hero-chip-pill.chip-design:hover{border-color:rgba(245,179,1,.45);box-shadow:0 8px 20px -4px rgba(245,179,1,.25);color:#d97706}
+.hero-chip-pill.chip-python:hover{border-color:rgba(34,197,94,.45);box-shadow:0 8px 20px -4px rgba(34,197,94,.25);color:#16a34a}
+.hero-chip-pill.chip-data:hover{border-color:rgba(20,184,166,.45);box-shadow:0 8px 20px -4px rgba(20,184,166,.25);color:#0d9488}
+.hero-chip-pill.chip-bakong:hover{border-color:rgba(226,30,43,.45);box-shadow:0 8px 20px -4px rgba(226,30,43,.25);color:#dc2626}
+[data-theme="dark"] .hero-chip-pill.chip-web:hover{border-color:rgba(99,102,241,.6);color:#93c5fd}
+[data-theme="dark"] .hero-chip-pill.chip-design:hover{border-color:rgba(245,179,1,.6);color:#fde68a}
+[data-theme="dark"] .hero-chip-pill.chip-python:hover{border-color:rgba(34,197,94,.6);color:#86efac}
+[data-theme="dark"] .hero-chip-pill.chip-data:hover{border-color:rgba(20,184,166,.6);color:#5eead4}
+[data-theme="dark"] .hero-chip-pill.chip-bakong:hover{border-color:rgba(226,30,43,.6);color:#fca5a5}
+.hero-main-btn{position:relative;overflow:hidden}
+.hero-main-btn::after{content:"";position:absolute;top:-50%;left:-75%;width:50%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);transform:rotate(25deg);animation:btn-shimmer 6s infinite}
+@keyframes btn-shimmer{0%{left:-75%}20%,100%{left:125%}}
+
+/* Card Hover Auras */
+.show-card:nth-child(1):hover{box-shadow:0 32px 64px -15px rgba(59,107,255,.35),inset 0 1px 0 rgba(255,255,255,1);border-color:rgba(59,107,255,.55)}
+.show-card:nth-child(2):hover{box-shadow:0 32px 64px -15px rgba(245,179,1,.35),inset 0 1px 0 rgba(255,255,255,1);border-color:rgba(245,179,1,.55)}
+.show-card:nth-child(3):hover{box-shadow:0 32px 64px -15px rgba(20,184,166,.35),inset 0 1px 0 rgba(255,255,255,1);border-color:rgba(20,184,166,.55)}
+
+/* Glass Metric Dashboard */
+.stats-section{position:relative;z-index:2}
+.stats-dashboard{display:flex;align-items:center;justify-content:space-between;padding:22px 28px;border-radius:28px;margin-top:0;gap:14px;background:rgba(255,255,255,.76);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border:1px solid rgba(255,255,255,.95);box-shadow:0 24px 50px -12px rgba(0,0,0,.07),inset 0 1px 0 rgba(255,255,255,1)}
+[data-theme="dark"] .stats-dashboard{background:rgba(18,24,38,.76);border-color:rgba(255,255,255,.12);box-shadow:0 24px 50px -12px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08)}
+.stat-card-item{display:flex;align-items:center;gap:16px;flex:1;padding:10px 14px;border-radius:20px;transition:transform .25s cubic-bezier(.16,1,.3,1),background .25s ease}
+.stat-card-item:hover{transform:translateY(-3px);background:rgba(255,255,255,.55)}
+[data-theme="dark"] .stat-card-item:hover{background:rgba(255,255,255,.05)}
+.stat-icon-wrap{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;font-size:1.45rem;flex-shrink:0;box-shadow:0 6px 16px -2px rgba(0,0,0,.08);transition:transform .25s ease}
+.stat-card-item:hover .stat-icon-wrap{transform:scale(1.1) rotate(4deg)}
+.stat-icon-blue{background:linear-gradient(135deg,rgba(59,107,255,.15),rgba(99,102,241,.18));color:#3b82f6}
+.stat-icon-gold{background:linear-gradient(135deg,rgba(245,179,1,.18),rgba(217,119,6,.22));color:#d97706}
+.stat-icon-teal{background:linear-gradient(135deg,rgba(20,184,166,.18),rgba(13,148,136,.22));color:#0d9488}
+.stat-icon-purple{background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(124,58,237,.22));color:#8b5cf6}
+.stat-number-row{display:flex;align-items:baseline;gap:8px}
+.stat-number-row b{font-size:2.15rem;font-weight:600;letter-spacing:-.035em;color:var(--text);line-height:1.1;background:linear-gradient(135deg,var(--text) 0%,var(--blue) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-trend-tag{font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:999px}
+.tag-green{background:rgba(16,185,129,.12);color:#059669}
+.tag-blue{background:rgba(59,107,255,.12);color:#2563eb}
+.tag-gold{background:rgba(245,179,1,.15);color:#b45309}
+.stat-label{display:block;font-size:.86rem;color:var(--soft);margin-top:2px}
+.stat-divider{width:1px;height:48px;background:rgba(0,0,0,.07);flex-shrink:0}
+[data-theme="dark"] .stat-divider{background:rgba(255,255,255,.1)}
+@media(max-width:900px){.stats-dashboard{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;padding:20px}.stat-divider{display:none}}
+@media(max-width:500px){.stats-dashboard{grid-template-columns:1fr}}
+
+/* Apple-style Journey Stepper Cards */
+.journey-stepper-wrap{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;position:relative;margin-top:24px}
+.journey-stepper-wrap::before{content:"";position:absolute;top:50%;left:6%;right:6%;height:2px;background:linear-gradient(90deg,rgba(59,107,255,.25) 0%,rgba(99,102,241,.35) 25%,rgba(245,179,1,.35) 50%,rgba(20,184,166,.35) 75%,rgba(34,197,94,.35) 100%);z-index:0;pointer-events:none}
+@media(max-width:900px){.journey-stepper-wrap::before{display:none}}
+.journey-step-card{position:relative;z-index:1;border-radius:24px;padding:26px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s ease,border-color .3s ease;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.72);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);box-shadow:0 10px 30px -10px rgba(0,0,0,.05),inset 0 1px 0 rgba(255,255,255,.95)}
+.journey-step-card:nth-child(1):hover{transform:translateY(-8px);border-color:rgba(59,107,255,.45);box-shadow:0 20px 40px -10px rgba(59,107,255,.25)}
+.journey-step-card:nth-child(2):hover{transform:translateY(-8px);border-color:rgba(99,102,241,.45);box-shadow:0 20px 40px -10px rgba(99,102,241,.25)}
+.journey-step-card:nth-child(3):hover{transform:translateY(-8px);border-color:rgba(245,179,1,.45);box-shadow:0 20px 40px -10px rgba(245,179,1,.25)}
+.journey-step-card:nth-child(4):hover{transform:translateY(-8px);border-color:rgba(20,184,166,.45);box-shadow:0 20px 40px -10px rgba(20,184,166,.25)}
+.journey-step-card:nth-child(5):hover{transform:translateY(-8px);border-color:rgba(34,197,94,.45);box-shadow:0 20px 40px -10px rgba(34,197,94,.25)}
+[data-theme="dark"] .journey-step-card{background:rgba(18,24,38,.72);border-color:rgba(255,255,255,.1);box-shadow:0 10px 30px -10px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.06)}
+[data-theme="dark"] .journey-step-card:hover{box-shadow:0 20px 40px -10px rgba(99,102,241,.35);border-color:rgba(99,102,241,.45)}
+.step-num-pill{position:absolute;top:14px;right:14px;font-size:.72rem;font-weight:700;letter-spacing:.05em;color:var(--soft);padding:3px 9px;border-radius:999px;background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.05);transition:all .25s ease}
+.journey-step-card:hover .step-num-pill{color:#fff;background:var(--text);transform:scale(1.05)}
+[data-theme="dark"] .step-num-pill{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#94a3b8}
+[data-theme="dark"] .journey-step-card:hover .step-num-pill{background:#fff;color:#0b0d12}
+.step-ico-box{width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,rgba(59,107,255,.12),rgba(139,92,246,.12));display:grid;place-items:center;font-size:1.8rem;margin-bottom:14px;box-shadow:0 6px 16px rgba(59,107,255,.12);transition:transform .25s ease}
+.journey-step-card:hover .step-ico-box{transform:scale(1.12) rotate(4deg)}
+.journey-step-card b{font-size:1.05rem;font-weight:600;color:var(--text);margin-bottom:6px;display:block}
+.journey-step-card small{font-size:.82rem;color:var(--soft);line-height:1.45}
+@media(max-width:900px){.journey-stepper-wrap{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.journey-stepper-wrap{grid-template-columns:1fr}}
+
+/* CMU Honors Team Banner */
+.team-bar{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;border-radius:26px;margin-bottom:28px;gap:16px;flex-wrap:wrap;background:rgba(255,255,255,.68);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(255,255,255,.85);box-shadow:0 15px 35px -10px rgba(0,0,0,.05),inset 0 1px 0 rgba(255,255,255,.95)}
+.team-bar-honors{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.88) 0%,rgba(255,248,230,.75) 100%);border:1.5px solid rgba(245,179,1,.45);box-shadow:0 20px 50px -12px rgba(245,179,1,.22),inset 0 1px 0 rgba(255,255,255,1);padding:22px 30px}
+.team-bar-honors::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#f5b301,#ffd35c,#f5b301,transparent)}
+[data-theme="dark"] .team-bar{background:rgba(18,24,38,.68);border-color:rgba(255,255,255,.1);box-shadow:0 15px 35px -10px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08)}
+[data-theme="dark"] .team-bar-honors{background:linear-gradient(135deg,rgba(26,22,12,.85) 0%,rgba(18,24,38,.9) 100%);border-color:rgba(245,179,1,.45);box-shadow:0 20px 50px -12px rgba(0,0,0,.7),0 0 25px rgba(245,179,1,.15)}
+.badge-cmu-honors{background:linear-gradient(135deg,#f5b301 0%,#d97706 100%);color:#ffffff;font-weight:700;padding:7px 18px;border-radius:999px;box-shadow:0 6px 18px rgba(245,179,1,.4);letter-spacing:.02em;font-size:.86rem;display:inline-flex;align-items:center;gap:6px;transition:transform .25s ease,box-shadow .25s ease}
+.badge-cmu-honors:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 10px 24px rgba(245,179,1,.5)}
+.team-bar-left{display:flex;align-items:center;gap:16px}
+.team-avatars{display:flex;align-items:center}
+.team-avatars img{width:48px;height:48px;border-radius:50%;border:3px solid var(--bg);margin-left:-12px;object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,.2);transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s ease}
+.team-avatars img:first-child{margin-left:0}
+.team-avatars img:hover{transform:scale(1.3) translateY(-6px);z-index:10;box-shadow:0 8px 20px rgba(0,0,0,.35);border-color:#f5b301}
+
+/* Thumbnails */
+.thumb{height:140px;border-radius:20px;display:grid;place-items:center;font-size:3.2rem;margin-bottom:16px;color:#fff;position:relative;overflow:hidden;box-shadow:0 10px 25px -6px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.45);transition:transform .35s var(--spring)}
+.thumb::before{content:"";position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,.25),transparent);pointer-events:none}
+.card:hover .thumb{transform:scale(1.03)}
+
+/* Filters (segmented) */
+.filters{display:flex;gap:8px;overflow-x:auto;padding:6px;margin:0 auto 22px;width:max-content;max-width:100%;border-radius:999px;scrollbar-width:none}
 .filters::-webkit-scrollbar{display:none}
-.pill{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:6px 18px;min-height:40px;font-weight:600}
-.pill.on{background:var(--primary);color:#fff;border-color:var(--primary)}
-.field{width:100%;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;font-size:1rem;margin-top:4px}
-label{font-weight:600;font-size:.9rem;display:block;margin-top:12px}
+.pill{flex:none;border:0;background:transparent;border-radius:999px;padding:6px 18px;min-height:40px;font-weight:500;color:var(--soft);transition:.25s var(--spring)}
+.pill.on{background:var(--ink);color:var(--ink-text)}
+.field{width:100%;padding:12px 16px;border-radius:16px;border:1px solid var(--line);background:var(--glass-strong);color:var(--text);font-family:inherit;font-size:1rem;margin-top:4px}
+label{font-weight:500;font-size:.88rem;display:block;margin-top:12px}
+
+/* Course thumbs */
+.thumb{height:140px;border-radius:20px;display:grid;place-items:center;font-size:3rem;margin-bottom:14px;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
 
 /* Roadmap */
-.timeline{list-style:none;border-left:3px solid var(--border);margin-left:14px}
-.timeline li{position:relative;padding:0 0 18px 28px}
-.timeline li::before{content:"";position:absolute;left:-11px;top:4px;width:19px;height:19px;border-radius:50%;background:var(--surface);border:3px solid var(--border)}
+.timeline{list-style:none;border-left:2px solid var(--line);margin-left:12px}
+.timeline li{position:relative;padding:0 0 16px 26px}
+.timeline li::before{content:"";position:absolute;left:-10px;top:5px;width:18px;height:18px;border-radius:50%;background:var(--bg);border:2px solid var(--line);transition:.3s}
 .timeline li.done::before{background:var(--teal);border-color:var(--teal)}
-.timeline label{margin:0;display:flex;gap:10px;align-items:center;cursor:pointer;font-weight:600}
-.ring{--p:0;width:110px;height:110px;border-radius:50%;background:conic-gradient(var(--teal) calc(var(--p)*1%),var(--border) 0);display:grid;place-items:center;margin:0 auto 14px}
-.ring span{width:84px;height:84px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-weight:700;font-size:1.3rem}
-
-/* Tracker */
+.timeline label{margin:0;display:flex;gap:10px;align-items:center;cursor:pointer;font-weight:500}
+.ring{--p:0;width:112px;height:112px;border-radius:50%;background:conic-gradient(var(--teal) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;margin:0 auto 14px}
+.ring span{width:88px;height:88px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-weight:500;font-size:1.4rem}
 .tracker{display:flex;gap:6px;margin-top:12px}
-.tracker i{flex:1;height:8px;border-radius:99px;background:var(--border)}
+.tracker i{flex:1;height:6px;border-radius:99px;background:var(--line)}
 .tracker i.on{background:var(--teal)}
-.tracker-labels{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-top:4px}
+.tracker-labels{display:flex;justify-content:space-between;font-size:.68rem;color:var(--soft);margin-top:4px}
+.avatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#f97316);display:grid;place-items:center;color:#fff;font-weight:600;flex:none;object-fit:cover}
 
-/* Chat */
+/* Chat + notifs */
 .chat{display:flex;flex-direction:column;height:320px}
-.msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:6px}
-.msg{max-width:80%;padding:8px 14px;border-radius:16px;background:var(--border);align-self:flex-start;font-size:.92rem}
-.msg.me{background:var(--primary);color:#fff;align-self:flex-end}
+.msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px}
+.msg{max-width:82%;padding:8px 14px;border-radius:20px;background:var(--chip);align-self:flex-start;font-size:.92rem}
+.msg.me{background:var(--blue);color:#fff;align-self:flex-end}
 .chat-form{display:flex;gap:8px;margin-top:8px}
-.notif{padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;font-size:.92rem}
-.notif.unread b::before{content:"● ";color:var(--primary-2)}
-.bar{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:.9rem}
-.bar i{display:block;height:14px;border-radius:99px;background:linear-gradient(90deg,var(--primary-2),var(--teal))}
-details{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:10px}
-summary{font-weight:700;cursor:pointer}
-footer{background:var(--primary);color:#fff;text-align:center;padding:28px 0}
+.notif{padding:10px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.notif.unread b::before{content:"● ";color:var(--blue)}
+.bar{display:flex;align-items:center;gap:10px;margin:10px 0;font-size:.9rem}
+.bar i{display:block;height:10px;border-radius:99px}
+details{border-radius:20px;padding:16px 22px;margin-bottom:10px}
+summary{font-weight:500;cursor:pointer}
+
+/* Dark CTA (Antigravity download banner) */
+.cta{position:relative;overflow:hidden;border-radius:36px;background:#000;color:#fff;min-height:380px;display:flex;align-items:flex-end;padding:48px}
+.cta canvas{position:absolute;inset:0;width:100%;height:100%}
+.cta-inner{position:relative;z-index:2}
+.cta h2{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:400;letter-spacing:-.03em;line-height:1.1;margin-bottom:24px}
+html[lang="km"] .cta h2{font-weight:600;line-height:1.45;letter-spacing:0}
+.cta .btn-light{background:#fff;color:#000}
+.cta .btn-dim{background:rgba(255,255,255,.14);color:#fff}
+footer{text-align:center;padding:40px 0 120px;color:var(--soft);font-size:.9rem}
 
 /* Modal + toast */
-.overlay{position:fixed;inset:0;background:rgba(2,6,23,.6);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.overlay{position:fixed;inset:0;background:rgba(5,7,12,.45);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
 .overlay.open{display:flex}
-.modal{background:var(--surface);color:var(--text);border-radius:24px;padding:26px;width:min(460px,100%);max-height:92vh;overflow:auto;animation:pop .25s}
-@keyframes pop{from{transform:scale(.94);opacity:0}}
-.qr{display:grid;grid-template-columns:repeat(21,1fr);width:210px;margin:12px auto;background:#fff;padding:8px;border-radius:12px;border:4px solid var(--red)}
+.modal{width:min(460px,100%);max-height:92vh;overflow:auto;border-radius:32px;padding:28px;background:var(--glass-strong);backdrop-filter:blur(30px) saturate(180%);border:1px solid var(--glass-line);color:var(--text);animation:pop .4s var(--spring)}
+@keyframes pop{from{transform:scale(.92) translateY(16px);opacity:0}}
+.qr{display:grid;grid-template-columns:repeat(21,1fr);width:210px;margin:12px auto;background:#fff;padding:8px;border-radius:16px;border:4px solid var(--red)}
 .qr i{aspect-ratio:1;background:#fff}.qr i.k{background:#111}
-.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(30px);background:#0F172A;color:#fff;padding:10px 22px;border-radius:999px;opacity:0;pointer-events:none;transition:.3s;z-index:200;font-size:.92rem}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(30px);padding:10px 24px;border-radius:999px;opacity:0;pointer-events:none;transition:.4s var(--spring);z-index:200;font-size:.92rem;background:var(--ink);color:var(--ink-text)}
 .toast.show{opacity:1;transform:translateX(-50%)}
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s var(--spring)}
 .reveal.show{opacity:1;transform:none}
-.bottom-nav{display:none}
 
-@media(max-width:1000px){.nav-links{display:none}.hero-grid{grid-template-columns:1fr}.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+/* Floating tab bar (iOS) */
+.tabbar{display:none}
+
+@media(max-width:1000px){.nav-links{display:none}.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){
-  .container{width:min(1200px,100% - 32px)}
-  .g3,.g4,.g2{grid-template-columns:1fr}
-  .stats .card{grid-template-columns:repeat(2,1fr)}
-  .pill-live,.mentor-chip{display:none}
-  .hero-actions .btn{flex:1}
-  body{padding-bottom:70px}
-  .bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--surface);border-top:1px solid var(--border);justify-content:space-around;padding:6px 0}
-  .bottom-nav a{text-decoration:none;font-size:.7rem;text-align:center;font-weight:600;min-width:56px;min-height:44px;color:var(--muted)}
-  .bottom-nav a span{display:block;font-size:1.3rem}
+  .container{width:min(1180px,100% - 32px)}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .nav{padding-left:16px}.nav-actions .btn{display:none}
+  .show-card{height:240px}.orb{width:100px;height:100px}
+  .cta{padding:28px;min-height:320px}
+  section{padding:64px 0}
+  .tabbar{display:flex;position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:70;border-radius:30px;padding:6px;justify-content:space-around}
+  .tabbar a{flex:1;text-decoration:none;text-align:center;font-size:.66rem;font-weight:500;min-height:48px;border-radius:24px;color:var(--soft);display:grid;align-content:center;transition:.3s var(--spring)}
+  .tabbar a span{font-size:1.25rem;line-height:1.1}
+  .tabbar a.on{background:var(--chip);color:var(--text)}
+  .toast{bottom:104px}
+  .overlay{align-items:flex-end;padding:0}.modal{border-radius:32px 32px 0 0}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
-/* iOS-inspired Liquid Glass: visual changes only; demo handlers stay intact. */
-:root {
-  --primary:#1754d6; --primary-2:#287dff; --bg:#f5f7fc;
-  --radius:26px; --shadow:0 16px 40px -20px #233d6852;
-  --glass:rgba(255,255,255,.9); --glass-edge:rgba(255,255,255,.95);
-}
-[data-theme="dark"] {
-  --primary:#a6c8ff; --primary-2:#90baff;
-  --glass:rgba(25,35,54,.94); --glass-edge:rgba(190,209,244,.22);
-}
-header {
-  background:var(--glass); border-color:var(--glass-edge);
-  backdrop-filter:blur(24px) saturate(1.5); -webkit-backdrop-filter:blur(24px) saturate(1.5);
-  box-shadow:var(--shadow);
-}
-.hero {
-  color:var(--text);
-  background:radial-gradient(ellipse at 90% 10%,#d8e5ff,transparent 55%),
-    radial-gradient(ellipse at 12% 85%,#e7dcfa,transparent 45%),
-    radial-gradient(ellipse at 85% 90%,#d6f4f3,transparent 40%),#f7f9ff;
-}
-.hero::before { background:none; }
-.hero h1 em { color:#1754d6; }
-.eyebrow,.chip { background:var(--glass); color:var(--text); border:1px solid var(--border); }
-.hero-card,.pill-live,.pill-bottom,.search {
-  background:var(--glass); border:1px solid var(--glass-edge);
-  box-shadow:var(--shadow),inset 0 1px 0 #ffffff70;
-  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-}
-.hero-card { border-radius:32px; }
-.hero-img { border-radius:22px; }
-.card { border-radius:26px; box-shadow:0 12px 34px -22px #203f6d45; }
-.btn-primary { background:linear-gradient(180deg,#287dff,#1754d6); color:#fff; box-shadow:inset 0 1px 0 #ffffff70,0 6px 16px #2563eb28; }
-.icon-btn { border-radius:50%; background:var(--glass); }
-.pill { min-height:44px; }
-.pill.on { background:#1754d6; color:#fff; }
-.field { border-radius:16px; }
-@media (max-width:600px) {
-  .nav { height:auto; min-height:68px; flex-wrap:wrap; justify-content:center; gap:8px; padding-block:10px; }
-  .nav .logo { text-align:center; flex-basis:100%; }
-  .nav-actions { flex-wrap:wrap; justify-content:center; gap:8px; max-width:100%; }
-  html { scroll-padding-top:130px; }
-}
-[data-theme="dark"] .hero { background:radial-gradient(ellipse at 90% 15%,#203b66,transparent 60%),#101a2d; }
-[data-theme="dark"] .hero h1 em { color:#a6c8ff; }
-[data-theme="dark"] .search input { color:var(--text); }
-@media (prefers-reduced-motion:reduce) {
-  html { scroll-behavior:auto; }
-  .hero-card,.pill-live,.pill-bottom { animation:none!important; transform:none!important; translate:none!important; }
-  .btn { transition:none; }
-}
-@media (prefers-reduced-transparency:reduce),(prefers-contrast:more) {
-  :root { --glass:#fff; --glass-edge:#bdcbe0; }
-  [data-theme="dark"] { --glass:#192336; --glass-edge:#7b8ca7; }
-  header,.hero-card,.pill-live,.pill-bottom,.search { backdrop-filter:none; -webkit-backdrop-filter:none; }
-}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="container nav">
-    <a class="logo" href="#top">Smart <span>Community</span></a>
-    <nav class="nav-links">
-      <a href="#courses" data-i18n="n_courses"></a>
-      <a href="#exchange" data-i18n="n_exchange"></a>
-      <a href="#mentors" data-i18n="n_mentors"></a>
-      <a href="#sessions" data-i18n="n_sessions"></a>
-      <a href="#career" data-i18n="n_career"></a>
-      <a href="#jobs" data-i18n="n_jobs"></a>
-      <a href="#forum" data-i18n="n_forum"></a>
-    </nav>
-    <div class="nav-actions">
-      <button class="icon-btn" id="bell" aria-label="Notifications">🔔<span class="badge-dot" id="bellCount">0</span></button>
-      <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
-      <button class="icon-btn" id="langBtn" aria-label="Language">EN</button>
-      <button class="btn btn-primary btn-sm" id="signBtn" data-i18n="signin"></button>
-    </div>
+<!-- Floating glass navbar -->
+<header class="nav glass">
+  <a class="logo" href="#top">Smart <span>Community</span></a>
+  <nav class="nav-links">
+    <a href="#courses" data-i18n="n_courses"></a><a href="#exchange" data-i18n="n_exchange"></a><a href="#mentors" data-i18n="n_mentors"></a>
+    <a href="#sessions" data-i18n="n_sessions"></a><a href="#career" data-i18n="n_career"></a><a href="#jobs" data-i18n="n_jobs"></a><a href="#forum" data-i18n="n_forum"></a>
+  </nav>
+  <div class="nav-actions">
+    <button class="icon-btn" id="bell" aria-label="Notifications">🔔<span class="badge-dot" id="bellCount">0</span></button>
+    <button class="icon-btn" id="themeBtn" aria-label="Dark mode">🌙</button>
+    <button class="icon-btn" id="langBtn" aria-label="Language">EN</button>
+    <button class="btn btn-primary btn-sm" id="signBtn"></button>
   </div>
 </header>
 
 <!-- HERO -->
 <div class="hero" id="top">
-  <div class="container hero-grid">
-    <div class="hero-text">
-      <span class="eyebrow" data-i18n="eyebrow"></span>
-      <h1 data-i18n="h1"></h1>
-      <p class="lead" data-i18n="lead"></p>
-      <form class="search" id="heroSearch">
-        <input id="heroInput" type="search" aria-label="Search" data-i18n-ph="ph_search">
-        <button class="btn btn-accent btn-sm" type="submit" data-i18n="search"></button>
-      </form>
-      <div class="chips"><span class="chip">React</span><span class="chip">UI/UX Design</span><span class="chip">Python</span><span class="chip">Data</span></div>
-      <div class="hero-actions">
-        <a class="btn btn-accent" href="#courses" data-i18n="start"></a>
-        <a class="btn btn-outline" href="#journey" data-i18n="explore"></a>
+  <canvas id="dots"></canvas>
+  <div class="container hero-inner">
+    <div class="hero-eyebrow-pill">
+      <span class="live-dot"></span>
+      <span data-i18n="eyebrow"></span>
+      <span class="eyebrow-divider">•</span>
+      <span class="eyebrow-highlight">CMU Exit Exam</span>
+    </div>
+    <h1 class="hero-title" data-i18n="h1"></h1>
+    <p class="hero-lead" data-i18n="lead"></p>
+    <form class="hero-search-glass glass" id="heroSearch">
+      <span class="search-icon-symbol">🔍</span>
+      <input id="heroInput" type="search" aria-label="Search" data-i18n-ph="ph_search">
+      <span class="search-kbd-hint">⌘K</span>
+      <button type="submit" class="btn btn-primary btn-sm search-submit-btn" data-i18n="search"></button>
+    </form>
+    <div class="hero-chips-wrap">
+      <button type="button" class="hero-chip-pill chip-web" onclick="applyQuickSearch('Web')">💻 Web Development</button>
+      <button type="button" class="hero-chip-pill chip-design" onclick="applyQuickSearch('Design')">🎨 UI/UX Design</button>
+      <button type="button" class="hero-chip-pill chip-python" onclick="applyQuickSearch('Python')">🐍 Python &amp; AI</button>
+      <button type="button" class="hero-chip-pill chip-data" onclick="applyQuickSearch('Data')">📊 Data Analytics</button>
+      <button type="button" class="hero-chip-pill chip-bakong" onclick="applyQuickSearch('Bakong')">🇰🇭 Bakong KHQR</button>
+    </div>
+    <div class="hero-actions">
+      <a class="btn btn-primary hero-main-btn" href="#courses"><span data-i18n="start"></span> <span class="btn-arrow-icon">→</span></a>
+      <a class="btn btn-soft hero-second-btn" href="#showcase" data-i18n="explore"></a>
+    </div>
+
+    <!-- Floating Live Badges for visual depth -->
+    <div class="hero-floating-badge badge-left">
+      <span class="float-badge-icon float-icon-blue">⚡</span>
+      <div class="float-badge-text">
+        <div class="float-badge-top">
+          <b data-i18n="float_b1_title">Practical Projects</b>
+          <span class="mini-pill-status tag-blue" data-i18n="float_b1_tag">48+ Courses</span>
+        </div>
+        <small class="muted" data-i18n="float_b1_sub">From basics to industry-ready</small>
       </div>
     </div>
-    <div class="scene">
-      <div class="hero-card tilt-hero">
-        <div class="pill-live"><b><span class="dot"></span>Live Session Room</b><span class="muted">Interactive Q&amp;A</span></div>
-        <div class="hero-img"><span class="tag-left">Practical Academy</span>💻</div>
-        <div class="hero-body">
-          <div class="kicker">Web &amp; Cloud Engineering</div>
-          <h3>Full-Stack Application Development</h3>
-          <div class="hero-meta"><span>28 Lessons · Certificate</span><span><span class="badge b-bakong">Bakong KHQR</span> <b>$15</b></span></div>
+
+    <div class="hero-floating-badge badge-right">
+      <span class="float-badge-icon float-icon-red">🇰🇭</span>
+      <div class="float-badge-text">
+        <div class="float-badge-top">
+          <b data-i18n="float_b2_title">Bakong KHQR</b>
+          <span class="mini-pill-status tag-green" data-i18n="float_b2_tag">Instant</span>
+        </div>
+        <small class="muted" data-i18n="float_b2_sub">Scan QR code to enroll</small>
+      </div>
+    </div>
+
+    <div class="hero-trust-bar">
+      <span><span class="trust-icon">✔</span> <span data-i18n="trust_khqr">Bakong KHQR Instant</span></span>
+      <span class="trust-dot">•</span>
+      <span><span class="trust-icon">✔</span> <span data-i18n="trust_mentor">1:1 Mentorship</span></span>
+      <span class="trust-dot">•</span>
+      <span><span class="trust-icon">✔</span> <span data-i18n="trust_intern">Verified Internships</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- 3D SHOWCASE -->
+<section id="showcase" style="padding-top:40px">
+  <div class="container">
+    <div class="grid g3 showcase reveal">
+      <!-- Card 1: Academy & Practical Courses -->
+      <div class="card glass tilt show-card show-card-academy">
+        <div class="show-bento-media">
+          <img src="./image/academy_preview.jpg" alt="Practical Courses" class="show-bento-img" loading="lazy">
+          <div class="show-bento-overlay"></div>
+          <div class="show-bento-badge-row">
+            <span class="show-tag tag-blue">🚀 Academy</span>
+            <span class="badge b-bakong">Bakong KHQR $15</span>
+          </div>
+        </div>
+
+        <div class="show-card-content">
+          <div class="show-card-text">
+            <h3 data-i18n="sc1"></h3>
+            <p class="muted" data-i18n="sc1d"></p>
+          </div>
+          <div class="card-mini-progress">
+            <div class="progress" style="margin:0;flex:1"><i style="width:65%"></i></div>
+            <span class="mini-progress-label" data-i18n="sc1_stat">65% Avg Progress</span>
+          </div>
         </div>
       </div>
-      <div class="mentor-chip"><div class="avatar">M</div><div><b>Muy Kalin ✔</b><div class="muted" style="font-size:.78rem">Full-Stack Lead · ★ 5.0</div></div></div>
+
+      <!-- Card 2: 1:1 Mentorship & Trusted Mentors -->
+      <div class="card glass tilt show-card show-card-mentors">
+        <div class="show-bento-media">
+          <img src="./image/mentorship_preview.jpg" alt="Trusted Mentors" class="show-bento-img" loading="lazy">
+          <div class="show-bento-overlay"></div>
+          <div class="show-bento-badge-row">
+            <span class="show-tag tag-gold">🤝 1:1 Mentorship</span>
+            <span class="badge b-approved">5 Verified</span>
+          </div>
+        </div>
+
+        <div class="show-card-content">
+          <div class="show-card-text">
+            <h3 data-i18n="sc2"></h3>
+            <p class="muted" data-i18n="sc2d"></p>
+          </div>
+          <div class="card-mini-team">
+            <div class="mini-avatar-stack">
+              <img src="./image/HEANG CHHENG KHOEM.jpg" alt="HEANG CHHENG KHOEM" onerror="this.src='./image/1.jpg'">
+              <img src="./image/MUY KALIN.jpg" alt="MUY KALIN" onerror="this.src='./image/2.jpg'">
+              <img src="./image/HORN PISEY.jpg" alt="HORN PISEY" onerror="this.src='./image/3.jpg'">
+              <img src="./image/KRY SORANUTH.jpg" alt="KRY SORANUTH" onerror="this.src='./image/4.jpg'">
+              <img src="./image/SAMRITH RATANA.jpg" alt="SAMRITH RATANA" onerror="this.src='./image/5.jpg'">
+            </div>
+            <span class="mini-team-text" data-i18n="sc2_stat">5 Researchers</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Career Ready & Verified Internships -->
+      <div class="card glass tilt show-card show-card-career">
+        <div class="show-bento-media">
+          <img src="./image/career_preview.jpg" alt="Verified Internships" class="show-bento-img" loading="lazy">
+          <div class="show-bento-overlay"></div>
+          <div class="show-bento-badge-row">
+            <span class="show-tag tag-teal">💼 Career Ready</span>
+            <span class="badge b-level">Direct Apply</span>
+          </div>
+        </div>
+
+        <div class="show-card-content">
+          <div class="show-card-text">
+            <h3 data-i18n="sc3"></h3>
+            <p class="muted" data-i18n="sc3d"></p>
+          </div>
+          <div class="card-mini-tracker">
+            <div class="mini-step-dots">
+              <span class="step-dot on"></span>
+              <span class="step-line on"></span>
+              <span class="step-dot on"></span>
+              <span class="step-line on"></span>
+              <span class="step-dot on"></span>
+              <span class="step-line"></span>
+              <span class="step-dot"></span>
+            </div>
+            <span class="mini-tracker-label" data-i18n="sc3_stat">Live Status Tracking</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Glass Metric Dashboard -->
+    <div class="stats-dashboard glass reveal" id="stats">
+      <div class="stat-card-item">
+        <div class="stat-icon-wrap stat-icon-blue">👥</div>
+        <div class="stat-content">
+          <div class="stat-number-row">
+            <b data-count="1280">0</b>
+            <span class="stat-trend-tag tag-green">↑ 18%</span>
+          </div>
+          <span class="stat-label" data-i18n="st1">Learners</span>
+        </div>
+      </div>
+
+      <div class="stat-divider"></div>
+
+      <div class="stat-card-item">
+        <div class="stat-icon-wrap stat-icon-gold">📚</div>
+        <div class="stat-content">
+          <div class="stat-number-row">
+            <b data-count="48">0</b>
+            <span class="stat-trend-tag tag-blue" data-i18n="st2_tag">Industry</span>
+          </div>
+          <span class="stat-label" data-i18n="st2">Courses</span>
+        </div>
+      </div>
+
+      <div class="stat-divider"></div>
+
+      <div class="stat-card-item">
+        <div class="stat-icon-wrap stat-icon-teal">🤝</div>
+        <div class="stat-content">
+          <div class="stat-number-row">
+            <b data-count="34">0</b>
+            <span class="stat-trend-tag tag-gold">5 CMU Team</span>
+          </div>
+          <span class="stat-label" data-i18n="st3">Mentors</span>
+        </div>
+      </div>
+
+      <div class="stat-divider"></div>
+
+      <div class="stat-card-item">
+        <div class="stat-icon-wrap stat-icon-purple">💼</div>
+        <div class="stat-content">
+          <div class="stat-number-row">
+            <b data-count="26">0</b>
+            <span class="stat-trend-tag tag-green" data-i18n="st4_tag">Open</span>
+          </div>
+          <span class="stat-label" data-i18n="st4">Open internships</span>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-
-<div class="container stats reveal">
-  <div class="card">
-    <div><b data-count="1250">0</b><span class="muted" data-i18n="st1"></span></div>
-    <div><b data-count="48">0</b><span class="muted" data-i18n="st2"></span></div>
-    <div><b data-count="32">0</b><span class="muted" data-i18n="st3"></span></div>
-    <div><b data-count="75">0</b><span class="muted" data-i18n="st4"></span></div>
-  </div>
-</div>
+</section>
 
 <!-- JOURNEY -->
-<section id="journey">
+<section id="journey" style="padding-top:20px">
   <div class="container">
     <div class="sec-title reveal"><h2 data-i18n="j_title"></h2><p data-i18n="j_sub"></p></div>
-    <div class="grid reveal" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
-      <div class="card step"><div class="ico">👤</div><b data-i18n="j1"></b><br><small data-i18n="j1d"></small></div>
-      <div class="card step"><div class="ico">📚</div><b data-i18n="j2"></b><br><small data-i18n="j2d"></small></div>
-      <div class="card step"><div class="ico">🤝</div><b data-i18n="j3"></b><br><small data-i18n="j3d"></small></div>
-      <div class="card step"><div class="ico">🧭</div><b data-i18n="j4"></b><br><small data-i18n="j4d"></small></div>
-      <div class="card step"><div class="ico">💼</div><b data-i18n="j5"></b><br><small data-i18n="j5d"></small></div>
+    <div class="journey-stepper-wrap reveal">
+      <div class="journey-step-card glass">
+        <span class="step-num-pill">01</span>
+        <div class="step-ico-box">👤</div>
+        <b data-i18n="j1"></b>
+        <small class="muted" data-i18n="j1d"></small>
+      </div>
+
+      <div class="journey-step-card glass">
+        <span class="step-num-pill">02</span>
+        <div class="step-ico-box">📚</div>
+        <b data-i18n="j2"></b>
+        <small class="muted" data-i18n="j2d"></small>
+      </div>
+
+      <div class="journey-step-card glass">
+        <span class="step-num-pill">03</span>
+        <div class="step-ico-box">🤝</div>
+        <b data-i18n="j3"></b>
+        <small class="muted" data-i18n="j3d"></small>
+      </div>
+
+      <div class="journey-step-card glass">
+        <span class="step-num-pill">04</span>
+        <div class="step-ico-box">🧭</div>
+        <b data-i18n="j4"></b>
+        <small class="muted" data-i18n="j4d"></small>
+      </div>
+
+      <div class="journey-step-card glass">
+        <span class="step-num-pill">05</span>
+        <div class="step-ico-box">💼</div>
+        <b data-i18n="j5"></b>
+        <small class="muted" data-i18n="j5d"></small>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- COURSES -->
-<section id="courses" class="alt">
+<section id="courses">
   <div class="container">
     <div class="sec-title reveal"><h2 data-i18n="c_title"></h2><p data-i18n="c_sub"></p></div>
-    <input class="field" id="courseSearch" type="search" data-i18n-ph="ph_course" style="margin-bottom:14px">
-    <div class="filters" id="catFilters"></div>
+    <input class="field glass" id="courseSearch" type="search" data-i18n-ph="ph_course" style="max-width:480px;margin:0 auto 18px;display:block">
+    <div class="filters glass" id="catFilters"></div>
     <div class="grid g3" id="courseGrid"></div>
   </div>
 </section>
@@ -338,12 +681,28 @@ header {
   </div>
 </section>
 
-<!-- MENTORS -->
-<section id="mentors" class="alt">
+<!-- MENTORS (HONORING 5-STUDENT GRADUATION PROJECT TEAM) -->
+<section id="mentors">
   <div class="container">
     <div class="sec-title reveal"><h2 data-i18n="m_title"></h2><p data-i18n="m_sub"></p></div>
+    <div class="card glass team-bar team-bar-honors reveal">
+      <div class="team-bar-left">
+        <div class="team-avatars">
+          <img src="./image/HEANG CHHENG KHOEM.jpg" alt="HEANG CHHENG KHOEM" title="HEANG CHHENG KHOEM - Digital Marketing & IT Support" onerror="this.src='./image/1.jpg'">
+          <img src="./image/MUY KALIN.jpg" alt="MUY KALIN" title="MUY KALIN - Full-Stack Developer" onerror="this.src='./image/2.jpg'">
+          <img src="./image/HORN PISEY.jpg" alt="HORN PISEY" title="HORN PISEY - IT Audit & Cyber Risk" onerror="this.src='./image/3.jpg'">
+          <img src="./image/KRY SORANUTH.jpg" alt="KRY SORANUTH" title="KRY SORANUTH - Cybersecurity & Networks" onerror="this.src='./image/4.jpg'">
+          <img src="./image/SAMRITH RATANA.jpg" alt="SAMRITH RATANA" title="SAMRITH RATANA - B2B Technical Support" onerror="this.src='./image/5.jpg'">
+        </div>
+        <div>
+          <b data-i18n="team_badge" style="color:var(--text);font-size:1.05rem">🎓 Graduation Research Project Team</b>
+          <div class="muted sm" data-i18n="team_note">5 Student Researchers · Cambodian Mekong University (CMU 2026)</div>
+        </div>
+      </div>
+      <span class="badge-cmu-honors">⭐ CMU Exit Exam 2026</span>
+    </div>
     <div class="grid g3" id="mentorGrid"></div>
-    <h3 style="margin:36px 0 12px" data-i18n="m_my"></h3>
+    <h3 style="margin:40px 0 14px;font-weight:500" data-i18n="m_my"></h3>
     <div class="grid g2" id="bookingList"></div>
   </div>
 </section>
@@ -357,16 +716,16 @@ header {
 </section>
 
 <!-- CAREER -->
-<section id="career" class="alt">
+<section id="career">
   <div class="container">
     <div class="sec-title reveal"><h2 data-i18n="car_title"></h2><p data-i18n="car_sub"></p></div>
     <div class="grid g2">
-      <div class="card">
+      <div class="card glass">
         <div class="ring" id="ring"><span id="ringTxt">0%</span></div>
-        <h3 style="text-align:center;margin-bottom:14px">Web Developer Roadmap</h3>
+        <h3 style="text-align:center;margin-bottom:16px">Web Developer Roadmap</h3>
         <ul class="timeline" id="roadmap"></ul>
       </div>
-      <div class="card">
+      <div class="card glass">
         <h3 data-i18n="assess"></h3>
         <svg viewBox="0 0 240 240" width="100%" style="max-width:280px;display:block;margin:6px auto" id="radar"></svg>
         <div id="sliders"></div>
@@ -380,16 +739,16 @@ header {
   <div class="container">
     <div class="sec-title reveal"><h2 data-i18n="job_title"></h2><p data-i18n="job_sub"></p></div>
     <div class="grid g3" id="jobGrid"></div>
-    <h3 style="margin:36px 0 12px" data-i18n="job_my"></h3>
+    <h3 style="margin:40px 0 14px;font-weight:500" data-i18n="job_my"></h3>
     <div class="grid g2" id="appList"></div>
   </div>
 </section>
 
 <!-- FORUM -->
-<section id="forum" class="alt">
-  <div class="container">
+<section id="forum">
+  <div class="container" style="max-width:820px">
     <div class="sec-title reveal"><h2 data-i18n="f_title"></h2><p data-i18n="f_sub"></p></div>
-    <form class="card" id="postForm" style="margin-bottom:18px">
+    <form class="card glass" id="postForm" style="margin-bottom:18px">
       <input class="field" id="postInput" data-i18n-ph="ph_post" required>
       <div class="row"><select class="field" id="postCat" style="width:auto"><option>Programming</option><option>Design</option><option>Career</option><option>Internship</option></select>
       <button class="btn btn-primary btn-sm" data-i18n="post"></button></div>
@@ -398,39 +757,50 @@ header {
   </div>
 </section>
 
-<!-- COMMUNITY: chat + notifications + admin -->
+<!-- COMMUNITY -->
 <section id="community">
   <div class="container">
     <div class="sec-title reveal"><h2 data-i18n="com_title"></h2></div>
     <div class="grid g3">
-      <div class="card"><h3 data-i18n="chat"></h3>
+      <div class="card glass"><h3 data-i18n="chat"></h3>
         <div class="chat"><div class="msgs" id="msgs"><div class="msg">Hi! Ready for our skill exchange?</div></div>
         <form class="chat-form" id="chatForm"><input class="field" id="chatInput" style="margin:0" data-i18n-ph="ph_msg"><button class="btn btn-primary btn-sm">➤</button></form></div>
       </div>
-      <div class="card"><h3 data-i18n="notifs"></h3>
-        <div id="notifList"></div>
-        <button class="btn btn-ghost btn-sm" id="readAll" data-i18n="readall"></button>
-      </div>
-      <div class="card"><h3 data-i18n="admin"></h3>
-        <div id="adminBars"></div>
+      <div class="card glass"><h3 data-i18n="notifs"></h3><div id="notifList"></div><button class="btn btn-ghost btn-sm" id="readAll" data-i18n="readall"></button></div>
+      <div class="card glass"><h3 data-i18n="admin"></h3><div id="adminBars"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="container" style="max-width:760px">
+    <div class="sec-title reveal"><h2>FAQ</h2></div>
+    <details class="glass"><summary data-i18n="q1"></summary><p class="muted" data-i18n="a1"></p></details>
+    <details class="glass"><summary data-i18n="q2"></summary><p class="muted" data-i18n="a2"></p></details>
+    <details class="glass"><summary data-i18n="q3"></summary><p class="muted" data-i18n="a3"></p></details>
+  </div>
+</section>
+
+<!-- Dark CTA with blue dashes -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="cta reveal">
+      <canvas id="dashes"></canvas>
+      <div class="cta-inner">
+        <h2 data-i18n="cta"></h2>
+        <a class="btn btn-light" href="#courses" data-i18n="start"></a>
+        <a class="btn btn-dim" href="#mentors" data-i18n="n_mentors"></a>
       </div>
     </div>
   </div>
 </section>
 
-<section class="alt">
-  <div class="container" style="max-width:760px">
-    <div class="sec-title reveal"><h2>FAQ</h2></div>
-    <details><summary data-i18n="q1"></summary><p class="muted" data-i18n="a1"></p></details>
-    <details><summary data-i18n="q2"></summary><p class="muted" data-i18n="a2"></p></details>
-    <details><summary data-i18n="q3"></summary><p class="muted" data-i18n="a3"></p></details>
-  </div>
-</section>
+<footer><div class="container">© 2026 Smart Community Skill &amp; Career Development Platform · CMU Final Exit Exam</div></footer>
 
-<footer><div class="container">© 2026 Smart Community Skill &amp; Career Development Platform · Demo</div></footer>
-
-<nav class="bottom-nav">
-  <a href="#top"><span>🏠</span>Home</a>
+<!-- iOS Floating Tabbar -->
+<nav class="tabbar glass" id="tabbar">
+  <a href="#top" class="on"><span>🏠</span>Home</a>
   <a href="#courses"><span>📚</span>Courses</a>
   <a href="#career"><span>🧭</span>Career</a>
   <a href="#jobs"><span>💼</span>Jobs</a>
@@ -442,28 +812,38 @@ header {
 
 <script>
 /* ============ i18n ============ */
-const I = {
+const I={
 km:{n_courses:"វគ្គសិក្សា",n_exchange:"ប្តូរជំនាញ",n_mentors:"អ្នកណែនាំ",n_sessions:"Live",n_career:"អាជីព",n_jobs:"កម្មសិក្សា",n_forum:"ហ្វូរ៉ុម",signin:"ចូលគណនី",signout:"ចាកចេញ",
-eyebrow:"រៀន • ភ្ជាប់ • រីកចម្រើនក្នុងសហគមន៍តែមួយ",h1:"បង្កើតជំនាញពិត <em>ចាប់ផ្តើមអាជីពក្តីសុបិន្ត</em>",
-lead:"រៀនជំនាញជាក់ស្តែង ជួបអ្នកណែនាំដែលអាចទុកចិត្តបាន ហើយឆ្ពោះទៅរកឱកាសការងារពិត។",
-search:"ស្វែងរក",start:"ចាប់ផ្តើមរៀន",explore:"ស្វែងយល់បន្ថែម",ph_search:"តើអ្នកចង់រៀនអ្វី?",
-st1:"អ្នកសិក្សា",st2:"វគ្គសិក្សា",st3:"អ្នកណែនាំ",st4:"កម្មសិក្សា",
+eyebrow:"Smart Community • វេទិកាអភិវឌ្ឍន៍ជំនាញ & អាជីព",h1:'កសាងជំនាញពិតប្រាកដ<br><span class="hero-gradient-text">ពង្រីកឱកាសការងារក្នុងក្តីស្រមៃ</span>',
+lead:"វេទិកាតែមួយគត់សម្រាប់រៀន ជួបអ្នកណែនាំផ្ទាល់ និងដាក់ពាក្យចូលកម្មសិក្សាដែលបានផ្ទៀងផ្ទាត់នៅកម្ពុជា។",search:"ស្វែងរក",start:"ចាប់ផ្តើមរៀនឥឡូវនេះ",explore:"ស្វែងយល់បន្ថែម",ph_search:"តើអ្នកចង់រៀនអ្វី? (ឧ. React, Python, UI/UX...)",
+float_b1_title:"គម្រោងអនុវត្តពិត",float_b1_tag:"៤៨+ វគ្គ",float_b2_title:"Bakong KHQR",float_b2_tag:"ទូទាត់រហ័ស",real_proj:"គម្រោងពិត",
+trust_khqr:"បង់ប្រាក់ភ្លាមៗតាម Bakong KHQR",trust_mentor:"ការណែនាំ 1:1 ផ្ទាល់",trust_intern:"កម្មសិក្សាពិតប្រាកដ",
+sc1:"វគ្គសិក្សាអនុវត្ត",sc1d:"៤៨ វគ្គសិក្សាពីកម្រិតមូលដ្ឋានដល់អាជីព បង់ប្រាក់តាម Bakong KHQR ភ្លាមៗ",sc1_stat:"៦៥% វឌ្ឍនភាពមធ្យម",
+sc2:"អ្នកណែនាំជំនាញ",sc2d:"កក់ម៉ោងពិភាក្សាផ្ទាល់ 1:1 ជាមួយក្រុមការងារនិស្សិត និងអ្នកជំនាញតាម Jitsi Meet",sc2_stat:"៥ រូប · CMU Team",
+sc3:"កម្មសិក្សាពិតប្រាកដ",sc3d:"ដាក់ពាក្យជាមួយ CV (PDF) ដោយផ្ទាល់ និងតាមដានដំណាក់កាលពី Pending ដល់ Approved",sc3_stat:"តាមដានស្ថានភាពផ្ទាល់",
+team_badge:"🎓 ក្រុមស្រាវជ្រាវគម្រោងបញ្ចប់ការសិក្សា",team_note:"និស្សិត ៥ រូប · សាកលវិទ្យាល័យមេគង្គកម្ពុជា (CMU Exit Exam)",
+st1:"អ្នកសិក្សា",st2:"វគ្គសិក្សា",st3:"អ្នកណែនាំ",st4:"កម្មសិក្សាកំពុងបើក",
 j_title:"ដំណើរសិក្សារបស់អ្នក",j_sub:"៥ជំហានពីអ្នកចាប់ផ្តើម ដល់ការងារ",j1:"ប្រវត្តិរូប",j1d:"បង្កើតគណនី",j2:"រៀន",j2d:"វគ្គសិក្សា",j3:"សហការ",j3d:"ប្តូរជំនាញ",j4:"អាជីព",j4d:"ផែនទីអាជីព",j5:"ដាក់ពាក្យ",j5d:"កម្មសិក្សា",
 c_title:"វគ្គសិក្សា",c_sub:"បង់ប្រាក់ដោយ Bakong KHQR ឬចូលរៀនឥតគិតថ្លៃ",ph_course:"ស្វែងរកវគ្គសិក្សា...",
-x_title:"ប្តូរជំនាញជាមួយមិត្តភក្តិ",x_sub:"ប្រព័ន្ធផ្គូផ្គងតាមជំនាញដែលអ្នកអាចបង្រៀន និងចង់រៀន",
+x_title:"ប្តូរជំនាញជាមួយមិត្តភក្តិ",x_sub:"ផ្គូផ្គងតាមជំនាញដែលអ្នកអាចបង្រៀន និងចង់រៀន",
 m_title:"អ្នកណែនាំដែលបានផ្ទៀងផ្ទាត់",m_sub:"ផ្ញើសំណើ រង់ចាំ Mentor យល់ព្រម បន្ទាប់មកទទួលតំណ Jitsi",m_my:"ការកក់របស់ខ្ញុំ",
 s_title:"វគ្គសិក្សាផ្ទាល់ (Live)",s_sub:"ចុះឈ្មោះចូលរួមតាមអនឡាញ",
 car_title:"ផែនទីអាជីព និងការវាយតម្លៃ",car_sub:"ធីកជំហាននីមួយៗ ដើម្បីមើលវឌ្ឍនភាព",assess:"វាយតម្លៃសមត្ថភាពខ្លួនឯង",
 job_title:"កម្មសិក្សា",job_sub:"ដាក់ពាក្យជាមួយ CV (PDF) និងតាមដានស្ថានភាព",job_my:"ពាក្យសុំរបស់ខ្ញុំ",
 f_title:"ហ្វូរ៉ុមសហគមន៍",f_sub:"សួរ ឆ្លើយ និងចែករំលែកចំណេះដឹង",ph_post:"សួរសំណួររបស់អ្នក...",post:"ផុសសំណួរ",
 com_title:"សហគមន៍ ការជូនដំណឹង និងរបាយការណ៍",chat:"សារ",ph_msg:"វាយសារ...",notifs:"ការជូនដំណឹង",readall:"សម្គាល់ថាអានហើយ",admin:"វិភាគ Admin",
-q1:"តើវាឥតគិតថ្លៃទេ?",a1:"មានវគ្គឥតគិតថ្លៃ និងវគ្គបង់ប្រាក់តាម Bakong KHQR។",q2:"តើខ្ញុំអាចក្លាយជា Mentor បានទេ?",a2:"ដាក់ពាក្យ ហើយរង់ចាំ Admin អនុម័ត។",q3:"តើមានការធានាការងារទេ?",a3:"មិនមានការធានាទេ វេទិកានេះគាំទ្រការរៀន និងការសម្រេចចិត្តជ្រើសរើស។",
-request:"ស្នើសុំម៉ោង",enroll:"ចូលរៀន",pay:"បង់ប្រាក់",free:"ឥតគិតថ្លៃ",apply:"ដាក់ពាក្យ",register:"ចុះឈ្មោះ",cancel:"បោះបង់",send:"ផ្ញើសំណើ"},
+q1:"តើវាឥតគិតថ្លៃទេ?",a1:"មានវគ្គឥតគិតថ្លៃ និងវគ្គបង់ប្រាក់តាម Bakong KHQR។",q2:"តើខ្ញុំអាចក្លាយជា Mentor បានទេ?",a2:"ដាក់ពាក្យ ហើយរង់ចាំ Admin អនុម័ត។",q3:"តើមានការធានាការងារទេ?",a3:"មិនមានការធានាទេ វេទិកានេះគាំទ្រការរៀន និងដំណើរការជ្រើសរើសប៉ុណ្ណោះ។",
+cta:"ត្រៀមខ្លួនចាប់ផ្តើមដំណើររបស់អ្នកហើយឬនៅ?",request:"ស្នើសុំម៉ោង",enroll:"ចូលរៀន",pay:"បង់ប្រាក់",free:"ឥតគិតថ្លៃ",apply:"ដាក់ពាក្យ",register:"ចុះឈ្មោះ",cancel:"បោះបង់",send:"ផ្ញើសំណើ"},
 en:{n_courses:"Courses",n_exchange:"Exchange",n_mentors:"Mentors",n_sessions:"Live",n_career:"Career",n_jobs:"Internships",n_forum:"Forum",signin:"Sign in",signout:"Sign out",
-eyebrow:"Learn • Connect • Grow in one community",h1:"Build real-world skills. <em>Launch your dream career.</em>",
-lead:"Learn practical skills, meet trusted mentors, and move toward real career opportunities.",
-search:"Search",start:"Start learning",explore:"Explore",ph_search:"What do you want to learn?",
-st1:"Learners",st2:"Courses",st3:"Mentors",st4:"Internships",
+eyebrow:"Smart Community • Skill & Career Platform",h1:'Build real-world skills.<br><span class="hero-gradient-text">Launch your dream career.</span>',
+lead:"One place to learn in-demand tech skills, meet trusted mentors, and apply directly for verified internships.",search:"Search",start:"Start learning",explore:"Explore ecosystem",ph_search:"What do you want to learn? (e.g. React, Python, Design...)",
+float_b1_title:"Practical Projects",float_b1_tag:"48+ Courses",float_b2_title:"Bakong KHQR",float_b2_tag:"Instant",real_proj:"Real Projects",
+trust_khqr:"Instant Bakong KHQR",trust_mentor:"1:1 Mentorship",trust_intern:"Verified Internships",
+sc1:"Practical Courses",sc1d:"48 real-world courses from beginner to pro with instant KHQR payment",sc1_stat:"65% Avg Progress",
+sc2:"Trusted Mentors",sc2d:"Book 1:1 video sessions with university researchers & verified industry experts",sc2_stat:"5 Researchers",
+sc3:"Verified Internships",sc3d:"Direct application with PDF CV & live status tracking from Pending to Approved",sc3_stat:"Live Status Tracking",
+team_badge:"🎓 Graduation Research Project Team",team_note:"5 Student Researchers · Cambodian Mekong University Exit Exam",
+st1:"Learners",st2:"Courses",st3:"Mentors",st4:"Open internships",
 j_title:"Your learning journey",j_sub:"5 steps from beginner to job-ready",j1:"Profile",j1d:"Create account",j2:"Learn",j2d:"Courses",j3:"Collaborate",j3d:"Skill exchange",j4:"Career",j4d:"Roadmap",j5:"Apply",j5d:"Internships",
 c_title:"Courses",c_sub:"Pay with Bakong KHQR or enroll for free",ph_course:"Search courses...",
 x_title:"Skill exchange with peers",x_sub:"Matched by skills you can teach and want to learn",
@@ -474,177 +854,134 @@ job_title:"Internships",job_sub:"Apply with a PDF CV and track the status",job_m
 f_title:"Community forum",f_sub:"Ask, answer and share knowledge",ph_post:"Ask your question...",post:"Post",
 com_title:"Community, notifications & reports",chat:"Messages",ph_msg:"Type a message...",notifs:"Notifications",readall:"Mark all read",admin:"Admin analytics",
 q1:"Is it free?",a1:"There are free courses and paid courses via Bakong KHQR.",q2:"Can I become a mentor?",a2:"Apply and wait for administrator approval.",q3:"Does it guarantee a job?",a3:"No. The platform supports learning and recruitment, but it cannot guarantee employment.",
-request:"Request session",enroll:"Enroll",pay:"Pay now",free:"Free",apply:"Apply",register:"Register",cancel:"Cancel",send:"Send request"}
-};
-let lang = localStorage.getItem("lang") || "km";
-const t = k => (I[lang][k] ?? k);
-function applyLang(){
-  document.documentElement.lang = lang;
+cta:"Ready to start your journey?",request:"Request session",enroll:"Enroll",pay:"Pay now",free:"Free",apply:"Apply",register:"Register",cancel:"Cancel",send:"Send request"}};
+let lang=localStorage.getItem("lang")||"km";const t=k=>I[lang][k]??k;
+function applyQuickSearch(term){const inp=$("#heroInput");if(inp){inp.value=term;location.href="#courses";const cInp=$("#courseSearch");if(cInp){cInp.value=term;renderCourses();}}}
+function applyLang(){document.documentElement.lang=lang;
   document.querySelectorAll("[data-i18n]").forEach(e=>e.innerHTML=t(e.dataset.i18n));
   document.querySelectorAll("[data-i18n-ph]").forEach(e=>e.placeholder=t(e.dataset.i18nPh));
-  document.getElementById("langBtn").textContent = lang==="km"?"EN":"ខ្មែរ";
-  document.getElementById("signBtn").textContent = signed?t("signout"):t("signin");
-  renderAll();
-}
+  $("#langBtn").textContent=lang==="km"?"EN":"ខ្មែរ";$("#signBtn").textContent=signed?t("signout"):t("signin");renderAll()}
+document.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key==="k"){e.preventDefault();$("#heroInput")?.focus()}});
 
 /* ============ helpers ============ */
-const $ = s=>document.querySelector(s);
-let signed = false;
+const $=s=>document.querySelector(s);let signed=false;
 function toast(m){const e=$("#toast");e.textContent=m;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),2600)}
 function openModal(h){$("#modal").innerHTML=h;$("#overlay").classList.add("open")}
 function closeModal(){$("#overlay").classList.remove("open");clearInterval(closeModal.timer)}
 $("#overlay").addEventListener("click",e=>{if(e.target.id==="overlay")closeModal()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
-function needLogin(){ if(signed) return false; toast(lang==="km"?"សូមចូលគណនីជាមុន":"Please sign in first"); return true; }
-function notify(text){ notifs.unshift({text,read:false}); renderNotifs(); }
+function needLogin(){if(signed)return false;toast(lang==="km"?"សូមចូលគណនីជាមុន":"Please sign in first");return true}
+function notify(x){notifs.unshift({text:x,read:false});renderNotifs()}
 
 /* ============ data ============ */
 const courses=[
- {id:1,title:"Web Development",cat:"Technology",level:"Beginner",price:15,lessons:28,icon:"💻",g:"linear-gradient(135deg,#3B82F6,#1E3A8A)"},
- {id:2,title:"UX/UI Design",cat:"Design",level:"Beginner",price:0,lessons:18,icon:"🎨",g:"linear-gradient(135deg,#F5B301,#f97316)"},
- {id:3,title:"Data Analysis",cat:"Technology",level:"Intermediate",price:20,lessons:22,icon:"📊",g:"linear-gradient(135deg,#14B8A6,#0f766e)"},
- {id:4,title:"Digital Marketing",cat:"Business",level:"Beginner",price:0,lessons:14,icon:"📣",g:"linear-gradient(135deg,#ec4899,#be185d)"},
- {id:5,title:"Python Programming",cat:"Technology",level:"Intermediate",price:18,lessons:30,icon:"🐍",g:"linear-gradient(135deg,#22c55e,#166534)"},
- {id:6,title:"Interview Skills",cat:"Career",level:"Advanced",price:0,lessons:10,icon:"🎤",g:"linear-gradient(135deg,#8b5cf6,#5b21b6)"}];
+{id:1,title:"Web Development",cat:"Technology",level:"Beginner",price:15,lessons:28,icon:"💻",g:"linear-gradient(135deg,#6d8dff,#3B6BFF 60%,#1b2f8f)"},
+{id:2,title:"UX/UI Design",cat:"Design",level:"Beginner",price:0,lessons:18,icon:"🎨",g:"linear-gradient(135deg,#ffd35c,#F5B301 60%,#c2570c)"},
+{id:3,title:"Data Analysis",cat:"Technology",level:"Intermediate",price:20,lessons:22,icon:"📊",g:"linear-gradient(135deg,#5eead4,#14B8A6 60%,#0b5f58)"},
+{id:4,title:"Digital Marketing",cat:"Business",level:"Beginner",price:0,lessons:14,icon:"📣",g:"linear-gradient(135deg,#f9a8d4,#ec4899 60%,#9d174d)"},
+{id:5,title:"Python Programming",cat:"Technology",level:"Intermediate",price:18,lessons:30,icon:"🐍",g:"linear-gradient(135deg,#86efac,#22c55e 60%,#166534)"},
+{id:6,title:"Interview Skills",cat:"Career",level:"Advanced",price:0,lessons:10,icon:"🎤",g:"linear-gradient(135deg,#c4b5fd,#8b5cf6 60%,#5b21b6)"}];
+
+/* The 5 Student Researchers of CMU Final Exit Exam */
 const mentors=[
- {id:1,name:"Muy Kalin",role:"Full-Stack Developer",skills:["React","Node.js"],rating:5.0,reviews:24},
- {id:2,name:"Sophea Chan",role:"UX/UI Designer",skills:["Figma","Research"],rating:4.8,reviews:17},
- {id:3,name:"Dara Sok",role:"Data Analyst",skills:["Python","SQL"],rating:4.7,reviews:12}];
-const matches=[
- {name:"Vanna",teach:"Photoshop",learn:"JavaScript",score:92},
- {name:"Rina",teach:"English",learn:"UI Design",score:85},
- {name:"Sokha",teach:"Excel",learn:"Python",score:78}];
-const sessions=[
- {id:1,title:"React Q&A Night",host:"Muy Kalin",when:"Tomorrow 19:00",cap:30,reg:18},
- {id:2,title:"Portfolio Review",host:"Sophea Chan",when:"Friday 20:00",cap:20,reg:20},
- {id:3,title:"SQL for Beginners",host:"Dara Sok",when:"Saturday 09:00",cap:40,reg:12}];
+  {id:1,name:"HEANG CHHENG KHOEM",role:"Digital Marketing & IT Support",skills:["Marketing","SEO","IT Setup"],rating:4.9,reviews:26,img:"./image/HEANG CHHENG KHOEM.jpg"},
+  {id:2,name:"MUY KALIN",role:"Full-stack & Frontend Developer",skills:["React.js","Node.js","PHP","MySQL"],rating:5.0,reviews:28,img:"./image/MUY KALIN.jpg"},
+  {id:3,name:"HORN PISEY",role:"IT Audit & Cyber Risk Analyst",skills:["ITGC","Compliance","Risk Control"],rating:4.8,reviews:21,img:"./image/HORN PISEY.jpg"},
+  {id:4,name:"KRY SORANUTH",role:"Cybersecurity & Network Foundations",skills:["Linux","Security","Python"],rating:4.8,reviews:18,img:"./image/KRY SORANUTH.jpg"},
+  {id:5,name:"SAMRITH RATANA",role:"B2B Account & Technical Support",skills:["B2B Support","Troubleshooting","Client Setup"],rating:4.7,reviews:19,img:"./image/SAMRITH RATANA.jpg"}
+];
+
+const matches=[{name:"Vanna",teach:"Photoshop",learn:"JavaScript",score:92},{name:"Rina",teach:"English",learn:"UI Design",score:85},{name:"Sokha",teach:"Excel",learn:"Python",score:78}];
+const sessions=[{id:1,title:"React Q&A Night",host:"Muy Kalin",when:"Tomorrow 19:00",cap:30,reg:18},{id:2,title:"Portfolio Review",host:"Horn Pisey",when:"Friday 20:00",cap:20,reg:20},{id:3,title:"SQL for Beginners",host:"Kry Soranuth",when:"Saturday 09:00",cap:40,reg:12}];
 const steps=[{t:"Learn HTML & CSS",d:true},{t:"Learn JavaScript",d:false},{t:"Build 3 portfolio projects",d:false},{t:"Learn React",d:false},{t:"Apply for internships",d:false}];
 const axes=[["Technical",60],["Problem solving",50],["Projects",40],["Readiness",55]];
-const jobs=[
- {id:1,title:"Frontend Intern",company:"Angkor Tech",loc:"Phnom Penh",type:"Hybrid",stipend:"$150/mo"},
- {id:2,title:"UX Design Intern",company:"Khmer Studio",loc:"Siem Reap",type:"On-site",stipend:"$120/mo"},
- {id:3,title:"Data Intern",company:"Mekong Data",loc:"Remote",type:"Remote",stipend:"$140/mo"}];
+const jobs=[{id:1,title:"Frontend Intern",company:"Angkor Tech",loc:"Phnom Penh",type:"Hybrid",stipend:"$150/mo"},{id:2,title:"UX Design Intern",company:"Khmer Studio",loc:"Siem Reap",type:"On-site",stipend:"$120/mo"},{id:3,title:"Data Intern",company:"Mekong Data",loc:"Remote",type:"Remote",stipend:"$140/mo"}];
 const posts=[{q:"How do I start learning React?",cat:"Programming",likes:5,ans:3},{q:"Tips for my first CV?",cat:"Career",likes:9,ans:4}];
 const stages=["pending","reviewed","shortlisted","approved"];
 let cat="All",enrolled={},bookings=[],apps=[],regs={},exch={},notifs=[{text:"Welcome to Smart Community!",read:false}];
 
 /* ============ render ============ */
+function stars(n){return"★".repeat(Math.round(n))+"☆".repeat(5-Math.round(n))}
 function renderCourses(){
   const cats=["All",...new Set(courses.map(c=>c.cat))];
   $("#catFilters").innerHTML=cats.map(c=>`<button class="pill ${c===cat?"on":""}" data-cat="${c}">${c}</button>`).join("");
   const q=$("#courseSearch").value.toLowerCase();
   const list=courses.filter(c=>(cat==="All"||c.cat===cat)&&c.title.toLowerCase().includes(q));
-  $("#courseGrid").innerHTML=list.length?list.map(c=>`
-   <div class="card tilt"><div class="thumb" style="background:${c.g}">${c.icon}</div>
-    <span class="badge b-level">${c.level}</span>
-    <h3>${c.title}</h3><div class="muted">${c.lessons} lessons · ${c.cat}</div>
-    ${enrolled[c.id]?`<div class="progress"><i style="width:${enrolled[c.id]}%"></i></div>`:""}
-    <div class="row"><span>${c.price?`<span class="price">$${c.price}</span> <span class="badge b-bakong">Bakong KHQR</span>`:`<span class="badge b-free">${t("free")}</span>`}</span>
-    ${enrolled[c.id]?`<button class="btn btn-primary btn-sm" data-learn="${c.id}">▶ Continue</button>`:`<button class="btn btn-primary btn-sm" data-enroll="${c.id}">${c.price?t("pay"):t("enroll")}</button>`}</div></div>`).join("")
-   :`<div class="card" style="grid-column:1/-1;text-align:center"><div style="font-size:2.5rem">🔍</div><b>No courses found</b><br><button class="btn btn-outline btn-sm" id="clearF" style="margin-top:10px">Clear filters</button></div>`;
-  bindTilt();
-}
-function renderMatches(){
-  $("#matchGrid").innerHTML=matches.map((m,i)=>`<div class="card tilt"><div class="row" style="margin:0"><div style="display:flex;gap:10px;align-items:center"><div class="avatar">${m.name[0]}</div><b>${m.name}</b></div><span class="badge b-approved">${m.score}% match</span></div>
-   <p class="muted" style="margin-top:10px">Teaches <b>${m.teach}</b><br>Wants <b>${m.learn}</b></p>
-   <div class="row">${exch[i]?`<span class="badge b-${exch[i]}">${exch[i]}</span><button class="btn btn-ghost btn-sm" data-xnext="${i}">Demo: next</button>`:`<button class="btn btn-primary btn-sm" data-xreq="${i}">${t("send")}</button>`}</div></div>`).join("");
-  bindTilt();
-}
-function stars(n){return "★".repeat(Math.round(n))+"☆".repeat(5-Math.round(n))}
-function renderMentors(){
-  $("#mentorGrid").innerHTML=mentors.map(m=>`<div class="card tilt"><div style="display:flex;gap:12px;align-items:center"><div class="avatar" style="width:52px;height:52px">${m.name[0]}</div><div><b>${m.name} <span style="color:#22c55e">✔</span></b><div class="muted">${m.role}</div></div></div>
-   <div style="margin:10px 0">${m.skills.map(s=>`<span class="badge b-level" style="margin-right:4px">${s}</span>`).join("")}</div>
-   <div class="muted"><span style="color:var(--accent)">${stars(m.rating)}</span> ${m.rating} (${m.reviews})</div>
-   <div class="row"><span></span><button class="btn btn-primary btn-sm" data-mreq="${m.id}">${t("request")}</button></div></div>`).join("");
-  bindTilt();
-}
-function renderBookings(){
-  $("#bookingList").innerHTML=bookings.length?bookings.map((b,i)=>`<div class="card"><div class="row" style="margin:0"><b>${b.mentor}</b><span class="badge b-${b.status}">${b.status}</span></div>
-   <p class="muted">${b.topic} · ${b.when} · ${b.dur} min · ${b.freq}</p>
-   <div class="row">
-   ${b.status==="pending"?`<button class="btn btn-outline btn-sm" data-bcancel="${i}">${t("cancel")}</button><button class="btn btn-ghost btn-sm" data-bnext="${i}">Demo: mentor approves</button>`:""}
-   ${b.status==="active"?`<a class="btn btn-accent btn-sm" target="_blank" rel="noopener" href="https://meet.jit.si/SmartCommunity-${b.id}">Join meeting</a><button class="btn btn-ghost btn-sm" data-bnext="${i}">Demo: complete</button>`:""}
-   ${b.status==="completed"&&!b.review?`<select class="field" style="width:auto;margin:0" data-rate="${i}"><option value="">Rate…</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select>`:""}
-   ${b.review?`<span class="muted">Your review: <span style="color:var(--accent)">${stars(b.review)}</span></span>`:""}
-   </div></div>`).join(""):`<div class="card muted" style="grid-column:1/-1;text-align:center">No bookings yet. Request a session from a mentor above.</div>`;
-}
-function renderSessions(){
-  $("#sessionGrid").innerHTML=sessions.map(s=>{const full=s.reg>=s.cap&&!regs[s.id];const n=s.reg+(regs[s.id]?1:0);
-   return `<div class="card tilt"><span class="badge b-active">scheduled</span><h3>${s.title}</h3><div class="muted">Host: ${s.host}<br>🕒 ${s.when}</div>
-   <div class="progress"><i style="width:${n/s.cap*100}%"></i></div><div class="muted" style="font-size:.8rem">${n}/${s.cap} places</div>
-   <div class="row"><span></span>${full?`<button class="btn btn-outline btn-sm" disabled>Full</button>`:regs[s.id]?`<button class="btn btn-outline btn-sm" data-sreg="${s.id}">${t("cancel")}</button>`:`<button class="btn btn-primary btn-sm" data-sreg="${s.id}">${t("register")}</button>`}</div></div>`}).join("");
-  bindTilt();
-}
-function renderRoadmap(){
-  $("#roadmap").innerHTML=steps.map((s,i)=>`<li class="${s.d?"done":""}"><label><input type="checkbox" data-step="${i}" ${s.d?"checked":""}> ${s.t}</label></li>`).join("");
-  const p=Math.round(steps.filter(s=>s.d).length/steps.length*100);
-  $("#ring").style.setProperty("--p",p);$("#ringTxt").textContent=p+"%";
-}
-function renderRadar(){
-  const c=120,R=90,n=axes.length;let g="";
-  [.25,.5,.75,1].forEach(k=>g+=`<polygon fill="none" stroke="#94a3b8" stroke-opacity=".35" points="${axes.map((_,i)=>pt(i,R*k)).join(" ")}"/>`);
-  axes.forEach((a,i)=>{g+=`<line x1="${c}" y1="${c}" x2="${pt(i,R).split(",")[0]}" y2="${pt(i,R).split(",")[1]}" stroke="#94a3b8" stroke-opacity=".35"/><text x="${pt(i,R+14).split(",")[0]}" y="${pt(i,R+14).split(",")[1]}" font-size="9" text-anchor="middle" fill="currentColor">${a[0]}</text>`});
-  g+=`<polygon fill="rgba(20,184,166,.35)" stroke="#14B8A6" stroke-width="2" points="${axes.map((a,i)=>pt(i,R*a[1]/100)).join(" ")}"/>`;
-  function pt(i,r){const ang=-Math.PI/2+i*2*Math.PI/n;return (c+r*Math.cos(ang)).toFixed(1)+","+(c+r*Math.sin(ang)).toFixed(1)}
-  $("#radar").innerHTML=g;
-  $("#sliders").innerHTML=axes.map((a,i)=>`<label>${a[0]}: <b>${a[1]}</b><input type="range" min="0" max="100" value="${a[1]}" data-axis="${i}" style="width:100%"></label>`).join("");
-}
-function renderJobs(){
-  $("#jobGrid").innerHTML=jobs.map(j=>`<div class="card tilt"><span class="badge b-level">${j.type}</span><h3>${j.title}</h3><div class="muted">${j.company} · ${j.loc}<br>💰 ${j.stipend}</div>
-   <div class="row"><span></span>${apps.find(a=>a.job.id===j.id)?`<button class="btn btn-outline btn-sm" disabled>Applied ✔</button>`:`<button class="btn btn-primary btn-sm" data-apply="${j.id}">${t("apply")}</button>`}</div></div>`).join("");
-  $("#appList").innerHTML=apps.length?apps.map((a,i)=>`<div class="card"><div class="row" style="margin:0"><b>${a.job.title}</b><span class="badge b-${a.status}">${a.status}</span></div>
-   <div class="muted">${a.job.company} · CV: ${a.cv}</div>
-   <div class="tracker">${stages.map((s,k)=>`<i class="${k<=stages.indexOf(a.status)?"on":""}"></i>`).join("")}</div>
-   <div class="tracker-labels">${stages.map(s=>`<span>${s}</span>`).join("")}</div>
-   ${a.status!=="approved"?`<button class="btn btn-ghost btn-sm" style="margin-top:8px" data-anext="${i}">Demo: recruiter moves next</button>`:""}</div>`).join(""):`<div class="card muted" style="grid-column:1/-1;text-align:center">No applications yet.</div>`;
-  bindTilt();
-}
-function renderForum(){
-  $("#postList").innerHTML=posts.map((p,i)=>`<div class="card"><span class="badge b-level">${p.cat}</span><h3>${p.q}</h3><div class="row" style="margin-top:6px"><span class="muted">💬 ${p.ans} answers</span><button class="btn btn-outline btn-sm" data-like="${i}">👍 ${p.likes}</button></div></div>`).join("");
-}
-function renderNotifs(){
-  const u=notifs.filter(n=>!n.read).length;$("#bellCount").textContent=u;$("#bellCount").style.display=u?"grid":"none";
-  $("#notifList").innerHTML=notifs.slice(0,6).map(n=>`<div class="notif ${n.read?"":"unread"}"><b>${n.text}</b></div>`).join("");
-}
-function renderAdmin(){
-  const rows=[["Students",820,"#3B82F6"],["Mentors",32,"#F5B301"],["Recruiters",18,"#14B8A6"],["Applications",140,"#8b5cf6"]];
-  const mx=820;$("#adminBars").innerHTML=rows.map(r=>`<div class="bar"><span style="width:90px">${r[0]}</span><i style="width:${Math.max(r[1]/mx*100,6)}%;background:${r[2]}"></i><b>${r[1]}</b></div>`).join("")+`<p class="muted" style="font-size:.8rem">Sample data for demo.</p>`;
-}
+  $("#courseGrid").innerHTML=list.length?list.map(c=>`<div class="card glass tilt"><div class="thumb" style="background:${c.g}">${c.icon}</div>
+   <span class="badge b-level">${c.level}</span><h3>${c.title}</h3><div class="muted">${c.lessons} lessons · ${c.cat}</div>
+   ${enrolled[c.id]?`<div class="progress"><i style="width:${enrolled[c.id]}%"></i></div>`:""}
+   <div class="row"><span>${c.price?`<span class="price">$${c.price}</span> <span class="badge b-bakong">Bakong KHQR</span>`:`<span class="badge b-free">${t("free")}</span>`}</span>
+   ${enrolled[c.id]?`<button class="btn btn-primary btn-sm" data-learn="${c.id}">▶ Continue</button>`:`<button class="btn btn-primary btn-sm" data-enroll="${c.id}">${c.price?t("pay"):t("enroll")}</button>`}</div></div>`).join("")
+  :`<div class="card glass" style="grid-column:1/-1;text-align:center"><div style="font-size:2.4rem">🔍</div><b>No courses found</b><br><button class="btn btn-soft btn-sm" id="clearF" style="margin-top:12px">Clear filters</button></div>`;
+  bindTilt()}
+function renderMatches(){$("#matchGrid").innerHTML=matches.map((m,i)=>`<div class="card glass tilt"><div class="row" style="margin:0"><div style="display:flex;gap:10px;align-items:center"><div class="avatar">${m.name[0]}</div><b>${m.name}</b></div><span class="badge b-approved">${m.score}% match</span></div>
+  <p class="muted" style="margin-top:12px">Teaches <b>${m.teach}</b><br>Wants <b>${m.learn}</b></p>
+  <div class="row">${exch[i]?`<span class="badge b-${exch[i]}">${exch[i]}</span>${exch[i]!=="completed"?`<button class="btn btn-ghost btn-sm" data-xnext="${i}">Demo: next</button>`:""}`:`<button class="btn btn-primary btn-sm" data-xreq="${i}">${t("send")}</button>`}</div></div>`).join("");bindTilt()}
+function renderMentors(){$("#mentorGrid").innerHTML=mentors.map(m=>`<div class="card glass tilt"><div style="display:flex;gap:12px;align-items:center"><img src="${m.img}" alt="${m.name}" class="avatar" style="width:52px;height:52px"><div><b>${m.name} <span style="color:#22c55e">✔</span></b><div class="muted" style="font-size:.82rem">${m.role}</div></div></div>
+  <div style="margin:12px 0">${m.skills.map(s=>`<span class="badge b-level" style="margin-right:4px">${s}</span>`).join("")}</div>
+  <div class="muted"><span style="color:var(--gold)">${stars(m.rating)}</span> ${m.rating} (${m.reviews})</div>
+  <div class="row"><span></span><button class="btn btn-primary btn-sm" data-mreq="${m.id}">${t("request")}</button></div></div>`).join("");bindTilt()}
+function renderBookings(){$("#bookingList").innerHTML=bookings.length?bookings.map((b,i)=>`<div class="card glass"><div class="row" style="margin:0"><b>${b.mentor}</b><span class="badge b-${b.status}">${b.status}</span></div>
+  <p class="muted">${b.topic} · ${b.when} · ${b.dur} min · ${b.freq}</p><div class="row">
+  ${b.status==="pending"?`<button class="btn btn-soft btn-sm" data-bcancel="${i}">${t("cancel")}</button><button class="btn btn-ghost btn-sm" data-bnext="${i}">Demo: mentor approves</button>`:""}
+  ${b.status==="active"?`<a class="btn btn-gold btn-sm" target="_blank" rel="noopener" href="https://meet.jit.si/SmartCommunity-${b.id}">Join meeting</a><button class="btn btn-ghost btn-sm" data-bnext="${i}">Demo: complete</button>`:""}
+  ${b.status==="completed"&&!b.review?`<select class="field" style="width:auto;margin:0" data-rate="${i}"><option value="">Rate…</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select>`:""}
+  ${b.review?`<span class="muted">Your review: <span style="color:var(--gold)">${stars(b.review)}</span></span>`:""}</div></div>`).join("")
+  :`<div class="card glass muted" style="grid-column:1/-1;text-align:center">No bookings yet. Request a session from a mentor above.</div>`}
+function renderSessions(){$("#sessionGrid").innerHTML=sessions.map(s=>{const full=s.reg>=s.cap&&!regs[s.id];const n=s.reg+(regs[s.id]?1:0);
+  return`<div class="card glass tilt"><span class="badge b-active">scheduled</span><h3>${s.title}</h3><div class="muted">Host: ${s.host}<br>🕒 ${s.when}</div>
+  <div class="progress"><i style="width:${n/s.cap*100}%"></i></div><div class="muted" style="font-size:.8rem">${n}/${s.cap} places</div>
+  <div class="row"><span></span>${full?`<button class="btn btn-soft btn-sm" disabled>Full</button>`:regs[s.id]?`<button class="btn btn-soft btn-sm" data-sreg="${s.id}">${t("cancel")}</button>`:`<button class="btn btn-primary btn-sm" data-sreg="${s.id}">${t("register")}</button>`}</div></div>`}).join("");bindTilt()}
+function renderRoadmap(){$("#roadmap").innerHTML=steps.map((s,i)=>`<li class="${s.d?"done":""}"><label><input type="checkbox" data-step="${i}" ${s.d?"checked":""}> ${s.t}</label></li>`).join("");
+  const p=Math.round(steps.filter(s=>s.d).length/steps.length*100);$("#ring").style.setProperty("--p",p);$("#ringTxt").textContent=p+"%"}
+function renderRadar(){const c=120,R=90,n=axes.length;let g="";
+  function pt(i,r){const a=-Math.PI/2+i*2*Math.PI/n;return(c+r*Math.cos(a)).toFixed(1)+","+(c+r*Math.sin(a)).toFixed(1)}
+  [.25,.5,.75,1].forEach(k=>g+=`<polygon fill="none" stroke="currentColor" stroke-opacity=".15" points="${axes.map((_,i)=>pt(i,R*k)).join(" ")}"/>`);
+  axes.forEach((a,i)=>{const e=pt(i,R).split(","),l=pt(i,R+14).split(",");g+=`<line x1="${c}" y1="${c}" x2="${e[0]}" y2="${e[1]}" stroke="currentColor" stroke-opacity=".15"/><text x="${l[0]}" y="${l[1]}" font-size="9" text-anchor="middle" fill="currentColor">${a[0]}</text>`});
+  g+=`<polygon fill="rgba(59,107,255,.28)" stroke="#3B6BFF" stroke-width="2" points="${axes.map((a,i)=>pt(i,R*a[1]/100)).join(" ")}"/>`;$("#radar").innerHTML=g;
+  if(!$("#sliders").children.length)$("#sliders").innerHTML=axes.map((a,i)=>`<label>${a[0]} <input type="range" min="0" max="100" value="${a[1]}" data-axis="${i}" style="width:100%"></label>`).join("")}
+function renderJobs(){$("#jobGrid").innerHTML=jobs.map(j=>`<div class="card glass tilt"><span class="badge b-level">${j.type}</span><h3>${j.title}</h3><div class="muted">${j.company} · ${j.loc}<br>💰 ${j.stipend}</div>
+  <div class="row"><span></span>${apps.find(a=>a.job.id===j.id)?`<button class="btn btn-soft btn-sm" disabled>Applied ✔</button>`:`<button class="btn btn-primary btn-sm" data-apply="${j.id}">${t("apply")}</button>`}</div></div>`).join("");
+  $("#appList").innerHTML=apps.length?apps.map((a,i)=>`<div class="card glass"><div class="row" style="margin:0"><b>${a.job.title}</b><span class="badge b-${a.status}">${a.status}</span></div>
+  <div class="muted">${a.job.company} · CV: ${a.cv}</div><div class="tracker">${stages.map((s,k)=>`<i class="${k<=stages.indexOf(a.status)?"on":""}"></i>`).join("")}</div>
+  <div class="tracker-labels">${stages.map(s=>`<span>${s}</span>`).join("")}</div>
+  ${a.status!=="approved"?`<button class="btn btn-ghost btn-sm" style="margin-top:8px" data-anext="${i}">Demo: recruiter moves next</button>`:""}</div>`).join("")
+  :`<div class="card glass muted" style="grid-column:1/-1;text-align:center">No applications yet.</div>`;bindTilt()}
+function renderForum(){$("#postList").innerHTML=posts.map((p,i)=>`<div class="card glass"><span class="badge b-level">${p.cat}</span><h3>${p.q}</h3><div class="row" style="margin-top:6px"><span class="muted">💬 ${p.ans} answers</span><button class="btn btn-soft btn-sm" data-like="${i}">👍 ${p.likes}</button></div></div>`).join("")}
+function renderNotifs(){const u=notifs.filter(n=>!n.read).length;$("#bellCount").textContent=u;$("#bellCount").style.display=u?"grid":"none";
+  $("#notifList").innerHTML=notifs.slice(0,6).map(n=>`<div class="notif ${n.read?"":"unread"}"><b>${n.text}</b></div>`).join("")}
+function renderAdmin(){const rows=[["Students",820,"#3B6BFF"],["Mentors",32,"#F5B301"],["Recruiters",18,"#14B8A6"],["Applications",140,"#8b5cf6"]];
+  $("#adminBars").innerHTML=rows.map(r=>`<div class="bar"><span style="width:92px">${r[0]}</span><i style="width:${Math.max(r[1]/820*100,6)}%;background:${r[2]}"></i><b>${r[1]}</b></div>`).join("")+`<p class="muted" style="font-size:.8rem">Sample data for demo.</p>`}
 function renderAll(){renderCourses();renderMatches();renderMentors();renderBookings();renderSessions();renderRoadmap();renderRadar();renderJobs();renderForum();renderNotifs();renderAdmin()}
 
 /* ============ KHQR modal ============ */
 function qrHTML(seed){let s=seed*9301+49297,h="";for(let y=0;y<21;y++)for(let x=0;x<21;x++){const f=(x<7&&y<7)||(x>13&&y<7)||(x<7&&y>13);let k;
-  if(f){const dx=x>13?x-14:x,dy=y>13?y-14:y;k=dx===0||dx===6||dy===0||dy===6||(dx>=2&&dx<=4&&dy>=2&&dy<=4)}else{s=(s*9301+49297)%233280;k=s/233280>.5}
-  h+=`<i class="${k?"k":""}"></i>`}return h}
-function payModal(c){
-  let left=300;
-  openModal(`<h3 style="color:var(--red)">Bakong KHQR</h3><p class="muted">${c.title} · <b>$${c.price}</b></p>
-   <div class="qr" id="qrBox">${qrHTML(c.id)}</div>
-   <p style="text-align:center">Expires in <b id="cd">05:00</b></p>
-   <ol class="muted" style="margin:10px 0 14px 18px"><li>Open ABA / Wing / ACLEDA / any bank app</li><li>Scan the QR code</li><li>Return here and tap "I have paid"</li></ol>
-   <p class="muted" style="font-size:.78rem">Demo only: this is not a real payment QR.</p>
-   <div class="row"><button class="btn btn-outline btn-sm" onclick="closeModal()">${t("cancel")}</button><button class="btn btn-primary btn-sm" id="paidBtn">I have paid</button></div>`);
+  if(f){const dx=x>13?x-14:x,dy=y>13?y-14:y;k=dx===0||dx===6||dy===0||dy===6||(dx>=2&&dx<=4&&dy>=2&&dy<=4)}else{s=(s*9301+49297)%233280;k=s/233280>.5}h+=`<i class="${k?"k":""}"></i>`}return h}
+function payModal(c){let left=300;
+  openModal(`<h3 style="color:var(--red);font-weight:600">Bakong KHQR</h3><p class="muted">${c.title} · <b>$${c.price}</b></p><div class="qr" id="qrBox">${qrHTML(c.id)}</div>
+  <p style="text-align:center">Expires in <b id="cd">05:00</b></p>
+  <ol class="muted" style="margin:10px 0 14px 18px"><li>Open ABA / Wing / ACLEDA / any bank app</li><li>Scan the QR code</li><li>Return and tap "I have paid"</li></ol>
+  <p class="muted" style="font-size:.78rem">Demo only: not a real payment QR.</p>
+  <div class="row"><button class="btn btn-soft btn-sm" onclick="closeModal()">${t("cancel")}</button><button class="btn btn-primary btn-sm" id="paidBtn">I have paid</button></div>`);
   closeModal.timer=setInterval(()=>{left--;const m=String(Math.floor(left/60)).padStart(2,"0"),s=String(left%60).padStart(2,"0");const e=$("#cd");if(e)e.textContent=m+":"+s;
     if(left<=0){clearInterval(closeModal.timer);$("#qrBox").style.opacity=.2;$("#cd").textContent="Expired";$("#paidBtn").textContent="New QR";$("#paidBtn").onclick=()=>payModal(c)}},1000);
-  $("#paidBtn").onclick=()=>{clearInterval(closeModal.timer);closeModal();enrolled[c.id]=5;renderCourses();toast("Payment confirmed ✔ Course unlocked");notify("Course unlocked: "+c.title)};
-}
+  $("#paidBtn").onclick=()=>{clearInterval(closeModal.timer);closeModal();enrolled[c.id]=5;renderCourses();toast("Payment confirmed ✔ Course unlocked");notify("Course unlocked: "+c.title)}}
 
 /* ============ events ============ */
 document.addEventListener("click",e=>{
-  const d=e.target.closest("[data-cat],[data-enroll],[data-learn],[data-xreq],[data-xnext],[data-mreq],[data-bcancel],[data-bnext],[data-sreg],[data-apply],[data-anext],[data-like]");
   if(e.target.id==="clearF"){cat="All";$("#courseSearch").value="";renderCourses();return}
-  if(!d)return;const D=d.dataset;
+  const d=e.target.closest("[data-cat],[data-enroll],[data-learn],[data-xreq],[data-xnext],[data-mreq],[data-bcancel],[data-bnext],[data-sreg],[data-apply],[data-anext],[data-like]");if(!d)return;const D=d.dataset;
   if(D.cat){cat=D.cat;renderCourses()}
   else if(D.enroll){if(needLogin())return;const c=courses.find(x=>x.id==D.enroll);if(c.price)payModal(c);else{enrolled[c.id]=5;renderCourses();toast("Enrolled ✔");notify("Enrolled: "+c.title)}}
   else if(D.learn){const c=courses.find(x=>x.id==D.learn);enrolled[c.id]=Math.min(100,enrolled[c.id]+15);renderCourses();toast("Lesson completed (demo)")}
   else if(D.xreq){if(needLogin())return;exch[D.xreq]="pending";renderMatches();notify("Skill request sent to "+matches[D.xreq].name)}
   else if(D.xnext){const o=["pending","accepted","completed"];const i=o.indexOf(exch[D.xnext]);if(i<2){exch[D.xnext]=o[i+1];renderMatches();notify("Exchange "+o[i+1]+": "+matches[D.xnext].name)}}
   else if(D.mreq){if(needLogin())return;const m=mentors.find(x=>x.id==D.mreq);
-    openModal(`<h3>${t("request")} · ${m.name}</h3><form id="bkForm"><label>Topic<input class="field" name="topic" required></label>
-     <label>Date & time<input class="field" type="datetime-local" name="when" required></label>
-     <label>Duration<select class="field" name="dur"><option>30</option><option>60</option><option>90</option></select></label>
-     <label>Frequency<select class="field" name="freq"><option>One time</option><option>Weekly</option><option>Monthly</option></select></label>
-     <div class="row"><button type="button" class="btn btn-outline btn-sm" onclick="closeModal()">${t("cancel")}</button><button class="btn btn-primary btn-sm">${t("send")}</button></div></form>`);
+    openModal(`<h3 style="font-weight:600">${t("request")} · ${m.name}</h3><form id="bkForm"><label>Topic<input class="field" name="topic" required></label>
+    <label>Date & time<input class="field" type="datetime-local" name="when" required></label>
+    <label>Duration<select class="field" name="dur"><option>30</option><option>60</option><option>90</option></select></label>
+    <label>Frequency<select class="field" name="freq"><option>One time</option><option>Weekly</option><option>Monthly</option></select></label>
+    <div class="row"><button type="button" class="btn btn-soft btn-sm" onclick="closeModal()">${t("cancel")}</button><button class="btn btn-primary btn-sm">${t("send")}</button></div></form>`);
     $("#bkForm").onsubmit=ev=>{ev.preventDefault();const f=new FormData(ev.target);
       if(new Date(f.get("when"))<=new Date()){toast("Please choose a future date");return}
       if(bookings.some(b=>b.mentor===m.name&&["pending","active"].includes(b.status))){toast("You already have an open booking with this mentor");return}
@@ -654,9 +991,9 @@ document.addEventListener("click",e=>{
   else if(D.bnext){const b=bookings[D.bnext];b.status=b.status==="pending"?"active":"completed";renderBookings();notify("Booking "+b.status+": "+b.mentor)}
   else if(D.sreg){if(needLogin())return;regs[D.sreg]=!regs[D.sreg];renderSessions();notify(regs[D.sreg]?"Registered for a live session":"Registration cancelled")}
   else if(D.apply){if(needLogin())return;const j=jobs.find(x=>x.id==D.apply);
-    openModal(`<h3>${t("apply")} · ${j.title}</h3><form id="apForm"><label>CV (PDF, max 10MB)<input class="field" type="file" accept="application/pdf" name="cv" required></label>
-     <label>Portfolio URL (optional)<input class="field" type="url" name="url"></label><label>Cover letter<textarea class="field" rows="3" name="cl"></textarea></label>
-     <div class="row"><button type="button" class="btn btn-outline btn-sm" onclick="closeModal()">${t("cancel")}</button><button class="btn btn-primary btn-sm">${t("apply")}</button></div></form>`);
+    openModal(`<h3 style="font-weight:600">${t("apply")} · ${j.title}</h3><form id="apForm"><label>CV (PDF, max 10MB)<input class="field" type="file" accept="application/pdf" name="cv" required></label>
+    <label>Portfolio URL (optional)<input class="field" type="url" name="url"></label><label>Cover letter<textarea class="field" rows="3" name="cl"></textarea></label>
+    <div class="row"><button type="button" class="btn btn-soft btn-sm" onclick="closeModal()">${t("cancel")}</button><button class="btn btn-primary btn-sm">${t("apply")}</button></div></form>`);
     $("#apForm").onsubmit=ev=>{ev.preventDefault();const file=ev.target.cv.files[0];
       if(!file||file.type!=="application/pdf"){toast("CV must be a PDF");return}
       if(file.size>10*1024*1024){toast("CV is larger than 10MB");return}
@@ -666,12 +1003,10 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("change",e=>{
   if(e.target.dataset.step!==undefined){steps[e.target.dataset.step].d=e.target.checked;renderRoadmap()}
-  if(e.target.dataset.rate!==undefined&&e.target.value){bookings[e.target.dataset.rate].review=+e.target.value;renderBookings();toast("Thanks for your review ✔")}
-});
+  if(e.target.dataset.rate!==undefined&&e.target.value){bookings[e.target.dataset.rate].review=+e.target.value;renderBookings();toast("Thanks for your review ✔")}});
 document.addEventListener("input",e=>{
-  if(e.target.dataset.axis!==undefined){axes[e.target.dataset.axis][1]=+e.target.value;renderRadar();const s=document.querySelector(`[data-axis="${e.target.dataset.axis}"]`);if(s)s.focus()}
-  if(e.target.id==="courseSearch")renderCourses();
-});
+  if(e.target.dataset.axis!==undefined){axes[e.target.dataset.axis][1]=+e.target.value;renderRadar()}
+  if(e.target.id==="courseSearch")renderCourses()});
 $("#heroSearch").addEventListener("submit",e=>{e.preventDefault();$("#courseSearch").value=$("#heroInput").value;renderCourses();location.hash="#courses"});
 $("#postForm").addEventListener("submit",e=>{e.preventDefault();if(needLogin())return;posts.unshift({q:$("#postInput").value,cat:$("#postCat").value,likes:0,ans:0});$("#postInput").value="";renderForum();toast("Posted ✔")});
 $("#chatForm").addEventListener("submit",e=>{e.preventDefault();if(needLogin())return;const v=$("#chatInput").value.trim();if(!v)return;
@@ -686,19 +1021,42 @@ $("#themeBtn").onclick=()=>setTheme(document.documentElement.dataset.theme!=="da
 setTheme(localStorage.getItem("dark")==="1"||(localStorage.getItem("dark")===null&&matchMedia("(prefers-color-scheme:dark)").matches));
 
 /* ============ 3D tilt (mouse only) ============ */
-const canTilt=matchMedia("(hover:hover) and (pointer:fine)").matches&&!matchMedia("(prefers-reduced-motion:reduce)").matches;
-function bindTilt(){ if(!canTilt)return;
-  document.querySelectorAll(".tilt").forEach(c=>{ if(c._t)return;c._t=1;
-    c.addEventListener("mousemove",e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(900px) rotateX(${-y*10}deg) rotateY(${x*10}deg) scale(1.03)`});
-    c.addEventListener("mouseleave",()=>c.style.transform="")})}
-if(canTilt){const h=document.querySelector(".tilt-hero"),sc=document.querySelector(".scene");
-  sc.addEventListener("mousemove",e=>{const r=sc.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;h.style.transform=`rotateX(${-y*12}deg) rotateY(${x*14}deg)`});
-  sc.addEventListener("mouseleave",()=>h.style.transform="")}
+const fine=matchMedia("(hover:hover) and (pointer:fine)").matches,calm=matchMedia("(prefers-reduced-motion:reduce)").matches;
+function bindTilt(){if(!fine||calm)return;document.querySelectorAll(".tilt").forEach(c=>{if(c._t)return;c._t=1;
+  c.addEventListener("mousemove",e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(900px) rotateX(${-y*9}deg) rotateY(${x*9}deg) scale(1.02)`});
+  c.addEventListener("mouseleave",()=>c.style.transform="")})}
 
-/* ============ reveal + count-up ============ */
+/* ============ Dot-field hero (Antigravity style) ============ */
+(function(){const cv=$("#dots"),ctx=cv.getContext("2d");let w,h,dots=[],mx=-999,my=-999;
+  function size(){const r=cv.parentElement.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);w=r.width;h=r.height;cv.width=w*d;cv.height=h*d;cv.style.width=w+"px";cv.style.height=h+"px";ctx.setTransform(d,0,0,d,0,0);
+    dots=[];const g=w<700?26:30;for(let y=g/2;y<h;y+=g)for(let x=g/2;x<w;x+=g)dots.push({bx:x,by:y,x,y})}
+  cv.parentElement.addEventListener("pointermove",e=>{const r=cv.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});
+  cv.parentElement.addEventListener("pointerleave",()=>{mx=my=-999});
+  function draw(ts){ctx.clearRect(0,0,w,h);const dark=document.documentElement.dataset.theme==="dark";
+    for(const p of dots){const dx=p.bx-mx,dy=p.by-my,d=Math.hypot(dx,dy)||1,R=150,push=d<R?(1-d/R)*42:0;
+      const wave=calm?0:Math.sin((p.bx+p.by)*.012+ts*.0012)*2.2;
+      p.x+=(p.bx+dx/d*push-p.x)*.12;p.y+=(p.by+dy/d*push+wave-p.y)*.12;
+      ctx.beginPath();ctx.fillStyle=push>5?"#3B6BFF":(dark?"rgba(255,255,255,.22)":"rgba(15,23,42,.28)");ctx.arc(p.x,p.y,1.3+push*.035,0,6.283);ctx.fill()}
+    if(!calm)requestAnimationFrame(draw)}
+  size();addEventListener("resize",size);requestAnimationFrame(draw)})();
+
+/* ============ Blue dash field (dark CTA) ============ */
+(function(){const cv=$("#dashes"),ctx=cv.getContext("2d");let w,h;
+  function size(){const r=cv.parentElement.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);w=r.width;h=r.height;cv.width=w*d;cv.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+  function draw(ts){ctx.clearRect(0,0,w,h);const cx=w*.72,cy=h*.5;ctx.lineCap="round";ctx.lineWidth=3;
+    for(let i=1;i<=16;i++){const r=i*28+10,n=Math.floor(r/10),dir=i%2?1:-1;
+      for(let k=0;k<n;k++){const a=k/n*6.283+(calm?0:ts*.00018*dir),x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;
+        ctx.strokeStyle=`rgba(80,112,255,${Math.max(.15,1-i/18)})`;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(a)*7,y+Math.sin(a)*7);ctx.stroke()}}
+    if(!calm)requestAnimationFrame(draw)}
+  size();addEventListener("resize",size);requestAnimationFrame(draw)})();
+
+/* ============ reveal, count-up, scroll-spy ============ */
 const io=new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;en.target.classList.add("show");
   en.target.querySelectorAll("[data-count]").forEach(n=>{const to=+n.dataset.count;let v=0;const st=to/40;const id=setInterval(()=>{v+=st;if(v>=to){v=to;clearInterval(id)}n.textContent=Math.round(v).toLocaleString()+"+"},30)});io.unobserve(en.target)}),{threshold:.15});
 document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+const tabs=[...document.querySelectorAll("#tabbar a")];
+const spy=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting)tabs.forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+en.target.id))}),{rootMargin:"-45% 0px -50% 0px"});
+["top","courses","career","jobs","community"].forEach(id=>spy.observe(document.getElementById(id)));
 
 applyLang();
 </script>

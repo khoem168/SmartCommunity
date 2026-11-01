@@ -58,8 +58,56 @@ const requireRole =
     return next();
   };
 
+const requireVerifiedCompany = async (req, res, next) => {
+  if (req.user?.role === "admin") return next();
+
+  if (req.user?.role !== "recruiter") {
+    return res.status(403).json({ error: "Only recruiters can perform this action." });
+  }
+
+  const [rows] = await db.query(
+    "SELECT id, name, verification_status, is_verified FROM company_profiles WHERE owner_id = ?",
+    [req.user.id],
+  );
+  const company = rows[0];
+
+  if (!company) {
+    return res.status(403).json({
+      error: "Please complete your company profile before posting jobs.",
+      code: "COMPANY_PROFILE_REQUIRED",
+    });
+  }
+
+  const isVerified = Boolean(company.is_verified) || company.verification_status === "verified";
+  if (!isVerified) {
+    return res.status(403).json({
+      error: "Your company account is pending verification by an administrator.",
+      code: "COMPANY_NOT_VERIFIED",
+      verificationStatus: company.verification_status || "pending",
+    });
+  }
+
+  req.company = company;
+  return next();
+};
+
+const requireVerifiedMentor = async (req, res, next) => {
+  if (req.user?.role === "admin") return next();
+
+  if (req.user?.role !== "mentor") {
+    return res.status(403).json({
+      error: "Only verified mentors can perform this action.",
+      code: "MENTOR_ROLE_REQUIRED",
+    });
+  }
+
+  return next();
+};
+
 module.exports = {
   optionalAuth,
   requireAuth,
   requireRole,
+  requireVerifiedCompany,
+  requireVerifiedMentor,
 };

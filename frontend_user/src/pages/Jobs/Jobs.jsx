@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   IoArrowForwardOutline,
@@ -201,9 +201,12 @@ const Jobs = () => {
               </Link>
             )}
             {user && (
-              <Link to="/applications" className="btn outline">
+              <Link
+                to={user.role === "recruiter" ? "/recruiter/candidates" : "/my-applications"}
+                className="btn outline"
+              >
                 {user.role === "recruiter"
-                  ? t("jobsPage.recruiterDashboard")
+                  ? (isKm ? "ផ្ទាំងបេក្ខជន (Candidate ATS)" : "Candidate ATS")
                   : t("jobsPage.myApplications")}
               </Link>
             )}

@@ -138,6 +138,24 @@ const register = async (req, res, next) => {
       );
     }
 
+    if (requestedRole === "recruiter") {
+      const companyName = String(recruiterCompany || `${fullName}'s Company`).trim().slice(0, 150);
+      await db.query(
+        `INSERT INTO company_profiles
+         (owner_id, name, description, industry, contact_email, location, is_verified, verification_status)
+         VALUES (?, ?, ?, ?, ?, ?, 0, 'pending')
+         ON DUPLICATE KEY UPDATE name = VALUES(name)`,
+        [
+          result.insertId,
+          companyName,
+          bio || "Partner company offering internship and career opportunities.",
+          jobTitle || "Technology",
+          email,
+          location || "Phnom Penh, Cambodia",
+        ],
+      );
+    }
+
     if (!verificationRequired) {
       return res.status(201).json({
         message: "Account created. You can now log in.",

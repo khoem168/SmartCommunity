@@ -1,0 +1,30 @@
+.empty-state-card {
+  border-radius: var(--radius-card, 28px);
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 16px 0;
+}
+
+.empty-icon {
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.empty-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.empty-desc {
+  max-width: 440px;
+  margin-bottom: 18px;
+}
+
+.empty-action {
+  margin-top: 6px;
+}

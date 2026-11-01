@@ -9,6 +9,9 @@
   font-weight: 800;
   line-height: 1;
   isolation: isolate;
+  width: var(--avatar-size, 38px);
+  height: var(--avatar-size, 38px);
+  border-radius: 50%;
 }
 
 .user-avatar-shell.has-image {
@@ -21,5 +24,6 @@
   display: block;
   object-fit: cover;
   object-position: center top;
+  border-radius: inherit;
 }
 

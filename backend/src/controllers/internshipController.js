@@ -203,7 +203,10 @@ const createInternship = async (req, res, next) => {
     const startDate = String(req.body.startDate || "").trim() || null;
     const durationWeeks = Number(req.body.durationWeeks || 0) || null;
     const openings = Number(req.body.openings || 1);
-    const stipendAmount = req.body.stipendAmount === "" ? null : Number(req.body.stipendAmount);
+    const stipendAmount =
+      req.body.stipendAmount === "" || req.body.stipendAmount === undefined || req.body.stipendAmount === null
+        ? null
+        : Number(req.body.stipendAmount);
     if (!title || !description || !requirements.length) {
       return res.status(400).json({ error: "Title, description, and requirements are required." });
     }
@@ -222,6 +225,17 @@ const createInternship = async (req, res, next) => {
     const company = companies[0];
     if (!company) {
       return res.status(400).json({ error: "Create your company profile before posting an internship." });
+    }
+    const isVerified =
+      req.user.role === "admin" ||
+      Boolean(company.is_verified) ||
+      company.verification_status === "verified";
+    if (!isVerified) {
+      return res.status(403).json({
+        error: "Your company account is pending verification by an administrator.",
+        code: "COMPANY_NOT_VERIFIED",
+        verificationStatus: company.verification_status || "pending",
+      });
     }
     const [result] = await db.query(
       `INSERT INTO internships
@@ -377,7 +391,29 @@ const applyInternship = async (req, res, next) => {
   }
 };
 
-const formatApplication = (row) => ({
+const formatStudentApplication = (row) => ({
+  id: row.id,
+  internshipId: row.internship_id,
+  internshipTitle: row.internship_title,
+  company: row.company,
+  companyLogo: row.company_logo,
+  location: row.location,
+  internshipType: row.internship_type,
+  stipend: row.stipend,
+  coverLetter: row.cover_letter,
+  resumeUrl: row.resume_url,
+  resumeOriginalName: row.resume_original_name,
+  portfolioUrl: row.portfolio_url,
+  status: row.status === "accepted" ? "approved" : row.status,
+  appliedAt: row.applied_at,
+  statusUpdatedAt: row.status_updated_at || row.reviewed_at,
+  interviewScheduledAt: row.interview_scheduled_at,
+  interviewMeetingLink: row.interview_meeting_link,
+  interviewNote: row.interview_note,
+  // Note: recruiterNotes / admin_notes are STRICTLY excluded for student privacy
+});
+
+const formatRecruiterApplication = (row) => ({
   id: row.id,
   internshipId: row.internship_id,
   internshipTitle: row.internship_title,
@@ -385,6 +421,7 @@ const formatApplication = (row) => ({
   studentId: row.student_id,
   studentName: row.student_name,
   studentEmail: row.student_email,
+  studentAvatar: row.student_avatar,
   coverLetter: row.cover_letter,
   resumeUrl: row.resume_url,
   resumeOriginalName: row.resume_original_name,
@@ -393,30 +430,48 @@ const formatApplication = (row) => ({
   recruiterNotes: row.admin_notes,
   appliedAt: row.applied_at,
   statusUpdatedAt: row.status_updated_at || row.reviewed_at,
+  interviewScheduledAt: row.interview_scheduled_at,
+  interviewMeetingLink: row.interview_meeting_link,
+  interviewNote: row.interview_note,
 });
 
 const getInternshipApplications = async (req, res, next) => {
   try {
-    const baseSelect = `
-      SELECT ia.*, i.title AS internship_title, i.company,
-             student.full_name AS student_name, student.email AS student_email
-      FROM internship_applications ia
-      JOIN internships i ON i.id = ia.internship_id
-      JOIN users student ON student.id = ia.student_id
-    `;
-    const recruiterView = ["recruiter", "admin"].includes(req.user.role);
-    const [rows] = recruiterView
-      ? await db.query(
-          `${baseSelect}
-           WHERE i.posted_by = ? OR ? = 'admin'
-           ORDER BY ia.applied_at DESC`,
-          [req.user.id, req.user.role],
-        )
-      : await db.query(
-          `${baseSelect} WHERE ia.student_id = ? ORDER BY ia.applied_at DESC`,
-          [req.user.id],
-        );
-    return res.json({ applications: rows.map(formatApplication), view: recruiterView ? "recruiter" : "student" });
+    const isRecruiterOrAdmin = ["recruiter", "admin"].includes(req.user.role);
+    const view = req.query.view === "student" ? "student" : isRecruiterOrAdmin ? "recruiter" : "student";
+
+    if (view === "recruiter") {
+      const [rows] = await db.query(
+        `SELECT ia.*, i.title AS internship_title, i.company,
+                student.full_name AS student_name, student.email AS student_email,
+                student.avatar_url AS student_avatar
+         FROM internship_applications ia
+         JOIN internships i ON i.id = ia.internship_id
+         JOIN users student ON student.id = ia.student_id
+         WHERE i.posted_by = ? OR ? = 'admin'
+         ORDER BY ia.applied_at DESC`,
+        [req.user.id, req.user.role],
+      );
+      return res.json({
+        applications: rows.map(formatRecruiterApplication),
+        view: "recruiter",
+      });
+    }
+
+    // Student View: Object-level isolation to only own applications
+    const [rows] = await db.query(
+      `SELECT ia.*, i.title AS internship_title, i.company, i.company_logo,
+              i.location, i.internship_type, i.stipend
+       FROM internship_applications ia
+       JOIN internships i ON i.id = ia.internship_id
+       WHERE ia.student_id = ?
+       ORDER BY ia.applied_at DESC`,
+      [req.user.id],
+    );
+    return res.json({
+      applications: rows.map(formatStudentApplication),
+      view: "student",
+    });
   } catch (err) {
     return next(err);
   }
@@ -425,34 +480,89 @@ const getInternshipApplications = async (req, res, next) => {
 const updateApplicationStatus = async (req, res, next) => {
   try {
     const status = String(req.body.status || "");
-    const notes = String(req.body.recruiterNotes || "").trim().slice(0, 2000) || null;
+    const notes = req.body.recruiterNotes !== undefined
+      ? (String(req.body.recruiterNotes || "").trim().slice(0, 2000) || null)
+      : undefined;
+    const interviewScheduledAt = req.body.interviewScheduledAt
+      ? new Date(req.body.interviewScheduledAt).toISOString().slice(0, 19).replace("T", " ")
+      : null;
+    const interviewMeetingLink = cleanUrl(req.body.interviewMeetingLink);
+    const interviewNote = String(req.body.interviewNote || "").trim().slice(0, 1000) || null;
+
     if (!["pending", "reviewed", "shortlisted", "approved", "rejected"].includes(status)) {
       return res.status(400).json({ error: "Invalid application status." });
     }
+
+    // Object-level authorization: Ensure recruiter owns the internship
     const [rows] = await db.query(
-      `SELECT ia.id, ia.student_id, i.title
+      `SELECT ia.id, ia.student_id, ia.status AS previous_status, i.title, i.company
        FROM internship_applications ia
        JOIN internships i ON i.id = ia.internship_id
        WHERE ia.id = ? AND (i.posted_by = ? OR ? = 'admin')`,
       [req.params.applicationId, req.user.id, req.user.role],
     );
     const application = rows[0];
-    if (!application) return res.status(404).json({ error: "Application not found." });
-    await db.query(
-      `UPDATE internship_applications
-       SET status = ?, admin_notes = ?, status_updated_by = ?,
-           status_updated_at = NOW(), reviewed_at = NOW()
-       WHERE id = ?`,
-      [status, notes, req.user.id, application.id],
-    );
+    if (!application) {
+      return res.status(404).json({ error: "Application not found or unauthorized." });
+    }
+
+    let query = `
+      UPDATE internship_applications
+      SET status = ?,
+          status_updated_by = ?,
+          status_updated_at = NOW(),
+          reviewed_at = NOW()
+    `;
+    const params = [status, req.user.id];
+
+    if (notes !== undefined) {
+      query += `, admin_notes = ?`;
+      params.push(notes);
+    }
+    if (req.body.interviewScheduledAt !== undefined) {
+      query += `, interview_scheduled_at = ?`;
+      params.push(interviewScheduledAt);
+    }
+    if (req.body.interviewMeetingLink !== undefined) {
+      query += `, interview_meeting_link = ?`;
+      params.push(interviewMeetingLink);
+    }
+    if (req.body.interviewNote !== undefined) {
+      query += `, interview_note = ?`;
+      params.push(interviewNote);
+    }
+
+    query += ` WHERE id = ?`;
+    params.push(application.id);
+
+    await db.query(query, params);
+
+    // Context-rich notification to student
+    let notifTitle = "Application status updated";
+    let notifMsg = `Your application for ${application.title} at ${application.company} is now ${status}.`;
+    if (interviewScheduledAt && ["shortlisted", "reviewed"].includes(status)) {
+      notifTitle = "Interview Scheduled!";
+      notifMsg = `${application.company} scheduled an interview for ${application.title}.`;
+    }
+
     await createNotification(req, {
       userId: application.student_id,
       type: "internship",
-      title: "Application status updated",
-      message: `Your application for ${application.title} is now ${status}.`,
-      link: "/applications",
+      title: notifTitle,
+      message: notifMsg,
+      link: "/my-applications",
+      metadata: {
+        applicationId: application.id,
+        status,
+        interviewScheduledAt,
+      },
     });
-    return res.json({ message: `Application marked ${status}.`, status });
+
+    return res.json({
+      message: `Application status updated to ${status}.`,
+      status,
+      interviewScheduledAt,
+    });
   } catch (err) {
     return next(err);
   }

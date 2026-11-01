@@ -1,0 +1,7 @@
+.glass-card {
+  border-radius: var(--radius-card, 28px);
+  padding: 22px;
+  min-width: 0;
+  transition: transform 0.35s var(--spring, cubic-bezier(0.2, 0.9, 0.3, 1.15)),
+    box-shadow 0.25s ease;
+}

@@ -1,30 +1,51 @@
 import { useEffect, useRef } from "react";
+import "./TiltCard.css";
 
-// Decorative only: no layout changes, and no movement for touch/reduced motion.
-export default function TiltCard({ children, className = "", ...props }) {
+export default function TiltCard({
+  children,
+  className = "",
+  maxTilt = 8,
+  perspective = 1000,
+  glare = true,
+  as: Component = "div",
+  ...props
+}) {
   const ref = useRef(null);
+
   useEffect(() => {
     const element = ref.current;
-    const allowed = window.matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+    if (!element) return;
+
+    const allowed = window.matchMedia(
+      "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)",
+    );
+
     let frame;
     const reset = () => {
       cancelAnimationFrame(frame);
-      element.style.removeProperty("transform");
+      element.style.transform = "";
     };
+
     const move = (event) => {
       if (!allowed.matches || event.pointerType === "touch") return;
       const rect = element.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width - 0.5;
       const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+      element.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+      element.style.setProperty("--my", `${event.clientY - rect.top}px`);
+
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        element.style.transform = `perspective(1000px) rotateX(${-y * 5}deg) rotateY(${x * 5}deg)`;
+        element.style.transform = `perspective(${perspective}px) rotateX(${-y * maxTilt}deg) rotateY(${x * maxTilt}deg) scale(1.02)`;
       });
     };
+
     allowed.addEventListener("change", reset);
-    element.addEventListener("pointermove", move);
+    element.addEventListener("pointermove", move, { passive: true });
     element.addEventListener("pointerleave", reset);
     element.addEventListener("pointercancel", reset);
+
     return () => {
       reset();
       allowed.removeEventListener("change", reset);
@@ -32,6 +53,15 @@ export default function TiltCard({ children, className = "", ...props }) {
       element.removeEventListener("pointerleave", reset);
       element.removeEventListener("pointercancel", reset);
     };
-  }, []);
-  return <article ref={ref} className={`sc-tilt ${className}`} {...props}>{children}</article>;
+  }, [maxTilt, perspective]);
+
+  return (
+    <Component
+      ref={ref}
+      className={`glass tilt-card ${glare ? "has-glare" : ""} ${className}`}
+      {...props}
+    >
+      {children}
+    </Component>
+  );
 }

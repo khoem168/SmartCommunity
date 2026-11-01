@@ -1,0 +1,386 @@
+/* ==========================================================================
+   SMART COMMUNITY COMMAND PALETTE (SPOTLIGHT SEARCH) - iOS 27 GLASS DESIGN
+   ========================================================================== */
+
+.cmd-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(60px, 12vh, 120px) 16px 24px;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  animation: cmd-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-theme="dark"] .cmd-backdrop {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+@keyframes cmd-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.cmd-modal-card {
+  width: min(640px, 100%);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 24px 70px -15px rgba(15, 23, 42, 0.2),
+    0 10px 25px -5px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  overflow: hidden;
+  animation: cmd-slide-down 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-theme="dark"] .cmd-modal-card {
+  background: rgba(18, 24, 38, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 30px 80px -15px rgba(0, 0, 0, 0.8),
+    0 12px 30px -5px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+@keyframes cmd-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   SEARCH BAR
+   -------------------------------------------------------------------------- */
+.cmd-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="dark"] .cmd-search-bar {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.cmd-search-icon {
+  font-size: 1.25rem;
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .cmd-search-icon {
+  color: #60a5fa;
+}
+
+.cmd-input {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: none;
+  font-size: 1.05rem;
+  color: #0f172a;
+  font-family: inherit;
+  font-weight: 500;
+  padding: 0;
+}
+
+[data-theme="dark"] .cmd-input {
+  color: #f8fafc;
+}
+
+.cmd-input::placeholder {
+  color: #94a3b8;
+  font-size: 0.96rem;
+}
+
+.cmd-clear-btn {
+  background: transparent;
+  border: 0;
+  color: #94a3b8;
+  font-size: 1.1rem;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.cmd-clear-btn:hover {
+  color: #0f172a;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .cmd-clear-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.cmd-esc-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.06);
+  color: #64748b;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .cmd-esc-badge {
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* --------------------------------------------------------------------------
+   RESULTS LIST
+   -------------------------------------------------------------------------- */
+.cmd-results-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 420px;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Custom smooth scrollbar */
+.cmd-results-list::-webkit-scrollbar {
+  width: 6px;
+}
+.cmd-results-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+}
+[data-theme="dark"] .cmd-results-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.cmd-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cmd-item:hover,
+.cmd-item.active {
+  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(37, 99, 235, 0.2);
+}
+
+[data-theme="dark"] .cmd-item:hover,
+[data-theme="dark"] .cmd-item.active {
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(96, 165, 250, 0.3);
+}
+
+.cmd-item-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.04);
+  color: #2563eb;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .cmd-item-icon-box {
+  background: rgba(255, 255, 255, 0.08);
+  color: #60a5fa;
+}
+
+.cmd-item.active .cmd-item-icon-box {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .cmd-item.active .cmd-item-icon-box {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.cmd-item-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cmd-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cmd-item-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .cmd-item-title {
+  color: #f8fafc;
+}
+
+.cmd-item-category {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.05);
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .cmd-item-category {
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
+.cmd-item-subtitle {
+  font-size: 0.78rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .cmd-item-subtitle {
+  color: #94a3b8;
+}
+
+.cmd-item-enter {
+  opacity: 0;
+  color: #2563eb;
+  font-size: 0.9rem;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: translateX(-3px);
+}
+
+.cmd-item.active .cmd-item-enter {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+[data-theme="dark"] .cmd-item.active .cmd-item-enter {
+  color: #60a5fa;
+}
+
+/* Empty state */
+.cmd-empty-state {
+  padding: 36px 20px;
+  text-align: center;
+  color: #64748b;
+}
+
+.cmd-empty-state p {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 6px;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .cmd-empty-state p {
+  color: #f8fafc;
+}
+
+.cmd-empty-state small {
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+/* --------------------------------------------------------------------------
+   FOOTER BAR
+   -------------------------------------------------------------------------- */
+.cmd-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  background: rgba(0, 0, 0, 0.025);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 0.76rem;
+  color: #64748b;
+}
+
+[data-theme="dark"] .cmd-footer {
+  background: rgba(0, 0, 0, 0.25);
+  border-top-color: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
+.cmd-footer-shortcuts {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cmd-shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cmd-kbd {
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #475569;
+}
+
+[data-theme="dark"] .cmd-kbd {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #cbd5e1;
+}
+
+.cmd-brand-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #94a3b8;
+}

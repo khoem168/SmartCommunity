@@ -71,6 +71,8 @@ const getCourses = async (req, res, next) => {
 const getCourseDetail = async (req, res, next) => {
   try {
     const userId = req.user?.id || 0;
+    const slugOrId = req.params.courseSlug;
+    const isNum = !isNaN(Number(slugOrId));
     const [[course]] = await db.query(
       `SELECT c.*,
               COUNT(DISTINCT l.id) AS lesson_count,
@@ -81,9 +83,9 @@ const getCourseDetail = async (req, res, next) => {
        LEFT JOIN course_lessons l ON l.course_id = c.id
        LEFT JOIN course_enrollments e
          ON e.course_id = c.id AND e.user_id = ?
-       WHERE c.slug = ? AND c.is_published = 1
+       WHERE (c.slug = ? OR (1 = ? AND c.id = ?)) AND c.is_published = 1
        GROUP BY c.id`,
-      [userId, req.params.courseSlug],
+      [userId, slugOrId, isNum ? 1 : 0, isNum ? Number(slugOrId) : 0],
     );
     if (!course) return res.status(404).json({ error: "Course not found." });
 
@@ -118,13 +120,15 @@ const getCourseDetail = async (req, res, next) => {
 
 const getCourseLesson = async (req, res, next) => {
   try {
+    const slugOrId = req.params.courseSlug;
+    const isNum = !isNaN(Number(slugOrId));
     const [[lesson]] = await db.query(
       `SELECT l.*, c.id AS course_id, c.slug AS course_slug,
               c.title AS course_title, c.is_published
        FROM course_lessons l
        JOIN courses c ON c.id = l.course_id
-       WHERE l.id = ? AND c.slug = ?`,
-      [Number(req.params.lessonId), req.params.courseSlug],
+       WHERE l.id = ? AND (c.slug = ? OR (1 = ? AND c.id = ?))`,
+      [Number(req.params.lessonId), slugOrId, isNum ? 1 : 0, isNum ? Number(slugOrId) : 0],
     );
     if (!lesson || !lesson.is_published) {
       return res.status(404).json({ error: "Lesson not found." });

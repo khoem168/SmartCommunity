@@ -1,22 +1,31 @@
 .mentorship-page {
   min-height: 70vh;
   padding-bottom: 64px;
-  background: #fff;
+  background: var(--bg);
+  position: relative;
+  isolation: isolate;
 }
 
 .mentorship-hero {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: clamp(66px, 8vw, 104px) 20px clamp(62px, 7vw, 92px);
-  background:
-    radial-gradient(circle at 8% 12%, rgba(45, 212, 191, 0.2), transparent 25%),
-    radial-gradient(
-      circle at 92% 22%,
-      rgba(37, 99, 235, 0.13),
-      transparent 28%
-    ),
-    linear-gradient(180deg, #f7fffd 0%, #f7f9fc 100%);
+  padding: clamp(66px, 8vw, 100px) 20px clamp(50px, 6vw, 76px);
+  background: transparent;
+}
+
+.mentorship-hero::before {
+  content: "";
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 640px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.16) 0%, rgba(20, 184, 166, 0.08) 50%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .mentorship-hero .hero-content {
@@ -29,11 +38,23 @@
   margin: 12px 0 16px;
   font-size: clamp(2.1rem, 5vw, 3.7rem);
   line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .mentorship-hero h1 {
+  color: #f8fafc;
 }
 
 .mentorship-hero p {
-  color: #526178;
-  line-height: 1.7;
+  color: #64748b;
+  line-height: 1.65;
+  font-size: 1.06rem;
+}
+
+[data-theme="dark"] .mentorship-hero p {
+  color: #94a3b8;
 }
 
 .mentorship-hero-actions,
@@ -93,10 +114,20 @@
 .mentor-admin-panel,
 .my-mentorships {
   padding: 24px;
-  border: 1px solid #dbeafe;
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.07);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+[data-theme="dark"] .mentor-application-form,
+[data-theme="dark"] .mentor-admin-panel,
+[data-theme="dark"] .my-mentorships {
+  background: rgba(18, 24, 38, 0.74);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.65);
 }
 
 .mentor-form-grid {
@@ -116,8 +147,16 @@
 .booking-review-form label {
   display: grid;
   gap: 7px;
-  color: #334155;
-  font-weight: 700;
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+[data-theme="dark"] .mentor-form-grid label,
+[data-theme="dark"] .mentor-application-card label,
+[data-theme="dark"] .mentorship-booking-card label,
+[data-theme="dark"] .booking-review-form label {
+  color: #e2e8f0;
 }
 
 .mentor-form-grid input,
@@ -126,12 +165,33 @@
 .mentorship-booking-card textarea,
 .booking-review-form select {
   width: 100%;
-  border: 1px solid #cbd5e1;
-  border-radius: 9px;
-  padding: 11px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 12px 16px;
   color: #0f172a;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
   font: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .mentor-form-grid input,
+[data-theme="dark"] .mentor-form-grid textarea,
+[data-theme="dark"] .mentor-application-card textarea,
+[data-theme="dark"] .mentorship-booking-card textarea,
+[data-theme="dark"] .booking-review-form select {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+}
+
+.mentor-form-grid input:focus,
+.mentor-form-grid textarea:focus,
+.mentor-application-card textarea:focus,
+.mentorship-booking-card textarea:focus,
+.booking-review-form select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
 }
 
 .mentor-form-grid textarea,
@@ -146,7 +206,11 @@
   grid-template-columns: minmax(0, 1fr) minmax(240px, 0.55fr);
   gap: 16px;
   padding: 17px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="dark"] .mentor-application-card {
+  border-top-color: rgba(255, 255, 255, 0.08);
 }
 
 .mentor-application-card .mentor-card-actions {
@@ -158,46 +222,93 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
   gap: 12px;
-  margin-bottom: 20px;
-  padding: 14px;
-  border: 1px solid #e2e8f0;
-  border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.055);
+  margin-bottom: 24px;
+  padding: 14px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.05);
+  backdrop-filter: blur(20px);
+}
+
+[data-theme="dark"] .mentor-search-panel {
+  background: rgba(25, 33, 52, 0.82) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 16px 42px -6px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 24px -4px rgba(59, 130, 246, 0.2) !important;
 }
 
 .mentor-search-panel label {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 9px;
-  padding: 0 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 9px;
+  gap: 10px;
+  padding: 0 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+}
+
+.mentor-search-panel label svg {
+  color: #2563eb;
+  font-size: 1.15rem;
+}
+
+[data-theme="dark"] .mentor-search-panel label {
+  background: rgba(30, 42, 68, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+[data-theme="dark"] .mentor-search-panel label svg {
+  color: #60a5fa !important;
+  filter: drop-shadow(0 0 6px rgba(96, 165, 250, 0.4));
 }
 
 .mentor-search-panel input,
 .mentor-search-panel select {
   width: 100%;
-  min-height: 46px;
+  min-height: 44px;
   border: 0;
   outline: 0;
   color: #0f172a;
-  background: #fff;
+  background: transparent;
   font: inherit;
+  font-weight: 500;
+}
+
+.mentor-search-panel input::placeholder {
+  color: #64748b;
+  opacity: 0.85;
+}
+
+[data-theme="dark"] .mentor-search-panel input,
+[data-theme="dark"] .mentor-search-panel select {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .mentor-search-panel input::placeholder {
+  color: rgba(226, 232, 240, 0.72) !important;
+  opacity: 1 !important;
 }
 
 .mentor-search-panel select {
-  padding: 0 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 9px;
+  padding: 0 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] .mentor-search-panel select {
+  background: rgba(30, 42, 68, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
 }
 
 .mentor-grid,
 .mentorship-booking-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 17px;
+  gap: 20px;
 }
 
 .mentorship-page .mentor-card,
@@ -205,21 +316,32 @@
   display: grid;
   align-content: start;
   gap: 15px;
-  padding: 21px;
-  border: 1px solid #e2e8f0;
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.07);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   transition:
-    transform 0.25s ease,
+    transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.15),
     box-shadow 0.25s ease,
     border-color 0.25s ease;
 }
 
+[data-theme="dark"] .mentorship-page .mentor-card,
+[data-theme="dark"] .mentorship-booking-card {
+  background: rgba(18, 24, 38, 0.74);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.65);
+}
+
 .mentorship-page .mentor-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(15, 118, 110, 0.24);
-  box-shadow: 0 24px 52px rgba(15, 23, 42, 0.12);
+  border-color: rgba(37, 99, 235, 0.35);
+  box-shadow:
+    0 24px 52px -10px rgba(37, 99, 235, 0.14),
+    0 8px 20px -2px rgba(15, 23, 42, 0.06);
 }
 
 .mentorship-page .mentor-card .btn {
@@ -242,6 +364,7 @@
 
 .mentor-card-person > img {
   object-fit: cover;
+  object-position: center top;
 }
 
 .mentor-card-person > span {
