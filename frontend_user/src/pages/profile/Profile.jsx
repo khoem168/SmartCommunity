@@ -22,6 +22,9 @@ import {
   uploadAvatarRequest,
   uploadProjectImageRequest,
 } from "../../services/profileService";
+import StudentProfileView from "./StudentProfileView";
+import RecruiterProfileView from "./RecruiterProfileView";
+import MentorProfileView from "./MentorProfileView";
 import "./Profile.css";
 
 const splitList = (value = "") =>
@@ -283,6 +286,7 @@ const Profile = () => {
   const { user, updateUser, refreshUser } = useGlobleContext();
   const [profile, setProfile] = useState(null);
   const [editing, setEditing] = useState(false);
+  const [adminRoleView, setAdminRoleView] = useState("admin");
   const [form, setForm] = useState({});
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -400,313 +404,157 @@ const Profile = () => {
     }
   };
 
+  const handleMentorProfileUpdate = async (updates) => {
+    await updateUser(updates);
+    await reloadProfile();
+    await refreshUser();
+  };
+
   const uploadProjectBeforeSave = async (payload, imageFile) => {
     if (!imageFile) return payload;
     const result = await uploadProjectImageRequest(imageFile);
     return { ...payload, imageUrl: result.imageUrl };
   };
 
+  // Determine effective role
+  const effectiveRole =
+    user.role === "admin" && adminRoleView !== "admin"
+      ? adminRoleView
+      : user.role;
+
+  const renderAdminSwitcher = () => (
+    <div className="container" style={{ paddingTop: "1rem" }}>
+      <div className="admin-role-switcher glass">
+        <span>👑 Admin Role Preview:</span>
+        {["admin", "student", "recruiter", "mentor"].map((r) => (
+          <button
+            key={r}
+            type="button"
+            className={`role-switch-btn ${adminRoleView === r ? "active" : ""}`}
+            onClick={() => setAdminRoleView(r)}
+          >
+            {r.toUpperCase()} VIEW
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <main className="profile-page">
-      <section className="profile-hero">
-        <div className="container profile-hero-inner">
-          <div className="profile-identity">
-            <div className="profile-avatar-wrap">
-              <UserAvatar
-                user={profileUser}
-                className="profile-large-avatar"
-              />
-              <label
-                className="profile-avatar-upload"
-                title="Upload profile picture"
-              >
-                <IoCameraOutline />
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  onChange={handleAvatar}
-                  disabled={busy}
-                />
-              </label>
-            </div>
-            <div>
-              <p className="eyebrow">{profileUser.role}</p>
-              <h1>{profileUser.fullName}</h1>
-              <p>
-                {profileUser.bio ||
-                  profileUser.careerGoal ||
-                  "Build your skills and career with the community."}
-              </p>
-              <div className="profile-social-links">
-                {profileUser.githubUrl && (
-                  <a
-                    href={profileUser.githubUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <IoLogoGithub /> GitHub
-                  </a>
-                )}
-                {profileUser.linkedinUrl && (
-                  <a
-                    href={profileUser.linkedinUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <IoLogoLinkedin /> LinkedIn
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-          <button className="btn primary" type="button" onClick={beginEdit}>
-            Edit profile
-          </button>
-        </div>
-      </section>
+      {user.role === "admin" && renderAdminSwitcher()}
 
-      <section className="section container profile-content">
-        {message && <div className="profile-success">{message}</div>}
-        {error && <div className="profile-error">{error}</div>}
-
-        {editing && (
-          <section className="profile-panel profile-editor-panel">
-            <div className="profile-section-heading">
-              <h2>Personal and career information</h2>
-            </div>
-            <form
-              className="profile-edit-form profile-edit-grid"
-              onSubmit={handleSave}
-            >
-              {[
-                ["fullName", "Full name"],
-                ["location", "Location"],
-                ["jobTitle", "Profession or job title"],
-                ["recruiterCompany", "Company"],
-                ["githubUrl", "GitHub URL", "url"],
-                ["linkedinUrl", "LinkedIn URL", "url"],
-                ["availability", "Availability"],
-                ["experienceLevel", "Experience level"],
-                ["skillsToTeach", "Skills I can teach"],
-                ["skillsToLearn", "Skills I want to learn"],
-                ["interestedSkills", "Interested skills"],
-              ].map(([name, label, type]) => (
-                <label key={name}>
-                  {label}
-                  <input
-                    type={type || "text"}
-                    value={form[name] || ""}
-                    onChange={(event) =>
-                      setForm((current) => ({
-                        ...current,
-                        [name]: event.target.value,
-                      }))
-                    }
-                  />
-                </label>
-              ))}
-              <label className="profile-wide-field">
-                Bio
-                <textarea
-                  value={form.bio || ""}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      bio: event.target.value,
-                    }))
-                  }
-                />
-              </label>
-              <label className="profile-wide-field">
-                Career goal
-                <textarea
-                  value={form.careerGoal || ""}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      careerGoal: event.target.value,
-                    }))
-                  }
-                />
-              </label>
-              <div className="profile-form-actions profile-wide-field">
-                <button
-                  className="btn outline"
-                  type="button"
-                  onClick={() => setEditing(false)}
-                >
-                  Cancel
-                </button>
-                <button className="btn primary" disabled={busy}>
-                  {busy ? "Saving..." : "Save profile"}
-                </button>
-              </div>
-            </form>
-          </section>
-        )}
-
-        <div className="profile-overview-grid">
-          <section className="profile-panel">
-            <h2>Career overview</h2>
-            <div className="profile-info-list">
-              <span>
-                <IoBriefcaseOutline />{" "}
-                {profileUser.profession || "Add your profession"}
-              </span>
-              <span>
-                <IoSchoolOutline /> {skillData.experienceLevel || "Beginner"}{" "}
-                level
-              </span>
-              <span>
-                <IoCalendarOutline /> Joined {formatDate(profileUser.createdAt)}
-              </span>
-            </div>
-            {profileUser.careerGoal && (
-              <p className="profile-career-goal">{profileUser.careerGoal}</p>
-            )}
-          </section>
-          <section className="profile-panel">
-            <h2>Skills and interests</h2>
-            <div className="profile-skill-group">
-              <strong>Teach</strong>
-              <div className="profile-skill-wrap">
-                {skillsToTeach.map((skill) => (
-                  <span className="profile-skill" key={skill}>
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="profile-skill-group">
-              <strong>Learn</strong>
-              <div className="profile-skill-wrap">
-                {skillsToLearn.map((skill) => (
-                  <span className="profile-skill" key={skill}>
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="profile-skill-group">
-              <strong>Interested</strong>
-              <div className="profile-skill-wrap">
-                {(profileUser.interestedSkills || []).map((skill) => (
-                  <span className="profile-skill interested" key={skill}>
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </section>
-        </div>
-
-        <div className="profile-record-grid">
-          <ProfileRecordSection
-            title="Education"
-            icon={<IoSchoolOutline />}
-            resource="education"
-            fields={educationFields}
-            items={profile?.education || []}
-            emptyText="Add your education history."
-            onChanged={reloadProfile}
-            renderItem={(item) => (
-              <>
-                <h3>{item.institution}</h3>
-                <p>
-                  {[item.degree, item.fieldOfStudy].filter(Boolean).join(" · ")}
-                </p>
-                <small>
-                  {formatDate(item.startDate)} – {formatDate(item.endDate)}
-                </small>
-                {item.description && <p>{item.description}</p>}
-              </>
-            )}
-          />
-          <ProfileRecordSection
-            title="Experience"
-            icon={<IoBriefcaseOutline />}
-            resource="experiences"
-            fields={experienceFields}
-            items={profile?.experiences || []}
-            emptyText="Add your professional experience."
-            onChanged={reloadProfile}
-            renderItem={(item) => (
-              <>
-                <h3>{item.title}</h3>
-                <p>
-                  {item.company}
-                  {item.employmentType ? ` · ${item.employmentType}` : ""}
-                </p>
-                <small>
-                  {formatDate(item.startDate)} –{" "}
-                  {item.isCurrent ? "Present" : formatDate(item.endDate)}
-                </small>
-                {item.description && <p>{item.description}</p>}
-              </>
-            )}
-          />
-          <ProfileRecordSection
-            title="Certificates"
-            icon={<IoRibbonOutline />}
-            resource="certificates"
-            fields={certificateFields}
-            items={profile?.certificates || []}
-            emptyText="Add certificates and credentials."
-            onChanged={reloadProfile}
-            renderItem={(item) => (
-              <>
-                <h3>{item.name}</h3>
-                <p>{item.issuer || "Certificate"}</p>
-                <small>{formatDate(item.issueDate)}</small>
-                {item.credentialUrl && (
-                  <a href={item.credentialUrl} target="_blank" rel="noreferrer">
-                    View credential
-                  </a>
-                )}
-              </>
-            )}
-          />
-        </div>
-
-        <ProfileRecordSection
-          title="Portfolio projects"
-          icon={<IoLogoGithub />}
-          resource="projects"
-          fields={projectFields}
-          items={profile?.projects || []}
-          emptyText="Upload your first portfolio project."
-          onChanged={reloadProfile}
-          beforeSubmit={uploadProjectBeforeSave}
-          renderItem={(item) => (
-            <div className="portfolio-record">
-              {item.imageUrl && <img src={item.imageUrl} alt="" />}
-              <div>
-                <h3>{item.title}</h3>
-                {item.description && <p>{item.description}</p>}
-                <div className="profile-skill-wrap">
-                  {item.technologies.map((technology) => (
-                    <span className="profile-skill" key={technology}>
-                      {technology}
-                    </span>
-                  ))}
-                </div>
-                <div className="portfolio-links">
-                  {item.projectUrl && (
-                    <a href={item.projectUrl} target="_blank" rel="noreferrer">
-                      Live project
-                    </a>
-                  )}
-                  {item.githubUrl && (
-                    <a href={item.githubUrl} target="_blank" rel="noreferrer">
-                      GitHub
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
+      {/* Recruiter Role View */}
+      {effectiveRole === "recruiter" ? (
+        <RecruiterProfileView user={profileUser} />
+      ) : effectiveRole === "mentor" ? (
+        /* Mentor Role View */
+        <MentorProfileView
+          user={profileUser}
+          onAvatarUpload={handleAvatar}
+          onUpdateMentorProfile={handleMentorProfileUpdate}
         />
-      </section>
+      ) : (
+        /* Student Role View (Default) */
+        <>
+          <div className="container">
+            {message && <div className="profile-success">{message}</div>}
+            {error && <div className="profile-error">{error}</div>}
+          </div>
+
+          {editing && (
+            <section className="container section">
+              <div className="profile-panel profile-editor-panel glass">
+                <div className="profile-section-heading">
+                  <h2>Personal and Career Information</h2>
+                </div>
+                <form
+                  className="profile-edit-form profile-edit-grid"
+                  onSubmit={handleSave}
+                >
+                  {[
+                    ["fullName", "Full name"],
+                    ["location", "Location"],
+                    ["jobTitle", "Profession or job title"],
+                    ["recruiterCompany", "Company"],
+                    ["githubUrl", "GitHub URL", "url"],
+                    ["linkedinUrl", "LinkedIn URL", "url"],
+                    ["availability", "Availability"],
+                    ["experienceLevel", "Experience level"],
+                    ["skillsToTeach", "Skills I can teach"],
+                    ["skillsToLearn", "Skills I want to learn"],
+                    ["interestedSkills", "Interested skills"],
+                  ].map(([name, label, type]) => (
+                    <label key={name}>
+                      {label}
+                      <input
+                        type={type || "text"}
+                        value={form[name] || ""}
+                        onChange={(event) =>
+                          setForm((current) => ({
+                            ...current,
+                            [name]: event.target.value,
+                          }))
+                        }
+                      />
+                    </label>
+                  ))}
+                  <label className="profile-wide-field">
+                    Bio
+                    <textarea
+                      value={form.bio || ""}
+                      onChange={(event) =>
+                        setForm((current) => ({
+                          ...current,
+                          bio: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className="profile-wide-field">
+                    Career goal
+                    <textarea
+                      value={form.careerGoal || ""}
+                      onChange={(event) =>
+                        setForm((current) => ({
+                          ...current,
+                          careerGoal: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <div className="profile-form-actions profile-wide-field">
+                    <button
+                      className="btn outline"
+                      type="button"
+                      onClick={() => setEditing(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button className="btn primary" disabled={busy}>
+                      {busy ? "Saving..." : "Save profile"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+          )}
+
+          <StudentProfileView
+            user={profileUser}
+            profileData={profile}
+            onAvatarUpload={handleAvatar}
+            onBeginEdit={beginEdit}
+            renderRecordSection={(props) => <ProfileRecordSection {...props} />}
+            educationFields={educationFields}
+            experienceFields={experienceFields}
+            certificateFields={certificateFields}
+            projectFields={projectFields}
+            onRecordChanged={reloadProfile}
+            onUploadProjectBeforeSave={uploadProjectBeforeSave}
+          />
+        </>
+      )}
     </main>
   );
 };
