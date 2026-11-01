@@ -20,3 +20,4 @@ export { default as Settings } from "./settings/Settings";
 export { default as Messages } from "./messages/Messages";
 export { default as LearningSessions } from "./sessions/LearningSessions";
 export { default as SessionRoom } from "./sessions/SessionRoom";
+export { default as SkillExchangeHub } from "./exchange/SkillExchangeHub";

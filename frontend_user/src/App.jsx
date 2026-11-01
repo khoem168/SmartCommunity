@@ -26,6 +26,7 @@ const SessionRoom = lazy(() => import("./pages/sessions/SessionRoom"));
 const Discover = lazy(() => import("./pages/discover/Discover"));
 const DiscoverProfile = lazy(() => import("./pages/discover/DiscoverProfile"));
 const SkillRequests = lazy(() => import("./pages/discover/SkillRequests"));
+const SkillExchangeHub = lazy(() => import("./pages/exchange/SkillExchangeHub"));
 const Jobs = lazy(() => import("./pages/Jobs/Jobs"));
 const StudentApplicationTracker = lazy(() => import("./pages/Jobs/StudentApplicationTracker"));
 const RecruiterATS = lazy(() => import("./pages/Jobs/RecruiterATS"));
@@ -87,8 +88,14 @@ const routes = createBrowserRouter(
         <Route path="sessions" element={pageElement(LearningSessions, "Loading live sessions...")} />
         <Route path="sessions/:sessionId" element={pageElement(LearningSessions, "Loading session...")} />
         <Route path="sessions/:sessionId/room" element={protectedPage(SessionRoom, "Preparing session room...")} />
-        <Route path="discover" element={protectedPage(Discover, "Finding community members...")} />
+        {/* Unified Skill Exchange Hub & Backward-Compatible URLs */}
+        <Route path="skill-exchange" element={protectedPage(SkillExchangeHub, "Preparing Skill Exchange Hub...")} />
+        <Route path="exchange" element={protectedPage(SkillExchangeHub, "Preparing Skill Exchange Hub...")} />
+        <Route path="discover" element={protectedPage(() => <SkillExchangeHub initialTab="match" />, "Finding skill partners...")} />
         <Route path="discover/:memberId" element={protectedPage(DiscoverProfile, "Loading member profile...")} />
+        <Route path="community" element={protectedPage(() => <SkillExchangeHub initialTab="match" />, "Loading skill exchanges...")} />
+        <Route path="skill-requests" element={protectedPage(() => <SkillExchangeHub initialTab="swaps" />, "Loading skill requests...")} />
+        <Route path="community/skill-exchange/:exchangeId" element={protectedPage(SkillExchangeDetail, "Loading skill exchange...")} />
         <Route path="jobs" element={pageElement(Jobs, "Loading opportunities...")} />
         {/* Role-Specific Application Management */}
         <Route
@@ -116,17 +123,14 @@ const routes = createBrowserRouter(
         <Route path="career" element={pageElement(CareerDevelopment, "Loading career roadmap...")} />
         <Route path="mentorship" element={pageElement(Mentorship, "Loading mentors...")} />
         <Route path="mentorship/:mentorId" element={pageElement(MentorDetail, "Loading mentor profile...")} />
-        <Route path="community" element={pageElement(Community, "Loading community...")} />
         <Route path="forum" element={pageElement(Forum, "Loading forum...")} />
         <Route path="forum/:postId" element={pageElement(ForumDetail, "Loading discussion...")} />
-        <Route path="community/skill-exchange/:exchangeId" element={protectedPage(SkillExchangeDetail, "Loading skill exchange...")} />
         <Route
           path="post-job"
           element={protectedPage(PostJob, "Preparing internship form...", ["recruiter", "admin"])}
         />
         <Route path="profile" element={protectedPage(Profile, "Loading your profile...")} />
         <Route path="settings" element={protectedPage(Settings, "Loading settings...")} />
-        <Route path="skill-requests" element={protectedPage(SkillRequests, "Loading skill requests...")} />
         <Route path="messages" element={protectedPage(Messages, "Loading messages...")} />
         <Route path="messages/:conversationId" element={protectedPage(Messages, "Loading conversation...")} />
         <Route path="notifications" element={protectedPage(Notifications, "Loading notifications...")} />

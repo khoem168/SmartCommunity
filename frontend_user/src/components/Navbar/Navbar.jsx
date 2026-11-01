@@ -12,7 +12,7 @@ import "./navbar.css";
 
 const defaultNavItems = [
   { sectionId: "courses", path: "/courses", labelEn: "Courses", labelKm: "វគ្គសិក្សា" },
-  { sectionId: "exchange", path: "/discover", labelEn: "Exchange", labelKm: "ប្តូរជំនាញ" },
+  { sectionId: "exchange", path: "/skill-exchange", labelEn: "Skill Swap", labelKm: "ប្តូរជំនាញ" },
   { sectionId: "mentors", path: "/mentorship", labelEn: "Mentors", labelKm: "អ្នកណែនាំ" },
   { sectionId: "sessions", path: "/sessions", labelEn: "Live", labelKm: "Live" },
   { sectionId: "career", path: "/career", labelEn: "Career", labelKm: "អាជីព" },

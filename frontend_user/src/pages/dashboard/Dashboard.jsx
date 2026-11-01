@@ -907,7 +907,7 @@ export default function Dashboard() {
   // =========================================================================
   const studentStats = [
     [FiBookOpen, widgets.enrolledCourses || 0, t("refresh.enrolledCourses"), "/courses"],
-    [IoSwapHorizontalOutline, widgets.activeExchanges || 0, t("refresh.activeExchanges"), "/skill-requests"],
+    [IoSwapHorizontalOutline, widgets.activeExchanges || 0, t("refresh.activeExchanges"), "/skill-exchange?tab=swaps"],
     [FiBriefcase, widgets.applications || 0, t("refresh.applications"), "/my-applications"],
     [FiBell, widgets.unreadNotifications || 0, t("refresh.unread"), "/notifications"],
   ];
@@ -1162,7 +1162,7 @@ export default function Dashboard() {
                   <p>{t("refresh.exchangesTitle")}</p>
                   <h2>{t("refresh.exchangesTitle")}</h2>
                 </div>
-                <Link to="/skill-requests">
+                <Link to="/skill-exchange?tab=swaps">
                   {t("refresh.viewAll")} <FiArrowRight />
                 </Link>
               </header>
