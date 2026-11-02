@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer-core");
 const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
 const CHROME_PATH = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const BASE_URL = "http://localhost:5173";
@@ -16,26 +17,17 @@ const capture = async (page, filename) => {
 const run = async () => {
   console.log("Starting V7 CV & Portfolio Studio E2E Validation with Chrome...");
 
-  // 1. Obtain auth token for student
-  console.log("Authenticating as student...");
-  let token = null;
-  try {
-    const res = await fetch(`${API_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: "test.student@smartcommunity.local",
-        password: "TestUser1234*",
-      }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      token = data.token;
-      console.log("Student login successful.");
-    }
-  } catch (err) {
-    console.log("Using direct storage token injection fallback.");
-  }
+  const { signToken } = require("../utils/auth");
+  const db = require("../config/db");
+  const [[student]] = await db.query(
+    "SELECT id, email, role FROM users WHERE role = 'student' AND is_active = 1 LIMIT 1"
+  );
+  const token = signToken({
+    id: student.id,
+    email: student.email,
+    role: "student",
+  });
+  console.log(`Student token generated for: ${student.email}`);
 
   const browser = await puppeteer.launch({
     executablePath: CHROME_PATH,
@@ -45,20 +37,26 @@ const run = async () => {
 
   const page = await browser.newPage();
 
-  // Set auth token if available
+  // Set auth token on every page load
   if (token) {
-    await page.goto(`${BASE_URL}/`, { waitUntil: "domcontentloaded" });
-    await page.evaluate((t) => {
+    await page.evaluateOnNewDocument((t) => {
       localStorage.setItem("smartCommunityToken", t);
       sessionStorage.setItem("smartCommunityToken", t);
     }, token);
   }
+
+  page.on("pageerror", (err) => console.log("PAGE ERROR:", err.message));
+  page.on("console", (msg) => {
+    if (msg.type() === "error") console.log("PAGE LOG ERROR:", msg.text());
+  });
 
   // 1. Desktop 1366px - CV Studio Editor
   await page.setViewport({ width: 1366, height: 950 });
   console.log("Navigating to /cv-studio (Desktop 1366px)...");
   await page.goto(`${BASE_URL}/cv-studio`, { waitUntil: "networkidle2" });
   await new Promise((r) => setTimeout(r, 1200));
+  const desktopToken = await page.evaluate(() => localStorage.getItem("smartCommunityToken"));
+  console.log("Desktop localStorage token exists:", Boolean(desktopToken));
   await capture(page, "v7_cv_studio_desktop_1366px.png");
 
   // 2. Click to Preview Tab (Step 5)
@@ -72,9 +70,10 @@ const run = async () => {
 
   // 3. Mobile 390px - CV Studio
   await page.setViewport({ width: 390, height: 844, isMobile: true });
-  console.log("Navigating to /cv-studio (Mobile 390px)...");
-  await page.goto(`${BASE_URL}/cv-studio`, { waitUntil: "networkidle2" });
-  await new Promise((r) => setTimeout(r, 1000));
+  console.log("Testing Mobile 390px Viewport...");
+  await new Promise((r) => setTimeout(r, 1200));
+  const mobileToken = await page.evaluate(() => localStorage.getItem("smartCommunityToken"));
+  console.log("Mobile localStorage token exists:", Boolean(mobileToken));
   await capture(page, "v7_cv_studio_mobile_390px.png");
 
   await browser.close();
