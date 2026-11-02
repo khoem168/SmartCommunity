@@ -87,7 +87,6 @@ export default function Navbar() {
             alt=""
             className="nav-logo-icon"
             aria-hidden="true"
-            style={{ width: "26px", height: "26px", objectFit: "contain" }}
           />
           <span>
             Smart <span className="logo-accent">Community</span>

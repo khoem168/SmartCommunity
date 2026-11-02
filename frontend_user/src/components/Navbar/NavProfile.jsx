@@ -73,20 +73,39 @@ export const NavProfile = ({ user = {}, onLogout }) => {
         aria-haspopup="true"
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
+        title={user.fullName || user.email}
       >
         <UserAvatar user={user} className="profile-avatar" />
         <div className="profile-text">
-          <strong>{user.fullName || user.email}</strong>
+          <strong title={user.fullName || user.email}>
+            {user.fullName || user.email}
+          </strong>
           <small>{roleLabel}</small>
         </div>
       </button>
 
       {open && (
         <div className="profile-menu" role="menu">
+          {/* Full Name & Role Header Card */}
+          <div className="profile-menu-header">
+            <UserAvatar user={user} className="profile-menu-header-avatar" />
+            <div className="profile-menu-header-info">
+              <strong className="profile-menu-header-name" title={user.fullName || user.email}>
+                {user.fullName || user.email}
+              </strong>
+              <div className="profile-menu-header-meta">
+                <span className="profile-role-badge">{roleLabel}</span>
+                {user.email && (
+                  <span className="profile-email-sub">{user.email}</span>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="profile-menu-divider" />
+
           <Link
             to="/dashboard"
-            className="profile-menu-item"
-            style={{ fontWeight: "700", color: "#2563eb" }}
+            className="profile-menu-item profile-menu-item-highlight"
             onClick={() => setOpen(false)}
           >
             {isKm ? "ផ្ទាំងការងារ (Workspace)" : "Workspace"}
