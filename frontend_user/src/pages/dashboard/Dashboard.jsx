@@ -323,9 +323,15 @@ const SmartActionCenter = ({ actions, isKm }) => {
             <p>{isKm ? "កិច្ចការបន្ទាន់ដែលអ្នកត្រូវធ្វើបន្ទាប់" : "Tasks that require your immediate attention"}</p>
           </div>
         </div>
-        <span className="sc-action-count-pill">
-          {actions.length} {isKm ? "កិច្ចការ" : actions.length === 1 ? "task" : "tasks"}
-        </span>
+        <div className="sc-action-header-right">
+          <a href="/calendar" className="sc-action-calendar-btn">
+            <FiCalendar />
+            <span>{isKm ? "កាលវិភាគសកម្មភាព" : "Activity Calendar"}</span>
+          </a>
+          <span className="sc-action-count-pill">
+            {actions.length} {isKm ? "កិច្ចការ" : actions.length === 1 ? "task" : "tasks"}
+          </span>
+        </div>
       </div>
 
       {actions.length > 0 ? (

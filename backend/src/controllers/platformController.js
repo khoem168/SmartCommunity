@@ -210,7 +210,11 @@ const getDashboard = async (req, res, next) => {
                   student.avatar_url AS student_avatar, student.email AS student_email
            FROM mentorships m
            JOIN users student ON student.id = m.student_id
-           LEFT JOIN mentorship_sessions ms ON ms.mentorship_id = m.id
+           LEFT JOIN mentorship_sessions ms ON ms.id = (
+             SELECT id FROM mentorship_sessions
+             WHERE mentorship_id = m.id
+             ORDER BY scheduled_time DESC LIMIT 1
+           )
            WHERE m.mentor_id = ?
            ORDER BY m.requested_time DESC LIMIT 6`,
           [userId],

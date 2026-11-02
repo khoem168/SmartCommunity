@@ -480,6 +480,39 @@
   color: var(--soft, #64748b);
 }
 
+.sc-action-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sc-action-calendar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.1);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .sc-action-calendar-btn {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.sc-action-calendar-btn:hover {
+  background: rgba(2, 132, 199, 0.2);
+  transform: translateY(-1px);
+}
+
 .sc-action-count-pill {
   display: inline-flex;
   align-items: center;

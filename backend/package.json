@@ -15,12 +15,14 @@
     "seed:community-exchanges": "node src/scripts/seedCommunityExchanges.js",
     "seed:admin": "node src/scripts/seedAdmin.js",
     "seed:showcase": "npm run seed:admin && npm run seed:community-users && npm run seed:community-exchanges && npm run seed:demo",
+    "seed:fixtures": "node src/scripts/seedTestFixtures.js",
     "test:chat": "node src/scripts/testChat.js",
     "test:sessions": "node src/scripts/testLearningSessions.js",
     "test:notifications": "node src/scripts/testNotifications.js",
     "test:analytics": "node src/scripts/testAnalytics.js",
     "test:admin": "node src/scripts/testAdmin.js",
     "test:courses": "node src/scripts/testCourses.js",
+    "test:calendar": "node src/scripts/testCalendar.js",
     "test:email": "node src/scripts/testEmailService.js",
     "test:auth-features": "node src/scripts/testAuthFeatures.js",
     "test": "npm run test:auth-features && npm run test:email"
@@ -41,7 +43,8 @@
     "socket.io": "^4.8.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "puppeteer-core": "^25.16.0"
   },
   "overrides": {
     "axios": "1.19.0",

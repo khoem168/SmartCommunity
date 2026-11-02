@@ -12,6 +12,7 @@ const authRoutes = require("./routes/authRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const platformRoutes = require("./routes/platformRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const calendarRoutes = require("./routes/calendarRoutes");
 const setupSockets = require("./sockets");
 const db = require("./config/db");
 
@@ -80,6 +81,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/calendar", calendarRoutes);
 app.use("/api", platformRoutes);
 
 app.use((req, res) => {

@@ -59,6 +59,7 @@ const Messages = lazy(() => import("./pages/messages/Messages"));
 const Notifications = lazy(() => import("./pages/notifications/Notifications"));
 const AnalyticsDashboard = lazy(() => import("./pages/analytics/AnalyticsDashboard"));
 const AdminPanel = lazy(() => import("./pages/admin/AdminPanel"));
+const CalendarPage = lazy(() => import("./pages/calendar/CalendarPage"));
 
 const pageElement = (Component, label = "Loading page...") => (
   <Suspense fallback={<RouteLoader label={label} />}>
@@ -134,6 +135,7 @@ const routes = createBrowserRouter(
         <Route path="messages" element={protectedPage(Messages, "Loading messages...")} />
         <Route path="messages/:conversationId" element={protectedPage(Messages, "Loading conversation...")} />
         <Route path="notifications" element={protectedPage(Notifications, "Loading notifications...")} />
+        <Route path="calendar" element={protectedPage(CalendarPage, "Loading your calendar...")} />
         <Route
           path="analytics"
           element={protectedPage(AnalyticsDashboard, "Loading analytics...", ["admin"])}

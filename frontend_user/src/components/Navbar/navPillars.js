@@ -13,6 +13,7 @@ import {
   FiPlusCircle,
   FiShield,
   FiBarChart2,
+  FiCalendar,
 } from "react-icons/fi";
 
 export const getHybridNav = (user) => {
@@ -28,6 +29,15 @@ export const getHybridNav = (user) => {
         { path: "/profile", labelEn: "Company", labelKm: "ក្រុមហ៊ុន" },
       ],
       moreItems: [
+        {
+          path: "/calendar",
+          labelEn: "Activity Calendar",
+          labelKm: "កាលវិភាគសកម្មភាព",
+          descEn: "View candidate interviews and hiring meetings",
+          descKm: "មើលកាលវិភាគសម្ភាសន៍បេក្ខជន និងការណាត់ជួប",
+          icon: FiCalendar,
+          color: "blue",
+        },
         {
           path: "/post-job",
           labelEn: "Post an Opportunity",
@@ -108,6 +118,15 @@ export const getHybridNav = (user) => {
         { path: "/forum", labelEn: "Community", labelKm: "សហគមន៍" },
       ],
       moreItems: [
+        {
+          path: "/calendar",
+          labelEn: "Activity Calendar",
+          labelKm: "កាលវិភាគសកម្មភាព",
+          descEn: "Mentorship sessions and live workshops",
+          descKm: "កាលវិភាគ Session 1:1 និងថ្នាក់បង្រៀនផ្ទាល់",
+          icon: FiCalendar,
+          color: "emerald",
+        },
         {
           path: "/courses",
           labelEn: "Courses Library",
@@ -229,6 +248,15 @@ export const getHybridNav = (user) => {
       { path: "/forum", labelEn: "Community", labelKm: "សហគមន៍" },
     ],
     moreItems: [
+      {
+        path: "/calendar",
+        labelEn: "Activity Calendar",
+        labelKm: "កាលវិភាគសកម្មភាព",
+        descEn: "Your mentorships, live classes and interviews",
+        descKm: "កាលវិភាគរៀន សម្ភាសន៍ និងជួប Mentor ក្នុងកន្លែងតែមួយ",
+        icon: FiCalendar,
+        color: "blue",
+      },
       {
         path: "/career",
         labelEn: "Career Roadmap",
