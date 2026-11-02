@@ -10,24 +10,43 @@ export default function PillarDropdown({
   language,
 }) {
   const dropdownRef = useRef(null);
-  const triggerRef = useRef(null);
   const location = useLocation();
   const isKm = language === "km";
+  const timerRef = useRef(null);
 
-  // Check if any link in this pillar is currently active
-  const isPillarActive = pillar.items.some((item) => {
-    if (item.path === "/") return location.pathname === "/";
-    return location.pathname.startsWith(item.path);
+  const subItems = pillar.subItems || [];
+  const hasSubItems = subItems.length > 0;
+
+  // Check if current route matches this item or any of its sub-items
+  const isDirectActive = location.pathname.startsWith(pillar.primaryPath);
+  const isSubActive = hasSubItems && subItems.some((sub) => {
+    if (sub.path === "/") return location.pathname === "/";
+    return location.pathname.startsWith(sub.path);
   });
+  const isActive = isDirectActive || isSubActive;
 
-  // Handle escape key and click outside
+  // Smooth hover handling without clicking
+  const handleMouseEnter = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (hasSubItems && window.innerWidth > 1040) {
+      onToggle(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      onClose();
+    }, 180);
+  };
+
+  // Keyboard navigation & click outside
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
         onClose();
-        if (triggerRef.current) triggerRef.current.focus();
       }
     };
 
@@ -46,47 +65,47 @@ export default function PillarDropdown({
     };
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
   return (
     <div
       ref={dropdownRef}
       className={`nav-pillar-wrapper ${isOpen ? "open" : ""}`}
-      onMouseEnter={() => {
-        // Desktop gentle hover expansion
-        if (window.innerWidth > 1040) {
-          onToggle(true);
-        }
-      }}
-      onMouseLeave={() => {
-        if (window.innerWidth > 1040) {
-          onToggle(false);
-        }
-      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      <button
-        ref={triggerRef}
-        type="button"
-        className={`nav-pillar-trigger ${isPillarActive ? "active" : ""} ${
+      {/* 1-CLICK DIRECT LINK TRIGGER */}
+      <Link
+        to={pillar.primaryPath}
+        className={`nav-pillar-trigger ${isActive ? "active" : ""} ${
           isOpen ? "expanded" : ""
         }`}
-        aria-haspopup="true"
-        aria-expanded={isOpen}
-        onClick={() => onToggle(!isOpen)}
-        aria-label={`${isKm ? pillar.labelKm : pillar.labelEn} menu`}
+        onClick={onClose}
+        aria-label={isKm ? pillar.labelKm : pillar.labelEn}
       >
         <span className="pillar-trigger-label">
           {isKm ? pillar.labelKm : pillar.labelEn}
         </span>
-        <FiChevronDown
-          className={`pillar-chevron ${isOpen ? "rotated" : ""}`}
-          aria-hidden="true"
-        />
-      </button>
+        {hasSubItems && (
+          <FiChevronDown
+            className={`pillar-chevron ${isOpen ? "rotated" : ""}`}
+            aria-hidden="true"
+          />
+        )}
+      </Link>
 
-      {isOpen && (
+      {/* ZERO-CLICK HOVER PREVIEW MENU */}
+      {hasSubItems && isOpen && (
         <div
           className="pillar-dropdown-card"
           role="menu"
           aria-label={isKm ? pillar.labelKm : pillar.labelEn}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           {pillar.taglineEn && (
             <div className="pillar-dropdown-header">
@@ -100,7 +119,7 @@ export default function PillarDropdown({
           )}
 
           <div className="pillar-items-grid">
-            {pillar.items.map((item) => {
+            {subItems.map((item) => {
               const Icon = item.icon;
               const isItemActive =
                 item.path === "/"
@@ -111,7 +130,9 @@ export default function PillarDropdown({
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`pillar-menu-item ${isItemActive ? "current" : ""}`}
+                  className={`pillar-menu-item ${
+                    isItemActive ? "current" : ""
+                  }`}
                   role="menuitem"
                   onClick={onClose}
                 >
