@@ -8,8 +8,8 @@ import { useTheme } from "../../context/ThemeContext";
 import { NavProfile } from "./NavProfile";
 import { fetchNotifications } from "../../services/notificationService";
 import { getSocket } from "../../services/realtimeService";
-import { getNavPillars, getWorkspaceInfo } from "./navPillars";
-import PillarDropdown from "./PillarDropdown";
+import { getHybridNav } from "./navPillars";
+import MoreDropdown from "./MoreDropdown";
 import MobileNavDrawer from "./MobileNavDrawer";
 import "./navbar.css";
 
@@ -19,19 +19,11 @@ export default function Navbar() {
   const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
 
-  const [openPillarId, setOpenPillarId] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
 
-  // Dynamic role-aware pillars (Student, Mentor, Recruiter, Admin)
-  const pillars = useMemo(() => getNavPillars(user), [user]);
-  // Dynamic role-aware workspace info
-  const workspace = useMemo(() => getWorkspaceInfo(user), [user]);
-
-  // Close dropdown on location change
-  useEffect(() => {
-    setOpenPillarId(null);
-  }, [location.pathname]);
+  // Dynamic role-aware hybrid navigation (Student, Mentor, Recruiter, Admin)
+  const nav = useMemo(() => getHybridNav(user), [user]);
 
   // Notification badge polling and realtime socket
   useEffect(() => {
@@ -67,6 +59,15 @@ export default function Navbar() {
     };
   }, [user]);
 
+  // Listen to open-mobile-drawer event (e.g. triggered from mobile bottom TabBar)
+  useEffect(() => {
+    const handleOpenDrawer = () => setIsMobileMenuOpen(true);
+    window.addEventListener("open-mobile-drawer", handleOpenDrawer);
+    return () => {
+      window.removeEventListener("open-mobile-drawer", handleOpenDrawer);
+    };
+  }, []);
+
   const toggleLanguage = () => {
     const nextLang = language === "km" ? "en" : "km";
     setLanguage(nextLang);
@@ -93,41 +94,48 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop 3-Pillar Navigation + Workspace Action */}
+        {/* Desktop Premium Hybrid Navigation: 1-Click Direct Links + More Dropdown + Workspace Pill */}
         <nav
           className="nav-glass-links"
           id="navLinks"
           role="navigation"
           aria-label="Main Navigation"
         >
-          {pillars.map((pillar) => (
-            <PillarDropdown
-              key={pillar.id}
-              pillar={pillar}
-              isOpen={openPillarId === pillar.id}
-              onToggle={(open) => setOpenPillarId(open ? pillar.id : null)}
-              onClose={() => setOpenPillarId(null)}
-              language={language}
-            />
-          ))}
+          {/* Direct 1-Click Main Navigation Links */}
+          {nav.directLinks.map((link) => {
+            const isActive =
+              link.path === "/"
+                ? location.pathname === "/"
+                : location.pathname.startsWith(link.path);
 
-          {/* Direct Role Workspace Pill */}
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`nav-item-link ${isActive ? "on" : ""}`}
+              >
+                {language === "km" ? link.labelKm : link.labelEn}
+              </Link>
+            );
+          })}
+
+          {/* Secondary Tools "More" Menu */}
+          {nav.moreItems && nav.moreItems.length > 0 && (
+            <MoreDropdown items={nav.moreItems} language={language} />
+          )}
+
+          {/* Direct 1-Click Workspace Action (Compact, Clean Pill) */}
           <Link
-            to={workspace.path}
+            to={nav.workspace.path}
             className={`nav-workspace-pill ${
-              location.pathname.startsWith(workspace.path) ? "active" : ""
+              location.pathname.startsWith(nav.workspace.path) ? "active" : ""
             }`}
-            title={language === "km" ? workspace.labelKm : workspace.labelEn}
+            title={language === "km" ? nav.workspace.labelKm : nav.workspace.labelEn}
           >
             <span className="workspace-pill-pulse" aria-hidden="true" />
             <span className="workspace-pill-label">
-              {language === "km" ? workspace.labelKm : workspace.labelEn}
+              {language === "km" ? nav.workspace.labelKm : nav.workspace.labelEn}
             </span>
-            {workspace.badgeEn && (
-              <span className="workspace-pill-badge">
-                {language === "km" ? workspace.badgeKm : workspace.badgeEn}
-              </span>
-            )}
           </Link>
         </nav>
 
@@ -186,7 +194,7 @@ export default function Navbar() {
             {language === "km" ? "EN" : "ខ្មែរ"}
           </button>
 
-          {/* User Profile Dropdown or Sign In */}
+          {/* Compact User Profile Dropdown or Sign In */}
           {user ? (
             <div className="nav-acct-wrap">
               <NavProfile user={user} onLogout={logout} />
@@ -210,12 +218,12 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Touch Drawer */}
+      {/* Mobile Touch Drawer with Full Navigation */}
       <MobileNavDrawer
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
-        pillars={pillars}
-        workspace={workspace}
+        pillars={nav.drawerSections}
+        workspace={nav.workspace}
         user={user}
         onLogout={logout}
         language={language}
@@ -226,4 +234,3 @@ export default function Navbar() {
     </>
   );
 }
-

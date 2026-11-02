@@ -147,6 +147,13 @@
     border-color: rgba(18, 24, 38, 0.9);
   }
 
+  button.tabbar-item {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
   /* Ensure page content has bottom padding so floating tab bar never covers it */
   body {
     padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
