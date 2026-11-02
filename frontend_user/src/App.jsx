@@ -61,6 +61,7 @@ const AnalyticsDashboard = lazy(() => import("./pages/analytics/AnalyticsDashboa
 const AdminPanel = lazy(() => import("./pages/admin/AdminPanel"));
 const CalendarPage = lazy(() => import("./pages/calendar/CalendarPage"));
 const SearchResultsPage = lazy(() => import("./pages/search/SearchResultsPage"));
+const CvStudioPage = lazy(() => import("./pages/career/CvStudioPage"));
 
 const pageElement = (Component, label = "Loading page...") => (
   <Suspense fallback={<RouteLoader label={label} />}>
@@ -124,6 +125,8 @@ const routes = createBrowserRouter(
         />
 
         <Route path="career" element={pageElement(CareerDevelopment, "Loading career roadmap...")} />
+        <Route path="cv-studio" element={protectedPage(CvStudioPage, "Preparing CV Studio...")} />
+        <Route path="my-cv" element={<Navigate to="/cv-studio" replace />} />
         <Route path="mentorship" element={pageElement(Mentorship, "Loading mentors...")} />
         <Route path="mentorship/:mentorId" element={pageElement(MentorDetail, "Loading mentor profile...")} />
         <Route path="forum" element={pageElement(Forum, "Loading forum...")} />

@@ -598,6 +598,11 @@ const Jobs = () => {
                             }))
                           }
                         />
+                        <span className="cv-studio-shortcut-hint" style={{ fontSize: "0.82rem", marginTop: "4px", display: "block" }}>
+                          ⚡ <Link to="/cv-studio" target="_blank" rel="noreferrer" style={{ color: "#2563eb", fontWeight: 600 }}>
+                            Need a PDF CV? Open CV Studio to create &amp; export →
+                          </Link>
+                        </span>
                       </label>
                       <label>
                         {t("jobsPage.portfolio")}

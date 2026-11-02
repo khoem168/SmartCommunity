@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   IoCameraOutline,
   IoLogoGithub,
@@ -98,14 +99,13 @@ export default function StudentProfileView({
           </div>
 
           <div className="profile-hero-buttons">
-            <button
-              type="button"
+            <Link
+              to="/cv-studio"
               className="btn primary profile-cv-btn"
-              onClick={() => setResumeOpen(true)}
             >
               <IoDocumentTextOutline />
-              <span>{isKm ? "📄 មើល & ទាញយក CV" : "Generate CV / Resume"}</span>
-            </button>
+              <span>{isKm ? "ស្ទូឌីយោ CV & Portfolio" : "Open CV Studio"}</span>
+            </Link>
             <button
               type="button"
               className="btn outline"

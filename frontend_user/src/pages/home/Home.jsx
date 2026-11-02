@@ -821,8 +821,8 @@ export default function Home() {
                     user?.role === "mentor"
                       ? "/dashboard"
                       : user
-                      ? "/mentorship?apply=1"
-                      : "/register?role=mentor"
+                        ? "/mentorship?apply=1"
+                        : "/register?role=mentor"
                   }
                   className="role-cta-btn btn-mentor"
                 >
@@ -858,8 +858,8 @@ export default function Home() {
                     user?.role === "recruiter"
                       ? "/post-job"
                       : user
-                      ? "/dashboard"
-                      : "/register?role=recruiter"
+                        ? "/dashboard"
+                        : "/register?role=recruiter"
                   }
                   className="role-cta-btn btn-recruiter"
                 >

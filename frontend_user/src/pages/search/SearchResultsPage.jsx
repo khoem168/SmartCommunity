@@ -458,12 +458,10 @@ export default function SearchResultsPage() {
             <div className="search-results-meta-header">
               <span className="results-count-text">
                 {isKm
-                  ? `រកឃើញ ${results.counts[activeType] || results.counts.all} លទ្ធផល${
-                      queryParam ? ` សម្រាប់ "${queryParam}"` : ""
-                    }`
-                  : `Found ${results.counts[activeType] || results.counts.all} results${
-                      queryParam ? ` for "${queryParam}"` : ""
-                    }`}
+                  ? `រកឃើញ ${results.counts[activeType] || results.counts.all} លទ្ធផល${queryParam ? ` សម្រាប់ "${queryParam}"` : ""
+                  }`
+                  : `Found ${results.counts[activeType] || results.counts.all} results${queryParam ? ` for "${queryParam}"` : ""
+                  }`}
               </span>
             </div>
 
@@ -669,8 +667,8 @@ export default function SearchResultsPage() {
                               {job.deadline
                                 ? new Date(job.deadline).toLocaleDateString()
                                 : isKm
-                                ? "បើកទទួលពាក្យ"
-                                : "Open deadline"}
+                                  ? "បើកទទួលពាក្យ"
+                                  : "Open deadline"}
                             </span>
                             <Link to={job.route} className="btn btn-outline-sm">
                               {isKm ? "ដាក់ពាក្យឥឡូវ" : "Apply Now"} <FiArrowRight />

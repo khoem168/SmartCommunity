@@ -2,6 +2,12 @@ import { apiFetch } from "./api";
 
 export const fetchProfileRequest = () => apiFetch("/profile");
 
+export const updateBasicProfileRequest = (payload) =>
+  apiFetch("/auth/profile", {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+
 export const createProfileItemRequest = (resource, payload) =>
   apiFetch(`/profile/${resource}`, {
     method: "POST",

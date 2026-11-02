@@ -41,7 +41,7 @@ const run = async () => {
   assert.equal(studentCal.status, 200, "Student calendar fetch should return 200");
   assert.ok(Array.isArray(studentCal.data.events), "Events must be an array");
   assert.equal(studentCal.data.timezone, "Asia/Phnom_Penh", "Timezone must be Asia/Phnom_Penh");
-  
+
   // Verify student events belong to student
   const studentEventTypes = new Set(studentCal.data.events.map((e) => e.sourceType));
   console.log(`   -> Student has ${studentCal.data.total} events covering types:`, Array.from(studentEventTypes));
@@ -55,7 +55,7 @@ const run = async () => {
   const mentorCal = await getCalendar(mentorToken);
   assert.equal(mentorCal.status, 200, "Mentor calendar fetch should return 200");
   assert.equal(mentorCal.data.timezone, "Asia/Phnom_Penh");
-  
+
   // Verify mentor cannot see recruiter's candidate interviews
   const mentorInterviewEvents = mentorCal.data.events.filter((e) => e.sourceType === "interview");
   assert.equal(mentorInterviewEvents.length, 0, "Mentor must NOT see private recruiter interviews");
@@ -66,7 +66,7 @@ const run = async () => {
   const recruiterToken = await login("test.recruiter@smartcommunity.local");
   const recruiterCal = await getCalendar(recruiterToken);
   assert.equal(recruiterCal.status, 200, "Recruiter calendar fetch should return 200");
-  
+
   // Recruiter only sees interviews for their own jobs
   assert.ok(
     recruiterCal.data.events.every((e) => e.sourceType === "interview"),

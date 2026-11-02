@@ -102,7 +102,7 @@ const run = async () => {
     const internshipId = internshipRow.id;
 
     // 4. Seed Calendar Activities (Connected between isolated test accounts):
-    
+
     // A. Confirmed Mentorship Booking & Session
     await connection.query(
       `INSERT INTO mentorships (mentor_id, student_id, topic, description, requested_time, duration_minutes, status)
@@ -114,7 +114,7 @@ const run = async () => {
       "SELECT id FROM mentorships WHERE mentor_id = ? AND student_id = ? ORDER BY id DESC LIMIT 1",
       [mentorId, studentId]
     );
-    
+
     // Mentorship Session with meeting link
     const [existingSessions] = await connection.query(
       "SELECT id FROM mentorship_sessions WHERE mentorship_id = ?",
