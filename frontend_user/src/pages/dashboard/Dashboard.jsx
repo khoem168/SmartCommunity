@@ -971,6 +971,29 @@ export default function Dashboard() {
           ))}
         </section>
 
+        {data?.courses?.length > 0 && (
+          <section className="sc-continue-learning-banner">
+            <div className="sc-cl-left">
+              <span className="sc-cl-tag">
+                <FiBookOpen /> {isKm ? "កំពុងសិក្សា" : "Resume Learning"}
+              </span>
+              <h3>{data.courses[0].title}</h3>
+              <p>
+                {data.courses[0].category} · {data.courses[0].progress || 0}% {isKm ? "បានបញ្ចប់" : "Completed"}
+              </p>
+              <div className="sc-cl-bar">
+                <div
+                  className="sc-cl-fill"
+                  style={{ width: `${Math.max(6, Number(data.courses[0].progress || 0))}%` }}
+                />
+              </div>
+            </div>
+            <Link to={`/courses/${data.courses[0].slug}`} className="sc-cl-btn">
+              {isKm ? "បន្តការសិក្សា" : "Continue Course"} <FiArrowRight />
+            </Link>
+          </section>
+        )}
+
         <section className="sc-next-step">
           <span>
             <FiCompass />

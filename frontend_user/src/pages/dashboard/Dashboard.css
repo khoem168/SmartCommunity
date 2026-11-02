@@ -301,6 +301,121 @@
   color: #2563eb;
 }
 
+/* Continue Learning Banner (Action-First) */
+.sc-continue-learning-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 28px 0 16px;
+  border-radius: 28px;
+  padding: 24px 30px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(59, 130, 246, 0.05) 50%, rgba(20, 184, 166, 0.1) 100%);
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  box-shadow: 0 12px 32px -8px rgba(37, 99, 235, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .sc-continue-learning-banner {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.22) 0%, rgba(30, 58, 138, 0.2) 50%, rgba(20, 184, 166, 0.15) 100%);
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.35);
+}
+
+.sc-cl-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.sc-cl-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.12);
+  margin-bottom: 8px;
+}
+
+[data-theme="dark"] .sc-cl-tag {
+  color: #93c5fd;
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.sc-cl-left h3 {
+  margin: 0 0 4px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+}
+
+.sc-cl-left p {
+  margin: 0 0 12px;
+  font-size: 0.88rem;
+  color: var(--soft, #64748b);
+}
+
+.sc-cl-bar {
+  width: 100%;
+  max-width: 440px;
+  height: 7px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .sc-cl-bar {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sc-cl-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #06b6d4);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.sc-cl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #2563eb;
+  color: #ffffff !important;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sc-cl-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.4);
+}
+
+@media (max-width: 640px) {
+  .sc-continue-learning-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+  }
+  .sc-cl-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /* Next Step Capsule Banner */
 .sc-next-step {
   display: grid;
