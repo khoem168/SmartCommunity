@@ -770,23 +770,138 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="hero-actions">
-            <Link to="/courses" className="btn btn-primary hero-main-btn">
-              <span>{isKm ? "ចាប់ផ្តើមរៀនឥឡូវនេះ" : "Start learning"}</span>
-              <FiArrowRight className="btn-arrow-icon" />
-            </Link>
-            <a href="#showcase" className="btn btn-soft hero-second-btn">
-              {isKm ? "ស្វែងយល់បន្ថែម" : "Explore ecosystem"}
-            </a>
+          {/* ====================================================================
+              ROLE-BASED ENTRY PATHWAYS (STUDENT | MENTOR | RECRUITER)
+              ==================================================================== */}
+          <div className="hero-role-grid">
+            {/* 1. Student Pathway Card */}
+            <div className="hero-role-card role-student">
+              <div className="role-card-header">
+                <span className="role-badge badge-student">
+                  <FiBookOpen className="role-badge-icon" />
+                  <span>{isKm ? "សម្រាប់សិស្ស & អ្នករៀន" : "Student"}</span>
+                </span>
+                <span className="role-tagline">{isKm ? "រៀន & រកការងារ" : "Learn & Get Hired"}</span>
+              </div>
+              <h3 className="role-card-title">
+                {isKm ? "កសាងជំនាញ និងពង្រីកឱកាស" : "Learn skills and find opportunities"}
+              </h3>
+              <p className="role-card-desc">
+                {isKm
+                  ? "រៀនវគ្គសិក្សាអនឡាញ ជួបអ្នកណែនាំ 1:1 និងដាក់ពាក្យចូលកម្មសិក្សាដែលបានផ្ទៀងផ្ទាត់។"
+                  : "Access 35+ industry tech courses, practice peer skill swaps, and apply directly for verified internships."}
+              </p>
+              <div className="role-card-footer">
+                <Link to="/courses" className="role-cta-btn btn-student">
+                  <span>{isKm ? "រៀនវគ្គសិក្សា" : "Explore Courses"}</span>
+                  <FiArrowRight className="role-arrow" />
+                </Link>
+                <span className="role-feature-hint">
+                  <FiCheckCircle className="hint-icon" /> {isKm ? "បង់តាម Bakong KHQR" : "Instant Bakong KHQR"}
+                </span>
+              </div>
+            </div>
+
+            {/* 2. Mentor Pathway Card */}
+            <div className="hero-role-card role-mentor">
+              <div className="role-card-header">
+                <span className="role-badge badge-mentor">
+                  <FiUsers className="role-badge-icon" />
+                  <span>{isKm ? "សម្រាប់អ្នកណែនាំ" : "Mentor"}</span>
+                </span>
+                <span className="role-tagline">{isKm ? "ណែនាំ & បង្រៀន" : "Guide & Teach"}</span>
+              </div>
+              <h3 className="role-card-title">
+                {isKm ? "ណែនាំសិស្ស និងបើកថ្នាក់បង្រៀន" : "Guide learners and host sessions"}
+              </h3>
+              <p className="role-card-desc">
+                {isKm
+                  ? "កំណត់កាលវិភាគទំនេរ ទទួលការកក់ម៉ោងពិគ្រោះ 1:1 និងរៀបចំសិក្ខាសាលាផ្ទាល់ជាមួយសិស្ស។"
+                  : "Set your availability calendar, guide aspiring students 1:1 via video rooms, and earn verified reviews."}
+              </p>
+              <div className="role-card-footer">
+                <Link to="/mentorship" className="role-cta-btn btn-mentor">
+                  <span>{isKm ? "ក្លាយជាអ្នកណែនាំ" : "Become a Mentor"}</span>
+                  <FiArrowRight className="role-arrow" />
+                </Link>
+                <span className="role-feature-hint">
+                  <FiCheckCircle className="hint-icon" /> {isKm ? "ការប្រជុំតាម Jitsi" : "1:1 Live Jitsi Rooms"}
+                </span>
+              </div>
+            </div>
+
+            {/* 3. Recruiter Pathway Card */}
+            <div className="hero-role-card role-recruiter">
+              <div className="role-card-header">
+                <span className="role-badge badge-recruiter">
+                  <FiBriefcase className="role-badge-icon" />
+                  <span>{isKm ? "សម្រាប់ក្រុមហ៊ុន" : "Recruiter"}</span>
+                </span>
+                <span className="role-tagline">{isKm ? "ជ្រើសរើសបុគ្គលិក" : "Hire Talent"}</span>
+              </div>
+              <h3 className="role-card-title">
+                {isKm ? "បង្ហោះការងារ និងស្វែងរកទេពកោសល្យ" : "Post jobs and discover talent"}
+              </h3>
+              <p className="role-card-desc">
+                {isKm
+                  ? "ផ្សព្វផ្សាយឱកាសកម្មសិក្សា ពិនិត្យ CV បេក្ខជន និងសម្ភាសន៍តាមរយៈប្រព័ន្ធ ATS ស្វ័យប្រវត្តិ។"
+                  : "Publish verified internship opportunities, review qualified applicants with ATS, and schedule interviews."}
+              </p>
+              <div className="role-card-footer">
+                <Link to={user?.role === "recruiter" ? "/post-job" : "/register"} className="role-cta-btn btn-recruiter">
+                  <span>{isKm ? "ស្វែងរកបេក្ខជន" : "Hire Talent"}</span>
+                  <FiArrowRight className="role-arrow" />
+                </Link>
+                <span className="role-feature-hint">
+                  <FiCheckCircle className="hint-icon" /> {isKm ? "គ្រប់គ្រងបេក្ខជន ATS" : "Full Candidate ATS"}
+                </span>
+              </div>
+            </div>
           </div>
 
-          {/* Hero Trust Bar */}
-          <div className="hero-trust-bar">
-            <span><FiCheckCircle className="trust-icon" /> {isKm ? "បង់ប្រាក់ភ្លាមៗតាម Bakong KHQR" : "Instant Bakong KHQR"}</span>
-            <span className="trust-dot">•</span>
-            <span><FiCheckCircle className="trust-icon" /> {isKm ? "ការណែនាំ 1:1 ផ្ទាល់" : "1:1 Mentorship"}</span>
-            <span className="trust-dot">•</span>
-            <span><FiCheckCircle className="trust-icon" /> {isKm ? "កម្មសិក្សាពិតប្រាកដ" : "Verified Internships"}</span>
+          {/* ====================================================================
+              EXPLORE THE PLATFORM QUICK SHORTCUTS
+              ==================================================================== */}
+          <div className="hero-quick-explore">
+            <div className="explore-eyebrow">
+              <span className="explore-label">
+                {isKm ? "ស្វែងរកមុខងារសំខាន់ៗក្នុងប្រព័ន្ធ" : "Explore the platform"}
+              </span>
+              <span className="explore-line" />
+            </div>
+            <div className="explore-pills-row">
+              <Link to="/courses" className="explore-pill-card">
+                <div className="explore-pill-icon blue"><FiBookOpen /></div>
+                <div className="explore-pill-text">
+                  <strong>{isKm ? "វគ្គសិក្សាកំពុងពេញនិយម" : "Popular Courses"}</strong>
+                  <span>{isKm ? "ស្វែងរកឱកាសរៀន →" : "View opportunities →"}</span>
+                </div>
+              </Link>
+
+              <Link to="/mentorship" className="explore-pill-card">
+                <div className="explore-pill-icon emerald"><FiUsers /></div>
+                <div className="explore-pill-text">
+                  <strong>{isKm ? "អ្នកណែនាំដែលបានផ្ទៀងផ្ទាត់" : "Verified Mentors"}</strong>
+                  <span>{isKm ? "ស្វែងរកឱកាសរៀន →" : "View opportunities →"}</span>
+                </div>
+              </Link>
+
+              <Link to="/jobs" className="explore-pill-card">
+                <div className="explore-pill-icon purple"><FiBriefcase /></div>
+                <div className="explore-pill-text">
+                  <strong>{isKm ? "កម្មសិក្សាដែលបានផ្ទៀងផ្ទាត់" : "Internships"}</strong>
+                  <span>{isKm ? "ស្វែងរកឱកាសរៀន →" : "View opportunities →"}</span>
+                </div>
+              </Link>
+
+              <Link to="/skill-exchange" className="explore-pill-card">
+                <div className="explore-pill-icon rose"><FiRepeat /></div>
+                <div className="explore-pill-text">
+                  <strong>{isKm ? "ដោះដូរជំនាញរវាងមិត្តភក្តិ" : "Skill Exchange"}</strong>
+                  <span>{isKm ? "ស្វែងរកឱកាសរៀន →" : "View opportunities →"}</span>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

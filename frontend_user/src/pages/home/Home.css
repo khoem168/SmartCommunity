@@ -439,139 +439,388 @@ html[data-language="km"] .hero-title {
 [data-theme="dark"] .hero-chip-pill.chip-data:hover { border-color: rgba(20, 184, 166, 0.6); color: #5eead4; }
 [data-theme="dark"] .hero-chip-pill.chip-bakong:hover { border-color: rgba(226, 30, 43, 0.6); color: #fca5a5; }
 
-/* Hero Actions */
-.hero-actions {
+/* ==========================================================================
+   ROLE-BASED ENTRY PATHWAYS (STUDENT | MENTOR | RECRUITER)
+   ========================================================================== */
+.hero-role-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-width: 1140px;
+  margin: 20px auto 28px;
+  width: 100%;
+}
+
+.hero-role-card {
   display: flex;
-  gap: 14px;
-  justify-content: center;
+  flex-direction: column;
+  text-align: left;
+  padding: 22px 22px 18px 22px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 28px -6px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .hero-role-card {
+  background: rgba(15, 23, 42, 0.88);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.hero-role-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.16), 0 0 0 1.5px rgba(37, 99, 235, 0.3);
+}
+
+[data-theme="dark"] .hero-role-card:hover {
+  box-shadow: 0 20px 45px -8px rgba(59, 130, 246, 0.25), 0 0 0 1.5px rgba(96, 165, 250, 0.4);
+}
+
+/* Card Header */
+.role-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.role-badge-icon {
+  font-size: 0.88rem;
+}
+
+.badge-student {
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
+}
+[data-theme="dark"] .badge-student {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.badge-mentor {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+}
+[data-theme="dark"] .badge-mentor {
+  background: rgba(16, 185, 129, 0.22);
+  color: #34d399;
+}
+
+.badge-recruiter {
+  background: rgba(124, 58, 237, 0.12);
+  color: #7c3aed;
+}
+[data-theme="dark"] .badge-recruiter {
+  background: rgba(168, 85, 247, 0.22);
+  color: #c084fc;
+}
+
+.role-tagline {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--soft, #64748b);
+  letter-spacing: 0.02em;
+}
+
+[data-theme="dark"] .role-tagline {
+  color: #94a3b8;
+}
+
+/* Card Title & Desc */
+.role-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+  margin: 0 0 8px 0;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+[data-theme="dark"] .role-card-title {
+  color: #f8fafc;
+}
+
+.role-card-desc {
+  font-size: 0.84rem;
+  color: var(--soft, #64748b);
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+  flex: 1;
+}
+
+[data-theme="dark"] .role-card-desc {
+  color: #94a3b8;
+}
+
+/* Card Footer */
+.role-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
   flex-wrap: wrap;
 }
 
-.hero-main-btn {
-  position: relative;
-  overflow: hidden;
-  padding: 13px 30px;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  color: #ffffff;
-  box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+[data-theme="dark"] .role-card-footer {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.role-cta-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
-.hero-main-btn::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -75%;
-  width: 50%;
-  height: 200%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transform: rotate(25deg);
-  animation: btn-shimmer 6s infinite;
-}
-
-@keyframes btn-shimmer {
-  0% { left: -75%; }
-  20%, 100% { left: 125%; }
-}
-
-[data-theme="dark"] .hero-main-btn {
-  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-  box-shadow: 0 14px 32px -6px rgba(59, 130, 246, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-}
-
-.hero-main-btn:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 16px 36px -6px rgba(37, 99, 235, 0.55);
-}
-
-.btn-arrow-icon {
+.role-arrow {
   transition: transform 0.2s ease;
 }
 
-.hero-main-btn:hover .btn-arrow-icon {
-  transform: translateX(4px);
+.role-cta-btn:hover .role-arrow {
+  transform: translateX(3px);
 }
 
-.hero-second-btn {
-  padding: 12px 28px;
-  font-size: 0.98rem;
-  font-weight: 600;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1.5px solid rgba(15, 23, 42, 0.16);
-  color: var(--text, #0f172a);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+.btn-student {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+.btn-student:hover {
+  background: #1d4ed8;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-mentor {
+  background: #059669;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+}
+.btn-mentor:hover {
+  background: #047857;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-recruiter {
+  background: #0f172a;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.3);
+}
+[data-theme="dark"] .btn-recruiter {
+  background: #7c3aed;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+}
+.btn-recruiter:hover {
+  background: #1e293b;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+[data-theme="dark"] .btn-recruiter:hover {
+  background: #6d28d9;
+}
+
+.role-feature-hint {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 4px;
+  font-size: 0.74rem;
+  color: var(--soft, #64748b);
+  font-weight: 500;
+}
+
+[data-theme="dark"] .role-feature-hint {
+  color: #94a3b8;
+}
+
+.hint-icon {
+  color: #10b981;
+}
+
+/* ==========================================================================
+   EXPLORE THE PLATFORM QUICK SHORTCUTS
+   ========================================================================== */
+.hero-quick-explore {
+  max-width: 1140px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.explore-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.explore-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--soft, #64748b);
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .explore-label {
+  color: #94a3b8;
+}
+
+.explore-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .explore-line {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.explore-pills-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.explore-pill-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
   text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.hero-second-btn:hover {
-  background: #ffffff;
-  border-color: rgba(37, 99, 235, 0.5);
-  color: #2563eb;
+[data-theme="dark"] .explore-pill-card {
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.explore-pill-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px -4px rgba(37, 99, 235, 0.2);
+  border-color: rgba(37, 99, 235, 0.4);
+  box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.15);
 }
 
-[data-theme="dark"] .hero-second-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #f8fafc;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+[data-theme="dark"] .explore-pill-card:hover {
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 8px 20px -4px rgba(59, 130, 246, 0.25);
 }
 
-[data-theme="dark"] .hero-second-btn:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(96, 165, 250, 0.55);
-  color: #93c5fd;
-  box-shadow: 0 8px 24px -4px rgba(59, 130, 246, 0.35);
-}
-
-.hero-main-btn:focus-visible,
-.hero-second-btn:focus-visible,
-.hero-chip-pill:focus-visible {
-  outline: 2px solid #2563eb !important;
-  outline-offset: 3px !important;
-}
-
-[data-theme="dark"] .hero-main-btn:focus-visible,
-[data-theme="dark"] .hero-second-btn:focus-visible,
-[data-theme="dark"] .hero-chip-pill:focus-visible {
-  outline: 2px solid #60a5fa !important;
-  outline-offset: 3px !important;
-}
-
-/* Trust Bar */
-.hero-trust-bar {
+.explore-pill-icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-top: 32px;
-  font-size: 0.86rem;
-  color: var(--soft);
-  flex-wrap: wrap;
+  font-size: 1.05rem;
+  transition: transform 0.2s ease;
 }
 
-.trust-icon {
-  color: #10b981;
-  font-weight: 700;
-  margin-right: 4px;
+.explore-pill-card:hover .explore-pill-icon {
+  transform: scale(1.08);
 }
 
-.trust-dot {
-  opacity: 0.35;
+.explore-pill-icon.blue { background: rgba(37, 99, 235, 0.1); color: #2563eb; }
+.explore-pill-icon.emerald { background: rgba(16, 185, 129, 0.1); color: #059669; }
+.explore-pill-icon.purple { background: rgba(124, 58, 237, 0.1); color: #7c3aed; }
+.explore-pill-icon.rose { background: rgba(244, 63, 94, 0.1); color: #e11d48; }
+
+[data-theme="dark"] .explore-pill-icon.blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+[data-theme="dark"] .explore-pill-icon.emerald { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+[data-theme="dark"] .explore-pill-icon.purple { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+[data-theme="dark"] .explore-pill-icon.rose { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
+
+.explore-pill-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+
+.explore-pill-text strong {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .explore-pill-text strong {
+  color: #f8fafc;
+}
+
+.explore-pill-text span {
+  font-size: 0.72rem;
+  color: var(--blue, #2563eb);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .explore-pill-text span {
+  color: #60a5fa;
+}
+
+/* Keyboard focus */
+.role-cta-btn:focus-visible,
+.explore-pill-card:focus-visible {
+  outline: 2px solid #2563eb !important;
+  outline-offset: 2px !important;
+}
+
+/* Responsive queries */
+@media (max-width: 1040px) {
+  .hero-role-grid {
+    grid-template-columns: 1fr;
+    max-width: 580px;
+  }
+  .explore-pills-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .explore-pills-row {
+    grid-template-columns: 1fr;
+  }
+  .hero-role-card {
+    padding: 18px 16px;
+  }
 }
 
 /* --------------------------------------------------------------------------
