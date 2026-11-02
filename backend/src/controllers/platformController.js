@@ -205,11 +205,12 @@ const getDashboard = async (req, res, next) => {
         ),
         db.query(
           `SELECT m.id, m.topic, m.description, m.requested_time, m.duration_minutes,
-                  m.status, m.meeting_link,
+                  m.status, COALESCE(ms.meeting_link, '') AS meeting_link,
                   student.id AS student_id, student.full_name AS student_name,
                   student.avatar_url AS student_avatar, student.email AS student_email
            FROM mentorships m
            JOIN users student ON student.id = m.student_id
+           LEFT JOIN mentorship_sessions ms ON ms.mentorship_id = m.id
            WHERE m.mentor_id = ?
            ORDER BY m.requested_time DESC LIMIT 6`,
           [userId],

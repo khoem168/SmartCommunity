@@ -125,12 +125,42 @@ const PostJob = () => {
             Internships are connected to a verified company account so students
             know who posted them.
           </p>
-          <Link className="btn primary" to="/applications">
+          <Link className="btn primary" to="/profile">
             Create company profile
           </Link>
         </section>
       </main>
     );
+
+  const isVerifiedCompany =
+    user?.role === "admin" ||
+    Boolean(company.is_verified) ||
+    company.verification_status === "verified";
+
+  if (!isVerifiedCompany) {
+    return (
+      <main className="post-job-page">
+        <section className="section container company-required" style={{ textAlign: "center", padding: "40px 20px" }}>
+          <div style={{ maxWidth: 640, margin: "0 auto", background: "var(--card-bg, #ffffff)", padding: "36px 32px", borderRadius: 20, boxShadow: "0 12px 36px rgba(0,0,0,0.06)", border: "1px solid var(--line, #e2e8f0)" }}>
+            <span style={{ fontSize: "2.5rem" }}>⏳</span>
+            <h1 style={{ fontSize: "1.6rem", margin: "16px 0 10px" }}>Company Verification Under Review</h1>
+            <p style={{ color: "var(--soft, #64748b)", lineHeight: 1.6, marginBottom: 24 }}>
+              Your company <strong>{company.name}</strong> is currently pending administrator verification.
+              To ensure safety and quality for students, internships can only be published once approved.
+            </p>
+            <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+              <Link className="btn primary" to="/dashboard">
+                Go to Workspace
+              </Link>
+              <Link className="btn outline" to="/profile">
+                Review Company Details
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="post-job-page">

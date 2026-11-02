@@ -416,6 +416,301 @@
   }
 }
 
+/* ==========================================================================
+   SMART ACTION CENTER
+   ========================================================================== */
+.sc-action-center {
+  margin: 28px 0;
+  border-radius: 28px;
+  padding: 26px 30px;
+  background: var(--card-bg, rgba(255, 255, 255, 0.85));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--line, rgba(15, 23, 42, 0.08));
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="dark"] .sc-action-center {
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+}
+
+.sc-action-center-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line, rgba(15, 23, 42, 0.06));
+}
+
+[data-theme="dark"] .sc-action-center-header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.sc-action-center-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sc-action-center-icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: #ffffff;
+  border-radius: 14px;
+  font-size: 1.3rem;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.sc-action-center-title h3 {
+  margin: 0;
+  font-size: 1.22rem;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+}
+
+.sc-action-center-title p {
+  margin: 2px 0 0;
+  font-size: 0.88rem;
+  color: var(--soft, #64748b);
+}
+
+.sc-action-count-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+[data-theme="dark"] .sc-action-count-pill {
+  color: #93c5fd;
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.sc-action-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sc-action-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 20px;
+  border-radius: 20px;
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid var(--line, rgba(15, 23, 42, 0.06));
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="dark"] .sc-action-item {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.sc-action-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+.sc-action-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sc-action-icon-wrap {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 12px;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.sc-action-item.badge-urgent .sc-action-icon-wrap {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+.sc-action-item.badge-warning .sc-action-icon-wrap {
+  background: rgba(245, 158, 11, 0.14);
+  color: #d97706;
+}
+
+.sc-action-item.badge-info .sc-action-icon-wrap {
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+}
+
+.sc-action-item.badge-success .sc-action-icon-wrap {
+  background: rgba(16, 185, 129, 0.14);
+  color: #10b981;
+}
+
+.sc-action-item.badge-accent .sc-action-icon-wrap,
+.sc-action-item.badge-neutral .sc-action-icon-wrap {
+  background: rgba(99, 102, 241, 0.12);
+  color: #6366f1;
+}
+
+.sc-action-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.sc-action-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sc-action-title-row h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+}
+
+.sc-action-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sc-action-badge.urgent {
+  background: rgba(239, 68, 68, 0.14);
+  color: #dc2626;
+}
+
+.sc-action-badge.warning {
+  background: rgba(245, 158, 11, 0.14);
+  color: #d97706;
+}
+
+.sc-action-badge.info {
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+}
+
+.sc-action-badge.success {
+  background: rgba(16, 185, 129, 0.14);
+  color: #059669;
+}
+
+.sc-action-badge.accent,
+.sc-action-badge.neutral {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4f46e5;
+}
+
+.sc-action-body p {
+  margin: 3px 0 0;
+  font-size: 0.86rem;
+  color: var(--soft, #64748b);
+  line-height: 1.45;
+}
+
+.sc-action-right {
+  flex-shrink: 0;
+}
+
+.sc-action-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.09);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .sc-action-cta-btn {
+  color: #93c5fd;
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.sc-action-cta-btn:hover {
+  background: #2563eb;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}
+
+.sc-action-empty-state {
+  text-align: center;
+  padding: 36px 20px;
+}
+
+.sc-empty-sparkle {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.sc-action-empty-state h4 {
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+}
+
+.sc-action-empty-state p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--soft, #64748b);
+}
+
+@media (max-width: 768px) {
+  .sc-action-center {
+    padding: 20px 18px;
+    border-radius: 20px;
+  }
+  .sc-action-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+  }
+  .sc-action-right {
+    width: 100%;
+  }
+  .sc-action-cta-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /* Next Step Capsule Banner */
 .sc-next-step {
   display: grid;

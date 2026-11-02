@@ -820,7 +820,16 @@ export default function Home() {
                   : "Set your availability calendar, guide aspiring students 1:1 via video rooms, and earn verified reviews."}
               </p>
               <div className="role-card-footer">
-                <Link to="/mentorship" className="role-cta-btn btn-mentor">
+                <Link
+                  to={
+                    user?.role === "mentor"
+                      ? "/dashboard"
+                      : user
+                      ? "/mentorship?apply=1"
+                      : "/register?role=mentor"
+                  }
+                  className="role-cta-btn btn-mentor"
+                >
                   <span>{isKm ? "ក្លាយជាអ្នកណែនាំ" : "Become a Mentor"}</span>
                   <FiArrowRight className="role-arrow" />
                 </Link>
@@ -848,7 +857,16 @@ export default function Home() {
                   : "Publish verified internship opportunities, review qualified applicants with ATS, and schedule interviews."}
               </p>
               <div className="role-card-footer">
-                <Link to={user?.role === "recruiter" ? "/post-job" : "/register"} className="role-cta-btn btn-recruiter">
+                <Link
+                  to={
+                    user?.role === "recruiter"
+                      ? "/post-job"
+                      : user
+                      ? "/dashboard"
+                      : "/register?role=recruiter"
+                  }
+                  className="role-cta-btn btn-recruiter"
+                >
                   <span>{isKm ? "ស្វែងរកបេក្ខជន" : "Hire Talent"}</span>
                   <FiArrowRight className="role-arrow" />
                 </Link>

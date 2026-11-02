@@ -18,6 +18,7 @@ import {
   FiAlertTriangle,
   FiGlobe,
   FiMail,
+  FiUser,
 } from "react-icons/fi";
 import { IoSwapHorizontalOutline } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
@@ -42,6 +43,333 @@ const toDate = (value, language) => {
         dateStyle: "medium",
         timeStyle: "short",
       }).format(date);
+};
+
+const computeActionItems = (role, data, user, profileProgress, isKm) => {
+  const actions = [];
+
+  // 1. RECRUITER ACTIONS
+  if (role === "recruiter") {
+    const company = data?.company;
+    const isCompanyVerified = company?.isVerified;
+    const pendingApplicants = Number(data?.pipeline?.pending || 0);
+    const shortlistedApplicants = Number(data?.pipeline?.shortlisted || 0);
+
+    if (!isCompanyVerified) {
+      actions.push({
+        id: "recruiter-verify",
+        icon: FiShield,
+        title: isKm
+          ? "គណនីក្រុមហ៊ុនកំពុងរង់ចាំការផ្ទៀងផ្ទាត់ (Pending Verification)"
+          : "Company Profile Pending Verification",
+        desc: isKm
+          ? "រដ្ឋបាល Admin កំពុងត្រួតពិនិត្យឯកសារក្រុមហ៊ុន។ អ្នកនឹងអាចបង្ហោះការងារបានក្រោយការអនុម័ត។"
+          : "Administrators are reviewing your company profile. Job posting unlocks upon approval.",
+        badge: isKm ? "រង់ចាំពិនិត្យ" : "Under Review",
+        badgeType: "warning",
+        to: "/profile",
+        actionText: isKm ? "ពិនិត្យ Profile" : "View Profile",
+      });
+    }
+
+    if (pendingApplicants > 0) {
+      actions.push({
+        id: "recruiter-pending-apps",
+        icon: FiUsers,
+        title: isKm
+          ? `មានបេក្ខជន ${pendingApplicants} នាក់រង់ចាំការពិនិត្យ CV`
+          : `${pendingApplicants} Candidate Applications Awaiting Review`,
+        desc: isKm
+          ? "និស្សិតបានដាក់ពាក្យចូលកម្មសិក្សារបស់អ្នក · ពិនិត្យប្រវត្តិរូប និងជំនាញឥឡូវនេះ"
+          : "New applicants submitted CVs for your open internships · Review profiles now",
+        badge: `${pendingApplicants} ${isKm ? "ថ្មី" : "New"}`,
+        badgeType: "urgent",
+        to: "/recruiter/candidates",
+        actionText: isKm ? "ពិនិត្យក្នុង ATS" : "Review in ATS",
+      });
+    }
+
+    if (shortlistedApplicants > 0) {
+      actions.push({
+        id: "recruiter-shortlist",
+        icon: FiCalendar,
+        title: isKm
+          ? `បេក្ខជនជាប់ជម្រើស ${shortlistedApplicants} នាក់រង់ចាំកំណត់ថ្ងៃសម្ភាសន៍`
+          : `${shortlistedApplicants} Shortlisted Talent Ready for Interview`,
+        desc: isKm
+          ? "កំណត់កាលបរិច្ឆេទសម្ភាសន៍ និងផ្ញើការណែនាំតាមរយៈប្រព័ន្ធ ATS"
+          : "Coordinate interview schedule and send instructions directly via ATS pipeline",
+        badge: isKm ? "សម្ភាសន៍" : "Schedule Interview",
+        badgeType: "info",
+        to: "/recruiter/candidates",
+        actionText: isKm ? "កំណត់កាលវិភាគ" : "Open Pipeline",
+      });
+    }
+
+    if (isCompanyVerified && (!data?.myInternships || data.myInternships.length === 0)) {
+      actions.push({
+        id: "recruiter-post-job",
+        icon: FiBriefcase,
+        title: isKm ? "ប្រកាសឱកាសកម្មសិក្សាដំបូងរបស់អ្នក" : "Publish Your First Internship",
+        desc: isKm
+          ? "ទាក់ទាញនិស្សិតមានជំនាញខ្ពស់ក្នុងសហគមន៍ដោយបង្កើតការងារដំបូង"
+          : "Reach qualified students directly by creating your first verified listing",
+        badge: isKm ? "ចាប់ផ្តើម" : "Get Started",
+        badgeType: "accent",
+        to: "/post-job",
+        actionText: isKm ? "ប្រកាសការងារ" : "Post Job",
+      });
+    }
+    return actions;
+  }
+
+  // 2. MENTOR ACTIONS
+  if (role === "mentor") {
+    const pendingBookings = (data?.bookings || []).filter((b) => b.status === "pending");
+    if (pendingBookings.length > 0) {
+      actions.push({
+        id: "mentor-pending-bookings",
+        icon: FiCalendar,
+        title: isKm
+          ? `មានការកក់ម៉ោង ${pendingBookings.length} រង់ចាំការអនុម័ត`
+          : `${pendingBookings.length} Mentorship Booking Requests Pending`,
+        desc: isKm
+          ? "សិស្សកំពុងរង់ចាំការយល់ព្រមពីអ្នក ដើម្បីកំណត់កាលបរិច្ឆេទជួបពិភាក្សា"
+          : "Students are waiting for your approval to confirm session times",
+        badge: isKm ? "បន្ទាន់" : "Action Required",
+        badgeType: "urgent",
+        to: "/mentorship",
+        actionText: isKm ? "ពិនិត្យការកក់" : "Review Bookings",
+      });
+    }
+
+    const readyBooking = (data?.bookings || []).find((b) => b.status === "active" && b.meeting_link);
+    if (readyBooking) {
+      actions.push({
+        id: `mentor-ready-${readyBooking.id}`,
+        icon: FiVideo,
+        title: isKm
+          ? `វគ្គណែនាំសកម្ម: ${readyBooking.topic}`
+          : `Active Mentorship: ${readyBooking.topic}`,
+        desc: isKm
+          ? `ជាមួយសិស្ស ${readyBooking.student_name} · បន្ទប់វីដេអូបានត្រៀមរួចរាល់`
+          : `With ${readyBooking.student_name} · Video meeting room is ready`,
+        badge: isKm ? "ត្រៀមជួប" : "Ready to Join",
+        badgeType: "success",
+        externalUrl: readyBooking.meeting_link,
+        to: "/mentorship",
+        actionText: isKm ? "ចូលបន្ទប់ប្រជុំ" : "Join Video",
+      });
+    }
+
+    if (!data?.mentorApplication?.availability) {
+      actions.push({
+        id: "mentor-availability",
+        icon: FiClock,
+        title: isKm ? "កំណត់ម៉ោងទំនេរសម្រាប់ណែនាំសិស្ស" : "Set Your Booking Availability",
+        desc: isKm
+          ? "កំណត់ម៉ោង និងថ្ងៃដែលអ្នកទំនេរ ដើម្បីឱ្យសិស្សអាចកក់ម៉ោងពិគ្រោះបានត្រឹមត្រូវ"
+          : "Define your open days and hours so students can schedule sessions without conflict",
+        badge: isKm ? "រៀបចំ" : "Setup",
+        badgeType: "neutral",
+        to: "/profile",
+        actionText: isKm ? "កំណត់ម៉ោង" : "Set Hours",
+      });
+    }
+    return actions;
+  }
+
+  // 3. ADMIN ACTIONS
+  if (role === "admin") {
+    const pendingMentors = Number(data?.widgets?.pendingMentors || 0);
+    const pendingCompanies = Number(data?.widgets?.pendingCompanies || 0);
+
+    if (pendingMentors > 0) {
+      actions.push({
+        id: "admin-pending-mentors",
+        icon: FiShield,
+        title: isKm
+          ? `ពាក្យស្នើសុំជា Mentor ចំនួន ${pendingMentors} រង់ចាំការត្រួតពិនិត្យ`
+          : `${pendingMentors} Mentor Applications Awaiting Verification`,
+        desc: isKm
+          ? "ពិនិត្យជំនាញ ឯកសារ និងបទពិសោធន៍របស់អ្នកណែនាំថ្មី"
+          : "Verify credentials, portfolio links, and approve eligible mentors",
+        badge: `${pendingMentors} Pending`,
+        badgeType: "urgent",
+        to: "/admin",
+        actionText: isKm ? "ពិនិត្យ" : "Review",
+      });
+    }
+
+    if (pendingCompanies > 0) {
+      actions.push({
+        id: "admin-pending-companies",
+        icon: FiBriefcase,
+        title: isKm
+          ? `ក្រុមហ៊ុនចំនួន ${pendingCompanies} រង់ចាំការផ្ទៀងផ្ទាត់សិទ្ធិ`
+          : `${pendingCompanies} Company Profiles Pending Verification`,
+        desc: isKm
+          ? "ផ្ទៀងផ្ទាត់ភាពស្របច្បាប់ និងអនុញ្ញាតសិទ្ធិបង្ហោះការងារ"
+          : "Verify employer legitimacy before granting public posting permissions",
+        badge: `${pendingCompanies} Pending`,
+        badgeType: "urgent",
+        to: "/admin",
+        actionText: isKm ? "ផ្ទៀងផ្ទាត់" : "Verify",
+      });
+    }
+    return actions;
+  }
+
+  // 4. STUDENT ACTIONS
+  const unfinishedCourse = data?.courses?.find((c) => Number(c.progress || 0) < 100);
+  if (unfinishedCourse) {
+    actions.push({
+      id: "course-resume",
+      icon: FiBookOpen,
+      title: isKm
+        ? `បន្តការសិក្សា: ${unfinishedCourse.title}`
+        : `Continue: ${unfinishedCourse.title}`,
+      desc: isKm
+        ? `បានបញ្ចប់ ${unfinishedCourse.progress || 0}% · បន្តមេរៀនបន្ទាប់ភ្លាមៗ`
+        : `${unfinishedCourse.progress || 0}% completed · Resume where you left off`,
+      badge: isKm ? "កំពុងរៀន" : "In Progress",
+      badgeType: "warning",
+      to: `/courses/${unfinishedCourse.slug}`,
+      actionText: isKm ? "បន្តមេរៀន" : "Resume Lesson",
+    });
+  }
+
+  const pendingSwap = data?.exchanges?.find((e) => e.status === "pending");
+  if (pendingSwap) {
+    actions.push({
+      id: `swap-${pendingSwap.id}`,
+      icon: IoSwapHorizontalOutline,
+      title: isKm
+        ? `សំណើដោះដូរជំនាញ: ${pendingSwap.skill_requested || "Skill"}`
+        : `Skill Swap Request: ${pendingSwap.skill_requested || "Skill"}`,
+      desc: isKm
+        ? "មានសំណើថ្មីកំពុងរង់ចាំការឆ្លើយតបរបស់អ្នក"
+        : "A peer is waiting for your response to start learning",
+      badge: isKm ? "ត្រូវឆ្លើយតប" : "Action Required",
+      badgeType: "urgent",
+      to: "/skill-exchange?tab=swaps",
+      actionText: isKm ? "ពិនិត្យសំណើ" : "Review Request",
+    });
+  }
+
+  const activeApp = data?.applications?.find(
+    (a) => a.status === "shortlisted" || a.status === "reviewed"
+  );
+  if (activeApp) {
+    actions.push({
+      id: `app-${activeApp.id}`,
+      icon: FiBriefcase,
+      title: isKm
+        ? `ពាក្យសុំការងារបានផ្លាស់ប្តូរ: ${activeApp.title}`
+        : `Application Updated: ${activeApp.title}`,
+      desc: isKm
+        ? `ស្ថានភាព: ${activeApp.status === "shortlisted" ? "ជាប់ជម្រើស (Shortlisted)" : "បានពិនិត្យ"} · ពិនិត្យព័ត៌មានបន្ថែម`
+        : `Status: ${activeApp.status} · Check details and interview schedule`,
+      badge: activeApp.status,
+      badgeType: "info",
+      to: "/my-applications",
+      actionText: isKm ? "មើលពាក្យសុំ" : "View Application",
+    });
+  }
+
+  if (profileProgress < 85) {
+    actions.push({
+      id: "profile-complete",
+      icon: FiUser,
+      title: isKm ? "បំពេញប្រវត្តិរូប និងជំនាញ (Complete CV)" : "Complete Profile & Portfolio",
+      desc: isKm
+        ? `ប្រវត្តិរូបរបស់អ្នកសម្រេចបាន ${profileProgress}% · បន្ថែម Bio និងជំនាញដើម្បីបង្កើនឱកាសការងារ`
+        : `Profile is ${profileProgress}% complete · Add bio and skills to boost job match scores`,
+      badge: `${profileProgress}%`,
+      badgeType: "neutral",
+      to: "/profile",
+      actionText: isKm ? "បំពេញ Profile" : "Edit Profile",
+    });
+  }
+
+  if (!data?.roadmap) {
+    actions.push({
+      id: "career-roadmap",
+      icon: FiCompass,
+      title: isKm ? "ជ្រើសរើសផែនទីបង្ហាញផ្លូវអាជីព (Career Roadmap)" : "Explore Career Roadmaps",
+      desc: isKm
+        ? "ធ្វើតេស្តវាស់សមត្ថភាព និងជ្រើសរើស Roadmap ឆ្ពោះទៅកាន់ការងារដែលអ្នកស្រមៃចង់បាន"
+        : "Take competency assessment and establish milestone pathways to target jobs",
+      badge: isKm ? "ណែនាំ" : "Recommended",
+      badgeType: "accent",
+      to: "/career",
+      actionText: isKm ? "បើក Career" : "Start Roadmap",
+    });
+  }
+
+  return actions;
+};
+
+const SmartActionCenter = ({ actions, isKm }) => {
+  return (
+    <section className="sc-action-center">
+      <div className="sc-action-center-header">
+        <div className="sc-action-center-title">
+          <span className="sc-action-center-icon">
+            <FiCheckCircle />
+          </span>
+          <div>
+            <h3>{isKm ? "មជ្ឈមណ្ឌលសកម្មភាព (Smart Action Center)" : "Smart Action Center"}</h3>
+            <p>{isKm ? "កិច្ចការបន្ទាន់ដែលអ្នកត្រូវធ្វើបន្ទាប់" : "Tasks that require your immediate attention"}</p>
+          </div>
+        </div>
+        <span className="sc-action-count-pill">
+          {actions.length} {isKm ? "កិច្ចការ" : actions.length === 1 ? "task" : "tasks"}
+        </span>
+      </div>
+
+      {actions.length > 0 ? (
+        <div className="sc-action-grid">
+          {actions.map((act) => {
+            const Icon = act.icon || FiCompass;
+            return (
+              <div key={act.id} className={`sc-action-item badge-${act.badgeType || "neutral"}`}>
+                <div className="sc-action-left">
+                  <span className="sc-action-icon-wrap">
+                    <Icon />
+                  </span>
+                  <div className="sc-action-body">
+                    <div className="sc-action-title-row">
+                      <h4>{act.title}</h4>
+                      <span className={`sc-action-badge ${act.badgeType}`}>{act.badge}</span>
+                    </div>
+                    <p>{act.desc}</p>
+                  </div>
+                </div>
+                <div className="sc-action-right">
+                  {act.externalUrl ? (
+                    <a href={act.externalUrl} target="_blank" rel="noreferrer" className="sc-action-cta-btn">
+                      {act.actionText} <FiArrowRight />
+                    </a>
+                  ) : (
+                    <Link to={act.to} className="sc-action-cta-btn">
+                      {act.actionText} <FiArrowRight />
+                    </Link>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="sc-action-empty-state">
+          <span className="sc-empty-sparkle">🎉</span>
+          <h4>{isKm ? "អ្នកបានបញ្ចប់រាល់កិច្ចការទាំងអស់ហើយ!" : "All caught up! No pending tasks right now."}</h4>
+          <p>{isKm ? "មិនមានកិច្ចការបន្ទាន់ដែលរង់ចាំអ្នកនៅពេលនេះទេ។" : "Everything is on track. Explore new courses, mentors, or opportunities below."}</p>
+        </div>
+      )}
+    </section>
+  );
 };
 
 export default function Dashboard() {
@@ -287,6 +615,12 @@ export default function Dashboard() {
               </div>
             </div>
           </section>
+
+          {/* Smart Action Center */}
+          <SmartActionCenter
+            actions={computeActionItems("recruiter", data, user, profileProgress, isKm)}
+            isKm={isKm}
+          />
 
           {/* Main 2-column layout */}
           <div className="sc-dashboard-grid">
@@ -576,6 +910,12 @@ export default function Dashboard() {
             ))}
           </section>
 
+          {/* Smart Action Center */}
+          <SmartActionCenter
+            actions={computeActionItems("mentor", data, user, profileProgress, isKm)}
+            isKm={isKm}
+          />
+
           {/* Main 2-column layout */}
           <div className="sc-dashboard-grid">
             <div className="sc-dashboard-main">
@@ -817,6 +1157,12 @@ export default function Dashboard() {
             ))}
           </section>
 
+          {/* Smart Action Center */}
+          <SmartActionCenter
+            actions={computeActionItems("admin", data, user, profileProgress, isKm)}
+            isKm={isKm}
+          />
+
           <div className="sc-dashboard-grid">
             <div className="sc-dashboard-main">
               {/* Pending Approvals */}
@@ -994,19 +1340,11 @@ export default function Dashboard() {
           </section>
         )}
 
-        <section className="sc-next-step">
-          <span>
-            <FiCompass />
-          </span>
-          <div>
-            <p>{t("refresh.nextStep")}</p>
-            <h2>{next.title}</h2>
-            <small>{next.text}</small>
-          </div>
-          <Link to={next.to}>
-            {next.action} <FiArrowRight />
-          </Link>
-        </section>
+        {/* Smart Action Center */}
+        <SmartActionCenter
+          actions={computeActionItems("student", data, user, profileProgress, isKm)}
+          isKm={isKm}
+        />
 
         <div className="sc-dashboard-grid">
           <div className="sc-dashboard-main">

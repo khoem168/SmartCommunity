@@ -1,5 +1,5 @@
-﻿import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   IoCalendarOutline,
   IoCheckmarkCircleOutline,
@@ -35,7 +35,9 @@ const formatDate = (value) =>
 
 const Mentorship = () => {
   const { user } = useGlobleContext();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isKm = language === "km";
+  const [searchParams] = useSearchParams();
   const [mentors, setMentors] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [application, setApplication] = useState(null);
@@ -43,6 +45,12 @@ const Mentorship = () => {
   const [query, setQuery] = useState("");
   const [skill, setSkill] = useState("");
   const [showApplication, setShowApplication] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("apply") === "1" && user && user.role !== "mentor" && user.role !== "admin") {
+      setShowApplication(true);
+    }
+  }, [searchParams, user]);
   const [applicationForm, setApplicationForm] = useState({
     professionalTitle: "",
     company: "",
@@ -206,6 +214,11 @@ const Mentorship = () => {
           <h1>{t("mentorshipPage.heroTitle")}</h1>
           <p>{t("mentorshipPage.heroDescription")}</p>
           <div className="mentorship-hero-actions">
+            {!user && (
+              <Link to="/register?role=mentor" className="btn primary">
+                {t("mentorshipPage.becomeMentor")} →
+              </Link>
+            )}
             {user &&
               user.role !== "mentor" &&
               user.role !== "admin" &&
@@ -220,6 +233,11 @@ const Mentorship = () => {
                     : t("mentorshipPage.becomeMentor")}
                 </button>
               )}
+            {user?.role === "mentor" && (
+              <Link to="/dashboard" className="btn primary">
+                {isKm ? "ផ្ទាំងការងារអ្នកណែនាំ" : "Mentor Workspace"} →
+              </Link>
+            )}
             {application && (
               <span
                 className={`mentor-application-status ${application.status}`}

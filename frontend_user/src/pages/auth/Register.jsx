@@ -203,13 +203,20 @@ const SkillCategoryPicker = ({ title, field, selectedSkills, onToggle }) => {
 
 const Register = () => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState(initialForm);
+  const [searchParams] = useSearchParams();
+  const requestedRole = searchParams.get("role");
+  const initialRole = ["student", "mentor", "recruiter"].includes(requestedRole)
+    ? requestedRole
+    : "student";
+  const [formData, setFormData] = useState(() => ({
+    ...initialForm,
+    role: initialRole,
+  }));
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { registerUser } = useGlobleContext();
   const { t, language } = useLanguage();
   const isKm = language === "km";
