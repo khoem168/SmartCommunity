@@ -1,3 +1,4 @@
+process.env.DB_NAME = process.env.DB_NAME || "final_pro_test";
 const db = require("../config/db");
 const { hashPassword } = require("../utils/auth");
 
@@ -7,7 +8,7 @@ const run = async () => {
   const connection = await db.getConnection();
   try {
     await connection.beginTransaction();
-    console.log("Seeding isolated test fixtures for V5...");
+    console.log(`Seeding isolated test fixtures into database: ${process.env.DB_NAME}...`);
 
     const passwordHash = await hashPassword(TEST_PASSWORD);
 

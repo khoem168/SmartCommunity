@@ -9,6 +9,7 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "check-db": "node src/scripts/checkDb.js",
+    "db:init-test": "node src/scripts/initTestDatabase.js",
     "migrate-db": "node src/scripts/migrateDb.js",
     "seed:demo": "node src/scripts/seedDemoContent.js",
     "seed:community-users": "node src/scripts/seedCommunityUsers.js",
@@ -23,6 +24,7 @@
     "test:admin": "node src/scripts/testAdmin.js",
     "test:courses": "node src/scripts/testCourses.js",
     "test:calendar": "node src/scripts/testCalendar.js",
+    "test:search": "node src/scripts/testSearch.js",
     "test:email": "node src/scripts/testEmailService.js",
     "test:auth-features": "node src/scripts/testAuthFeatures.js",
     "test": "npm run test:auth-features && npm run test:email"

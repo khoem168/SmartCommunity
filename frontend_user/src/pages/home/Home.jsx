@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
@@ -452,6 +452,7 @@ const FORUM_POSTS_DATA = [
 ];
 
 export default function Home() {
+  const navigate = useNavigate();
   const { user } = useGlobleContext();
   const { language } = useLanguage();
 
@@ -571,24 +572,19 @@ export default function Home() {
     return () => observer.disconnect();
   }, [language, courseCat, courseLvl, coursePrice, jobType, forumCat]);
 
-  // Search handler
+  // Search handler - Navigates to V6 Unified Global Search
   const handleHeroSearch = (e) => {
     e?.preventDefault();
     const q = searchQuery.trim();
     if (!q) {
-      const el = document.getElementById("courses");
-      el?.scrollIntoView({ behavior: "smooth" });
+      navigate("/search");
       return;
     }
-    setCourseSearch(q);
-    const el = document.getElementById("courses");
-    el?.scrollIntoView({ behavior: "smooth" });
+    navigate(`/search?q=${encodeURIComponent(q)}&type=all`);
   };
 
   const handleChipClick = (chip) => {
-    setCourseSearch(chip);
-    const el = document.getElementById("courses");
-    el?.scrollIntoView({ behavior: "smooth" });
+    navigate(`/search?q=${encodeURIComponent(chip)}&type=all`);
   };
 
   // Filtered courses

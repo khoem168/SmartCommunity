@@ -60,6 +60,7 @@ const Notifications = lazy(() => import("./pages/notifications/Notifications"));
 const AnalyticsDashboard = lazy(() => import("./pages/analytics/AnalyticsDashboard"));
 const AdminPanel = lazy(() => import("./pages/admin/AdminPanel"));
 const CalendarPage = lazy(() => import("./pages/calendar/CalendarPage"));
+const SearchResultsPage = lazy(() => import("./pages/search/SearchResultsPage"));
 
 const pageElement = (Component, label = "Loading page...") => (
   <Suspense fallback={<RouteLoader label={label} />}>
@@ -83,6 +84,7 @@ const routes = createBrowserRouter(
         errorElement={<RouteErrorBoundary />}
       >
         <Route index element={pageElement(Home, "Preparing Smart Community...")} />
+        <Route path="search" element={pageElement(SearchResultsPage, "Searching Smart Community...")} />
         <Route path="dashboard" element={protectedPage(Dashboard, "Preparing your dashboard...")} />
         <Route path="courses" element={pageElement(Courses, "Loading courses...")} />
         <Route path="courses/:courseId" element={pageElement(CourseDetail, "Preparing classroom...")} />

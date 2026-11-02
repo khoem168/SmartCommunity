@@ -208,17 +208,30 @@ export default function CommandPalette() {
     ];
   }, [isKm, isDark, language, navigate, setLanguage, toggleTheme]);
 
-  // Filter items based on user query
+  // Filter items based on user query + dynamic global search action
   const filteredItems = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const trimmed = query.trim();
+    const q = trimmed.toLowerCase();
     if (!q) return items;
-    return items.filter(
+
+    const globalSearchAction = {
+      id: "search-global-action",
+      category: isKm ? "ស្វែងរកទូទាំងវេទិកា" : "Global Search",
+      title: isKm ? `ស្វែងរក "${trimmed}" លើ Smart Community` : `Search platform for "${trimmed}"`,
+      subtitle: isKm ? "ស្វែងរក Courses, Mentors, Jobs, Skills & Community" : "Explore Courses, Mentors, Jobs, Skills & Community",
+      icon: FiSearch,
+      action: () => navigate(`/search?q=${encodeURIComponent(trimmed)}&type=all`),
+    };
+
+    const matched = items.filter(
       (item) =>
         item.title.toLowerCase().includes(q) ||
         item.subtitle.toLowerCase().includes(q) ||
         item.category.toLowerCase().includes(q)
     );
-  }, [items, query]);
+
+    return [globalSearchAction, ...matched];
+  }, [items, query, isKm, navigate]);
 
   // Handle keyboard navigation inside the list
   const handleKeyDown = (e) => {
@@ -236,6 +249,9 @@ export default function CommandPalette() {
       e.preventDefault();
       if (filteredItems[selectedIndex]) {
         filteredItems[selectedIndex].action();
+        setIsOpen(false);
+      } else if (query.trim()) {
+        navigate(`/search?q=${encodeURIComponent(query.trim())}&type=all`);
         setIsOpen(false);
       }
     }

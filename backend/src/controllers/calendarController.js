@@ -30,9 +30,23 @@ const getCalendarEvents = async (req, res, next) => {
 
     const events = [];
 
-    // 1. MENTORSHIP SESSIONS & BOOKINGS
+    // 1. MENTORSHIP SESSIONS & BOOKINGS (Occurrences Model)
+    // Preserves all distinct session occurrences across different dates
     if (role === "mentor" || role === "student" || role === "admin") {
-      let mentorshipQuery = `
+      let roleFilterScheduled = "";
+      let roleFilterPending = "";
+      const mentorshipParams = [];
+
+      if (role === "mentor") {
+        roleFilterScheduled = "AND m.mentor_id = ?";
+        roleFilterPending = "AND m.mentor_id = ?";
+      } else if (role === "student") {
+        roleFilterScheduled = "AND m.student_id = ?";
+        roleFilterPending = "AND m.student_id = ?";
+      }
+
+      // Query all distinct scheduled session occurrences
+      const scheduledPart = `
         SELECT
           m.id AS booking_id,
           m.topic,
@@ -54,27 +68,48 @@ const getCalendarEvents = async (req, res, next) => {
           mentor.email AS mentor_email,
           mentor.avatar_url AS mentor_avatar,
           mentor.profession AS mentor_profession
+        FROM mentorship_sessions ms
+        JOIN mentorships m ON m.id = ms.mentorship_id
+        JOIN users student ON student.id = m.student_id
+        JOIN users mentor ON mentor.id = m.mentor_id
+        WHERE m.status IN ('active', 'completed') ${roleFilterScheduled}
+      `;
+
+      // Query pending booking requests that do not yet have session records
+      const pendingPart = `
+        SELECT
+          m.id AS booking_id,
+          m.topic,
+          m.description,
+          m.requested_time,
+          m.duration_minutes AS booking_duration,
+          m.status AS booking_status,
+          NULL AS session_id,
+          NULL AS session_scheduled_time,
+          NULL AS session_duration,
+          NULL AS meeting_link,
+          NULL AS session_status,
+          student.id AS student_id,
+          student.full_name AS student_name,
+          student.email AS student_email,
+          student.avatar_url AS student_avatar,
+          mentor.id AS mentor_id,
+          mentor.full_name AS mentor_name,
+          mentor.email AS mentor_email,
+          mentor.avatar_url AS mentor_avatar,
+          mentor.profession AS mentor_profession
         FROM mentorships m
         JOIN users student ON student.id = m.student_id
         JOIN users mentor ON mentor.id = m.mentor_id
-        LEFT JOIN mentorship_sessions ms ON ms.id = (
-          SELECT id FROM mentorship_sessions
-          WHERE mentorship_id = m.id
-          ORDER BY scheduled_time DESC LIMIT 1
-        )
-        WHERE 1 = 1
+        WHERE m.status = 'pending'
+          AND NOT EXISTS (SELECT 1 FROM mentorship_sessions WHERE mentorship_id = m.id)
+          ${roleFilterPending}
       `;
-      const mentorshipParams = [];
 
-      if (role === "mentor") {
-        mentorshipQuery += " AND m.mentor_id = ?";
-        mentorshipParams.push(userId);
-      } else if (role === "student") {
-        mentorshipQuery += " AND m.student_id = ?";
-        mentorshipParams.push(userId);
+      let mentorshipQuery = `(${scheduledPart}) UNION ALL (${pendingPart}) ORDER BY COALESCE(session_scheduled_time, requested_time) ASC`;
+      if (role === "mentor" || role === "student") {
+        mentorshipParams.push(userId, userId);
       }
-
-      mentorshipQuery += " ORDER BY COALESCE(ms.scheduled_time, m.requested_time) ASC";
 
       const [mentorshipRows] = await db.query(mentorshipQuery, mentorshipParams);
 

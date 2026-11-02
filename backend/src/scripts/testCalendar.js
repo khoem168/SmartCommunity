@@ -93,10 +93,12 @@ const run = async () => {
 
   // Re-fetch mentor calendar
   const mentorCal2 = await getCalendar(mentorToken);
-  // Verify booking is not duplicated in mentorship events
+  // Verify all distinct scheduled session occurrences for the booking appear on the calendar
   const bookingEvents = mentorCal2.data.events.filter((e) => e.sourceId === mentorship.id);
-  assert.equal(bookingEvents.length, 1, "Mentorship booking with multiple sessions must NOT create duplicate booking events");
-  console.log("   -> Passed: Deduplication verified. Exactly 1 event returned for multi-session booking.");
+  assert.equal(bookingEvents.length, 2, "Mentorship booking with 2 distinct sessions must return both scheduled occurrences");
+  const sessionIds = bookingEvents.map((e) => e.sessionId);
+  assert.equal(new Set(sessionIds).size, 2, "Session occurrences must have unique session IDs without duplicates");
+  console.log("   -> Passed: Multi-occurrence verified. Both distinct sessions appear with unique session IDs.");
 
   // Clean up extra session
   await db.query("DELETE FROM mentorship_sessions WHERE id = ?", [extraSessionId]);
