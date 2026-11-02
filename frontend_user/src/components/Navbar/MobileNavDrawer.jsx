@@ -76,7 +76,6 @@ export default function MobileNavDrawer({
               src={logo}
               alt=""
               className="nav-logo-icon"
-              style={{ width: "24px", height: "24px", objectFit: "contain" }}
             />
             <span>
               Smart <span className="logo-accent">Community</span>

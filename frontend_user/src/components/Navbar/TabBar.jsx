@@ -8,6 +8,7 @@ import {
   FiMoreHorizontal,
   FiUsers,
   FiAward,
+  FiVideo,
 } from "react-icons/fi";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
@@ -67,27 +68,34 @@ export default function TabBar() {
 
   const role = user?.role || "guest";
 
-  // Role-adaptive tabs: Workspace | Learn | Jobs | Messages | More
+  // Role-adaptive tabs:
+  // - Student/Guest: Workspace / Learn / Jobs / Messages / More
+  // - Mentor: Workspace / Sessions / Bookings / Messages / More
+  // - Recruiter: Workspace / Jobs / Candidates / Messages / More
   const getRoleTabs = () => {
     if (role === "recruiter") {
       return [
         { to: "/dashboard", Icon: FiLayout, label: isKm ? "ផ្ទាំងការងារ" : "Workspace" },
+        { to: "/my-posts", Icon: FiBriefcase, label: isKm ? "ការងារ" : "Jobs" },
         { to: "/recruiter/candidates", Icon: FiUsers, label: isKm ? "បេក្ខជន" : "Candidates" },
-        { to: "/my-posts", Icon: FiBriefcase, label: isKm ? "ការងារ" : "My Jobs" },
         { to: "/messages", Icon: FiMessageSquare, label: isKm ? "សារ" : "Messages", badge: unreadMessages },
       ];
     }
     if (role === "mentor") {
       return [
         { to: "/dashboard", Icon: FiLayout, label: isKm ? "ផ្ទាំងការងារ" : "Workspace" },
-        { to: "/mentorship", Icon: FiAward, label: isKm ? "ណែនាំ" : "Mentorship" },
-        { to: "/courses", Icon: FiBookOpen, label: isKm ? "វគ្គសិក្សា" : "Courses" },
+        { to: "/sessions", Icon: FiVideo, label: isKm ? "ថ្នាក់ Live" : "Sessions" },
+        { to: "/mentorship", Icon: FiAward, label: isKm ? "ការកក់" : "Bookings" },
         { to: "/messages", Icon: FiMessageSquare, label: isKm ? "សារ" : "Messages", badge: unreadMessages },
       ];
     }
     // Student / Guest
     return [
-      { to: user ? "/dashboard" : "/login", Icon: FiLayout, label: isKm ? "ផ្ទាំងការងារ" : "Workspace" },
+      {
+        to: user ? "/dashboard" : "/register",
+        Icon: FiLayout,
+        label: isKm ? (user ? "ផ្ទាំងការងារ" : "ចាប់ផ្តើម") : (user ? "Workspace" : "Get Started"),
+      },
       { to: "/courses", Icon: FiBookOpen, label: isKm ? "រៀន" : "Learn" },
       { to: "/jobs", Icon: FiBriefcase, label: isKm ? "ការងារ" : "Jobs" },
       { to: user ? "/messages" : "/forum", Icon: FiMessageSquare, label: isKm ? "សារ" : "Messages", badge: unreadMessages },

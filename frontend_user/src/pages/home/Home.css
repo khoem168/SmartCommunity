@@ -198,9 +198,10 @@ html[data-language="km"] .hero-title {
   display: flex;
   align-items: center;
   gap: 10px;
-  max-width: 620px;
+  max-width: 680px;
+  width: 100%;
   margin: 0 auto 18px;
-  padding: 8px 10px 8px 18px;
+  padding: 6px 8px 6px 18px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(24px) saturate(180%);
@@ -208,6 +209,7 @@ html[data-language="km"] .hero-title {
   border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.95);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
 }
 
 .hero-search-glass:focus-within {
@@ -349,6 +351,35 @@ html[data-language="km"] .hero-title {
 
 .search-submit-btn:active {
   transform: scale(0.96);
+}
+
+@media (max-width: 768px) {
+  .hero-search-glass {
+    padding: 6px 8px 6px 14px;
+    gap: 8px;
+  }
+  .search-kbd-hint {
+    display: none !important;
+  }
+  .search-submit-btn {
+    padding: 8px 18px !important;
+    font-size: 0.88rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-search-glass {
+    padding: 5px 6px 5px 12px;
+    gap: 6px;
+  }
+  .hero-search-glass input {
+    font-size: 0.9rem !important;
+    padding: 0 4px !important;
+  }
+  .search-submit-btn {
+    padding: 7px 14px !important;
+    font-size: 0.82rem !important;
+  }
 }
 
 /* Quick Chips */

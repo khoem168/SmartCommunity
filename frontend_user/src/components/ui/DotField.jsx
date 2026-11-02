@@ -38,7 +38,7 @@ export default function DotField({ className = "" }) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       dots = [];
-      const gap = w < 700 ? 32 : 30;
+      const gap = w < 700 ? 36 : 34;
       for (let y = gap / 2; y < h; y += gap) {
         for (let x = gap / 2; x < w; x += gap) {
           dots.push({ bx: x, by: y, x, y });
@@ -92,14 +92,21 @@ export default function DotField({ className = "" }) {
         p.x += (p.bx + (dx / dist) * push - p.x) * 0.12;
         p.y += (p.by + (dy / dist) * push + wave - p.y) * 0.12;
 
+        // Soften dots directly behind the center Hero Title & Lead text
+        const cdx = p.bx - w / 2;
+        const cdy = (p.by - h * 0.42) * 1.35;
+        const centerDist = Math.hypot(cdx, cdy);
+        const centerFactor = Math.min(Math.max((centerDist - 90) / 250, 0.08), 1);
+
         ctx.beginPath();
-        ctx.fillStyle =
-          push > 5
-            ? "#3B6BFF"
-            : isDark
-              ? "rgba(255, 255, 255, 0.22)"
-              : "rgba(15, 23, 42, 0.25)";
-        ctx.arc(p.x, p.y, 1.3 + push * 0.035, 0, Math.PI * 2);
+        if (push > 5) {
+          ctx.fillStyle = "#3B6BFF";
+        } else if (isDark) {
+          ctx.fillStyle = `rgba(255, 255, 255, ${(0.10 * centerFactor).toFixed(3)})`;
+        } else {
+          ctx.fillStyle = `rgba(15, 23, 42, ${(0.11 * centerFactor).toFixed(3)})`;
+        }
+        ctx.arc(p.x, p.y, 1.1 + push * 0.03, 0, Math.PI * 2);
         ctx.fill();
       }
 

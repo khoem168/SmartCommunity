@@ -482,6 +482,26 @@ export default function Home() {
   const searchInputRef = useRef(null);
   const isKm = language === "km";
 
+  const [isMobileScreen, setIsMobileScreen] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 640 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileScreen(window.innerWidth < 640);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const heroPlaceholder = isKm
+    ? isMobileScreen
+      ? "ស្វែងរកជំនាញ ឬវគ្គសិក្សា..."
+      : "ស្វែងរកជំនាញ, វគ្គសិក្សា, ការងារ..."
+    : isMobileScreen
+      ? "Search skills, courses..."
+      : "Search skills, courses, mentors, jobs...";
+
   // Selected YouTube video for interactive modal preview
   const [selectedVideo, setSelectedVideo] = useState(null);
 
@@ -714,8 +734,8 @@ export default function Home() {
             <input
               ref={searchInputRef}
               type="search"
-              aria-label={isKm ? "តើអ្នកចង់រៀនអ្វី? (ឧ. React, Python, UI/UX...)" : "What do you want to learn? (e.g. React, Python, Design...)"}
-              placeholder={isKm ? "តើអ្នកចង់រៀនអ្វី? (ឧ. React, Python, UI/UX...)" : "What do you want to learn? (e.g. React, Python, Design...)"}
+              aria-label={heroPlaceholder}
+              placeholder={heroPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />

@@ -24,18 +24,27 @@ export const getHybridNav = (user) => {
       directLinks: [
         { path: "/my-posts", labelEn: "My Jobs", labelKm: "ការងារដែលបានបង្ហោះ" },
         { path: "/recruiter/candidates", labelEn: "Candidates", labelKm: "បេក្ខជន ATS" },
-        { path: "/post-job", labelEn: "Post Job", labelKm: "បង្ហោះការងារ" },
-        { path: "/messages", labelEn: "Messages", labelKm: "សារ" },
+        { path: "/recruiter/candidates", labelEn: "Interviews", labelKm: "កាលវិភាគសម្ភាសន៍" },
+        { path: "/profile", labelEn: "Company", labelKm: "ក្រុមហ៊ុន" },
       ],
       moreItems: [
         {
-          path: "/forum",
-          labelEn: "Community Forum",
-          labelKm: "វេទិកាសហគមន៍",
-          descEn: "Engage in developer discussions and answers",
-          descKm: "ចូលរួមសួរសំណួរ និងស្វែងយល់ពីបច្ចេកវិទ្យា",
-          icon: FiMessageSquare,
-          color: "purple",
+          path: "/post-job",
+          labelEn: "Post an Opportunity",
+          labelKm: "បង្ហោះការងារថ្មី",
+          descEn: "Publish new verified internships and jobs",
+          descKm: "ផ្សព្វផ្សាយឱកាសការងារទៅកាន់សិស្ស",
+          icon: FiPlusCircle,
+          color: "emerald",
+        },
+        {
+          path: "/messages",
+          labelEn: "Candidate Messages",
+          labelKm: "ប្រអប់សារបេក្ខជន",
+          descEn: "Chat directly with applicants and candidates",
+          descKm: "ជជែកផ្ទាល់ជាមួយបេក្ខជនដាក់ពាក្យ",
+          icon: FiMail,
+          color: "blue",
         },
         {
           path: "/jobs",
@@ -46,11 +55,20 @@ export const getHybridNav = (user) => {
           icon: FiBriefcase,
           color: "emerald",
         },
+        {
+          path: "/forum",
+          labelEn: "Community Forum",
+          labelKm: "វេទិកាសហគមន៍",
+          descEn: "Engage in developer discussions and answers",
+          descKm: "ចូលរួមសួរសំណួរ និងស្វែងយល់ពីបច្ចេកវិទ្យា",
+          icon: FiMessageSquare,
+          color: "purple",
+        },
       ],
       workspace: {
         path: "/dashboard",
-        labelEn: "Company Workspace",
-        labelKm: "ផ្ទាំងការងារក្រុមហ៊ុន",
+        labelEn: "My Workspace",
+        labelKm: "ផ្ទាំងការងារ",
       },
       drawerSections: [
         {
@@ -84,11 +102,21 @@ export const getHybridNav = (user) => {
     return {
       directLinks: [
         { path: "/sessions", labelEn: "My Sessions", labelKm: "ថ្នាក់បង្រៀន Live" },
-        { path: "/mentorship", labelEn: "Mentorship", labelKm: "ការណែនាំ 1:1" },
-        { path: "/courses", labelEn: "Courses", labelKm: "វគ្គសិក្សា" },
+        { path: "/mentorship", labelEn: "Bookings", labelKm: "ការកក់ម៉ោង" },
+        { path: "/mentorship", labelEn: "Availability", labelKm: "កាលវិភាគទំនេរ" },
+        { path: "/community", labelEn: "Mentees", labelKm: "សិស្ស/Mentees" },
         { path: "/forum", labelEn: "Community", labelKm: "សហគមន៍" },
       ],
       moreItems: [
+        {
+          path: "/courses",
+          labelEn: "Courses Library",
+          labelKm: "វគ្គសិក្សា",
+          descEn: "Explore video courses and curriculum",
+          descKm: "ចូលមើលមេរៀន និងវគ្គសិក្សា",
+          icon: FiBookOpen,
+          color: "blue",
+        },
         {
           path: "/messages",
           labelEn: "Mentee Messages",
@@ -98,20 +126,11 @@ export const getHybridNav = (user) => {
           icon: FiMail,
           color: "blue",
         },
-        {
-          path: "/community",
-          labelEn: "Discover Members",
-          labelKm: "ស្វែងរកសមាជិក",
-          descEn: "Find tech learners and collaborators",
-          descKm: "ស្វែងរកមិត្តភក្តិរៀនកូដ",
-          icon: FiUsers,
-          color: "indigo",
-        },
       ],
       workspace: {
         path: "/dashboard",
-        labelEn: "Mentor Workspace",
-        labelKm: "ផ្ទាំងការងារ Mentor",
+        labelEn: "My Workspace",
+        labelKm: "ផ្ទាំងការងារ",
       },
       drawerSections: [
         {
@@ -143,26 +162,36 @@ export const getHybridNav = (user) => {
   if (role === "admin") {
     return {
       directLinks: [
-        { path: "/admin", labelEn: "Admin Panel", labelKm: "ផ្ទាំងគ្រប់គ្រង" },
+        { path: "/admin", labelEn: "Users", labelKm: "អ្នកប្រើប្រាស់" },
+        { path: "/admin", labelEn: "Approvals", labelKm: "ការអនុម័ត" },
+        { path: "/admin", labelEn: "Companies", labelKm: "ក្រុមហ៊ុន" },
+        { path: "/forum", labelEn: "Moderation", labelKm: "គ្រប់គ្រង Forum" },
         { path: "/analytics", labelEn: "Analytics", labelKm: "ស្ថិតិទូទៅ" },
-        { path: "/courses", labelEn: "Courses", labelKm: "វគ្គសិក្សា" },
-        { path: "/jobs", labelEn: "Job Board", labelKm: "ផ្សារការងារ" },
       ],
       moreItems: [
         {
-          path: "/forum",
-          labelEn: "Community Moderation",
-          labelKm: "គ្រប់គ្រងសហគមន៍",
-          descEn: "Moderate topics and flagged discussions",
-          descKm: "គ្រប់គ្រងការពិភាក្សានៅក្នុងវេទិកា",
-          icon: FiMessageSquare,
-          color: "purple",
+          path: "/courses",
+          labelEn: "Courses Library",
+          labelKm: "បណ្ណាល័យវគ្គសិក្សា",
+          descEn: "Audit course curriculum and materials",
+          descKm: "ពិនិត្យវគ្គសិក្សា និងឯកសារ",
+          icon: FiBookOpen,
+          color: "blue",
+        },
+        {
+          path: "/jobs",
+          labelEn: "Job Board Audit",
+          labelKm: "ផ្សារការងារ",
+          descEn: "Audit company postings and compliance",
+          descKm: "ពិនិត្យការងារក្រុមហ៊ុន",
+          icon: FiBriefcase,
+          color: "emerald",
         },
       ],
       workspace: {
-        path: "/dashboard",
+        path: "/admin",
         labelEn: "Admin Workspace",
-        labelKm: "ផ្ទាំងការងារ Admin",
+        labelKm: "ផ្ទាំងបញ្ជា Admin",
       },
       drawerSections: [
         {
@@ -256,7 +285,7 @@ export const getHybridNav = (user) => {
       },
     ],
     workspace: {
-      path: user ? "/dashboard" : "/login",
+      path: user ? "/dashboard" : "/register",
       labelEn: user ? "My Workspace" : "Get Started",
       labelKm: user ? "ផ្ទាំងការងារ" : "ចាប់ផ្តើម",
     },
