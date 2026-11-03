@@ -241,6 +241,7 @@ export const getHybridNav = (user) => {
   // 4. STUDENT / GUEST HYBRID NAVIGATION (1-CLICK CORE LINKS + MORE MENU)
   return {
     directLinks: [
+      { path: "/", labelEn: "Home", labelKm: "ទំព័រដើម" },
       { path: "/courses", labelEn: "Courses", labelKm: "វគ្គសិក្សា" },
       { path: "/skill-exchange", labelEn: "Skill Swap", labelKm: "ប្តូរជំនាញ" },
       { path: "/mentorship", labelEn: "Mentors", labelKm: "អ្នកណែនាំ" },

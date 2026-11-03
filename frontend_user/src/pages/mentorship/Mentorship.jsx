@@ -23,6 +23,7 @@ import { getSocket } from "../../services/realtimeService";
 import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
 import { useLanguage } from "../../context/LanguageContext";
 import UserAvatar from "../../components/ui/UserAvatar";
+import { localizeMentorRecord } from "../../utils/bilingualCatalog";
 import "./Mentorship.css";
 
 const formatDate = (value) =>
@@ -700,17 +701,6 @@ const Mentorship = () => {
         )}
 
         <section>
-          <div className="section-header">
-            <div>
-              <h2>{t("mentorshipPage.verifiedMentors")}</h2>
-              <p>{t("mentorshipPage.searchDescription")}</p>
-            </div>
-            <span>
-              {t("mentorshipPage.mentorCount", {
-                count: filteredMentors.length,
-              })}
-            </span>
-          </div>
           <div className="mentor-search-panel">
             <label>
               <IoSearchOutline />
@@ -741,44 +731,44 @@ const Mentorship = () => {
             />
           ) : filteredMentors.length ? (
             <div className="mentor-grid">
-              {filteredMentors.map((mentor) => (
-                <article className="mentor-card" key={mentor.id}>
-                  <div className="mentor-card-person">
-                    <UserAvatar user={mentor} />
-                    <div>
-                      <h3>{mentor.name}</h3>
-                      <p className="mentor-title">
-                        {mentor.title}
-                        {mentor.company ? ` at ${mentor.company}` : ""}
-                      </p>
+              {filteredMentors.map((rawMentor) => {
+                const mentor = localizeMentorRecord(rawMentor, isKm);
+                return (
+                  <article className="mentor-card" key={mentor.id}>
+                    <div className="mentor-card-person">
+                      <UserAvatar user={mentor} />
+                      <div>
+                        <h3>{mentor.name}</h3>
+                        <p className="mentor-title">{mentor.displayTitle}</p>
+                      </div>
                     </div>
-                  </div>
-                  <p className="mentor-card-bio">{mentor.bio}</p>
-                  <div className="mentor-skills">
-                    {(mentor.skills || []).slice(0, 5).map((item) => (
-                      <span className="skill-pill" key={item}>
-                        {item}
+                    <p className="mentor-card-bio">{mentor.displayBio}</p>
+                    <div className="mentor-skills">
+                      {(mentor.skills || []).slice(0, 5).map((item) => (
+                        <span className="skill-pill" key={item}>
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="mentor-meta">
+                      <span>
+                        <IoStar /> {mentor.rating || (isKm ? "ថ្មី" : "New")}{" "}
+                        {mentor.reviewCount ? `(${mentor.reviewCount})` : ""}
                       </span>
-                    ))}
-                  </div>
-                  <div className="mentor-meta">
-                    <span>
-                      <IoStar /> {mentor.rating || "New"}{" "}
-                      {mentor.reviewCount ? `(${mentor.reviewCount})` : ""}
-                    </span>
-                    <span>
-                      <IoPeopleOutline /> {mentor.sessions} sessions
-                    </span>
-                    <span>{mentor.location}</span>
-                  </div>
-                  <Link
-                    to={`/mentorship/${mentor.id}`}
-                    className="btn primary small"
-                  >
-                    {t("mentorshipPage.viewBook")}
-                  </Link>
-                </article>
-              ))}
+                      <span>
+                        <IoPeopleOutline /> {mentor.displaySessions}
+                      </span>
+                      <span>{mentor.displayLocation}</span>
+                    </div>
+                    <Link
+                      to={`/mentorship/${mentor.id}`}
+                      className="btn primary small"
+                    >
+                      {t("mentorshipPage.viewBook")}
+                    </Link>
+                  </article>
+                );
+              })}
             </div>
           ) : (
             <div className="mentorship-empty">

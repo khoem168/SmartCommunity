@@ -22,14 +22,14 @@
   padding: 36px 0 48px;
   background:
     radial-gradient(55% 45% at 85% 15%, rgba(59, 107, 255, 0.14), transparent 70%),
-    radial-gradient(45% 40% at 15% 40%, rgba(20, 184, 166, 0.1), transparent 70%),
+    radial-gradient(45% 40% at 15% 40%, rgba(59, 130, 246, 0.1), transparent 70%),
     transparent;
 }
 
 [data-theme="dark"] .sc-dashboard-hero {
   background:
     radial-gradient(55% 45% at 85% 15%, rgba(99, 102, 241, 0.22), transparent 70%),
-    radial-gradient(45% 40% at 15% 40%, rgba(20, 184, 166, 0.14), transparent 70%),
+    radial-gradient(45% 40% at 15% 40%, rgba(59, 130, 246, 0.14), transparent 70%),
     transparent;
 }
 
@@ -310,7 +310,7 @@
   margin: 28px 0 16px;
   border-radius: 28px;
   padding: 24px 30px;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(59, 130, 246, 0.05) 50%, rgba(20, 184, 166, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(59, 130, 246, 0.05) 50%, rgba(59, 130, 246, 0.1) 100%);
   border: 1px solid rgba(37, 99, 235, 0.22);
   box-shadow: 0 12px 32px -8px rgba(37, 99, 235, 0.1);
   position: relative;
@@ -318,7 +318,7 @@
 }
 
 [data-theme="dark"] .sc-continue-learning-banner {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.22) 0%, rgba(30, 58, 138, 0.2) 50%, rgba(20, 184, 166, 0.15) 100%);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.22) 0%, rgba(30, 58, 138, 0.2) 50%, rgba(59, 130, 246, 0.15) 100%);
   border-color: rgba(99, 102, 241, 0.35);
   box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.35);
 }
@@ -753,14 +753,14 @@
   margin: 28px 0;
   border-radius: 28px;
   padding: 22px 28px;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(20, 184, 166, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(37, 99, 235, 0.18);
   box-shadow: 0 16px 40px -10px rgba(37, 99, 235, 0.08);
 }
 
 [data-theme="dark"] .sc-next-step {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.16) 0%, rgba(20, 184, 166, 0.12) 100%);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.16) 0%, rgba(59, 130, 246, 0.12) 100%);
   border-color: rgba(99, 102, 241, 0.3);
 }
 
@@ -974,7 +974,7 @@
 .sc-course-row em {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #10b981, #14b8a6);
+  background: linear-gradient(90deg, #10b981, #3b82f6);
   border-radius: inherit;
 }
 

@@ -123,19 +123,21 @@ export default function Navbar() {
             <MoreDropdown items={nav.moreItems} language={language} />
           )}
 
-          {/* Direct 1-Click Workspace Action (Compact, Clean Pill) */}
-          <Link
-            to={nav.workspace.path}
-            className={`nav-workspace-pill ${
-              location.pathname.startsWith(nav.workspace.path) ? "active" : ""
-            }`}
-            title={language === "km" ? nav.workspace.labelKm : nav.workspace.labelEn}
-          >
-            <span className="workspace-pill-pulse" aria-hidden="true" />
-            <span className="workspace-pill-label">
-              {language === "km" ? nav.workspace.labelKm : nav.workspace.labelEn}
-            </span>
-          </Link>
+          {/* Direct 1-Click Workspace Action (Shown when logged in) */}
+          {user && (
+            <Link
+              to={nav.workspace.path}
+              className={`nav-workspace-pill ${
+                location.pathname.startsWith(nav.workspace.path) ? "active" : ""
+              }`}
+              title={language === "km" ? nav.workspace.labelKm : nav.workspace.labelEn}
+            >
+              <span className="workspace-pill-pulse" aria-hidden="true" />
+              <span className="workspace-pill-label">
+                {language === "km" ? nav.workspace.labelKm : nav.workspace.labelEn}
+              </span>
+            </Link>
+          )}
         </nav>
 
         {/* Global Utility Actions */}

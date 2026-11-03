@@ -22,7 +22,7 @@
   transform: translateX(-50%);
   width: 640px;
   height: 400px;
-  background: radial-gradient(circle, rgba(37, 99, 235, 0.16) 0%, rgba(20, 184, 166, 0.08) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.16) 0%, rgba(59, 130, 246, 0.08) 50%, transparent 70%);
   filter: blur(80px);
   pointer-events: none;
   z-index: -1;
@@ -370,8 +370,8 @@
 .mentor-card-person > span {
   display: grid;
   place-items: center;
-  color: #0f766e;
-  background: #ccfbf1;
+  color: #2563eb;
+  background: #dbeafe;
   font-weight: 800;
 }
 
@@ -396,8 +396,8 @@
 .skill-pill {
   border-radius: 999px;
   padding: 7px 10px;
-  background: #ecfdf5;
-  color: #0f766e;
+  background: #eff6ff;
+  color: #2563eb;
   font-size: 0.85rem;
   font-weight: 700;
 }

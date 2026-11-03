@@ -13,6 +13,7 @@ import {
   IoTrashOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import UserAvatar from "../../components/ui/UserAvatar";
 import {
   createProfileItemRequest,
@@ -99,6 +100,8 @@ const ProfileRecordSection = ({
   onChanged,
   beforeSubmit,
 }) => {
+  const { language } = useLanguage();
+  const isKm = language === "km";
   const emptyForm = useMemo(() => emptyFormFor(fields), [fields]);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
@@ -188,7 +191,7 @@ const ProfileRecordSection = ({
           className="btn outline profile-small-action"
           onClick={() => (showForm ? resetForm() : setShowForm(true))}
         >
-          <IoAddOutline /> {showForm ? "Cancel" : "Add"}
+          <IoAddOutline /> {showForm ? (isKm ? "បោះបង់" : "Cancel") : (isKm ? "បន្ថែម" : "Add")}
         </button>
       </div>
 

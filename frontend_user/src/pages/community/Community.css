@@ -10,7 +10,7 @@
   overflow: hidden;
   padding: clamp(46px, 5vw, 66px) 20px !important;
   background:
-    radial-gradient(circle at 8% 12%, rgba(45, 212, 191, 0.2), transparent 25%),
+    radial-gradient(circle at 8% 12%, rgba(59, 130, 246, 0.2), transparent 25%),
     radial-gradient(
       circle at 92% 22%,
       rgba(37, 99, 235, 0.13),
@@ -23,7 +23,7 @@
 .community-hero::after {
   position: absolute;
   z-index: -1;
-  border: 1px solid rgba(15, 118, 110, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.08);
   border-radius: 50%;
   content: "";
 }
@@ -69,7 +69,7 @@
 }
 
 .community-hero .eyebrow {
-  color: #0f766e;
+  color: #2563eb;
 }
 
 .skill-match-actions,
@@ -138,8 +138,8 @@
   display: grid !important;
   place-items: center;
   border-radius: 13px;
-  background: #ecfdf5;
-  color: #0f766e;
+  background: #eff6ff;
+  color: #2563eb;
   font-size: 1.2rem;
 }
 
@@ -165,7 +165,7 @@
 }
 
 .exchange-skill-route > svg {
-  color: #0f766e;
+  color: #2563eb;
 }
 
 .exchange-card > p {
@@ -215,7 +215,7 @@
 }
 
 .exchange-mini-progress strong {
-  color: #0f766e;
+  color: #2563eb;
 }
 
 .exchange-mini-track {
@@ -229,7 +229,7 @@
   height: 100%;
   display: block;
   border-radius: inherit;
-  background: linear-gradient(90deg, #0f766e, #2dd4bf);
+  background: linear-gradient(90deg, #2563eb, #2dd4bf);
 }
 
 .exchange-meta,
@@ -564,7 +564,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #2563eb, #14b8a6);
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
 }
 
 .exchange-progress-form {
@@ -633,8 +633,8 @@
   height: 48px;
   place-items: center;
   border-radius: 14px;
-  color: #0f766e;
-  background: #ecfdf5;
+  color: #2563eb;
+  background: #eff6ff;
   font-size: 1.4rem;
 }
 

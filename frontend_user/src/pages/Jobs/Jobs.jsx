@@ -31,7 +31,8 @@ const formatDate = (value) =>
 const Jobs = () => {
   const navigate = useNavigate();
   const { user } = useGlobleContext();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isKm = language === "km";
   const [internships, setInternships] = useState([]);
   const [applications, setApplications] = useState([]);
   const [query, setQuery] = useState("");
@@ -169,17 +170,13 @@ const Jobs = () => {
             {t("jobsPage.heroDescription")}
           </p>
 
-          <div className="jobs-hero-actions">
-            <a href="#internship-search" className="btn primary jobs-hero-primary">
-              {t("jobsPage.findOpportunity")}
-              <IoArrowForwardOutline aria-hidden="true" />
-            </a>
-            {user?.role === "recruiter" && (
-              <Link to="/post-job" className="btn outline">
-                {t("jobsPage.postInternship")}
-              </Link>
-            )}
-            {user && (
+          {user && (
+            <div className="jobs-hero-actions">
+              {user?.role === "recruiter" && (
+                <Link to="/post-job" className="btn primary jobs-hero-primary">
+                  {t("jobsPage.postInternship")}
+                </Link>
+              )}
               <Link
                 to={user.role === "recruiter" ? "/recruiter/candidates" : "/my-applications"}
                 className="btn outline"
@@ -188,32 +185,14 @@ const Jobs = () => {
                   ? (isKm ? "ផ្ទាំងបេក្ខជន (Candidate ATS)" : "Candidate ATS")
                   : t("jobsPage.myApplications")}
               </Link>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
       <section className="section container jobs-content">
         {error && <div className="auth-error">{error}</div>}
         {success && <div className="profile-success">{success}</div>}
-
-        <div className="internship-stats">
-          <article>
-            <IoBriefcaseOutline />
-            <strong>{internships.length}</strong>
-            <span>{t("jobsPage.openInternships")}</span>
-          </article>
-          <article>
-            <strong>
-              {internships.filter((item) => item.isRemote).length}
-            </strong>
-            <span>{t("jobsPage.remoteOpportunities")}</span>
-          </article>
-          <article>
-            <strong>{applications.length}</strong>
-            <span>{t("jobsPage.yourApplications")}</span>
-          </article>
-        </div>
 
         <div className="internship-search-panel" id="internship-search">
           <label>

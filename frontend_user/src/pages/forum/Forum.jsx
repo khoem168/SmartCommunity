@@ -15,6 +15,10 @@ import {
   fetchForumCategories,
   fetchForumPosts,
 } from "../../services/forumService";
+import {
+  localizeForumCategory,
+  localizeForumPost,
+} from "../../utils/bilingualCatalog";
 import "./Forum.css";
 
 const formatDate = (value, language) => {
@@ -124,20 +128,6 @@ const Forum = () => {
               {user ? copy.create : copy.login}
             </button>
           </div>
-          <div className="forum-stat-grid">
-            <div>
-              <strong>{stats.posts || 0}</strong>
-              <span>{copy.total}</span>
-            </div>
-            <div>
-              <strong>{stats.questions || 0}</strong>
-              <span>{copy.questions}</span>
-            </div>
-            <div>
-              <strong>{stats.discussions || 0}</strong>
-              <span>{copy.discussions}</span>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -230,7 +220,6 @@ const Forum = () => {
           >
             <span className="category-dot all" />
             <strong>{copy.allTopics}</strong>
-            <span>{stats.posts || 0} {copy.posts}</span>
           </button>
           {(Array.isArray(categories) ? categories : []).map((category) => (
             <button
@@ -249,11 +238,7 @@ const Forum = () => {
                 className="category-dot"
                 style={{ background: category.color || "#2563eb" }}
               />
-              <strong>{category.name}</strong>
-              <span>
-                {category.postCount || 0}{" "}
-                {copy.posts}
-              </span>
+              <strong>{localizeForumCategory(category.name, language === "km")}</strong>
             </button>
           ))}
         </div>
@@ -322,12 +307,14 @@ const Forum = () => {
               </button>
             </div>
           ) : (
-            posts.map((post) => {
+            posts.map((rawPost) => {
+              const post = localizeForumPost(rawPost, language === "km");
               const catColor = post.category?.color || "#2563eb";
-              const catName =
+              const rawCatName =
                 post.category?.name ||
                 post.categoryName ||
                 (language === "km" ? "ទូទៅ" : "General");
+              const catName = localizeForumCategory(rawCatName, language === "km");
               const bodyText = String(post.body || "");
               return (
                 <article className="forum-post-card" key={post.id}>

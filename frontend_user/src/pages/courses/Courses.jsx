@@ -94,37 +94,43 @@ const Courses = () => {
   return (
     <main className="courses-page">
       <section className="courses-hero">
-        <div className="courses-hero-glow" />
         <div className="container courses-hero-inner">
           <div>
-            <p className="courses-kicker">Smart Community Academy</p>
+            <p className="courses-kicker">
+              {isKm ? "បណ្ណាល័យវគ្គសិក្សា" : "Smart Community Academy"}
+            </p>
             <h1>{t("coursesPage.heroTitle")}</h1>
             <p>{t("coursesPage.heroDescription")}</p>
-            <div className="courses-trust-row">
-              <span>
-                <FiPlayCircle /> {t("coursesPage.freePreviews")}
-              </span>
-              <span>
-                <FiCheckCircle /> {t("coursesPage.lifetimeAccess")}
-              </span>
-              <span>
-                <FiBookOpen /> {t("coursesPage.resources")}
-              </span>
-            </div>
-          </div>
-          <div className="courses-hero-stat">
-            <strong>{loading || error ? "—" : courses.length}</strong>
-            <span>{t("coursesPage.paths")}</span>
-            <small>{t("coursesPage.anyDevice")}</small>
           </div>
         </div>
       </section>
 
       <section className="container courses-library">
         <header className="courses-library-header">
-          <div>
-            <p className="courses-kicker">{t("coursesPage.library")}</p>
-            <h2>{t("coursesPage.chooseSkill")}</h2>
+          <div
+            className="course-filters"
+            aria-label={t("coursesPage.categoriesLabel")}
+          >
+            {categories.map((item) => {
+              const matchedCourse = courses.find((c) => c.category === item);
+              const label =
+                item === "All"
+                  ? t("coursesPage.all")
+                  : isKm && matchedCourse?.catKm
+                    ? matchedCourse.catKm
+                    : item;
+              return (
+                <button
+                  type="button"
+                  key={item}
+                  className={category === item ? "active" : ""}
+                  aria-pressed={category === item}
+                  onClick={() => setCategory(item)}
+                >
+                  {label}
+                </button>
+              );
+            })}
           </div>
           <label className="course-search">
             <FiSearch />
@@ -136,32 +142,6 @@ const Courses = () => {
             />
           </label>
         </header>
-
-        <div
-          className="course-filters"
-          aria-label={t("coursesPage.categoriesLabel")}
-        >
-          {categories.map((item) => {
-            const matchedCourse = courses.find((c) => c.category === item);
-            const label =
-              item === "All"
-                ? t("coursesPage.all")
-                : isKm && matchedCourse?.catKm
-                  ? matchedCourse.catKm
-                  : item;
-            return (
-              <button
-                type="button"
-                key={item}
-                className={category === item ? "active" : ""}
-                aria-pressed={category === item}
-                onClick={() => setCategory(item)}
-              >
-                {label}
-              </button>
-            );
-          })}
-        </div>
 
         {loading ? (
           <SkeletonGrid

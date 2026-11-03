@@ -93,11 +93,11 @@ const routes = createBrowserRouter(
         <Route path="sessions/:sessionId" element={pageElement(LearningSessions, "Loading session...")} />
         <Route path="sessions/:sessionId/room" element={protectedPage(SessionRoom, "Preparing session room...")} />
         {/* Unified Skill Exchange Hub & Backward-Compatible URLs */}
-        <Route path="skill-exchange" element={protectedPage(SkillExchangeHub, "Preparing Skill Exchange Hub...")} />
-        <Route path="exchange" element={protectedPage(SkillExchangeHub, "Preparing Skill Exchange Hub...")} />
-        <Route path="discover" element={protectedPage(() => <SkillExchangeHub initialTab="match" />, "Finding skill partners...")} />
-        <Route path="discover/:memberId" element={protectedPage(DiscoverProfile, "Loading member profile...")} />
-        <Route path="community" element={protectedPage(() => <SkillExchangeHub initialTab="match" />, "Loading skill exchanges...")} />
+        <Route path="skill-exchange" element={pageElement(SkillExchangeHub, "Preparing Skill Exchange Hub...")} />
+        <Route path="exchange" element={pageElement(SkillExchangeHub, "Preparing Skill Exchange Hub...")} />
+        <Route path="discover" element={pageElement(() => <SkillExchangeHub initialTab="match" />, "Finding skill partners...")} />
+        <Route path="discover/:memberId" element={pageElement(DiscoverProfile, "Loading member profile...")} />
+        <Route path="community" element={pageElement(() => <SkillExchangeHub initialTab="match" />, "Loading skill exchanges...")} />
         <Route path="skill-requests" element={protectedPage(() => <SkillExchangeHub initialTab="swaps" />, "Loading skill requests...")} />
         <Route path="community/skill-exchange/:exchangeId" element={protectedPage(SkillExchangeDetail, "Loading skill exchange...")} />
         <Route path="jobs" element={pageElement(Jobs, "Loading opportunities...")} />

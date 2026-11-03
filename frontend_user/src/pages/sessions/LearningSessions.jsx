@@ -213,8 +213,8 @@ const LearningSessions = () => {
             <p className="eyebrow">{t("sessionsPage.eyebrow")}</p>
             <h1>{t("sessionsPage.title")}</h1>
             <p>{t("sessionsPage.description")}</p>
-            <div className="sessions-hero-actions">
-              {canCreate && (
+            {canCreate && (
+              <div className="sessions-hero-actions">
                 <button
                   className="btn primary"
                   type="button"
@@ -222,31 +222,8 @@ const LearningSessions = () => {
                 >
                   <IoAddOutline /> {t("sessionsPage.createSession")}
                 </button>
-              )}
-              <button
-                className="btn outline"
-                type="button"
-                onClick={() => (user ? setScope("my") : navigate("/login"))}
-              >
-                {user
-                  ? t("sessionsPage.mySessions")
-                  : t("sessionsPage.loginToJoin")}
-              </button>
-            </div>
-          </div>
-          <div className="sessions-stats">
-            <div>
-              <strong>{stats.upcoming}</strong>
-              <span>{t("sessionsPage.upcoming")}</span>
-            </div>
-            <div>
-              <strong>{stats.registered}</strong>
-              <span>{t("sessionsPage.registered")}</span>
-            </div>
-            <div className={stats.live > 0 ? "sessions-live-stat" : ""}>
-              <strong>{stats.live}</strong>
-              <span>{t("sessionsPage.liveNow")}</span>
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </section>

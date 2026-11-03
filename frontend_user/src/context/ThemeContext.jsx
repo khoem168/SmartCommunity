@@ -77,13 +77,13 @@ export const ThemeProvider = ({ children }) => {
     () => ({
       algorithm: isDark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
       token: {
-        colorPrimary: isDark ? "#ffffff" : "#111318",
-        borderRadius: 20,
+        colorPrimary: isDark ? "#3b82f6" : "#2563eb",
+        borderRadius: 16,
         fontFamily: "Inter, 'Kantumruy Pro', system-ui, sans-serif",
         colorBgContainer: isDark ? "#161c2e" : "#ffffff",
-        colorText: isDark ? "#f3f5f9" : "#0b0d12",
-        colorTextSecondary: isDark ? "#9aa3b2" : "#6b7280",
-        colorBorder: isDark ? "rgba(255,255,255,0.12)" : "rgba(15,23,42,0.09)",
+        colorText: isDark ? "#f3f5f9" : "#0f172a",
+        colorTextSecondary: isDark ? "#9aa3b2" : "#64748b",
+        colorBorder: isDark ? "rgba(255,255,255,0.12)" : "#e2e8f0",
       },
     }),
     [isDark],

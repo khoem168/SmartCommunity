@@ -9,7 +9,7 @@
   background:
     radial-gradient(
       circle at 88% 10%,
-      rgba(45, 212, 191, 0.22),
+      rgba(59, 130, 246, 0.22),
       transparent 28%
     ),
     linear-gradient(135deg, #111827, #0f3d4a);
@@ -143,8 +143,8 @@
 .admin-report-icon {
   padding: 11px;
   border-radius: 14px;
-  background: #ccfbf1;
-  color: #0f766e;
+  background: #dbeafe;
+  color: #2563eb;
   font-size: 2.8rem;
 }
 

@@ -3,14 +3,14 @@
 }
 
 .profile-hero {
-  padding: 54px 0;
-  background:
-    radial-gradient(
-      circle at top right,
-      rgba(16, 185, 129, 0.16),
-      transparent 38%
-    ),
-    #f8fafc;
+  padding: 36px 0 32px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+[data-theme="dark"] .profile-hero {
+  background: linear-gradient(180deg, #0f172a 0%, #0b0f19 100%);
+  border-bottom: 1px solid #1e293b;
 }
 
 .profile-hero-inner {
@@ -32,7 +32,7 @@
   width: 86px;
   height: 86px;
   border-radius: 50%;
-  background: #0f766e;
+  background: #2563eb;
   color: #ffffff;
   font-size: 1.8rem;
   font-weight: 800;
@@ -58,7 +58,7 @@
   place-items: center;
   border: 2px solid #ffffff;
   border-radius: 50%;
-  background: #0f766e;
+  background: #2563eb;
   color: #ffffff;
   cursor: pointer;
 }
@@ -81,7 +81,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #0f766e;
+  color: #2563eb;
   font-weight: 700;
 }
 
@@ -166,7 +166,7 @@
 
 .profile-info-list svg,
 .activity-grid svg {
-  color: #0f766e;
+  color: #2563eb;
   font-size: 1.2rem;
 }
 
@@ -378,15 +378,15 @@
 .profile-edit-form select:focus,
 .profile-edit-form textarea:focus,
 .profile-skill-edit-row input:focus {
-  border-color: #0f766e;
-  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.08);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
 }
 
 .profile-success {
   margin-bottom: 14px;
   border: 1px solid #bbf7d0;
   border-radius: 12px;
-  background: #ecfdf5;
+  background: #eff6ff;
   color: #047857;
   padding: 10px 12px;
   font-weight: 700;
@@ -408,8 +408,8 @@
 .profile-skill {
   border-radius: 999px;
   border: 0;
-  background: #ecfdf5;
-  color: #0f766e;
+  background: #eff6ff;
+  color: #2563eb;
   padding: 8px 12px;
   font-weight: 700;
 }
@@ -596,9 +596,9 @@
 }
 
 .verification-pill.verified {
-  background: rgba(20, 184, 166, 0.12);
-  color: #0f766e;
-  border: 1px solid rgba(20, 184, 166, 0.25);
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+  border: 1px solid rgba(59, 130, 246, 0.25);
 }
 
 .verification-pill.pending {
@@ -705,10 +705,10 @@
 }
 
 .stat-icon.blue { color: var(--blue); background: rgba(59, 107, 255, 0.1); }
-.stat-icon.green { color: #0f766e; background: rgba(20, 184, 166, 0.1); }
+.stat-icon.green { color: #2563eb; background: rgba(59, 130, 246, 0.1); }
 .stat-icon.gold { color: #b45309; background: rgba(245, 179, 1, 0.1); }
 .stat-icon.purple { color: #9333ea; background: rgba(147, 51, 234, 0.1); }
-.stat-icon.teal { color: var(--teal); background: rgba(20, 184, 166, 0.1); }
+.stat-icon.teal { color: var(--teal); background: rgba(59, 130, 246, 0.1); }
 
 .recruiter-stat-card strong,
 .mentor-stat-card strong {

@@ -32,7 +32,7 @@
   height: 440px;
   top: -80px;
   left: 10%;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.28) 0%, rgba(20, 184, 166, 0.12) 70%, transparent 100%);
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.28) 0%, rgba(59, 130, 246, 0.12) 70%, transparent 100%);
 }
 
 .auth-orb-2 {
@@ -44,7 +44,7 @@
 }
 
 [data-theme="dark"] .auth-orb-1 {
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(20, 184, 166, 0.08) 70%, transparent 100%);
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.08) 70%, transparent 100%);
 }
 
 [data-theme="dark"] .auth-orb-2 {

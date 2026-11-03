@@ -53,6 +53,32 @@ export default function StudentProfileView({
   const projects = profileData?.projects || [];
   const certificates = profileData?.certificates || [];
 
+  const displayProfession = isKm
+    ? user.profession === "Frontend Learning Partner"
+      ? "ដៃគូសិក្សាផ្នែក Frontend (Frontend Learning Partner)"
+      : user.profession || "និស្សិតកំពុងអភិវឌ្ឍន៍ជំនាញ"
+    : user.profession || "Aspiring Software Engineer & Student";
+
+  const displayLocation = isKm
+    ? user.location === "Online"
+      ? "តាមប្រព័ន្ធអនឡាញ"
+      : user.location === "Phnom Penh, Cambodia"
+        ? "ភ្នំពេញ, កម្ពុជា"
+        : user.location
+    : user.location;
+
+  const displayLevel = isKm
+    ? (skillData.experienceLevel || "Beginner") === "Beginner"
+      ? "កម្រិតដំបូង (Beginner)"
+      : skillData.experienceLevel
+    : `${skillData.experienceLevel || "Beginner"} level`;
+
+  const displayBio = isKm
+    ? user.bio === "A friendly community member focused on building practical web projects and sharing frontend basics."
+      ? "សមាជិកសហគមន៍ដែលផ្តោតលើការបង្កើតគម្រោងគេហទំព័រជាក់ស្តែង និងការចែករំលែកចំណេះដឹងមូលដ្ឋានផ្នែក Frontend ជាមួយមិត្តរួមថ្នាក់។"
+      : user.bio
+    : user.bio;
+
   return (
     <div className="student-profile-view">
       {/* 1. Student Hero */}
@@ -79,9 +105,9 @@ export default function StudentProfileView({
               </span>
               <h1>{user.fullName}</h1>
               <p className="profile-headline">
-                {user.profession || (isKm ? "និស្សិតកំពុងអភិវឌ្ឍន៍ជំនាញ" : "Aspiring Software Engineer & Student")}
+                {displayProfession}
               </p>
-              {user.location && <small className="profile-location">📍 {user.location}</small>}
+              {displayLocation && <small className="profile-location">📍 {displayLocation}</small>}
 
               <div className="profile-social-links">
                 {user.githubUrl && (
@@ -126,10 +152,10 @@ export default function StudentProfileView({
             <h2>{isKm ? "ព័ត៌មានទូទៅ និងគោលដៅ" : "Career Overview & Goals"}</h2>
             <div className="profile-info-list">
               <span>
-                <IoBriefcaseOutline /> {user.profession || (isKm ? "មិនទាន់បញ្ជាក់ជំនាញ" : "Student")}
+                <IoBriefcaseOutline /> {displayProfession}
               </span>
               <span>
-                <IoSchoolOutline /> {skillData.experienceLevel || "Beginner"} level
+                <IoSchoolOutline /> {displayLevel}
               </span>
               <span>
                 <IoCalendarOutline /> {isKm ? "ចូលរួមតាំងពី" : "Joined"} {formatDate(user.createdAt)}
@@ -141,8 +167,8 @@ export default function StudentProfileView({
                 <p>{user.careerGoal}</p>
               </div>
             )}
-            {user.bio && (
-              <p className="profile-bio-text">{user.bio}</p>
+            {displayBio && (
+              <p className="profile-bio-text">{displayBio}</p>
             )}
           </section>
 

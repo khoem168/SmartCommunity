@@ -10,25 +10,31 @@
 
 /* 1. Hero Header */
 .hub-hero {
-  padding: 3rem 0 2rem;
-  background: radial-gradient(
-    circle at 50% 0%,
-    rgba(59, 107, 255, 0.08) 0%,
-    transparent 60%
-  );
-  border-bottom: 1px solid var(--line);
+  padding: 2.75rem 0 2.5rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+[data-theme="dark"] .hub-hero {
+  background: linear-gradient(180deg, #0f172a 0%, #0b0f19 100%);
+  border-bottom: 1px solid #1e293b;
 }
 
 .hub-hero-inner {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  flex-wrap: wrap;
+  text-align: center;
+  gap: 1.25rem;
+  max-width: 780px;
+  margin: 0 auto;
 }
 
 .hub-hero-text {
   max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hub-eyebrow {
@@ -120,9 +126,14 @@
 }
 
 .hub-tab-btn.active {
-  background: var(--text);
-  color: var(--bg);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+}
+
+[data-theme="dark"] .hub-tab-btn.active {
+  background: #3b82f6;
+  color: #ffffff;
 }
 
 .hub-tab-count {
@@ -135,7 +146,7 @@
 
 .hub-tab-btn.active .hub-tab-count {
   background: rgba(255, 255, 255, 0.25);
-  color: var(--bg);
+  color: #ffffff;
 }
 
 .hub-tab-badge-alert {
@@ -162,9 +173,9 @@
 }
 
 .hub-alert.success {
-  background: rgba(20, 184, 166, 0.12);
-  color: #0f766e;
-  border: 1px solid rgba(20, 184, 166, 0.25);
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+  border: 1px solid rgba(59, 130, 246, 0.25);
 }
 
 .hub-alert.error {
@@ -263,9 +274,9 @@
 }
 
 .hub-chip.active {
-  background: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
 }
 
 /* Matches Grid */
@@ -380,7 +391,7 @@
 }
 
 .hub-compat-badge.teach {
-  color: #0f766e;
+  color: #2563eb;
 }
 
 .hub-compat-badge.learn {
@@ -401,8 +412,8 @@
 }
 
 .hub-pill.teach {
-  background: rgba(20, 184, 166, 0.12);
-  color: #0f766e;
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
 }
 
 .hub-pill.learn {
@@ -507,7 +518,7 @@
 
 .hub-metric-icon.teal {
   color: var(--teal);
-  background: rgba(20, 184, 166, 0.1);
+  background: rgba(59, 130, 246, 0.1);
 }
 
 .hub-metric-card strong {
@@ -551,8 +562,8 @@
 }
 
 .hub-subtab-btn.active {
-  background: var(--text);
-  color: var(--bg);
+  background: #2563eb;
+  color: #ffffff;
 }
 
 .hub-swap-group {
@@ -638,8 +649,8 @@
 }
 
 .hub-status-pill.accepted {
-  background: rgba(20, 184, 166, 0.12);
-  color: #0f766e;
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
 }
 
 .hub-status-pill.rejected,
@@ -871,8 +882,8 @@
   gap: 0.5rem;
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #0f766e;
-  background: rgba(20, 184, 166, 0.12);
+  color: #2563eb;
+  background: rgba(59, 130, 246, 0.12);
   padding: 0.6rem;
   border-radius: 12px;
 }
@@ -1128,8 +1139,8 @@
 }
 
 .hub-tag-pill.teach {
-  background: rgba(20, 184, 166, 0.15);
-  color: #0f766e;
+  background: rgba(59, 130, 246, 0.15);
+  color: #2563eb;
 }
 
 .hub-tag-pill.learn {

@@ -1,19 +1,32 @@
-/* Floating glass pill navbar */
+/* Clean Full-Width White-Blue Docked Top Navbar (CodeKhmerLearning Style) */
 .nav-glass-header {
   position: fixed;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: none;
   z-index: 90;
-  width: min(1320px, calc(100% - 24px));
-  height: 64px;
-  border-radius: 999px;
+  width: 100%;
+  height: 68px;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 0 10px 0 18px;
+  gap: 16px;
+  padding: 0 max(24px, calc((100% - 1240px) / 2));
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: none !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.03) !important;
+}
+
+[data-theme="dark"] .nav-glass-header {
+  background: rgba(15, 23, 42, 0.94) !important;
+  border-bottom: 1px solid #1e293b !important;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35) !important;
 }
 
 .nav-glass-logo {
@@ -95,36 +108,29 @@
   transform: translateY(-1px);
 }
 
-/* Clear Active Page State with Pill Tint & Bottom Accent Indicator */
+/* Clean Active Page State (CodeKhmerLearning Soft Blue Pill) */
 .nav-item-link.on {
-  color: var(--blue, #2563eb) !important;
-  background: rgba(37, 99, 235, 0.1) !important;
+  color: #2563eb !important;
+  background: #eff6ff !important;
   font-weight: 700 !important;
-  box-shadow: inset 0 0 0 1.5px rgba(37, 99, 235, 0.28) !important;
+  border-radius: 10px;
+  box-shadow: none !important;
 }
 
 .nav-item-link.on::after {
-  content: "";
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 14px;
-  height: 2.5px;
-  border-radius: 999px;
-  background: #2563eb;
+  display: none;
 }
 
 [data-theme="dark"] .nav-item-link.on {
   color: #60a5fa !important;
-  background: rgba(59, 130, 246, 0.2) !important;
+  background: rgba(59, 130, 246, 0.18) !important;
   font-weight: 700 !important;
-  box-shadow: inset 0 0 0 1.5px rgba(96, 165, 250, 0.4) !important;
+  border-radius: 10px;
+  box-shadow: none !important;
 }
 
 [data-theme="dark"] .nav-item-link.on::after {
-  background: #60a5fa;
-  box-shadow: 0 0 8px rgba(96, 165, 250, 0.8);
+  display: none;
 }
 
 .nav-glass-actions {
@@ -576,10 +582,10 @@
 
 @media (max-width: 700px) {
   .nav-glass-header {
-    width: calc(100% - 20px);
-    padding: 0 8px 0 14px;
-    height: 56px;
-    top: 8px;
+    width: 100%;
+    padding: 0 16px;
+    height: 60px;
+    top: 0;
   }
 
   .nav-glass-logo span {

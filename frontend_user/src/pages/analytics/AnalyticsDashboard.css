@@ -119,8 +119,8 @@
   place-items: center;
   flex: 0 0 auto;
   border-radius: 14px;
-  background: #ccfbf1;
-  color: #0f766e;
+  background: #dbeafe;
+  color: #2563eb;
   font-size: 1.3rem;
 }
 
@@ -254,7 +254,7 @@
   place-items: center;
   flex: 0 0 auto;
   border-radius: 50%;
-  background: conic-gradient(#0f766e var(--rate), #e2e8f0 0);
+  background: conic-gradient(#2563eb var(--rate), #e2e8f0 0);
   position: relative;
 }
 

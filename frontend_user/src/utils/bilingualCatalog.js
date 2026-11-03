@@ -333,3 +333,92 @@ export const CAREER_PATH_KM_MAP = {
   },
 };
 
+export function localizeMentorRecord(mentor, isKm = false) {
+  if (!mentor) return {};
+  if (!isKm) {
+    return {
+      ...mentor,
+      displayTitle: mentor.title
+        ? `${mentor.title}${mentor.company ? ` at ${mentor.company}` : ""}`
+        : mentor.company || "Senior Mentor",
+      displayBio:
+        mentor.bio ||
+        "Experienced industry professional helping students master practical engineering skills and career readiness.",
+      displayLocation: mentor.location || "Phnom Penh, Cambodia",
+      displaySessions: `${mentor.sessions || 0} sessions`,
+    };
+  }
+
+  const titleLower = String(mentor.title || "").toLowerCase();
+  let titleKm = "អ្នកណែនាំជំនាញសហគមន៍ (Community Tech Mentor)";
+  if (titleLower.includes("full-stack") || titleLower.includes("fullstack")) {
+    titleKm = "វិស្វករកម្មវិធីជាន់ខ្ពស់ (Senior Full-Stack Engineer)";
+  } else if (titleLower.includes("cloud") || titleLower.includes("architect")) {
+    titleKm = "ស្ថាបត្យករប្រព័ន្ធ Cloud ជាន់ខ្ពស់ (Senior Cloud Architect)";
+  } else if (titleLower.includes("product") || titleLower.includes("design") || titleLower.includes("ux")) {
+    titleKm = "ប្រធានផ្នែករចនាបទពិសោធន៍អ្នកប្រើប្រាស់ (Lead UX/UI Designer)";
+  } else if (titleLower.includes("data") || titleLower.includes("ai")) {
+    titleKm = "អ្នកឯកទេសវិភាគទិន្នន័យ និង AI (Data & AI Specialist)";
+  } else if (titleLower.includes("backend")) {
+    titleKm = "វិស្វករប្រព័ន្ធ Backend ជាន់ខ្ពស់ (Senior Backend Engineer)";
+  } else if (titleLower.includes("frontend")) {
+    titleKm = "អ្នកអភិវឌ្ឍគេហទំព័រជាន់ខ្ពស់ (Senior Frontend Developer)";
+  }
+
+  return {
+    ...mentor,
+    displayTitle: mentor.company ? `${titleKm} · ${mentor.company}` : titleKm,
+    displayBio:
+      mentor.bioKm ||
+      "អ្នកជំនាញបច្ចេកវិទ្យាដែលមានបទពិសោធន៍ជាក់ស្តែងក្នុងការណែនាំនិស្សិតឱ្យចេះសរសេរកូដ រៀបចំគម្រោង Portfolio និងត្រៀមខ្លួនសម្ភាសន៍ការងារ។",
+    displayLocation:
+      String(mentor.location || "").toLowerCase().includes("siem reap")
+        ? "សៀមរាប, កម្ពុជា"
+        : "ភ្នំពេញ, កម្ពុជា",
+    displaySessions: `${mentor.sessions || 0} វគ្គណែនាំ`,
+  };
+}
+
+export function localizeForumCategory(name = "", isKm = false) {
+  if (!isKm) return name;
+  const key = String(name).trim().toLowerCase();
+  const map = {
+    career: "អាជីព & ការងារ",
+    design: "ការរចនា UX/UI",
+    internship: "កម្មសិក្សា",
+    programming: "ការសរសេរកូដ",
+    general: "ពិភាក្សាទូទៅ",
+  };
+  return map[key] || name;
+}
+
+export function localizeForumPost(post, isKm = false) {
+  if (!post || !isKm) return post;
+  const titleLower = String(post.title || "").toLowerCase();
+  let titleKm = post.title;
+  let bodyKm = post.body;
+
+  if (titleLower.includes("react portfolio")) {
+    titleKm = "តើខ្ញុំគួររៀបចំគម្រោង React Portfolio បែបណាដើម្បីដាក់ពាក្យកម្មសិក្សាឱ្យទទួលបានជោគជ័យ?";
+    bodyKm =
+      "ខ្ញុំបានបង្កើតគម្រោង React ចំនួន ៣ ហើយចង់រៀបចំដាក់បង្ហាញឱ្យមានលក្ខណៈអាជីព។ តើខ្ញុំគួរបញ្ចូលផ្នែកណាខ្លះ រូបភាព Screenshot ការពន្យល់បច្ចេកទេស និងតំណភ្ជាប់ Demo បែបណា ដើម្បីឱ្យអ្នកជ្រើសរើសបុគ្គលិកងាយស្រួលពិនិត្យស្នាដៃរបស់ខ្ញុំ?";
+  } else if (titleLower.includes("four-week plan") || titleLower.includes("junior developer interview")) {
+    titleKm = "ផែនការអនុវត្តរយៈពេល ៤ សប្តាហ៍សម្រាប់ត្រៀមសម្ភាសន៍ការងារ Junior Developer";
+    bodyKm =
+      "ការពិភាក្សានេះចែករំលែកផែនការប្រចាំសប្តាហ៍ជាក់ស្តែង រួមមានការរៀបចំ Portfolio ការរំលឹកមូលដ្ឋានគ្រឹះ JavaScript ការដោះស្រាយលំហាត់កូដ និងការហាត់សមសម្ភាសន៍ផ្ទាល់។";
+  } else if (titleLower.includes("ux") || titleLower.includes("figma")) {
+    titleKm = "គន្លឹះរៀបចំ Design System និង Prototype នៅក្នុង Figma សម្រាប់អ្នកចាប់ផ្តើមដំបូង";
+    bodyKm =
+      "ចែករំលែកបទពិសោធន៍ក្នុងការរៀបចំ Components, Auto Layout និងការធ្វើ User Flow ឱ្យមានរបៀបរៀបរយមុនពេលប្រគល់ឱ្យក្រុមវិស្វករសរសេរកូដ។";
+  }
+
+  return {
+    ...post,
+    title: titleKm,
+    body: bodyKm,
+    categoryName: localizeForumCategory(post.categoryName, true),
+  };
+}
+
+
+

@@ -25,6 +25,11 @@ import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { fetchDashboard } from "../../services/platformService";
 import { RouteLoader } from "../../components/ui/LoadingStates";
+import {
+  enrichCourseRecord,
+  enrichInternshipRecord,
+  localizeSessionRecord,
+} from "../../utils/bilingualCatalog";
 import "./Dashboard.css";
 
 const statusLabel = (t, value) => {
@@ -221,20 +226,22 @@ const computeActionItems = (role, data, user, profileProgress, isKm) => {
   }
 
   // 4. STUDENT ACTIONS
-  const unfinishedCourse = data?.courses?.find((c) => Number(c.progress || 0) < 100);
-  if (unfinishedCourse) {
+  const unfinishedRaw = data?.courses?.find((c) => Number(c.progress || 0) < 100);
+  if (unfinishedRaw) {
+    const unfinishedCourse = enrichCourseRecord(unfinishedRaw, 0);
+    const cTitle = isKm ? unfinishedCourse.titleKm : unfinishedCourse.titleEn;
     actions.push({
       id: "course-resume",
       icon: FiBookOpen,
       title: isKm
-        ? `បន្តការសិក្សា: ${unfinishedCourse.title}`
-        : `Continue: ${unfinishedCourse.title}`,
+        ? `បន្តការសិក្សា: ${cTitle}`
+        : `Continue: ${cTitle}`,
       desc: isKm
-        ? `បានបញ្ចប់ ${unfinishedCourse.progress || 0}% · បន្តមេរៀនបន្ទាប់ភ្លាមៗ`
-        : `${unfinishedCourse.progress || 0}% completed · Resume where you left off`,
+        ? `បានបញ្ចប់ ${unfinishedRaw.progress || 0}% · បន្តមេរៀនបន្ទាប់ភ្លាមៗ`
+        : `${unfinishedRaw.progress || 0}% completed · Resume where you left off`,
       badge: isKm ? "កំពុងរៀន" : "In Progress",
       badgeType: "warning",
-      to: `/courses/${unfinishedCourse.slug}`,
+      to: `/courses/${unfinishedRaw.slug}`,
       actionText: isKm ? "បន្តមេរៀន" : "Resume Lesson",
     });
   }
@@ -307,7 +314,7 @@ const computeActionItems = (role, data, user, profileProgress, isKm) => {
     });
   }
 
-  return actions;
+  return actions.slice(0, 2);
 };
 
 const SmartActionCenter = ({ actions, isKm }) => {
@@ -1274,7 +1281,10 @@ export default function Dashboard() {
             <p>{t("refresh.dashboardText")}</p>
             <div className="sc-dashboard-actions">
               <Link to="/courses">
-                {t("refresh.allCourses")} <FiArrowRight />
+                <FiBookOpen /> {t("refresh.allCourses")} <FiArrowRight />
+              </Link>
+              <Link to="/cv-studio">
+                <FiFileText /> {isKm ? "បង្កើត CV ស្អាត (CV Studio)" : "CV Studio"} <FiArrowRight />
               </Link>
               <Link to="/mentorship">
                 {t("refresh.mentorTitle")} <FiArrowRight />
@@ -1305,13 +1315,6 @@ export default function Dashboard() {
       </section>
 
       <div className="container sc-dashboard-content">
-        <div className="sc-dashboard-top">
-          <p>{t("refresh.workspace")}</p>
-          <button type="button" onClick={load}>
-            <FiRefreshCw /> {t("refresh.refresh")}
-          </button>
-        </div>
-
         <section className="sc-dashboard-stats">
           {studentStats.map(([Icon, value, label, to]) => (
             <Link to={to} key={label}>
@@ -1322,29 +1325,6 @@ export default function Dashboard() {
             </Link>
           ))}
         </section>
-
-        {data?.courses?.length > 0 && (
-          <section className="sc-continue-learning-banner">
-            <div className="sc-cl-left">
-              <span className="sc-cl-tag">
-                <FiBookOpen /> {isKm ? "កំពុងសិក្សា" : "Resume Learning"}
-              </span>
-              <h3>{data.courses[0].title}</h3>
-              <p>
-                {data.courses[0].category} · {data.courses[0].progress || 0}% {isKm ? "បានបញ្ចប់" : "Completed"}
-              </p>
-              <div className="sc-cl-bar">
-                <div
-                  className="sc-cl-fill"
-                  style={{ width: `${Math.max(6, Number(data.courses[0].progress || 0))}%` }}
-                />
-              </div>
-            </div>
-            <Link to={`/courses/${data.courses[0].slug}`} className="sc-cl-btn">
-              {isKm ? "បន្តការសិក្សា" : "Continue Course"} <FiArrowRight />
-            </Link>
-          </section>
-        )}
 
         {/* Smart Action Center */}
         <SmartActionCenter
@@ -1358,7 +1338,6 @@ export default function Dashboard() {
             <section className="sc-panel">
               <header>
                 <div>
-                  <p>{t("refresh.myCourses")}</p>
                   <h2>{t("refresh.myCourses")}</h2>
                 </div>
                 <Link to="/courses">
@@ -1367,26 +1346,31 @@ export default function Dashboard() {
               </header>
               {data?.courses?.length ? (
                 <div className="sc-dashboard-list">
-                  {data.courses.map((course) => (
-                    <Link
-                      to={`/courses/${course.slug}`}
-                      key={course.id}
-                      className="sc-course-row"
-                    >
-                      <FiBookOpen />
-                      <div>
-                        <strong>{course.title}</strong>
-                        <span>{course.category}</span>
-                      </div>
-                      <div>
-                        <b>{course.progress || 0}%</b>
-                        <i>
-                          <em style={{ width: `${course.progress || 0}%` }} />
-                        </i>
-                      </div>
-                      <FiArrowRight />
-                    </Link>
-                  ))}
+                  {data.courses.map((rawCourse, idx) => {
+                    const course = enrichCourseRecord(rawCourse, idx);
+                    const cTitle = isKm ? course.titleKm : course.titleEn;
+                    const cCat = isKm ? course.catKm : course.catEn;
+                    return (
+                      <Link
+                        to={`/courses/${course.slug}`}
+                        key={course.id}
+                        className="sc-course-row"
+                      >
+                        <FiBookOpen />
+                        <div>
+                          <strong>{cTitle}</strong>
+                          <span>{cCat}</span>
+                        </div>
+                        <div>
+                          <b>{course.progress || 0}%</b>
+                          <i>
+                            <em style={{ width: `${course.progress || 0}%` }} />
+                          </i>
+                        </div>
+                        <FiArrowRight />
+                      </Link>
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="sc-panel-empty">
@@ -1398,57 +1382,10 @@ export default function Dashboard() {
               )}
             </section>
 
-            {/* Career Roadmap */}
-            <section className="sc-panel">
-              <header>
-                <div>
-                  <p>{t("refresh.roadmap")}</p>
-                  <h2>{data?.roadmap?.title || t("refresh.noRoadmap")}</h2>
-                </div>
-                <Link to="/career">
-                  {t("refresh.openCareer")} <FiArrowRight />
-                </Link>
-              </header>
-              {data?.roadmap ? (
-                <div className="sc-roadmap">
-                  <div
-                    className="sc-roadmap-ring"
-                    style={{
-                      "--progress": `${
-                        data.roadmap.totalSteps
-                          ? (Number(data.roadmap.completedSteps) /
-                              Number(data.roadmap.totalSteps)) *
-                            100
-                          : 0
-                      }%`,
-                    }}
-                  >
-                    <span>
-                      {data.roadmap.completedSteps}/{data.roadmap.totalSteps}
-                    </span>
-                  </div>
-                  <p>
-                    {t("refresh.stepsComplete", {
-                      done: data.roadmap.completedSteps,
-                      total: data.roadmap.totalSteps,
-                    })}
-                  </p>
-                </div>
-              ) : (
-                <div className="sc-panel-empty">
-                  <p>{t("refresh.noRoadmap")}</p>
-                  <Link to="/career">
-                    {t("refresh.openCareer")} <FiArrowRight />
-                  </Link>
-                </div>
-              )}
-            </section>
-
             {/* Latest Internships */}
             <section className="sc-panel">
               <header>
                 <div>
-                  <p>{t("refresh.latestJobs")}</p>
                   <h2>{t("refresh.latestJobs")}</h2>
                 </div>
                 <Link to="/jobs">
@@ -1457,18 +1394,23 @@ export default function Dashboard() {
               </header>
               {data?.opportunities?.length ? (
                 <div className="sc-dashboard-list">
-                  {data.opportunities.map((job) => (
-                    <Link to="/jobs" key={job.id} className="sc-job-row">
-                      <FiBriefcase />
-                      <div>
-                        <strong>{job.title}</strong>
-                        <span>
-                          {job.company || job.location || job.internship_type}
-                        </span>
-                      </div>
-                      <FiArrowRight />
-                    </Link>
-                  ))}
+                  {data.opportunities.slice(0, 3).map((rawJob, idx) => {
+                    const job = enrichInternshipRecord(rawJob, idx);
+                    const jTitle = isKm ? job.titleKm : rawJob.title;
+                    const jLoc = isKm ? job.locationKm : rawJob.location;
+                    return (
+                      <Link to="/jobs" key={rawJob.id} className="sc-job-row">
+                        <FiBriefcase />
+                        <div>
+                          <strong>{jTitle}</strong>
+                          <span>
+                            {rawJob.company ? `${rawJob.company} · ${jLoc}` : jLoc}
+                          </span>
+                        </div>
+                        <FiArrowRight />
+                      </Link>
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="sc-panel-empty">
@@ -1483,7 +1425,6 @@ export default function Dashboard() {
             <section className="sc-panel">
               <header>
                 <div>
-                  <p>{t("refresh.mySchedule")}</p>
                   <h2>{t("refresh.mySchedule")}</h2>
                 </div>
                 <Link to="/sessions">
@@ -1492,25 +1433,28 @@ export default function Dashboard() {
               </header>
               {data?.upcomingEvents?.length ? (
                 <div className="sc-dashboard-list">
-                  {data.upcomingEvents.map((session) => (
-                    <Link
-                      to={`/sessions/${session.id}`}
-                      key={session.id}
-                      className="sc-session-row"
-                    >
-                      <FiCalendar />
-                      <div>
-                        <strong>{session.title}</strong>
-                        <span>
-                          {toDate(session.scheduled_time, language)} ·{" "}
-                          {session.mentor_name}
+                  {data.upcomingEvents.slice(0, 3).map((rawSession) => {
+                    const session = localizeSessionRecord(rawSession, isKm);
+                    return (
+                      <Link
+                        to={`/sessions/${session.id}`}
+                        key={session.id}
+                        className="sc-session-row"
+                      >
+                        <FiCalendar />
+                        <div>
+                          <strong>{session.displayTitle}</strong>
+                          <span>
+                            {toDate(session.scheduled_time, language)} ·{" "}
+                            {session.mentor_name}
+                          </span>
+                        </div>
+                        <span className={`sc-status ${session.status}`}>
+                          {statusLabel(t, session.status)}
                         </span>
-                      </div>
-                      <span className={`sc-status ${session.status}`}>
-                        {statusLabel(t, session.status)}
-                      </span>
-                    </Link>
-                  ))}
+                      </Link>
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="sc-panel-empty">
@@ -1522,51 +1466,10 @@ export default function Dashboard() {
               )}
             </section>
 
-            {/* Skill Exchanges */}
-            <section className="sc-panel">
-              <header>
-                <div>
-                  <p>{t("refresh.exchangesTitle")}</p>
-                  <h2>{t("refresh.exchangesTitle")}</h2>
-                </div>
-                <Link to="/skill-exchange?tab=swaps">
-                  {t("refresh.viewAll")} <FiArrowRight />
-                </Link>
-              </header>
-              {data?.exchanges?.length ? (
-                <div className="sc-dashboard-list">
-                  {data.exchanges.map((exchange) => (
-                    <Link
-                      to={`/community/skill-exchange/${exchange.id}`}
-                      key={exchange.id}
-                      className="sc-exchange-row"
-                    >
-                      <IoSwapHorizontalOutline />
-                      <div>
-                        <strong>{exchange.skill_requested}</strong>
-                        <span>{exchange.skill_offered}</span>
-                      </div>
-                      <span className={`sc-status ${exchange.status}`}>
-                        {statusLabel(t, exchange.status)}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="sc-panel-empty">
-                  <p>{t("refresh.noExchanges")}</p>
-                  <Link to="/community">
-                    {t("refresh.exchange")} <FiArrowRight />
-                  </Link>
-                </div>
-              )}
-            </section>
-
             {/* Activity Notifications */}
             <section className="sc-panel">
               <header>
                 <div>
-                  <p>{t("refresh.activity")}</p>
                   <h2>{t("refresh.activity")}</h2>
                 </div>
                 <Link to="/notifications">
@@ -1575,7 +1478,7 @@ export default function Dashboard() {
               </header>
               {data?.notifications?.length ? (
                 <div className="sc-dashboard-list">
-                  {data.notifications.map((notification) => (
+                  {data.notifications.slice(0, 4).map((notification) => (
                     <Link
                       to={notification.link || "/notifications"}
                       key={notification.id}

@@ -206,7 +206,7 @@ export default function RecruiterProfileView({ user }) {
             </button>
             <Link to="/post-job" className="btn primary">
               <IoAddOutline />
-              <span>{isKm ? "+ ប្រកាសការងារថ្មី" : "Post Internship"}</span>
+              <span>{isKm ? "ប្រកាសការងារថ្មី" : "Post Internship"}</span>
             </Link>
           </div>
         </div>

@@ -82,7 +82,7 @@ html[data-language="km"] {
 }
 
 .app-shell {
-  padding-top: calc(80px + env(safe-area-inset-top));
+  padding-top: calc(68px + env(safe-area-inset-top));
 }
 
 /* Base Body & Reset */
@@ -168,56 +168,10 @@ html[data-language="km"] h3 {
 }
 
 /* --------------------------------------------------------------------------
-   CLEAN ARCHITECTURAL GRID & AMBIENT BLUE GLOW (NO MUDDY MULTI-COLOR BLOBS)
+   CLEAN PURE CANVAS (HIDE GRID & BLOBS TO MATCH CODEKHMERLEARNING)
    -------------------------------------------------------------------------- */
 .bg-blobs {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-  background-image:
-    linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
-  background-size: 46px 46px;
-}
-
-[data-theme="dark"] .bg-blobs {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.028) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
-}
-
-.blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(110px);
-  opacity: 0.22;
-}
-
-.b1 {
-  width: 52vw;
-  height: 36vw;
-  left: 24vw;
-  top: -12vw;
-  background: #3b82f6;
-}
-
-.b2 {
-  width: 34vw;
-  height: 34vw;
-  right: -10vw;
-  top: 28vh;
-  background: #6366f1;
-  opacity: 0.12;
-}
-
-.b3 {
-  display: none;
-}
-
-[data-theme="dark"] .blob {
-  opacity: 0.16;
+  display: none !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -250,8 +204,16 @@ html[data-language="km"] h3 {
 }
 
 .btn-primary {
-  background: var(--ink);
-  color: var(--inkt);
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.24);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #4338ca);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.32);
 }
 
 .btn-soft {
@@ -305,8 +267,8 @@ html[data-language="km"] h3 {
 }
 
 .b-free {
-  background: rgba(20, 184, 166, 0.16);
-  color: #0f9488;
+  background: rgba(59, 130, 246, 0.16);
+  color: #2563eb;
 }
 
 .b-level {
@@ -432,17 +394,17 @@ html[data-language="km"] h3 {
 }
 
 .seg button.on {
-  background: var(--ink, #0f172a);
+  background: #2563eb;
   color: #ffffff !important;
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
 }
 
 [data-theme="dark"] .seg button.on {
-  background: #ffffff;
-  color: #0b0d12 !important;
+  background: #3b82f6;
+  color: #ffffff !important;
   font-weight: 700;
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.28);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.32);
 }
 
 .seg .thumb {
@@ -452,7 +414,7 @@ html[data-language="km"] h3 {
   left: 0;
   width: 0;
   border-radius: 999px;
-  background: var(--ink);
+  background: #2563eb;
   transition: left 0.45s var(--spring), width 0.45s var(--spring);
 }
 

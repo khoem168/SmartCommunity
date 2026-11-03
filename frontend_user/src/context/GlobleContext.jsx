@@ -41,6 +41,14 @@ const GlobleContext = ({ children }) => {
 
   useEffect(() => {
     if (!user) return;
+    const savedTheme =
+      typeof window !== "undefined"
+        ? window.localStorage.getItem("smartCommunityTheme")
+        : null;
+    if (savedTheme === "light" || savedTheme === "dark") {
+      document.documentElement.dataset.theme = savedTheme;
+      return;
+    }
     document.documentElement.dataset.theme = user.darkMode ? "dark" : "light";
   }, [user]);
 
