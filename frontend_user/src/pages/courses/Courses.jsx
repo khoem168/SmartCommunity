@@ -1,6 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
+  FaCode,
+  FaDatabase,
+  FaFigma,
+  FaGitAlt,
+  FaNodeJs,
+  FaPython,
+  FaReact,
+} from "react-icons/fa";
+import {
   FiArrowRight,
   FiBookOpen,
   FiCheckCircle,
@@ -13,7 +22,17 @@ import TiltCard from "../../components/ui/TiltCard";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { fetchCourses } from "../../services/courseService";
+import { enrichCourseRecord } from "../../utils/bilingualCatalog";
 import "./Courses.css";
+
+const COVER_ICON_MAP = {
+  react: FaReact,
+  node: FaNodeJs,
+  figma: FaFigma,
+  python: FaPython,
+  sql: FaDatabase,
+  git: FaGitAlt,
+};
 
 const money = (amount, currency, locale = "en-US") =>
   new Intl.NumberFormat(locale, {
@@ -25,24 +44,31 @@ const money = (amount, currency, locale = "en-US") =>
 const Courses = () => {
   const { language, t } = useLanguage();
   const { user } = useGlobleContext();
+  const isKm = language === "km";
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("search") || "";
   const setQuery = (value) => {
-    setSearchParams((previous) => {
-      const next = new URLSearchParams(previous);
-      if (value) next.set("search", value);
-      else next.delete("search");
-      return next;
-    }, { replace: true });
+    setSearchParams(
+      (previous) => {
+        const next = new URLSearchParams(previous);
+        if (value) next.set("search", value);
+        else next.delete("search");
+        return next;
+      },
+      { replace: true },
+    );
   };
   const [category, setCategory] = useState("All");
 
   useEffect(() => {
     fetchCourses()
-      .then((response) => setCourses(response.courses || []))
+      .then((response) => {
+        const raw = response.courses || [];
+        setCourses(raw.map((c, idx) => enrichCourseRecord(c, idx)));
+      })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
@@ -51,14 +77,17 @@ const Courses = () => {
     () => ["All", ...new Set(courses.map((course) => course.category))],
     [courses],
   );
+
   const visibleCourses = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return courses.filter(
       (course) =>
         (category === "All" || course.category === category) &&
         (!needle ||
-          course.title.toLowerCase().includes(needle) ||
-          course.description.toLowerCase().includes(needle)),
+          String(course.titleEn || "").toLowerCase().includes(needle) ||
+          String(course.titleKm || "").toLowerCase().includes(needle) ||
+          String(course.descEn || "").toLowerCase().includes(needle) ||
+          String(course.descKm || "").toLowerCase().includes(needle)),
     );
   }, [category, courses, query]);
 
@@ -112,17 +141,26 @@ const Courses = () => {
           className="course-filters"
           aria-label={t("coursesPage.categoriesLabel")}
         >
-          {categories.map((item) => (
-            <button
-              type="button"
-              key={item}
-              className={category === item ? "active" : ""}
-              aria-pressed={category === item}
-              onClick={() => setCategory(item)}
-            >
-              {item === "All" ? t("coursesPage.all") : item}
-            </button>
-          ))}
+          {categories.map((item) => {
+            const matchedCourse = courses.find((c) => c.category === item);
+            const label =
+              item === "All"
+                ? t("coursesPage.all")
+                : isKm && matchedCourse?.catKm
+                  ? matchedCourse.catKm
+                  : item;
+            return (
+              <button
+                type="button"
+                key={item}
+                className={category === item ? "active" : ""}
+                aria-pressed={category === item}
+                onClick={() => setCategory(item)}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
 
         {loading ? (
@@ -146,36 +184,48 @@ const Courses = () => {
                 : `/register?redirect=${encodeURIComponent(coursePath)}`;
               const isFree = Number(course.price || 0) <= 0;
               const priceLabel = isFree
-                ? language === "km"
+                ? isKm
                   ? "ឥតគិតថ្លៃ"
                   : "Free"
                 : money(
                     course.price,
                     course.currency || "USD",
-                    language === "km" ? "km-KH" : "en-US",
+                    isKm ? "km-KH" : "en-US",
                   );
+              const displayTitle = isKm ? course.titleKm : course.titleEn;
+              const displayDesc = isKm ? course.descKm : course.descEn;
+              const displayCat = isKm ? course.catKm : course.catEn;
+              const displayLevel = isKm ? course.levelKm : course.levelEn;
+              const CoverIcon = COVER_ICON_MAP[course.iconKey] || FaCode;
 
               return (
                 <TiltCard key={course.id} className="course-card">
                   <Link
                     to={accessPath}
-                    className="course-cover"
+                    className="course-cover course-cover-graphic"
+                    style={{ background: course.gradient }}
                     aria-label={t("coursesPage.viewCourse", {
-                      title: course.title,
+                      title: displayTitle,
                     })}
                   >
-                    <img src={course.thumbnailUrl} alt="" loading="lazy" decoding="async" />
-                    <span className="course-level">{course.level}</span>
+                    <div className="course-cover-dots" />
+                    <span className="course-level">{displayLevel}</span>
                     <span className={`course-price-badge ${isFree ? "free" : "paid"}`}>
                       {priceLabel}
                     </span>
-                    <span className="course-play">
-                      <FiPlayCircle />
-                    </span>
+                    <div className="course-cover-art">
+                      <div className="course-cover-emblem">
+                        <CoverIcon />
+                      </div>
+                      <div className="course-cover-titles">
+                        <strong>{course.bannerTitle}</strong>
+                        <span>{course.bannerSub}</span>
+                      </div>
+                    </div>
                   </Link>
                   <div className="course-card-content">
                     <div className="course-card-topline">
-                      <span className="course-category">{course.category}</span>
+                      <span className="course-category">{displayCat}</span>
                       {course.isEnrolled && (
                         <span className="course-owned">
                           <FiCheckCircle /> {t("coursesPage.enrolled")}
@@ -183,18 +233,18 @@ const Courses = () => {
                       )}
                     </div>
                     <h3>
-                      <Link to={accessPath}>{course.title}</Link>
+                      <Link to={accessPath}>{displayTitle}</Link>
                     </h3>
-                    <p>{course.description}</p>
+                    <p>{displayDesc}</p>
                     <div className="course-meta">
                       <span>
                         <FiBookOpen />{" "}
                         {t("coursesPage.lessons", {
-                          count: course.lessonCount,
+                          count: course.lessons || course.lessonCount,
                         })}
                       </span>
                       <span>
-                        <FiClock /> {course.duration}
+                        <FiClock /> {isKm ? course.durationKm : course.durationEn}
                       </span>
                     </div>
                     {course.isEnrolled && (
@@ -214,9 +264,9 @@ const Courses = () => {
                         <span>
                           {course.isEnrolled
                             ? t("coursesPage.continueLearning")
-                            : language === "km"
-                              ? "ចូលរៀនឥឡូវនេះ"
-                              : "Start Learning"}
+                            : isKm
+                              ? "👉 ចូលរៀនឥឡូវនេះ"
+                              : "👉 Start Learning"}
                         </span>
                         <FiArrowRight />
                       </Link>

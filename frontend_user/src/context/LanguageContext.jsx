@@ -19,9 +19,7 @@ const detectInitialLanguage = () => {
   const savedLanguage = window.localStorage.getItem(STORAGE_KEY);
   if (supportedLanguages.includes(savedLanguage)) return savedLanguage;
 
-  return window.navigator.language?.toLowerCase().startsWith("km")
-    ? "km"
-    : "en";
+  return "km";
 };
 
 const getNestedValue = (source, path) =>

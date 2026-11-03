@@ -17,6 +17,7 @@ import {
 import { useGlobleContext } from "../../context/GlobleContext";
 import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
 import { useLanguage } from "../../context/LanguageContext";
+import { enrichInternshipRecord } from "../../utils/bilingualCatalog";
 import "./Jobs.css";
 
 const formatType = (type = "") =>
@@ -168,39 +169,6 @@ const Jobs = () => {
             {t("jobsPage.heroDescription")}
           </p>
 
-          <div
-            className="jobs-hero-features"
-            aria-label={t("jobsPage.heroFeaturesLabel")}
-          >
-            <article className="jobs-hero-feature">
-              <span className="jobs-hero-feature-icon" aria-hidden="true">
-                <IoSearchOutline />
-              </span>
-              <span className="jobs-hero-feature-copy">
-                <strong>{t("jobsPage.exploreFeature")}</strong>
-                <small>{t("jobsPage.filterFeature")}</small>
-              </span>
-            </article>
-            <article className="jobs-hero-feature">
-              <span className="jobs-hero-feature-icon" aria-hidden="true">
-                <IoCloudUploadOutline />
-              </span>
-              <span className="jobs-hero-feature-copy">
-                <strong>{t("jobsPage.uploadFeature")}</strong>
-                <small>{t("jobsPage.uploadFeatureDescription")}</small>
-              </span>
-            </article>
-            <article className="jobs-hero-feature">
-              <span className="jobs-hero-feature-icon" aria-hidden="true">
-                <IoCheckmarkCircleOutline />
-              </span>
-              <span className="jobs-hero-feature-copy">
-                <strong>{t("jobsPage.statusFeature")}</strong>
-                <small>{t("jobsPage.statusFeatureDescription")}</small>
-              </span>
-            </article>
-          </div>
-
           <div className="jobs-hero-actions">
             <a href="#internship-search" className="btn primary jobs-hero-primary">
               {t("jobsPage.findOpportunity")}
@@ -322,7 +290,15 @@ const Jobs = () => {
           />
         ) : visibleInternships.length ? (
           <div className="jobs-list">
-            {visibleInternships.map((internship) => {
+            {visibleInternships.map((internship, idx) => {
+              const enriched = enrichInternshipRecord(internship, idx);
+              const displayTitle = isKm ? enriched.titleKm : internship.title;
+              const displayDesc = isKm ? enriched.descKm : internship.description;
+              const displayLocation = isKm
+                ? enriched.locationKm
+                : internship.isRemote
+                  ? t("jobsPage.remote")
+                  : internship.location;
               const expired =
                 internship.applicationDeadline &&
                 new Date(
@@ -339,9 +315,9 @@ const Jobs = () => {
                     )}
                     <div className="company-heading-info">
                       <span className="job-type">
-                        {formatType(internship.internshipType)}
+                        {isKm ? "កម្មសិក្សាពេញម៉ោង" : formatType(internship.internshipType)}
                       </span>
-                      <h3>{internship.title}</h3>
+                      <h3>{displayTitle}</h3>
                       <p className="company-name">{internship.company}</p>
                     </div>
 
@@ -376,14 +352,12 @@ const Jobs = () => {
                     ) : null}
                   </div>
                   <p className="internship-description">
-                    {internship.description}
+                    {displayDesc}
                   </p>
                   <div className="job-meta">
                     <span>
                       <IoLocationOutline />{" "}
-                      {internship.isRemote
-                        ? t("jobsPage.remote")
-                        : internship.location}
+                      {displayLocation}
                     </span>
                     <span>
                       <IoCalendarOutline />{" "}

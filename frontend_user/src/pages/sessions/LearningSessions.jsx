@@ -25,6 +25,7 @@ import {
 } from "../../services/learningSessionService";
 import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
 import UserAvatar from "../../components/ui/UserAvatar";
+import { localizeSessionRecord } from "../../utils/bilingualCatalog";
 import "./LearningSessions.css";
 
 const emptyForm = {
@@ -295,7 +296,8 @@ const LearningSessions = () => {
           />
         ) : sessions.length ? (
           <div className="sessions-grid">
-            {sessions.map((session) => {
+            {sessions.map((rawSession) => {
+              const session = localizeSessionRecord(rawSession, language === "km");
               const full = session.participantCount >= session.maxParticipants;
               return (
                 <article className="session-card" key={session.id}>
@@ -329,10 +331,14 @@ const LearningSessions = () => {
                       })()}
                     </span>
                   </div>
-                  <span className="session-category">{session.category}</span>
-                  <h2>{session.title}</h2>
+                  <span className="session-category">
+                    {session.displayCategory || session.category}
+                  </span>
+                  <h2>{session.displayTitle || session.title}</h2>
                   <p className="session-description">
-                    {session.description || t("sessionsPage.defaultDescription")}
+                    {session.displayDesc ||
+                      session.description ||
+                      t("sessionsPage.defaultDescription")}
                   </p>
                   <div className="session-host">
                     <UserAvatar

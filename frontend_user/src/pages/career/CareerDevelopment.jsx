@@ -31,11 +31,13 @@ import {
 } from "../../services/careerService";
 import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
 import { useLanguage } from "../../context/LanguageContext";
+import { CAREER_PATH_KM_MAP } from "../../utils/bilingualCatalog";
 import "./CareerDevelopment.css";
 
 const CareerDevelopment = () => {
   const { user } = useGlobleContext();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const isKm = language === "km";
   const [paths, setPaths] = useState([]);
   const [articles, setArticles] = useState([]);
   const [assessments, setAssessments] = useState([]);
@@ -472,10 +474,21 @@ const CareerDevelopment = () => {
             />
           ) : (
             <div className="career-path-grid">
-              {paths.map((path) => (
+              {paths.map((path) => {
+                const kmPath =
+                  CAREER_PATH_KM_MAP[String(path.title || "").trim().toLowerCase()];
+                const displayTitle = isKm && kmPath ? kmPath.titleKm : path.title;
+                const displayDesc = isKm && kmPath ? kmPath.descKm : path.description;
+                const displayLevel =
+                  isKm && String(path.level || "").toLowerCase() === "beginner"
+                    ? "កម្រិតដំបូង"
+                    : isKm && String(path.level || "").toLowerCase() === "intermediate"
+                      ? "កម្រិតមធ្យម"
+                      : path.level;
+                return (
                 <article className="career-path-card" key={path.id}>
                   <div className="career-path-heading">
-                    <span>{path.level}</span>
+                    <span>{displayLevel}</span>
                     {recommendedMap.has(path.id) && (
                       <strong>
                         {t("careerPage.profileMatch", {
@@ -484,8 +497,8 @@ const CareerDevelopment = () => {
                       </strong>
                     )}
                   </div>
-                  <h3>{path.title}</h3>
-                  <p>{path.description}</p>
+                  <h3>{displayTitle}</h3>
+                  <p>{displayDesc}</p>
                   <div className="career-skill-list">
                     {path.skills.map((skill) => (
                       <span key={skill}>{skill}</span>
@@ -518,7 +531,8 @@ const CareerDevelopment = () => {
                     )}
                   </button>
                 </article>
-              ))}
+                );
+              })}
             </div>
           )}
         </section>

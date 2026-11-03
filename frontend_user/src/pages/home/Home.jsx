@@ -1,16 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   FaChartBar,
+  FaCode,
   FaDatabase,
   FaFigma,
   FaGitAlt,
   FaHtml5,
   FaJs,
   FaNodeJs,
-  FaPlay,
   FaPython,
   FaReact,
+  FaServer,
   FaShieldAlt,
   FaStar,
 } from "react-icons/fa";
@@ -20,8 +21,12 @@ import {
   FiBriefcase,
   FiCalendar,
   FiCheck,
+  FiChevronLeft,
+  FiChevronRight,
   FiClock,
+  FiExternalLink,
   FiFileText,
+  FiLayers,
   FiMapPin,
   FiPlus,
   FiRepeat,
@@ -40,6 +45,11 @@ import {
   fetchInternships,
   fetchMentors,
 } from "../../services/platformService";
+import {
+  COURSE_BILINGUAL_MAP,
+  enrichCourseRecord,
+  enrichInternshipRecord,
+} from "../../utils/bilingualCatalog";
 
 import heangChhengKhoemPhoto from "../../assets/team/heang-chheng-khoem.jpg";
 import hornPiseyPhoto from "../../assets/team/horn-pisey.jpg";
@@ -48,336 +58,288 @@ import muyKalinPhoto from "../../assets/team/muy-kalin.jpg";
 import samrithRatanaPhoto from "../../assets/team/samrith-ratana.jpg";
 import "./Home.css";
 
+const TOP_TOPIC_PILLS = [
+  { label: "HTML & CSS", query: "HTML" },
+  { label: "JavaScript", query: "JavaScript" },
+  { label: "React.js", query: "React" },
+  { label: "Node.js & API", query: "Node" },
+  { label: "UX/UI Figma", query: "Figma" },
+  { label: "Python", query: "Python" },
+  { label: "SQL & MySQL", query: "SQL" },
+  { label: "Cybersecurity", query: "Cybersecurity" },
+  { label: "Git & GitHub", query: "Git" },
+  { label: "CV Studio", to: "/cv-studio" },
+  { label: "Skill Swap", to: "/skill-exchange" },
+  { label: "Internships", to: "/jobs" },
+];
+
 const TECH_SKILLS = [
-  { id: "react", label: "React.js", query: "React", icon: FaReact, color: "#0ea5e9", bg: "rgba(14, 165, 233, 0.12)" },
-  { id: "js", label: "JavaScript", query: "JavaScript", icon: FaJs, color: "#eab308", bg: "rgba(234, 179, 8, 0.14)" },
-  { id: "html", label: "HTML & CSS", query: "HTML", icon: FaHtml5, color: "#f97316", bg: "rgba(249, 115, 22, 0.12)" },
-  { id: "figma", label: "UX/UI Figma", query: "Figma", icon: FaFigma, color: "#ec4899", bg: "rgba(236, 72, 153, 0.12)" },
-  { id: "python", label: "Python", query: "Python", icon: FaPython, color: "#2563eb", bg: "rgba(37, 99, 235, 0.12)" },
-  { id: "node", label: "Node.js & API", query: "Node", icon: FaNodeJs, color: "#16a34a", bg: "rgba(22, 163, 74, 0.12)" },
-  { id: "sql", label: "SQL & MySQL", query: "SQL", icon: FaDatabase, color: "#6366f1", bg: "rgba(99, 102, 241, 0.12)" },
-  { id: "cyber", label: "Cybersecurity", query: "Cybersecurity", icon: FaShieldAlt, color: "#0d9488", bg: "rgba(13, 148, 136, 0.12)" },
-  { id: "git", label: "Git & GitHub", query: "Git", icon: FaGitAlt, color: "#ea580c", bg: "rgba(234, 88, 12, 0.12)" },
-  { id: "data", label: "Data & BI", query: "Data", icon: FaChartBar, color: "#7c3aed", bg: "rgba(124, 58, 237, 0.12)" },
+  { id: "html", label: "HTML & CSS", query: "HTML", icon: FaHtml5, color: "#f97316" },
+  { id: "js", label: "JavaScript", query: "JavaScript", icon: FaJs, color: "#eab308" },
+  { id: "react", label: "React.js", query: "React", icon: FaReact, color: "#0ea5e9" },
+  { id: "node", label: "Node.js & API", query: "Node", icon: FaNodeJs, color: "#16a34a" },
+  { id: "figma", label: "UX/UI Figma", query: "Figma", icon: FaFigma, color: "#ec4899" },
+  { id: "python", label: "Python", query: "Python", icon: FaPython, color: "#2563eb" },
+  { id: "sql", label: "SQL & MySQL", query: "SQL", icon: FaDatabase, color: "#4f46e5" },
+  { id: "cyber", label: "Cybersecurity", query: "Cybersecurity", icon: FaShieldAlt, color: "#0d9488" },
+  { id: "git", label: "Git & GitHub", query: "Git", icon: FaGitAlt, color: "#ea580c" },
+  { id: "data", label: "Data & BI", query: "Data", icon: FaChartBar, color: "#7c3aed" },
 ];
 
 const COURSE_CATEGORIES = [
-  { id: "All", km: "ទាំងអស់", en: "All Courses" },
-  { id: "Technology", km: "បច្ចេកវិទ្យា", en: "Technology" },
-  { id: "Design", km: "ការរចនា UX/UI", en: "Design" },
-  { id: "Business", km: "ពាណិជ្ជកម្ម", en: "Business" },
-  { id: "Career", km: "ត្រៀមអាជីព", en: "Career" },
+  { id: "All", km: "ទាំងអស់", en: "All" },
+  { id: "Frontend", km: "Frontend", en: "Frontend" },
+  { id: "Backend", km: "Backend & SQL", en: "Backend & SQL" },
+  { id: "Design", km: "ការរចនា UX/UI", en: "UX/UI Design" },
+  { id: "Data", km: "ទិន្នន័យ & Python", en: "Data & Python" },
+  { id: "Career", km: "ត្រៀមអាជីព", en: "Career Prep" },
 ];
 
-const FALLBACK_COURSES = [
-  {
-    id: "c1",
-    slug: "react-modern-web",
-    titleKm: "ការអភិវឌ្ឍគេហទំព័រទំនើបជាមួយ React.js",
-    titleEn: "Modern Web Development with React.js",
-    descKm: "រៀនបង្កើតគេហទំព័រទំនើប ប្រើប្រាស់ Components, Hooks និងភ្ជាប់ REST API ដោយអនុវត្តផ្ទាល់។",
-    descEn: "Build responsive modern web apps using React components, hooks, and real REST APIs.",
-    category: "Technology",
-    catKm: "បច្ចេកវិទ្យា",
-    level: "Beginner",
-    levelKm: "កម្រិតដំបូង",
-    price: 0,
-    lessons: 12,
-    duration: "4h 15m",
-    topics: ["HTML/CSS", "React Hooks", "REST API"],
-    thumbnailUrl: "https://img.youtube.com/vi/mU6anWqZJcc/hqdefault.jpg",
-    gradient: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #38bdf8 100%)",
-  },
-  {
-    id: "c2",
-    slug: "ui-ux-design-essentials",
-    titleKm: "មូលដ្ឋានគ្រឹះការរចនា UX/UI ក្នុង Figma",
-    titleEn: "UX/UI Design Essentials with Figma",
-    descKm: "ស្វែងយល់ពីការរៀបចំ Wireframe, Design System និង Interactive Prototype សម្រាប់ Portfolio។",
-    descEn: "Master wireframing, clean design systems, and interactive Figma prototypes for your portfolio.",
-    category: "Design",
-    catKm: "ការរចនា",
-    level: "Beginner",
-    levelKm: "កម្រិតដំបូង",
-    price: 0,
-    lessons: 10,
-    duration: "3h 45m",
-    topics: ["Wireframe", "Figma UI", "Prototype"],
-    thumbnailUrl: "https://img.youtube.com/vi/FTFaQWZBqQ8/hqdefault.jpg",
-    gradient: "linear-gradient(135deg, #831843 0%, #db2777 55%, #f472b6 100%)",
-  },
-  {
-    id: "c3",
-    slug: "python-data-foundations",
-    titleKm: "ការសរសេរកូដ Python និងវិភាគទិន្នន័យ",
-    titleEn: "Python Programming & Data Foundations",
-    descKm: "ចាប់ផ្តើមពីមូលដ្ឋានគ្រឹះ Python រហូតដល់ការរៀបចំ និងវិភាគទិន្នន័យជាមួយ Pandas និង SQL។",
-    descEn: "Progress from Python syntax fundamentals to practical data cleaning and analysis workflows.",
-    category: "Technology",
-    catKm: "បច្ចេកវិទ្យា",
-    level: "Intermediate",
-    levelKm: "កម្រិតមធ្យម",
-    price: 15,
-    lessons: 14,
-    duration: "5h 20m",
-    topics: ["Python 3", "Pandas", "Data Charts"],
-    thumbnailUrl: "https://img.youtube.com/vi/_uQrJ0TkZlc/hqdefault.jpg",
-    gradient: "linear-gradient(135deg, #064e3b 0%, #059669 55%, #34d399 100%)",
-  },
-  {
-    id: "c4",
-    slug: "sql-database-analysis",
-    titleKm: "ការគ្រប់គ្រងទិន្នន័យជាមួយ SQL & Power BI",
-    titleEn: "Data Querying with SQL & BI Dashboards",
-    descKm: "រៀនសរសេរសំណួរ SQL សំខាន់ៗ និងបង្កើតរបាយការណ៍ទិន្នន័យសម្រាប់ការសម្រេចចិត្តអាជីវកម្ម។",
-    descEn: "Write clean SQL queries, joins, and build executive visual dashboards from real datasets.",
-    category: "Technology",
-    catKm: "បច្ចេកវិទ្យា",
-    level: "Intermediate",
-    levelKm: "កម្រិតមធ្យម",
-    price: 18,
-    lessons: 9,
-    duration: "4h 10m",
-    topics: ["MySQL", "SQL Joins", "Power BI"],
-    thumbnailUrl: "https://img.youtube.com/vi/r-uOLxNrNk8/hqdefault.jpg",
-    gradient: "linear-gradient(135deg, #312e81 0%, #4f46e5 55%, #818cf8 100%)",
-  },
-  {
-    id: "c5",
-    slug: "digital-marketing-growth",
-    titleKm: "យុទ្ធសាស្ត្រទីផ្សារឌីជីថល និងមាតិកាអាជីវកម្ម",
-    titleEn: "Digital Marketing & Content Strategy",
-    descKm: "រៀនរៀបចំយុទ្ធនាការផ្សព្វផ្សាយ SEO និងវាស់វែងលទ្ធផលអាជីវកម្មលើប្រព័ន្ធឌីជីថល។",
-    descEn: "Plan high-converting social campaigns, SEO fundamentals, and practical analytics tracking.",
-    category: "Business",
-    catKm: "ពាណិជ្ជកម្ម",
-    level: "Beginner",
-    levelKm: "កម្រិតដំបូង",
-    price: 0,
-    lessons: 8,
-    duration: "3h 30m",
-    topics: ["SEO Basics", "Content Plan", "Analytics"],
-    thumbnailUrl: "https://img.youtube.com/vi/bixR-KIJKYM/hqdefault.jpg",
-    gradient: "linear-gradient(135deg, #7c2d12 0%, #ea580c 55%, #fb923c 100%)",
-  },
-  {
-    id: "c6",
-    slug: "git-github-collaboration",
-    titleKm: "Git, GitHub និងការត្រៀមសម្ភាសន៍ការងារ IT",
-    titleEn: "Git, GitHub & Technical Interview Prep",
-    descKm: "ស្ទាត់ជំនាញធ្វើការងារជាក្រុមលើ GitHub រៀបចំ CV បច្ចេកទេស និងត្រៀមឆ្លើយសំណួរសម្ភាសន៍។",
-    descEn: "Collaborate cleanly with Git branches, polish your GitHub profile, and ace tech interviews.",
-    category: "Career",
-    catKm: "ត្រៀមអាជីព",
-    level: "Beginner",
-    levelKm: "កម្រិតដំបូង",
-    price: 0,
-    lessons: 8,
-    duration: "2h 50m",
-    topics: ["Git Flow", "GitHub PR", "Mock Interview"],
-    thumbnailUrl: "https://img.youtube.com/vi/1qw5ITr3k9E/hqdefault.jpg",
-    gradient: "linear-gradient(135deg, #0f172a 0%, #334155 55%, #64748b 100%)",
-  },
-];
+const COURSE_ICON_MAP = {
+  react: FaReact,
+  node: FaNodeJs,
+  figma: FaFigma,
+  python: FaPython,
+  sql: FaDatabase,
+  git: FaGitAlt,
+};
 
 const ROADMAP_TRACKS = [
   {
     id: "web",
-    labelKm: "អ្នកអភិវឌ្ឍគេហទំព័រ",
+    icon: FaCode,
+    labelKm: "អ្នកអភិវឌ្ឍន៍វេបសាយ (Web Developer)",
     labelEn: "Web Developer",
     stages: [
       {
-        step: "01",
-        titleKm: "រៀនមូលដ្ឋានគ្រឹះកូដ និងបង្កើតគម្រោង Web",
-        titleEn: "Master Core Web Skills & Projects",
-        descKm: "ចាប់ផ្តើមពី HTML, CSS, JavaScript (ES6+) និងបង្កើតគេហទំព័រ React.js ពេញលេញ។",
-        descEn: "Learn responsive HTML/CSS, modern JavaScript, and build real React.js applications.",
-        tags: ["HTML & CSS", "JavaScript ES6+", "React.js", "Git & GitHub"],
-        ctaKm: "មើលមេរៀន Web",
-        ctaEn: "Explore Web Courses",
-        to: "/courses",
+        step: "1",
+        titleKm: "1. មូលដ្ឋានគ្រឹះកូដ និងការរចនាគេហទំព័រ (HTML, CSS & JS)",
+        titleEn: "1. Core Web Foundations (HTML, CSS & Modern JS)",
+        descKm:
+          "ចាប់ផ្តើមពីការរៀបចំរចនាសម្ព័ន្ធគេហទំព័រជាមួយ HTML5, រចនាផ្ទៃ Responsive ជាមួយ CSS Flexbox/Grid និងសរសេរកូដអន្តរកម្មជាមួយ JavaScript ES6+។",
+        descEn:
+          "Build semantic layouts with HTML5, responsive styling with CSS Flexbox/Grid, and interactive logic with modern JavaScript.",
+        links: [
+          { labelKm: "មេរៀន React & Web", labelEn: "React & Web Courses", to: "/courses" },
+          { labelKm: "ស្វែងរកមេរៀន HTML/CSS", labelEn: "Search HTML/CSS", to: "/search?q=HTML" },
+          { labelKm: "វេទិកាសំណួរ-ចម្លើយ", labelEn: "Community Q&A", to: "/forum" },
+        ],
       },
       {
-        step: "02",
-        titleKm: "អនុវត្តប្តូរជំនាញ និងពិនិត្យកូដជាមួយអ្នកណែនាំ 1:1",
-        titleEn: "Practice via Skill Swap & 1:1 Code Review",
-        descKm: "ផ្លាស់ប្តូរចំណេះដឹងជាមួយមិត្តរួមជំនាញ និងស្នើសុំមតិកែលម្អលើស្នាដៃពីរៀមច្បងជំនាញ។",
-        descEn: "Pair up with peers to exchange skills and book 1:1 mentor reviews on your portfolio code.",
-        tags: ["Peer Skill Swap", "1:1 Code Review", "Live Q&A Session"],
-        ctaKm: "ជួបអ្នកណែនាំជំនាញ",
-        ctaEn: "Connect with Mentors",
-        to: "/mentorship",
+        step: "2",
+        titleKm: "2. បង្កើតគម្រោង React.js និងអនុវត្តប្តូរជំនាញ (Skill Swap & Mentor)",
+        titleEn: "2. Build React.js Projects & Practice with Mentors",
+        descKm:
+          "អនុវត្តបង្កើតគេហទំព័រពេញលេញជាមួយ React Components, Hooks និងភ្ជាប់ API ព្រមទាំងផ្លាស់ប្តូរចំណេះដឹងជាមួយមិត្តរួមជំនាញ និងសុំមតិកែលម្អពីអ្នកណែនាំ 1:1។",
+        descEn:
+          "Create full React applications, exchange skills free with peers, and book 1:1 code reviews with industry mentors.",
+        links: [
+          { labelKm: "ប្តូរជំនាញ Skill Swap", labelEn: "Peer Skill Swap", to: "/skill-exchange" },
+          { labelKm: "ណាត់ជួបអ្នកណែនាំ 1:1", labelEn: "Book 1:1 Mentor", to: "/mentorship" },
+          { labelKm: "សិក្ខាសាលាផ្ទាល់ (Live)", labelEn: "Live Workshops", to: "/sessions" },
+        ],
       },
       {
-        step: "03",
-        titleKm: "បង្កើត PDF CV ក្នុង CV Studio និងដាក់ពាក្យការងារ",
-        titleEn: "Export PDF in CV Studio & Apply for Internships",
-        descKm: "ទាញយកព័ត៌មានជំនាញបង្កើតជា PDF CV ស្តង់ដារ ហើយដាក់ពាក្យចូលក្រុមហ៊ុនដែលបានផ្ទៀងផ្ទាត់។",
-        descEn: "Generate a clean ATS-friendly PDF resume in CV Studio and apply directly to verified jobs.",
-        tags: ["Minimal CV Studio", "Portfolio Link", "Verified Internships"],
-        ctaKm: "បើក CV Studio",
-        ctaEn: "Open CV Studio",
-        to: "/cv-studio",
+        step: "3",
+        titleKm: "3. បោះពុម្ព PDF CV ក្នុង CV Studio និងដាក់ពាក្យកម្មសិក្សា",
+        titleEn: "3. Export PDF in CV Studio & Apply for Verified Internships",
+        descKm:
+          "ទាញយកជំនាញ និងគម្រោងស្នាដៃរបស់អ្នកមកបង្កើតជា PDF CV ស្តង់ដារក្នុង Minimal CV Studio ហើយដាក់ពាក្យចូលក្រុមហ៊ុនបច្ចេកវិទ្យាដែលបានផ្ទៀងផ្ទាត់។",
+        descEn:
+          "Generate an ATS-ready PDF resume in Minimal CV Studio and apply directly to admin-verified tech internships.",
+        links: [
+          { labelKm: "បង្កើត PDF CV ឥឡូវនេះ", labelEn: "Open Minimal CV Studio", to: "/cv-studio" },
+          { labelKm: "ដាក់ពាក្យកម្មសិក្សា", labelEn: "Browse Internships", to: "/jobs" },
+          { labelKm: "ផែនទីអាជីពលម្អិត", labelEn: "Full Career Guide", to: "/career" },
+        ],
       },
     ],
   },
   {
     id: "uiux",
-    labelKm: "អ្នករចនា UX/UI",
+    icon: FaFigma,
+    labelKm: "អ្នករចនា UX/UI (UI/UX Designer)",
     labelEn: "UX/UI Designer",
     stages: [
       {
-        step: "01",
-        titleKm: "រៀន Design Thinking និងការរចនាក្នុង Figma",
-        titleEn: "Learn Design Thinking & Figma Prototyping",
-        descKm: "យល់ច្បាស់ពី User Flow, Typography, Color Hierarchy និងការរៀបចំ Component System។",
-        descEn: "Build strong foundations in user flows, visual hierarchy, and reusable Figma components.",
-        tags: ["User Research", "Wireframing", "Figma Components", "Prototyping"],
-        ctaKm: "មើលមេរៀន UX/UI",
-        ctaEn: "Explore Design Courses",
-        to: "/courses",
+        step: "1",
+        titleKm: "1. សិក្សា Design Thinking, Wireframe និង Figma UI",
+        titleEn: "1. Design Thinking, Wireframing & Figma UI",
+        descKm:
+          "ស្វែងយល់ពីតម្រូវការអ្នកប្រើប្រាស់ (User Flow) ការរៀបចំ Typography, Color System និងការបង្កើត Component ស្អាតៗនៅក្នុងកម្មវិធី Figma។",
+        descEn:
+          "Master user flows, visual hierarchy, color systems, and reusable component libraries in Figma.",
+        links: [
+          { labelKm: "មេរៀនរចនា UX/UI", labelEn: "UX/UI Design Course", to: "/courses/ui-ux-design-essentials" },
+          { labelKm: "ស្វែងរកប្រធានបទ Figma", labelEn: "Search Figma Topics", to: "/search?q=Figma" },
+        ],
       },
       {
-        step: "02",
-        titleKm: "បង្កើត Case Study និងទទួលមតិកែលម្អពីអ្នកណែនាំ",
-        titleEn: "Critique Case Studies with Design Mentors",
-        descKm: "ចូលរួមសិក្ខាសាលាពិនិត្យ Portfolio និងប្តូរជំនាញរចនាជាមួយនិស្សិតផ្នែកកូដ។",
-        descEn: "Swap UI design help for coding help and polish 2 end-to-end UX case studies with mentors.",
-        tags: ["UX Case Study", "Design Critique", "Design-Dev Swap"],
-        ctaKm: "ចូលរួមសិក្ខាសាលា",
-        ctaEn: "Join Live Workshops",
-        to: "/sessions",
+        step: "2",
+        titleKm: "2. បង្កើត Interactive Prototype និងពិនិត្យស្នាដៃជាមួយអ្នកណែនាំ",
+        titleEn: "2. Interactive Prototypes & Mentor Portfolio Critique",
+        descKm:
+          "រៀបចំ UX Case Study ចំនួន 2 គម្រោង ហើយចូលរួមសិក្ខាសាលាពិនិត្យស្នាដៃ ឬប្តូរជំនាញរចនាជាមួយនិស្សិតផ្នែកសរសេរកូដ។",
+        descEn:
+          "Build 2 complete UX case studies, swap design help for coding help, and refine your work with mentors.",
+        links: [
+          { labelKm: "ចូលរួមសិក្ខាសាលាផ្ទាល់", labelEn: "Join Design Workshops", to: "/sessions" },
+          { labelKm: "ប្តូរជំនាញជាមួយអ្នកកូដ", labelEn: "Swap Design & Code", to: "/skill-exchange" },
+        ],
       },
       {
-        step: "03",
-        titleKm: "រៀបចំ CV & Portfolio ដាក់ពាក្យកម្មសិក្សា Design",
-        titleEn: "Publish Design CV & Apply to Studios",
-        descKm: "ភ្ជាប់តំណភ្ជាប់ Figma Portfolio ទៅក្នុង PDF CV និងតាមដានស្ថានភាពដាក់ពាក្យការងារ។",
-        descEn: "Attach your Figma case studies in CV Studio and apply to verified UX/UI internships.",
-        tags: ["PDF CV Export", "Case Study Links", "Application Tracker"],
-        ctaKm: "មើលឱកាសការងារ",
-        ctaEn: "Browse Design Jobs",
-        to: "/jobs",
+        step: "3",
+        titleKm: "3. ភ្ជាប់ Portfolio ទៅក្នុង PDF CV និងដាក់ពាក្យការងារ Design",
+        titleEn: "3. Attach Portfolio to PDF CV & Apply to Design Studios",
+        descKm:
+          "បញ្ចូលតំណភ្ជាប់ Figma Prototype ទៅក្នុង CV Studio និងដាក់ពាក្យចូលហាត់ការផ្នែក Product Design នៅតាមក្រុមហ៊ុនដៃគូ។",
+        descEn:
+          "Showcase your Figma prototypes in CV Studio and apply directly to UX/UI internship openings.",
+        links: [
+          { labelKm: "រៀបចំ Design CV", labelEn: "Build Design CV", to: "/cv-studio" },
+          { labelKm: "មើលការងារ UX/UI", labelEn: "View UX/UI Jobs", to: "/jobs" },
+        ],
       },
     ],
   },
   {
     id: "backend",
-    labelKm: "Backend & API",
-    labelEn: "Backend & API",
+    icon: FaServer,
+    labelKm: "វិស្វករ Backend & API",
+    labelEn: "Backend & API Engineer",
     stages: [
       {
-        step: "01",
-        titleKm: "ស្ទាត់ជំនាញ Node.js, Express និង MySQL Database",
-        titleEn: "Build Secure REST APIs & Relational Schemas",
-        descKm: "រៀនរចនា Database Schema, JWT Authentication និងការបង្កើត API ដែលមានសុវត្ថិភាព។",
-        descEn: "Design normalized MySQL schemas, JWT auth middlewares, and clean RESTful endpoints.",
-        tags: ["Node.js & Express", "MySQL Schema", "JWT Security", "API Testing"],
-        ctaKm: "រៀនជំនាញ Backend",
-        ctaEn: "Start Backend Path",
-        to: "/courses",
+        step: "1",
+        titleKm: "1. ស្ទាត់ជំនាញ Node.js, Express និងការរចនា MySQL Database",
+        titleEn: "1. Node.js, Express & Relational MySQL Schemas",
+        descKm:
+          "រៀនសាងសង់ RESTful API, ការរចនាตารางទិន្នន័យ (Relational Schema) និងប្រព័ន្ធផ្ទៀងផ្ទាត់សុវត្ថិភាព JWT Authentication។",
+        descEn:
+          "Build clean REST endpoints, normalized MySQL schemas, and secure JWT authentication workflows.",
+        links: [
+          { labelKm: "មេរៀន Node.js API", labelEn: "Node.js API Course", to: "/courses/node-api-development" },
+          { labelKm: "មេរៀន SQL & MySQL", labelEn: "SQL Database Course", to: "/courses/sql-database-essentials" },
+        ],
       },
       {
-        step: "02",
-        titleKm: "សហការបង្កើតគម្រោង Full-Stack ជាមួយមិត្តរួមក្រុម",
-        titleEn: "Pair with Frontend Peers on Full-Stack Apps",
-        descKm: "សហការជាមួយអ្នករៀន Frontend ក្នុងប្រព័ន្ធ Skill Swap ដើម្បីភ្ជាប់ API ទៅកាន់ UI ពិត។",
-        descEn: "Match with frontend learners via Skill Exchange to ship complete full-stack portfolio apps.",
-        tags: ["API Integration", "GitHub PRs", "Mentor Architecture Review"],
-        ctaKm: "ស្វែងរកដៃគូសហការ",
-        ctaEn: "Find Skill Partners",
-        to: "/skill-exchange",
+        step: "2",
+        titleKm: "2. សហការបង្កើតគម្រោង Full-Stack លើ GitHub",
+        titleEn: "2. Collaborate on Full-Stack Projects via GitHub",
+        descKm:
+          "ប្រើប្រាស់ Git Branches និង Pull Requests ដើម្បីភ្ជាប់ប្រព័ន្ធ Backend API ជាមួយមិត្តរួមក្រុមផ្នែក Frontend។",
+        descEn:
+          "Use Git branches and pull requests to integrate your APIs with frontend peers in real team projects.",
+        links: [
+          { labelKm: "មេរៀន Git & GitHub", labelEn: "Git & GitHub Course", to: "/courses/git-github-collaboration" },
+          { labelKm: "ស្វែងរកដៃគូ Full-Stack", labelEn: "Find Project Partners", to: "/skill-exchange" },
+        ],
       },
       {
-        step: "03",
-        titleKm: "ដាក់ពាក្យកម្មសិក្សាផ្នែក Software Engineering",
-        titleEn: "Apply for Junior Backend & Full-Stack Roles",
-        descKm: "បង្ហាញគម្រោង API និង GitHub នៅក្នុង CV Studio ដើម្បីដាក់ពាក្យទៅកាន់ក្រុមហ៊ុនបច្ចេកវិទ្យា។",
-        descEn: "Showcase your GitHub repositories in CV Studio and apply to software engineering openings.",
-        tags: ["Technical CV", "GitHub Showcase", "Direct ATS Apply"],
-        ctaKm: "ដាក់ពាក្យការងារ",
-        ctaEn: "View Tech Openings",
-        to: "/jobs",
+        step: "3",
+        titleKm: "3. រៀបចំ Technical CV និងដាក់ពាក្យផ្នែក Software Engineering",
+        titleEn: "3. Prepare Technical CV & Apply for Engineering Roles",
+        descKm:
+          "បង្ហាញគម្រោង API និងប្រវត្តិកូដ GitHub នៅក្នុង PDF CV ដើម្បីដាក់ពាក្យចូលក្រុមហ៊ុនអភិវឌ្ឍន៍កម្មវិធី។",
+        descEn:
+          "Highlight your GitHub repositories and API architecture in CV Studio for engineering internships.",
+        links: [
+          { labelKm: "បើក CV Studio", labelEn: "Open CV Studio", to: "/cv-studio" },
+          { labelKm: "មើលការងារ Software", labelEn: "Software Internships", to: "/jobs" },
+        ],
       },
     ],
   },
   {
     id: "cyber",
+    icon: FaShieldAlt,
     labelKm: "សន្តិសុខសាយប័រ & IT Audit",
     labelEn: "Cybersecurity & IT Audit",
     stages: [
       {
-        step: "01",
-        titleKm: "មូលដ្ឋានគ្រឹះ Network, Linux និងសុវត្ថិភាពប្រព័ន្ធ",
-        titleEn: "Learn Networking, Linux & Security Controls",
-        descKm: "សិក្សាពីដំណើរការ TCP/IP, ការគ្រប់គ្រងសិទ្ធិប្រព័ន្ធ Linux និងគោលការណ៍ IT Governance (ITGC)។",
-        descEn: "Understand network protocols, Linux administration, OWASP basics, and ITGC audit controls.",
-        tags: ["Computer Networks", "Linux CLI", "OWASP Top 10", "ITGC Controls"],
-        ctaKm: "ស្វែងរកមេរៀន",
-        ctaEn: "Search Security Topics",
-        to: "/search?q=Cybersecurity",
+        step: "1",
+        titleKm: "1. មូលដ្ឋានគ្រឹះ Network, Linux និងគោលការណ៍សុវត្ថិភាពប្រព័ន្ធ",
+        titleEn: "1. Networking, Linux CLI & Security Controls",
+        descKm:
+          "សិក្សាពីដំណើរការបណ្តាញ TCP/IP, ការគ្រប់គ្រងប្រព័ន្ធ Linux និងស្តង់ដារត្រួតពិនិត្យសុវត្ថិភាពប្រព័ន្ធ ITGC។",
+        descEn:
+          "Understand TCP/IP networking, Linux administration, OWASP fundamentals, and ITGC audit controls.",
+        links: [
+          { labelKm: "ស្វែងរកមេរៀនសន្តិសុខ", labelEn: "Search Security Courses", to: "/search?q=Cybersecurity" },
+          { labelKm: "ពិភាក្សាក្នុងវេទិកា", labelEn: "Security Forum", to: "/forum" },
+        ],
       },
       {
-        step: "02",
-        titleKm: "ពិភាក្សាផ្ទាល់ជាមួយអ្នកជំនាញ IT Audit & Cyber Risk",
-        titleEn: "1:1 Guidance from IT Audit & Security Mentors",
-        descKm: "រៀនពីបទពិសោធន៍ការងារពិតក្នុងវិស័យធនាគារ និងហិរញ្ញវត្ថុពីអ្នកណែនាំជំនាញរបស់យើង។",
-        descEn: "Get practical career advice from active IT Audit and Cyber Risk mentors in Cambodia.",
-        tags: ["Risk Assessment", "Security Labs", "1:1 Career Advice"],
-        ctaKm: "មើលអ្នកណែនាំ IT Audit",
-        ctaEn: "Meet Security Mentors",
-        to: "/mentorship",
+        step: "2",
+        titleKm: "2. ទទួលការណែនាំ 1:1 ពីអ្នកជំនាញ IT Audit និង Cyber Risk",
+        titleEn: "2. 1:1 Mentorship with IT Audit & Cyber Specialists",
+        descKm:
+          "ជួបពិភាក្សាផ្ទាល់ជាមួយអ្នកណែនាំជំនាញដែលកំពុងបម្រើការងារក្នុងវិស័យធនាគារ ហិរញ្ញវត្ថុ និងទូរគមនាគមន៍។",
+        descEn:
+          "Get practical career guidance from active IT Audit and Cybersecurity mentors in Cambodia.",
+        links: [
+          { labelKm: "ជួបអ្នកណែនាំជំនាញ", labelEn: "Meet Security Mentors", to: "/mentorship" },
+          { labelKm: "សិក្ខាសាលា Cybersecurity", labelEn: "Live Security Labs", to: "/sessions" },
+        ],
       },
       {
-        step: "03",
-        titleKm: "ត្រៀម CV សម្រាប់ការងារ IT Support, Network & Audit",
-        titleEn: "Launch Your IT Security & Audit Career",
-        descKm: "រៀបចំប្រវត្តិរូបជំនាញបច្ចេកទេសច្បាស់លាស់ និងដាក់ពាក្យចូលស្ថាប័នហិរញ្ញវត្ថុ និងបច្ចេកវិទ្យា។",
-        descEn: "Highlight security labs and certifications in CV Studio for bank and enterprise IT roles.",
-        tags: ["CV Studio PDF", "Interview Readiness", "Enterprise IT Jobs"],
-        ctaKm: "មើលផែនទីអាជីព",
-        ctaEn: "Full Career Guide",
-        to: "/career",
+        step: "3",
+        titleKm: "3. ដាក់ពាក្យការងារផ្នែក IT Support, Network & Security Analyst",
+        titleEn: "3. Apply for IT Security & Audit Internships",
+        descKm:
+          "រៀបចំប្រវត្តិរូបជំនាញបច្ចេកទេសក្នុង CV Studio សម្រាប់ដាក់ពាក្យចូលស្ថាប័នហិរញ្ញវត្ថុ និងក្រុមហ៊ុនបច្ចេកវិទ្យា។",
+        descEn:
+          "Export your technical resume in CV Studio and apply to enterprise IT and security openings.",
+        links: [
+          { labelKm: "បង្កើត PDF CV", labelEn: "Create Technical CV", to: "/cv-studio" },
+          { labelKm: "មើលឱកាសការងារ IT", labelEn: "Browse IT Openings", to: "/jobs" },
+        ],
       },
     ],
   },
   {
     id: "data",
-    labelKm: "ទិន្នន័យ & Python",
-    labelEn: "Data & Python",
+    icon: FaChartBar,
+    labelKm: "អ្នកវិភាគទិន្នន័យ (Data Analyst)",
+    labelEn: "Data Analyst",
     stages: [
       {
-        step: "01",
-        titleKm: "រៀន Excel កម្រិតខ្ពស់, SQL និង Python Pandas",
-        titleEn: "Master SQL Queries, Spreadsheets & Python",
-        descKm: "ចេះទាញយក សម្អាត និងវិភាគទិន្នន័យចេញពី Database ដោយប្រើ SQL និង Python។",
-        descEn: "Clean, join, and analyze structured datasets using SQL, Python Pandas, and spreadsheets.",
-        tags: ["SQL Queries", "Python Pandas", "Data Cleaning", "Power BI"],
-        ctaKm: "មើលមេរៀន Data",
-        ctaEn: "Explore Data Courses",
-        to: "/courses",
+        step: "1",
+        titleKm: "1. ស្ទាត់ជំនាញ SQL Queries, Python Pandas និងការសម្អាតទិន្នន័យ",
+        titleEn: "1. SQL Queries, Python Pandas & Data Cleaning",
+        descKm:
+          "រៀនទាញយក និងរៀបចំទិន្នន័យចេញពី Database ដោយប្រើប្រាស់សំណួរ SQL និងបណ្ណាល័យវិភាគទិន្នន័យ Python។",
+        descEn:
+          "Query relational databases with SQL and clean structured datasets using Python Pandas.",
+        links: [
+          { labelKm: "មេរៀន Python & Data", labelEn: "Python Data Course", to: "/courses/python-data-foundations" },
+          { labelKm: "មេរៀន SQL Database", labelEn: "SQL Essentials Course", to: "/courses/sql-database-essentials" },
+        ],
       },
       {
-        step: "02",
-        titleKm: "បង្កើតគម្រោង Dashboard និងពិភាក្សាក្នុងសហគមន៍",
-        titleEn: "Build Storytelling Dashboards with Mentor Feedback",
-        descKm: "បង្កើតរបាយការណ៍វិភាគទិន្នន័យជាក់ស្តែង និងចែករំលែកដើម្បីទទួលមតិកែលម្អក្នុងវេទិកាសហគមន៍។",
-        descEn: "Publish interactive BI dashboards and refine your data storytelling with mentors.",
-        tags: ["BI Dashboard", "Community Q&A", "Portfolio Report"],
-        ctaKm: "ចូលវេទិកាសហគមន៍",
-        ctaEn: "Visit Community Forum",
-        to: "/forum",
+        step: "2",
+        titleKm: "2. បង្កើតផ្ទាំងរបាយការណ៍ Dashboard សម្រាប់ការសម្រេចចិត្តអាជីវកម្ម",
+        titleEn: "2. Build Executive BI Dashboards & Visual Reports",
+        descKm:
+          "ប្រែក្លាយតួលេខស្មុគស្មាញទៅជាក្រាហ្វិកងាយយល់ និងទទួលមតិកែលម្អលើរបាយការណ៍ពីអ្នកណែនាំជំនាញ។",
+        descEn:
+          "Transform raw numbers into clear visual dashboards and review your findings with mentors.",
+        links: [
+          { labelKm: "ពិភាក្សាជាមួយអ្នកណែនាំ", labelEn: "Book Data Mentor", to: "/mentorship" },
+          { labelKm: "ប្តូរជំនាញទិន្នន័យ", labelEn: "Data Skill Swap", to: "/skill-exchange" },
+        ],
       },
       {
-        step: "03",
-        titleKm: "ដាក់ពាក្យកម្មសិក្សាផ្នែក Data Analyst & BI",
-        titleEn: "Apply for Data Analyst Internships",
-        descKm: "បញ្ចូលស្នាដៃវិភាគទិន្នន័យទៅក្នុង PDF CV ហើយដាក់ពាក្យទៅកាន់ក្រុមហ៊ុនដៃគូដោយផ្ទាល់។",
-        descEn: "Export your tailored Data Analyst CV and apply to verified local and remote openings.",
-        tags: ["Data Portfolio CV", "Verified Employers", "1-Click Apply"],
-        ctaKm: "មើលការងារ Data",
-        ctaEn: "Browse Data Jobs",
-        to: "/jobs",
+        step: "3",
+        titleKm: "3. ដាក់ពាក្យកម្មសិក្សាផ្នែក Data Analyst & Business Intelligence",
+        titleEn: "3. Apply for Data Analyst & BI Internships",
+        descKm:
+          "បញ្ចូលគម្រោងវិភាគទិន្នន័យទៅក្នុង PDF CV ហើយដាក់ពាក្យទៅកាន់ក្រុមហ៊ុនដៃគូដោយផ្ទាល់។",
+        descEn:
+          "Include your analytics portfolio in CV Studio and apply directly to data internships.",
+        links: [
+          { labelKm: "រៀបចំ Data CV", labelEn: "Build Data Analyst CV", to: "/cv-studio" },
+          { labelKm: "មើលការងារផ្នែក Data", labelEn: "Explore Data Jobs", to: "/jobs" },
+        ],
       },
     ],
   },
@@ -387,6 +349,8 @@ const TEAM_MENTORS = [
   {
     slug: "muy-kalin",
     name: "MUY KALIN",
+    badgeKm: "ក្រុមស្រាវជ្រាវ CMU",
+    badgeEn: "CMU Research Team",
     roleKm: "អ្នកអភិវឌ្ឍ Full-Stack & Frontend",
     roleEn: "Full-Stack & Frontend Developer",
     org: "Cambodian Mekong University",
@@ -397,6 +361,8 @@ const TEAM_MENTORS = [
   {
     slug: "horn-pisey",
     name: "HORN PISEY",
+    badgeKm: "ក្រុមស្រាវជ្រាវ CMU",
+    badgeEn: "CMU Research Team",
     roleKm: "សវនកម្ម IT និងហានិភ័យប្រព័ន្ធ",
     roleEn: "IT Audit & Cyber Risk Specialist",
     org: "Camma Microfinance Limited",
@@ -407,6 +373,8 @@ const TEAM_MENTORS = [
   {
     slug: "kry-soranuth",
     name: "KRY SORANUTH",
+    badgeKm: "ក្រុមស្រាវជ្រាវ CMU",
+    badgeEn: "CMU Research Team",
     roleKm: "សន្តិសុខបណ្តាញ និងមូលដ្ឋាន Network",
     roleEn: "Cybersecurity & Network Specialist",
     org: "Cambodian Mekong University",
@@ -417,6 +385,8 @@ const TEAM_MENTORS = [
   {
     slug: "samrith-ratana",
     name: "SAMRITH RATANA",
+    badgeKm: "ក្រុមស្រាវជ្រាវ CMU",
+    badgeEn: "CMU Research Team",
     roleKm: "គាំទ្របច្ចេកទេស និងគណនី B2B",
     roleEn: "B2B Account & Technical Support",
     org: "Viettel (Cambodia) PTE. LTD.",
@@ -427,6 +397,8 @@ const TEAM_MENTORS = [
   {
     slug: "heang-chheng-khoem",
     name: "HEANG CHHENGKHOEM",
+    badgeKm: "ក្រុមស្រាវជ្រាវ CMU",
+    badgeEn: "CMU Research Team",
     roleKm: "ទីផ្សារឌីជីថល និងគាំទ្រប្រព័ន្ធ IT",
     roleEn: "Digital Marketing & IT Support",
     org: "888 UP FAST CASH",
@@ -511,39 +483,21 @@ const LIVE_SESSIONS = [
 const FALLBACK_INTERNSHIPS = [
   {
     id: "job1",
-    titleKm: "កម្មសិក្សាផ្នែក Frontend Web Developer",
-    titleEn: "Frontend Web Developer Intern",
-    company: "Angkor Tech Solutions",
-    locationKm: "ភ្នំពេញ · Hybrid",
-    locationEn: "Phnom Penh · Hybrid",
-    stipend: "$180/mo",
-    type: "Internship",
-    verified: true,
-    skills: ["React.js", "JavaScript", "Tailwind/CSS"],
+    title: "Full-Stack Developer Intern",
+    company: "Angkor Tech Ventures",
+    location: "Phnom Penh (Hybrid)",
   },
   {
     id: "job2",
-    titleKm: "កម្មសិក្សាផ្នែក UX/UI Product Design",
-    titleEn: "UX/UI Product Design Intern",
-    company: "Mekong Digital Studio",
-    locationKm: "ភ្នំពេញ · On-site",
-    locationEn: "Phnom Penh · On-site",
-    stipend: "$150/mo",
-    type: "Internship",
-    verified: true,
-    skills: ["Figma", "Wireframing", "Prototyping"],
+    title: "Junior Security Analyst",
+    company: "Acme Cybernetics",
+    location: "Phnom Penh, Cambodia",
   },
   {
     id: "job3",
-    titleKm: "កម្មសិក្សាផ្នែក Data & IT Audit Support",
-    titleEn: "Data & IT Audit Support Intern",
-    company: "Phnom Penh FinTech Hub",
-    locationKm: "ពីចម្ងាយ · Remote",
-    locationEn: "Cambodia · Remote",
-    stipend: "$200/mo",
-    type: "Full-Time Intern",
-    verified: true,
-    skills: ["SQL", "Power BI", "IT Controls"],
+    title: "Frontend Developer Intern",
+    company: "Mekong Digital Studio",
+    location: "Phnom Penh (Hybrid)",
   },
 ];
 
@@ -577,15 +531,14 @@ const FAQ_ITEMS = [
 export default function Home() {
   const { language } = useLanguage();
   const { user } = useGlobleContext();
-  const navigate = useNavigate();
   const isKm = language === "km";
+  const topicStripRef = useRef(null);
 
-  const [heroQuery, setHeroQuery] = useState("");
+  const [courseSearch, setCourseSearch] = useState("");
   const [selectedCat, setSelectedCat] = useState("All");
   const [activeTrackId, setActiveTrackId] = useState("web");
   const [activeHubTab, setActiveHubTab] = useState("mentors");
   const [openFaq, setOpenFaq] = useState(0);
-  const [brokenThumbs, setBrokenThumbs] = useState({});
 
   const [apiCourses, setApiCourses] = useState([]);
   const [apiMentors, setApiMentors] = useState([]);
@@ -624,39 +577,24 @@ export default function Home() {
   }, []);
 
   const displayCourses = useMemo(() => {
-    if (apiCourses.length > 0) {
-      return apiCourses.slice(0, 6).map((c, idx) => {
-        const fb = FALLBACK_COURSES[idx % FALLBACK_COURSES.length];
-        return {
-          id: c.id || fb.id,
-          slug: c.slug || fb.slug,
-          titleKm: c.titleKm || c.title || fb.titleKm,
-          titleEn: c.title || fb.titleEn,
-          descKm: c.descriptionKm || c.description || fb.descKm,
-          descEn: c.description || fb.descEn,
-          category: c.category || fb.category,
-          catKm: c.category || fb.catKm,
-          level: c.level || fb.level,
-          levelKm: c.level || fb.levelKm,
-          price: Number(c.price ?? fb.price),
-          lessons: c.lessonCount || fb.lessons,
-          duration: c.duration || fb.duration,
-          topics: Array.isArray(c.topics) && c.topics.length ? c.topics.slice(0, 3) : fb.topics,
-          thumbnailUrl: c.thumbnailUrl || fb.thumbnailUrl,
-          gradient: fb.gradient,
-        };
-      });
-    }
-    return FALLBACK_COURSES;
+    const rawList =
+      apiCourses.length > 0
+        ? apiCourses.slice(0, 6)
+        : Object.values(COURSE_BILINGUAL_MAP);
+    return rawList.map((c, idx) => enrichCourseRecord(c, idx));
   }, [apiCourses]);
 
   const filteredCourses = useMemo(() => {
-    if (selectedCat === "All") return displayCourses;
-    const matches = displayCourses.filter(
-      (item) => String(item.category).toLowerCase() === selectedCat.toLowerCase(),
-    );
-    return matches.length > 0 ? matches : displayCourses.slice(0, 3);
-  }, [displayCourses, selectedCat]);
+    return displayCourses.filter((item) => {
+      const catMatch =
+        selectedCat === "All" ||
+        String(item.category).toLowerCase() === selectedCat.toLowerCase();
+      const q = courseSearch.trim().toLowerCase();
+      if (!q) return catMatch;
+      const hay = `${item.titleKm} ${item.titleEn} ${item.descKm} ${item.descEn} ${item.topics.join(" ")}`.toLowerCase();
+      return catMatch && hay.includes(q);
+    });
+  }, [displayCourses, selectedCat, courseSearch]);
 
   const resolvedTeamMentors = useMemo(() => {
     return TEAM_MENTORS.map((member) => {
@@ -673,29 +611,9 @@ export default function Home() {
   }, [apiMentors]);
 
   const displayInternships = useMemo(() => {
-    if (apiInternships.length > 0) {
-      return apiInternships.slice(0, 3).map((job, idx) => {
-        const fb = FALLBACK_INTERNSHIPS[idx % FALLBACK_INTERNSHIPS.length];
-        const rawSkills = Array.isArray(job.skills)
-          ? job.skills
-          : typeof job.skills === "string"
-            ? job.skills.split(",").map((s) => s.trim()).filter(Boolean)
-            : fb.skills;
-        return {
-          id: job.id || fb.id,
-          titleKm: job.title || fb.titleKm,
-          titleEn: job.title || fb.titleEn,
-          company: job.companyName || job.company || fb.company,
-          locationKm: job.location || fb.locationKm,
-          locationEn: job.location || fb.locationEn,
-          stipend: job.stipend || job.salaryRange || fb.stipend,
-          type: job.type || job.workMode || fb.type,
-          verified: job.isVerified !== undefined ? Boolean(job.isVerified) : true,
-          skills: rawSkills.slice(0, 3),
-        };
-      });
-    }
-    return FALLBACK_INTERNSHIPS;
+    const source =
+      apiInternships.length > 0 ? apiInternships.slice(0, 3) : FALLBACK_INTERNSHIPS;
+    return source.map((job, idx) => enrichInternshipRecord(job, idx));
   }, [apiInternships]);
 
   const activeTrack = useMemo(
@@ -703,41 +621,76 @@ export default function Home() {
     [activeTrackId],
   );
 
-  const handleHeroSearch = (event) => {
-    event.preventDefault();
-    const trimmed = heroQuery.trim();
-    navigate(trimmed ? `/search?q=${encodeURIComponent(trimmed)}` : "/search");
+  const scrollTopicStrip = (dir) => {
+    if (!topicStripRef.current) return;
+    topicStripRef.current.scrollBy({ left: dir * 240, behavior: "smooth" });
   };
 
   const cvStudioPath = user ? "/cv-studio" : "/register?redirect=%2Fcv-studio";
 
   return (
     <div className="ck-home">
-      {/* 1. CLEAN HERO SECTION + GLOBAL SEARCH + 3 MINIMAL PILLARS */}
+      {/* 0. TOP TECH TOPIC STRIP (CodeKhmerLearning Sub-Nav Style) */}
+      <div className="ck-topic-bar">
+        <div className="ck-container ck-topic-bar-inner">
+          <button
+            type="button"
+            className="ck-topic-arrow"
+            onClick={() => scrollTopicStrip(-1)}
+            aria-label="Scroll topics left"
+          >
+            <FiChevronLeft />
+          </button>
+          <div className="ck-topic-scroll" ref={topicStripRef}>
+            {TOP_TOPIC_PILLS.map((item) => {
+              const target =
+                item.to || `/search?q=${encodeURIComponent(item.query)}`;
+              return (
+                <Link key={item.label} to={target} className="ck-topic-pill">
+                  <span className="ck-topic-dot" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+          <button
+            type="button"
+            className="ck-topic-arrow"
+            onClick={() => scrollTopicStrip(1)}
+            aria-label="Scroll topics right"
+          >
+            <FiChevronRight />
+          </button>
+        </div>
+      </div>
+
+      {/* 1. CLEAN HERO SECTION + 2 CTA BUTTONS + 3 VERTICAL STACKED FEATURE CARDS */}
       <section className="ck-hero" id="top">
         <div className="ck-container ck-hero-inner">
           <div className="ck-hero-badge">
             <span className="ck-hero-dot" />
             <span>
               {isKm
-                ? "វេទិកាសហគមន៍អភិវឌ្ឍន៍ជំនាញ និងអាជីពឌីជីថលនៅកម្ពុជា"
-                : "Cambodia’s Smart Community for Practical Skills & Careers"}
+                ? "ស្វាគមន៍មកកាន់វេទិកាសហគមន៍អភិវឌ្ឍន៍ជំនាញ និងអាជីពឌីជីថល"
+                : "Welcome to Cambodia’s Smart Skill & Career Community"}
             </span>
           </div>
 
           <h1 className="ck-hero-title">
             {isKm ? (
               <>
-                រៀនជំនាញបច្ចេកវិទ្យាជាក់ស្តែង{" "}
+                សិក្សាជំនាញបច្ចេកវិទ្យា និងកសាងអាជីព
+                <br />
                 <span className="ck-text-gradient">
-                  បង្កើត CV អាជីព និងឈានទៅរកការងារពិត
+                  ជាមួយ Smart Community
                 </span>
               </>
             ) : (
               <>
-                Master Practical Tech Skills,{" "}
+                Master Practical Tech Skills & Launch
+                <br />
                 <span className="ck-text-gradient">
-                  Craft Your CV & Launch Your Career
+                  Your Career with Smart Community
                 </span>
               </>
             )}
@@ -745,103 +698,78 @@ export default function Home() {
 
           <p className="ck-hero-subtitle">
             {isKm
-              ? "ប្រព័ន្ធតែមួយសម្រាប់សិស្ស និងនិស្សិត៖ សិក្សាមេរៀនវីដេអូ HD ប្តូរជំនាញជាមួយមិត្តរួមក្រុម ពិភាក្សា 1:1 ជាមួយអ្នកណែនាំ រៀបចំ PDF CV និងដាក់ពាក្យកម្មសិក្សាដែលបានផ្ទៀងផ្ទាត់។"
-              : "One unified flow for students: learn hands-on video courses, swap skills with peers, get 1:1 mentor guidance, export a clean PDF CV, and apply to verified internships."}
+              ? "វេទិកាសិក្សាជំនាញឌីជីថលជាភាសាខ្មែរ និងអង់គ្លេស — រៀនមេរៀនអនុវត្តជាក់ស្តែង ប្តូរជំនាញជាមួយមិត្តរួមក្រុម ពិភាក្សា 1:1 ជាមួយអ្នកណែនាំ រៀបចំ PDF CV និងដាក់ពាក្យកម្មសិក្សាពិតប្រាកដ។"
+              : "Learn project-based courses, swap skills free with peers, get 1:1 mentor guidance, export a clean PDF CV, and apply to verified internships in one place."}
           </p>
-
-          <form className="ck-search-bar" onSubmit={handleHeroSearch} role="search">
-            <FiSearch className="ck-search-icon" aria-hidden="true" />
-            <input
-              type="search"
-              value={heroQuery}
-              onChange={(e) => setHeroQuery(e.target.value)}
-              placeholder={
-                isKm
-                  ? "ស្វែងរកវគ្គសិក្សា អ្នកណែនាំ ការងារ ឬជំនាញ (ឧ. React, UX/UI, Python)..."
-                  : "Search courses, mentors, internships, or skills (e.g. React, Figma, SQL)..."
-              }
-              aria-label={isKm ? "ស្វែងរកទូទាំងប្រព័ន្ធ" : "Global platform search"}
-            />
-            <kbd className="ck-search-kbd">⌘K</kbd>
-            <button type="submit" className="ck-search-submit">
-              {isKm ? "ស្វែងរក" : "Search"}
-            </button>
-          </form>
 
           <div className="ck-hero-actions">
             <Link to="/courses" className="ck-btn ck-btn-primary">
-              <FiBookOpen />
               <span>{isKm ? "ចាប់ផ្តើមរៀនឥឡូវនេះ" : "Start Learning Now"}</span>
               <FiArrowRight />
             </Link>
             <Link to={cvStudioPath} className="ck-btn ck-btn-outline">
               <FiFileText />
-              <span>{isKm ? "បង្កើត CV & Portfolio" : "Build CV & Portfolio"}</span>
+              <span>{isKm ? "បង្កើត CV & រកការងារ" : "Build CV & Find Jobs"}</span>
             </Link>
           </div>
 
+          {/* 3 Vertical Feature Cards (CodeKhmerLearning Exact Proportions) */}
           <div className="ck-pillars-grid">
             <div className="ck-pillar-card">
               <div className="ck-pillar-icon blue">
                 <FiBookOpen />
               </div>
-              <div>
-                <h3>{isKm ? "មេរៀនអនុវត្តជាក់ស្តែង" : "Practical Video Courses"}</h3>
-                <p>
-                  {isKm
-                    ? "មេរៀនរៀបចំតាមលំដាប់ច្បាស់លាស់ ងាយយល់ និងផ្តោតលើការបង្កើតស្នាដៃពិត។"
-                    : "Structured step-by-step HD lessons focused on real portfolio projects."}
-                </p>
-              </div>
+              <h3>{isKm ? "មេរៀនអនុវត្តជាក់ស្តែង" : "Practical Video Courses"}</h3>
+              <p>
+                {isKm
+                  ? "មេរៀនរៀបចំតាមលំដាប់ច្បាស់លាស់ ងាយស្រួលយល់ និងផ្តោតលើការបង្កើតគម្រោងស្នាដៃពិតៗ។"
+                  : "Structured step-by-step lessons designed to help you build real portfolio projects."}
+              </p>
             </div>
 
             <div className="ck-pillar-card">
               <div className="ck-pillar-icon indigo">
                 <FiUsers />
               </div>
-              <div>
-                <h3>{isKm ? "ប្តូរជំនាញ & អ្នកណែនាំ 1:1" : "Skill Swap & 1:1 Mentors"}</h3>
-                <p>
-                  {isKm
-                    ? "ផ្លាស់ប្តូរចំណេះដឹងជាមួយមិត្តរួមជំនាញ និងទទួលការណែនាំផ្ទាល់ពីរៀមច្បង។"
-                    : "Exchange skills free with peers and book 1:1 reviews with industry mentors."}
-                </p>
-              </div>
+              <h3>{isKm ? "ប្តូរជំនាញ & អ្នកណែនាំ 1:1" : "Skill Swap & 1:1 Mentors"}</h3>
+              <p>
+                {isKm
+                  ? "ផ្លាស់ប្តូរចំណេះដឹងជាមួយមិត្តរួមជំនាញដោយឥតគិតថ្លៃ និងទទួលការណែនាំផ្ទាល់ពីរៀមច្បង។"
+                  : "Exchange skills free with peers and book 1:1 code and portfolio reviews with mentors."}
+              </p>
             </div>
 
             <div className="ck-pillar-card">
               <div className="ck-pillar-icon emerald">
                 <FiBriefcase />
               </div>
-              <div>
-                <h3>{isKm ? "CV Studio & កម្មសិក្សាពិត" : "CV Studio & Verified Jobs"}</h3>
-                <p>
-                  {isKm
-                    ? "បោះពុម្ព PDF CV ស្តង់ដារ និងដាក់ពាក្យចូលក្រុមហ៊ុនដៃគូដែលបានផ្ទៀងផ្ទាត់។"
-                    : "Export an ATS-ready PDF CV and apply directly to admin-verified employers."}
-                </p>
-              </div>
+              <h3>{isKm ? "CV Studio & កម្មសិក្សាពិត" : "CV Studio & Verified Jobs"}</h3>
+              <p>
+                {isKm
+                  ? "បោះពុម្ព PDF CV ស្តង់ដារក្នុង Minimal CV Studio និងដាក់ពាក្យចូលក្រុមហ៊ុនដែលបានផ្ទៀងផ្ទាត់។"
+                  : "Export an ATS-ready PDF CV and apply directly to admin-verified employer internships."}
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. POPULAR TECH & CAREER SKILLS SQUIRCLE GRID */}
+      {/* 2. FLOATING SQUARE TECH LOGO GRID (CodeKhmerLearning Logo Showcase Style) */}
       <section className="ck-section ck-skills-section" id="skills">
         <div className="ck-container">
           <header className="ck-section-header">
             <span className="ck-eyebrow">
-              {isKm ? "ជំនាញពេញនិយម" : "IN-DEMAND SKILLS"}
+              {isKm ? "ជំនាញបច្ចេកវិទ្យាពេញនិយម" : "IN-DEMAND TECH STACK"}
             </span>
             <h2>
               {isKm
-                ? "ជ្រើសរើសជំនាញបច្ចេកវិទ្យាដែលទីផ្សារការងារត្រូវការ"
-                : "Explore High-Demand Tech & Career Skills"}
+                ? "បច្ចេកវិទ្យាពេញនិយមដែលអ្នកនឹងសិក្សា"
+                : "Popular Technologies You Will Master"}
             </h2>
             <p>
               {isKm
-                ? "ចុចលើជំនាញណាមួយដើម្បីស្វែងរកវគ្គសិក្សា អ្នកណែនាំ និងឱកាសកម្មសិក្សាពាក់ព័ន្ធភ្លាមៗ"
-                : "Select any skill to instantly discover matching courses, mentors, and internships"}
+                ? "យើងផ្តោតលើជំនាញបច្ចេកវិទ្យា និងឌីជីថលដែលក្រុមហ៊ុននៅកម្ពុជា និងអន្តរជាតិកំពុងត្រូវការខ្លាំងបំផុត"
+                : "Focused on the modern tools and frameworks most requested by employers today"}
             </p>
           </header>
 
@@ -852,15 +780,12 @@ export default function Home() {
                 <Link
                   key={skill.id}
                   to={`/search?q=${encodeURIComponent(skill.query)}`}
-                  className="ck-tech-tile"
+                  className="ck-tech-item"
                 >
-                  <span
-                    className="ck-tech-squircle"
-                    style={{ color: skill.color, background: skill.bg }}
-                  >
+                  <div className="ck-tech-square" style={{ color: skill.color }}>
                     <IconComp />
-                  </span>
-                  <strong>{skill.label}</strong>
+                  </div>
+                  <span className="ck-tech-label">{skill.label}</span>
                 </Link>
               );
             })}
@@ -868,8 +793,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. FEATURED VISUAL COURSES (16:9 COVER + FLOATING PILLS + 3 TOPICS + SOLID CTA) */}
-      <section className="ck-section" id="courses">
+      {/* 3. FEATURED VISUAL COURSES (INLINE SEARCH + PILLS + GRAPHIC COVERS) */}
+      <section className="ck-section ck-section-alt" id="courses">
         <div className="ck-container">
           <header className="ck-section-header">
             <span className="ck-eyebrow">
@@ -882,102 +807,120 @@ export default function Home() {
             </h2>
             <p>
               {isKm
-                ? "មេរៀននីមួយៗមានរចនាសម្ព័ន្ធច្បាស់លាស់ ខ្លីងាយយល់ និងអាចរៀនបានគ្រប់ឧបករណ៍"
-                : "Clean, project-focused lessons with free previews and lifetime progress tracking"}
+                ? "មេរៀននីមួយៗមានរចនាសម្ព័ន្ធច្បាស់លាស់ ខ្លីងាយយល់ និងអាចរៀនបានគ្រប់ពេលវេលា"
+                : "Structured, project-focused courses with practical lessons and progress tracking"}
             </p>
           </header>
 
-          <div className="ck-filter-pills" role="tablist" aria-label="Course categories">
-            {COURSE_CATEGORIES.map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                role="tab"
-                aria-selected={selectedCat === cat.id}
-                className={`ck-pill-btn ${selectedCat === cat.id ? "active" : ""}`}
-                onClick={() => setSelectedCat(cat.id)}
-              >
-                {isKm ? cat.km : cat.en}
-              </button>
-            ))}
+          {/* Inline Search + Category Pills Toolbar (CodeKhmerLearning Exact Pattern) */}
+          <div className="ck-courses-toolbar">
+            <div className="ck-inline-search">
+              <FiSearch className="ck-inline-search-icon" />
+              <input
+                type="search"
+                value={courseSearch}
+                onChange={(e) => setCourseSearch(e.target.value)}
+                placeholder={
+                  isKm ? "ស្វែងរកវគ្គសិក្សា..." : "Search courses..."
+                }
+                aria-label={isKm ? "ស្វែងរកវគ្គសិក្សា" : "Search courses"}
+              />
+            </div>
+
+            <div className="ck-filter-pills" role="tablist" aria-label="Course categories">
+              {COURSE_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={selectedCat === cat.id}
+                  className={`ck-pill-btn ${selectedCat === cat.id ? "active" : ""}`}
+                  onClick={() => setSelectedCat(cat.id)}
+                >
+                  {isKm ? cat.km : cat.en}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="ck-courses-grid">
-            {filteredCourses.map((course) => {
-              const isFree = Number(course.price || 0) <= 0;
-              const courseTarget = `/courses/${course.slug}`;
-              const linkTo = user
-                ? courseTarget
-                : `/register?redirect=${encodeURIComponent(courseTarget)}`;
-              const thumbFailed = Boolean(brokenThumbs[course.id]);
+            {(filteredCourses.length > 0 ? filteredCourses : displayCourses.slice(0, 3)).map(
+              (course) => {
+                const isFree = Number(course.price || 0) <= 0;
+                const courseTarget = `/courses/${course.slug}`;
+                const linkTo = user
+                  ? courseTarget
+                  : `/register?redirect=${encodeURIComponent(courseTarget)}`;
+                const CoverIcon = COURSE_ICON_MAP[course.iconKey] || FaCode;
 
-              return (
-                <article key={course.id} className="ck-course-card">
-                  <Link
-                    to={linkTo}
-                    className="ck-course-media"
-                    style={{ background: course.gradient }}
-                  >
-                    {!thumbFailed && course.thumbnailUrl && (
-                      <img
-                        src={course.thumbnailUrl}
-                        alt={isKm ? course.titleKm : course.titleEn}
-                        loading="lazy"
-                        decoding="async"
-                        onError={() =>
-                          setBrokenThumbs((prev) => ({ ...prev, [course.id]: true }))
-                        }
-                      />
-                    )}
-                    <div className="ck-course-media-overlay" />
-                    <span className="ck-badge-level">
-                      {isKm ? course.levelKm : course.level}
-                    </span>
-                    <span className={`ck-badge-price ${isFree ? "free" : "paid"}`}>
-                      {isFree ? (isKm ? "ឥតគិតថ្លៃ" : "Free") : `$${course.price}`}
-                    </span>
-                    <span className="ck-media-play" aria-hidden="true">
-                      <FaPlay />
-                    </span>
-                  </Link>
-
-                  <div className="ck-course-body">
-                    <div className="ck-course-meta-top">
-                      <span className="ck-cat-tag">
-                        {isKm ? course.catKm : course.category}
+                return (
+                  <article key={course.id} className="ck-course-card">
+                    <Link
+                      to={linkTo}
+                      className="ck-course-media"
+                      style={{ background: course.gradient }}
+                    >
+                      <div className="ck-course-pattern" />
+                      <span className="ck-badge-level">
+                        {isKm ? course.levelKm : course.levelEn}
                       </span>
-                      <span className="ck-lesson-meta">
-                        <FiClock /> {course.lessons} {isKm ? "មេរៀន" : "lessons"} ·{" "}
-                        {course.duration}
+                      <span className={`ck-badge-price ${isFree ? "free" : "paid"}`}>
+                        {isFree ? (isKm ? "ឥតគិតថ្លៃ" : "Free") : `$${course.price}`}
                       </span>
-                    </div>
 
-                    <h3 className="ck-card-title">
-                      <Link to={linkTo}>
-                        {isKm ? course.titleKm : course.titleEn}
-                      </Link>
-                    </h3>
-
-                    <p className="ck-card-desc">
-                      {isKm ? course.descKm : course.descEn}
-                    </p>
-
-                    <div className="ck-topic-chips">
-                      {course.topics.map((topic) => (
-                        <span key={topic} className="ck-topic-chip">
-                          <FiCheck /> {topic}
-                        </span>
-                      ))}
-                    </div>
-
-                    <Link to={linkTo} className="ck-card-cta">
-                      <span>{isKm ? "ចូលរៀនឥឡូវនេះ" : "Start Learning"}</span>
-                      <FiArrowRight />
+                      <div className="ck-cover-art">
+                        <div className="ck-cover-emblem">
+                          <CoverIcon />
+                        </div>
+                        <div className="ck-cover-titles">
+                          <strong>{course.bannerTitle}</strong>
+                          <span>{course.bannerSub}</span>
+                        </div>
+                      </div>
                     </Link>
-                  </div>
-                </article>
-              );
-            })}
+
+                    <div className="ck-course-body">
+                      <div className="ck-course-meta-top">
+                        <span className="ck-cat-tag">
+                          {isKm ? course.catKm : course.catEn}
+                        </span>
+                        <span className="ck-lesson-meta">
+                          <FiClock /> {course.lessons} {isKm ? "មេរៀន" : "lessons"} ·{" "}
+                          {isKm ? course.durationKm : course.durationEn}
+                        </span>
+                      </div>
+
+                      <h3 className="ck-card-title">
+                        <Link to={linkTo}>
+                          {isKm ? course.titleKm : course.titleEn}
+                        </Link>
+                      </h3>
+
+                      <p className="ck-card-desc">
+                        {isKm ? course.descKm : course.descEn}
+                      </p>
+
+                      <div className="ck-topic-chips">
+                        {course.topics.map((topic) => (
+                          <span key={topic} className="ck-topic-chip">
+                            <FiCheck /> {topic}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="ck-course-footer">
+                        <Link to={linkTo} className="ck-card-cta">
+                          <span>{isKm ? "👉 ចូលរៀនឥឡូវនេះ" : "👉 Start Learning"}</span>
+                        </Link>
+                        <span className="ck-level-foot-pill">
+                          {isKm ? course.levelKm : course.levelEn}
+                        </span>
+                      </div>
+                    </div>
+                  </article>
+                );
+              },
+            )}
           </div>
 
           <div className="ck-section-footer">
@@ -989,79 +932,93 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. INTERACTIVE CAREER ROADMAP & CV STUDIO TIMELINE */}
-      <section className="ck-section ck-section-alt" id="roadmap">
+      {/* 4. CONNECTED VERTICAL TIMELINE CAREER ROADMAP (CodeKhmerLearning Exact Style) */}
+      <section className="ck-section" id="roadmap">
         <div className="ck-container">
           <header className="ck-section-header">
             <span className="ck-eyebrow">
-              {isKm ? "ផែនទីបង្ហាញផ្លូវអាជីព" : "END-TO-END CAREER FLOW"}
+              {isKm ? "ផែនទីបង្ហាញផ្លូវអាជីព" : "CAREER ROADMAP"}
             </span>
             <h2>
               {isKm
-                ? "ផ្លូវដើរច្បាស់លាស់ពីការរៀន រហូតដល់មានការងារធ្វើ"
-                : "Step-by-Step Roadmap from Learning to Hired"}
+                ? "ផែនទីបង្ហាញផ្លូវសិក្សា (Learning Roadmap)"
+                : "Step-by-Step Career Learning Roadmap"}
             </h2>
             <p>
               {isKm
-                ? "ជ្រើសរើសជំនាញអាជីពដែលអ្នកចង់ក្លាយជា ដើម្បីមើលជំហានទាំង 3 នៅលើ Smart Community"
-                : "Choose your target tech track to follow Smart Community’s 3-stage career pipeline"}
+                ? "មិនដឹងថាគួរចាប់ផ្តើមពីណាមែនទេ? ជ្រើសរើសជំនាញអាជីពដែលអ្នកចង់ក្លាយជា ដើម្បីមើលជំហានសិក្សា និងអនុវត្តតាមលំដាប់លំដោយ"
+                : "Not sure where to start? Pick your target role to follow a clear, structured path from fundamentals to getting hired"}
             </p>
           </header>
 
-          <div className="ck-filter-pills" role="tablist" aria-label="Career tracks">
-            {ROADMAP_TRACKS.map((track) => (
-              <button
-                key={track.id}
-                type="button"
-                role="tab"
-                aria-selected={activeTrackId === track.id}
-                className={`ck-pill-btn ${activeTrackId === track.id ? "active" : ""}`}
-                onClick={() => setActiveTrackId(track.id)}
-              >
-                {isKm ? track.labelKm : track.labelEn}
-              </button>
-            ))}
-          </div>
-
-          <div className="ck-roadmap-timeline">
-            {activeTrack.stages.map((stage) => {
-              const targetUrl =
-                stage.to === "/cv-studio"
-                  ? cvStudioPath
-                  : stage.to === "/skill-exchange" && !user
-                    ? "/register?redirect=%2Fskill-exchange"
-                    : stage.to;
+          <div className="ck-roadmap-tabs" role="tablist" aria-label="Career tracks">
+            {ROADMAP_TRACKS.map((track) => {
+              const TrackIcon = track.icon;
               return (
-                <div key={stage.step} className="ck-roadmap-step">
-                  <div className="ck-roadmap-num">{stage.step}</div>
-                  <div className="ck-roadmap-card">
-                    <div className="ck-roadmap-card-head">
-                      <div>
-                        <h3>{isKm ? stage.titleKm : stage.titleEn}</h3>
-                        <p>{isKm ? stage.descKm : stage.descEn}</p>
-                      </div>
-                      <Link to={targetUrl} className="ck-roadmap-link">
-                        <span>{isKm ? stage.ctaKm : stage.ctaEn}</span>
-                        <FiArrowRight />
-                      </Link>
-                    </div>
-                    <div className="ck-roadmap-tags">
-                      {stage.tags.map((tag) => (
-                        <span key={tag} className="ck-roadmap-tag">
-                          <FiCheck /> {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <button
+                  key={track.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTrackId === track.id}
+                  className={`ck-roadmap-tab ${activeTrackId === track.id ? "active" : ""}`}
+                  onClick={() => setActiveTrackId(track.id)}
+                >
+                  <TrackIcon />
+                  <span>{isKm ? track.labelKm : track.labelEn}</span>
+                </button>
               );
             })}
+          </div>
+
+          <div className="ck-timeline-wrap">
+            {activeTrack.stages.map((stage) => (
+              <div key={stage.step} className="ck-timeline-item">
+                <div className="ck-timeline-node">{stage.step}</div>
+                <div className="ck-timeline-card">
+                  <div className="ck-timeline-card-head">
+                    <div className="ck-timeline-icon">
+                      <FiLayers />
+                    </div>
+                    <h3>{isKm ? stage.titleKm : stage.titleEn}</h3>
+                  </div>
+
+                  <p className="ck-timeline-desc">
+                    {isKm ? stage.descKm : stage.descEn}
+                  </p>
+
+                  <div className="ck-timeline-divider" />
+
+                  <div className="ck-timeline-links-label">
+                    {isKm
+                      ? "🔗 តំណភ្ជាប់សិក្សា និងអនុវត្តនៅលើប្រព័ន្ធ៖"
+                      : "🔗 Platform Learning & Practice Links:"}
+                  </div>
+
+                  <div className="ck-timeline-pills">
+                    {stage.links.map((lk) => {
+                      const dest =
+                        lk.to === "/cv-studio"
+                          ? cvStudioPath
+                          : lk.to === "/skill-exchange" && !user
+                            ? "/register?redirect=%2Fskill-exchange"
+                            : lk.to;
+                      return (
+                        <Link key={lk.labelEn} to={dest} className="ck-timeline-pill">
+                          <span>{isKm ? lk.labelKm : lk.labelEn}</span>
+                          <FiExternalLink />
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* 5. INTERACTIVE COMMUNITY HUB: 1:1 MENTORS | PEER SKILL SWAP | LIVE SESSIONS */}
-      <section className="ck-section" id="community-hub">
+      <section className="ck-section ck-section-alt" id="community-hub">
         <div className="ck-container">
           <header className="ck-section-header">
             <span className="ck-eyebrow">
@@ -1118,7 +1075,7 @@ export default function Home() {
                 <article key={mentor.slug} className="ck-hub-card">
                   <div className="ck-mentor-top">
                     <div className="ck-avatar-ring">
-                      <img src={mentor.avatar} alt={mentor.name} loading="lazy" />
+                      <img src={mentor.avatar} alt={mentor.name} />
                     </div>
                     <div className="ck-mentor-info">
                       <div className="ck-mentor-name-row">
@@ -1250,7 +1207,7 @@ export default function Home() {
       </section>
 
       {/* 6. VERIFIED INTERNSHIPS & CAREER OPPORTUNITIES */}
-      <section className="ck-section ck-section-alt" id="internships">
+      <section className="ck-section" id="internships">
         <div className="ck-container">
           <header className="ck-section-header">
             <span className="ck-eyebrow">
@@ -1284,7 +1241,9 @@ export default function Home() {
                       <FiMapPin /> {isKm ? job.locationKm : job.locationEn}
                     </span>
                   </div>
-                  <span className="ck-stipend-pill">{job.stipend}</span>
+                  <span className="ck-stipend-pill">
+                    {isKm ? job.stipendKm : job.stipendEn}
+                  </span>
                 </div>
 
                 <h3 className="ck-card-title">
@@ -1317,11 +1276,11 @@ export default function Home() {
       </section>
 
       {/* 7. 3-ROLE ECOSYSTEM PURPOSE CARDS & CMU RESEARCH TEAM SHOWCASE */}
-      <section className="ck-section" id="ecosystem">
+      <section className="ck-section ck-section-alt" id="ecosystem">
         <div className="ck-container">
           <header className="ck-section-header">
             <span className="ck-eyebrow">
-              {isKm ? "ប្រព័ន្ធអេកូឡូស៊ី និងក្រុមស្ថាបនិក" : "ECOSYSTEM & RESEARCH TEAM"}
+              {isKm ? "គោលបំណង និងក្រុមស្ថាបនិក" : "PURPOSE & RESEARCH TEAM"}
             </span>
             <h2>
               {isKm
@@ -1385,11 +1344,15 @@ export default function Home() {
             </div>
           </div>
 
+          {/* CMU Research Team Showcase (CodeKhmerLearning Supporter Card Style) */}
           <div className="ck-team-block">
             <div className="ck-team-heading">
+              <span className="ck-eyebrow">
+                {isKm ? "ក្រុមស្រាវជ្រាវ និងអ្នកណែនាំ" : "RESEARCH & MENTOR TEAM"}
+              </span>
               <h3>
                 {isKm
-                  ? "ក្រុមស្រាវជ្រាវ និងអភិវឌ្ឍន៍ — សាកលវិទ្យាល័យមេគង្គកម្ពុជា (CMU)"
+                  ? "ក្រុមស្រាវជ្រាវបញ្ចប់ការសិក្សា — សាកលវិទ្យាល័យមេគង្គកម្ពុជា (CMU)"
                   : "CMU Graduation Research & Mentor Team"}
               </h3>
               <p>
@@ -1406,17 +1369,29 @@ export default function Home() {
                   key={member.slug}
                   className="ck-team-card"
                 >
-                  <div className="ck-team-avatar">
-                    <img src={member.avatar} alt={member.name} loading="lazy" />
+                  <div className="ck-team-avatar-wrap">
+                    <div className="ck-team-avatar">
+                      <img src={member.avatar} alt={member.name} />
+                    </div>
+                    <span className="ck-team-status-dot" aria-hidden="true" />
                   </div>
+
+                  <span className="ck-team-badge">
+                    🎓 {isKm ? member.badgeKm : member.badgeEn}
+                  </span>
+
                   <div className="ck-team-name">
                     <strong>{member.name}</strong>
                     <MdVerified className="ck-verified-icon" />
                   </div>
+
                   <span className="ck-team-role">
                     {isKm ? member.roleKm : member.roleEn}
                   </span>
+
                   <small className="ck-team-org">{member.org}</small>
+
+                  <span className="ck-team-accent-bar" aria-hidden="true" />
                 </Link>
               ))}
             </div>
@@ -1425,7 +1400,7 @@ export default function Home() {
       </section>
 
       {/* 8. CLEAN SINGLE-COLUMN ACCORDION FAQ */}
-      <section className="ck-section ck-section-alt" id="faq">
+      <section className="ck-section" id="faq">
         <div className="ck-container ck-faq-container">
           <header className="ck-section-header">
             <span className="ck-eyebrow">
@@ -1433,9 +1408,14 @@ export default function Home() {
             </span>
             <h2>
               {isKm
-                ? "ចម្លើយខ្លីៗ និងច្បាស់លាស់អំពីការប្រើប្រាស់ប្រព័ន្ធ"
-                : "Clear Answers to Common Questions"}
+                ? "សំណួរដែលសួរញឹកញាប់ (FAQ)"
+                : "Frequently Asked Questions (FAQ)"}
             </h2>
+            <p>
+              {isKm
+                ? "ចម្លើយខ្លីៗ និងច្បាស់លាស់សម្រាប់សំណួរទូទៅរបស់សិស្ស និងអ្នកប្រើប្រាស់"
+                : "Quick, clear answers to common questions about Smart Community"}
+            </p>
           </header>
 
           <div className="ck-faq-list">

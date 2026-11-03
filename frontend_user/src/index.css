@@ -1180,9 +1180,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .app-content {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.48), transparent 22rem),
-    transparent;
+  background: transparent;
 }
 
 :where(input, select, textarea) {
@@ -2108,9 +2106,27 @@ html[data-theme="dark"] :where(
     .page-hero
   )
   :where(h1, h2) {
-  max-width: 13ch;
+  max-width: 28ch !important;
+  font-size: clamp(1.75rem, 3.1vw, 2.45rem) !important;
+  line-height: 1.28 !important;
   color: #0f172a;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.025em;
+}
+
+[data-theme="dark"]
+  :where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .page-hero
+  )
+  :where(h1, h2) {
+  color: #f8fafc !important;
 }
 
 :where(
@@ -2126,8 +2142,25 @@ html[data-theme="dark"] :where(
   )
   :where(p:not(.eyebrow):not(.courses-kicker)) {
   max-width: 64ch;
-  color: #536176;
-  font-size: clamp(0.98rem, 1.05vw, 1.06rem);
+  color: #475569;
+  font-size: clamp(0.95rem, 1.02vw, 1.04rem);
+  line-height: 1.65;
+}
+
+[data-theme="dark"]
+  :where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .page-hero
+  )
+  :where(p:not(.eyebrow):not(.courses-kicker)) {
+  color: #94a3b8 !important;
 }
 
 :where(
@@ -2429,9 +2462,10 @@ html[data-language="km"]
     .page-hero
   )
   :where(h1, h2) {
-  max-width: 20ch;
-  line-height: 1.26;
-  letter-spacing: -0.012em;
+  max-width: 28ch !important;
+  font-size: clamp(1.68rem, 2.9vw, 2.32rem) !important;
+  line-height: 1.38 !important;
+  letter-spacing: 0;
 }
 
 html[lang="km"]
