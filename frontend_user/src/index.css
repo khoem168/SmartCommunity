@@ -27,9 +27,9 @@
 :root {
   --font-body: "Plus Jakarta Sans", "Kantumruy Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-display: "Plus Jakarta Sans", "Kantumruy Pro", -apple-system, BlinkMacSystemFont, sans-serif;
-  --color-primary: #0f766e;
-  --color-primary-dark: #115e59;
-  --color-primary-light: #ccfbf1;
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+  --color-primary-light: #dbeafe;
   --color-secondary: #2563eb;
   --color-accent: #f59e0b;
   --color-success: #16a34a;
@@ -342,20 +342,26 @@ ol {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: 82px 20px;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  padding: 52px 20px 56px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
   background:
     radial-gradient(
-      circle at 12% 15%,
-      rgba(20, 184, 166, 0.16),
-      transparent 27%
+      circle at 50% 0%,
+      rgba(37, 99, 235, 0.09),
+      transparent 55%
     ),
+    transparent;
+}
+
+[data-theme="dark"] .page-hero {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  background:
     radial-gradient(
-      circle at 85% 20%,
-      rgba(37, 99, 235, 0.12),
-      transparent 25%
+      circle at 50% 0%,
+      rgba(59, 130, 246, 0.15),
+      transparent 55%
     ),
-    linear-gradient(180deg, #f8fffe, #f7f9fc);
+    transparent;
 }
 
 .hero-content {
@@ -436,16 +442,16 @@ ol {
 }
 
 .btn.primary {
-  border-color: var(--color-primary);
-  background: var(--color-primary);
+  border-color: #2563eb;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: #fff;
-  box-shadow: 0 10px 24px rgba(15, 118, 110, 0.2);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.24);
 }
 
 .btn.primary:hover {
-  border-color: var(--color-primary-dark);
-  background: var(--color-primary-dark);
-  box-shadow: 0 14px 30px rgba(15, 118, 110, 0.28);
+  border-color: #1d4ed8;
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.32);
 }
 
 .btn.outline {
@@ -1254,7 +1260,7 @@ body::-webkit-scrollbar-thumb:hover {
 @media (hover: none) {
   .btn:hover,
   .btn-tag:hover,
-  :where(
+  html:not([data-theme="dark"]) :where(
     .course-card,
     .job-card,
     .mentor-card,
@@ -1393,7 +1399,7 @@ body::-webkit-scrollbar-thumb:hover {
   filter: drop-shadow(0 4px 8px rgba(15, 23, 42, 0.12));
 }
 
-:where(
+html:not([data-theme="dark"]) :where(
     .course-card,
     .job-card,
     .mentor-card,
@@ -1417,7 +1423,7 @@ body::-webkit-scrollbar-thumb:hover {
   transform: scale(1.05) rotate(-2deg);
 }
 
-:where(
+html:not([data-theme="dark"]) :where(
     .course-card,
     .job-card,
     .mentor-card,
@@ -1645,11 +1651,15 @@ html[data-language="km"] .auth-required-card h1 {
   --shadow-polished-hover: 0 24px 60px rgba(15, 23, 42, 0.105);
 }
 
-body {
+html:not([data-theme="dark"]) body {
   background:
-    radial-gradient(circle at 4% 0%, rgba(20, 184, 166, 0.055), transparent 30rem),
-    radial-gradient(circle at 98% 18%, rgba(37, 99, 235, 0.05), transparent 32rem),
+    radial-gradient(circle at 4% 0%, rgba(37, 99, 235, 0.05), transparent 30rem),
+    radial-gradient(circle at 98% 18%, rgba(99, 102, 241, 0.045), transparent 32rem),
     #f8fafc;
+}
+
+html[data-theme="dark"] body {
+  background: #0b0f19;
 }
 
 .app-content > main {
@@ -1674,7 +1684,7 @@ body {
   border-bottom: 1px solid rgba(226, 232, 240, 0.72);
 }
 
-:where(
+html:not([data-theme="dark"]) :where(
     .course-card,
     .job-card,
     .mentor-card,
@@ -1711,7 +1721,7 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.78);
 }
 
-:where(
+html:not([data-theme="dark"]) :where(
     .course-card,
     .job-card,
     .mentor-card,
@@ -1733,7 +1743,7 @@ body {
     background 180ms var(--ease-polished);
 }
 
-:where(
+html:not([data-theme="dark"]) :where(
     .course-card,
     .job-card,
     .mentor-card,
@@ -1768,13 +1778,13 @@ body {
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, #0f766e, #0d9488);
-  box-shadow: 0 14px 30px rgba(15, 118, 110, 0.2);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.26);
 }
 
 .btn.primary:hover {
-  background: linear-gradient(135deg, #115e59, #0f766e);
-  box-shadow: 0 18px 38px rgba(15, 118, 110, 0.24);
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  box-shadow: 0 16px 32px rgba(37, 99, 235, 0.34);
 }
 
 .btn.outline {
@@ -1964,7 +1974,7 @@ html[lang="km"] :where(.section-header h2, .career-section-header h2, .page-hero
   --presentation-card-radius: 20px;
 }
 
-:where(
+html:not([data-theme="dark"]) :where(
     .courses-page,
     .career-page,
     .community-page,
@@ -2007,7 +2017,7 @@ html[lang="km"] :where(.section-header h2, .career-section-header h2, .page-hero
   width: min(var(--presentation-max-width), calc(100% - 40px));
 }
 
-:where(
+html:not([data-theme="dark"]) :where(
     .courses-hero,
     .career-hero,
     .community-hero,
@@ -2018,20 +2028,47 @@ html[lang="km"] :where(.section-header h2, .career-section-header h2, .page-hero
     .discover-hero,
     .page-hero
   ) {
-  padding-block: clamp(54px, 7vw, 86px);
+  padding-block: clamp(38px, 5vw, 60px);
   color: #0f172a;
   background:
     radial-gradient(
-      circle at 8% 8%,
-      rgba(45, 212, 191, 0.14),
-      transparent 26rem
-    ),
-    radial-gradient(
-      circle at 96% 12%,
-      rgba(59, 130, 246, 0.1),
+      circle at 12% 8%,
+      rgba(37, 99, 235, 0.09),
       transparent 28rem
     ),
-    linear-gradient(180deg, #fbfffe 0%, #f7fafc 100%) !important;
+    radial-gradient(
+      circle at 92% 12%,
+      rgba(99, 102, 241, 0.08),
+      transparent 28rem
+    ),
+    linear-gradient(180deg, #f8fafc 0%, #f8fafc 100%) !important;
+}
+
+html[data-theme="dark"] :where(
+    .courses-hero,
+    .career-hero,
+    .community-hero,
+    .mentorship-hero,
+    .jobs-hero,
+    .sessions-hero,
+    .forum-hero,
+    .discover-hero,
+    .page-hero
+  ) {
+  padding-block: clamp(38px, 5vw, 60px);
+  color: #f8fafc;
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(37, 99, 235, 0.18),
+      transparent 28rem
+    ),
+    radial-gradient(
+      circle at 88% 12%,
+      rgba(99, 102, 241, 0.14),
+      transparent 28rem
+    ),
+    transparent !important;
 }
 
 :where(

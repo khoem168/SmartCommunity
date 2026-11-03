@@ -9,7 +9,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: clamp(66px, 8vw, 100px) 0 clamp(50px, 6vw, 76px);
+  padding: clamp(40px, 5vw, 60px) 0 clamp(40px, 5vw, 56px);
   background: transparent;
   color: #0f172a;
 }

@@ -1276,9 +1276,6 @@ export default function Dashboard() {
               <Link to="/courses">
                 {t("refresh.allCourses")} <FiArrowRight />
               </Link>
-              <Link to="/cv-studio">
-                <FiFileText /> {isKm ? "បង្កើត CV (CV Studio)" : "CV Studio"} <FiArrowRight />
-              </Link>
               <Link to="/mentorship">
                 {t("refresh.mentorTitle")} <FiArrowRight />
               </Link>
@@ -1325,6 +1322,29 @@ export default function Dashboard() {
             </Link>
           ))}
         </section>
+
+        {data?.courses?.length > 0 && (
+          <section className="sc-continue-learning-banner">
+            <div className="sc-cl-left">
+              <span className="sc-cl-tag">
+                <FiBookOpen /> {isKm ? "កំពុងសិក្សា" : "Resume Learning"}
+              </span>
+              <h3>{data.courses[0].title}</h3>
+              <p>
+                {data.courses[0].category} · {data.courses[0].progress || 0}% {isKm ? "បានបញ្ចប់" : "Completed"}
+              </p>
+              <div className="sc-cl-bar">
+                <div
+                  className="sc-cl-fill"
+                  style={{ width: `${Math.max(6, Number(data.courses[0].progress || 0))}%` }}
+                />
+              </div>
+            </div>
+            <Link to={`/courses/${data.courses[0].slug}`} className="sc-cl-btn">
+              {isKm ? "បន្តការសិក្សា" : "Continue Course"} <FiArrowRight />
+            </Link>
+          </section>
+        )}
 
         {/* Smart Action Center */}
         <SmartActionCenter
@@ -1423,6 +1443,39 @@ export default function Dashboard() {
                 </div>
               )}
             </section>
+
+            {/* Latest Internships */}
+            <section className="sc-panel">
+              <header>
+                <div>
+                  <p>{t("refresh.latestJobs")}</p>
+                  <h2>{t("refresh.latestJobs")}</h2>
+                </div>
+                <Link to="/jobs">
+                  {t("refresh.viewAll")} <FiArrowRight />
+                </Link>
+              </header>
+              {data?.opportunities?.length ? (
+                <div className="sc-dashboard-list">
+                  {data.opportunities.map((job) => (
+                    <Link to="/jobs" key={job.id} className="sc-job-row">
+                      <FiBriefcase />
+                      <div>
+                        <strong>{job.title}</strong>
+                        <span>
+                          {job.company || job.location || job.internship_type}
+                        </span>
+                      </div>
+                      <FiArrowRight />
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="sc-panel-empty">
+                  <p>{t("refresh.noJobs")}</p>
+                </div>
+              )}
+            </section>
           </div>
 
           <aside className="sc-dashboard-side">
@@ -1469,18 +1522,18 @@ export default function Dashboard() {
               )}
             </section>
 
-            {/* Skill Exchanges (shown only when active swaps exist) */}
-            {data?.exchanges?.length > 0 && (
-              <section className="sc-panel">
-                <header>
-                  <div>
-                    <p>{t("refresh.exchangesTitle")}</p>
-                    <h2>{t("refresh.exchangesTitle")}</h2>
-                  </div>
-                  <Link to="/skill-exchange?tab=swaps">
-                    {t("refresh.viewAll")} <FiArrowRight />
-                  </Link>
-                </header>
+            {/* Skill Exchanges */}
+            <section className="sc-panel">
+              <header>
+                <div>
+                  <p>{t("refresh.exchangesTitle")}</p>
+                  <h2>{t("refresh.exchangesTitle")}</h2>
+                </div>
+                <Link to="/skill-exchange?tab=swaps">
+                  {t("refresh.viewAll")} <FiArrowRight />
+                </Link>
+              </header>
+              {data?.exchanges?.length ? (
                 <div className="sc-dashboard-list">
                   {data.exchanges.map((exchange) => (
                     <Link
@@ -1499,8 +1552,15 @@ export default function Dashboard() {
                     </Link>
                   ))}
                 </div>
-              </section>
-            )}
+              ) : (
+                <div className="sc-panel-empty">
+                  <p>{t("refresh.noExchanges")}</p>
+                  <Link to="/community">
+                    {t("refresh.exchange")} <FiArrowRight />
+                  </Link>
+                </div>
+              )}
+            </section>
 
             {/* Activity Notifications */}
             <section className="sc-panel">

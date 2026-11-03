@@ -179,7 +179,7 @@ const Forum = () => {
                     setForm({ ...form, categoryId: event.target.value })
                   }
                 >
-                  {categories.map((category) => (
+                  {(Array.isArray(categories) ? categories : []).map((category) => (
                     <option key={category.id} value={category.id}>
                       {category.name}
                     </option>
@@ -232,10 +232,10 @@ const Forum = () => {
             <strong>{copy.allTopics}</strong>
             <span>{stats.posts || 0} {copy.posts}</span>
           </button>
-          {categories.map((category) => (
+          {(Array.isArray(categories) ? categories : []).map((category) => (
             <button
               className={`forum-category-card ${filters.category === category.slug ? "active" : ""}`}
-              key={category.id}
+              key={category.id || category.slug}
               aria-pressed={filters.category === category.slug}
               type="button"
               onClick={() =>
@@ -247,11 +247,11 @@ const Forum = () => {
             >
               <span
                 className="category-dot"
-                style={{ background: category.color }}
+                style={{ background: category.color || "#2563eb" }}
               />
               <strong>{category.name}</strong>
               <span>
-                {category.postCount}{" "}
+                {category.postCount || 0}{" "}
                 {copy.posts}
               </span>
             </button>
@@ -322,57 +322,65 @@ const Forum = () => {
               </button>
             </div>
           ) : (
-            posts.map((post) => (
-              <article className="forum-post-card" key={post.id}>
-                <div className="forum-vote-box">
-                  <IoHeartOutline />
-                  <strong>{post.likeCount}</strong>
-                  <span>{copy.likes}</span>
-                </div>
-                <div className="forum-post-main">
-                  <div className="forum-post-meta">
-                    <span className={`forum-type ${post.postType}`}>
-                      {copy[post.postType] || post.postType}
-                    </span>
-                    <span
-                      className="forum-category-pill"
-                      style={{ "--category-color": post.category.color }}
-                    >
-                      {post.category.name}
-                    </span>
-                    {post.status === "closed" && (
-                      <span className="forum-closed">{copy.closed}</span>
-                    )}
+            posts.map((post) => {
+              const catColor = post.category?.color || "#2563eb";
+              const catName =
+                post.category?.name ||
+                post.categoryName ||
+                (language === "km" ? "ទូទៅ" : "General");
+              const bodyText = String(post.body || "");
+              return (
+                <article className="forum-post-card" key={post.id}>
+                  <div className="forum-vote-box">
+                    <IoHeartOutline />
+                    <strong>{post.likeCount ?? 0}</strong>
+                    <span>{copy.likes}</span>
                   </div>
-                  <Link to={`/forum/${post.id}`}>
-                    <h2>{post.title}</h2>
-                  </Link>
-                  <p>
-                    {post.body.length > 220
-                      ? `${post.body.slice(0, 220)}...`
-                      : post.body}
-                  </p>
-                  <div className="forum-post-footer">
-                    <span>
-                      {copy.by} {post.authorName} · {formatDate(post.createdAt, language)}
-                    </span>
-                    <div>
-                      <span>
-                        <IoChatbubblesOutline /> {post.answerCount} {copy.answers}
+                  <div className="forum-post-main">
+                    <div className="forum-post-meta">
+                      <span className={`forum-type ${post.postType || "discussion"}`}>
+                        {copy[post.postType] || post.postType || copy.discussion}
                       </span>
-                      <span>
-                        <IoEyeOutline /> {post.viewsCount} {copy.views}
+                      <span
+                        className="forum-category-pill"
+                        style={{ "--category-color": catColor }}
+                      >
+                        {catName}
                       </span>
-                      {post.hasAcceptedAnswer && (
-                        <span className="forum-solved">
-                          <IoCheckmarkCircleOutline /> {copy.solved}
-                        </span>
+                      {post.status === "closed" && (
+                        <span className="forum-closed">{copy.closed}</span>
                       )}
                     </div>
+                    <Link to={`/forum/${post.id}`}>
+                      <h2>{post.title}</h2>
+                    </Link>
+                    <p>
+                      {bodyText.length > 220
+                        ? `${bodyText.slice(0, 220)}...`
+                        : bodyText}
+                    </p>
+                    <div className="forum-post-footer">
+                      <span>
+                        {copy.by} {post.authorName || "Member"} · {formatDate(post.createdAt, language)}
+                      </span>
+                      <div>
+                        <span>
+                          <IoChatbubblesOutline /> {post.answerCount ?? post.commentCount ?? 0} {copy.answers}
+                        </span>
+                        <span>
+                          <IoEyeOutline /> {post.viewsCount ?? post.viewCount ?? 0} {copy.views}
+                        </span>
+                        {post.hasAcceptedAnswer && (
+                          <span className="forum-solved">
+                            <IoCheckmarkCircleOutline /> {copy.solved}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </article>
-            ))
+                </article>
+              );
+            })
           )}
         </div>
       </section>

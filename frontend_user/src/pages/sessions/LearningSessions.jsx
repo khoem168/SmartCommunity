@@ -303,10 +303,30 @@ const LearningSessions = () => {
                     <span
                       className={`session-status ${session.status} ${session.status === "ongoing" ? "realtime-live-pill" : ""}`}
                     >
-                      {t(`sessionsPage.status.${session.status}`)}
+                      {(() => {
+                        const stKey = String(session.status || "scheduled").toLowerCase();
+                        const translated = t(`sessionsPage.status.${stKey}`);
+                        if (translated && !translated.toLowerCase().includes("sessionspage.status.")) {
+                          return translated;
+                        }
+                        const fallbacks = {
+                          upcoming: language === "km" ? "នឹងមកដល់" : "Upcoming",
+                          scheduled: language === "km" ? "នឹងមកដល់" : "Scheduled",
+                          ongoing: language === "km" ? "កំពុងផ្សាយផ្ទាល់" : "Live Now",
+                          completed: language === "km" ? "បានបញ្ចប់" : "Completed",
+                          cancelled: language === "km" ? "បានបោះបង់" : "Cancelled",
+                        };
+                        return fallbacks[stKey] || session.status;
+                      })()}
                     </span>
                     <span className="session-level">
-                      {t(`sessionsPage.level.${session.level}`)}
+                      {(() => {
+                        const lvlKey = String(session.level || "all").toLowerCase();
+                        const translated = t(`sessionsPage.level.${lvlKey}`);
+                        return translated && !translated.toLowerCase().includes("sessionspage.level.")
+                          ? translated
+                          : session.level || (language === "km" ? "គ្រប់កម្រិត" : "All Levels");
+                      })()}
                     </span>
                   </div>
                   <span className="session-category">{session.category}</span>

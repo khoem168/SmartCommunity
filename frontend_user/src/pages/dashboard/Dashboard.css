@@ -19,7 +19,7 @@
 .sc-dashboard-hero {
   position: relative;
   isolation: isolate;
-  padding: 96px 0 48px;
+  padding: 36px 0 48px;
   background:
     radial-gradient(55% 45% at 85% 15%, rgba(59, 107, 255, 0.14), transparent 70%),
     radial-gradient(45% 40% at 15% 40%, rgba(20, 184, 166, 0.1), transparent 70%),
@@ -1462,40 +1462,4 @@
     grid-column: 2 / 4;
   }
 }
-
-.sc-dashboard-state {
-  max-width: 520px;
-  margin: 120px auto 48px;
-  padding: 36px 28px;
-  border-radius: 24px;
-  text-align: center;
-  background: var(--color-surface, #ffffff);
-  border: 1px solid var(--border, #e2e8f0);
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
-}
-
-.sc-dashboard-state h1 {
-  font-size: 1.45rem;
-  line-height: 1.45;
-  margin-bottom: 10px;
-}
-
-.sc-dashboard-state p {
-  font-size: 0.94rem;
-  color: var(--soft, #64748b);
-  margin-bottom: 20px;
-}
-
-.sc-dashboard-state button {
-  height: 42px;
-  padding: 0 22px;
-  border-radius: 999px;
-  border: none;
-  background: #2563eb;
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
 

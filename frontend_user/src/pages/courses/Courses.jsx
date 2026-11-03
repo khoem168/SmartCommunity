@@ -5,7 +5,6 @@ import {
   FiBookOpen,
   FiCheckCircle,
   FiClock,
-  FiLock,
   FiPlayCircle,
   FiSearch,
 } from "react-icons/fi";
@@ -145,6 +144,16 @@ const Courses = () => {
               const accessPath = user
                 ? coursePath
                 : `/register?redirect=${encodeURIComponent(coursePath)}`;
+              const isFree = Number(course.price || 0) <= 0;
+              const priceLabel = isFree
+                ? language === "km"
+                  ? "ឥតគិតថ្លៃ"
+                  : "Free"
+                : money(
+                    course.price,
+                    course.currency || "USD",
+                    language === "km" ? "km-KH" : "en-US",
+                  );
 
               return (
                 <TiltCard key={course.id} className="course-card">
@@ -157,6 +166,9 @@ const Courses = () => {
                   >
                     <img src={course.thumbnailUrl} alt="" loading="lazy" decoding="async" />
                     <span className="course-level">{course.level}</span>
+                    <span className={`course-price-badge ${isFree ? "free" : "paid"}`}>
+                      {priceLabel}
+                    </span>
                     <span className="course-play">
                       <FiPlayCircle />
                     </span>
@@ -185,7 +197,7 @@ const Courses = () => {
                         <FiClock /> {course.duration}
                       </span>
                     </div>
-                    {course.isEnrolled ? (
+                    {course.isEnrolled && (
                       <div className="course-progress">
                         <div>
                           <span style={{ width: `${course.progress}%` }} />
@@ -196,37 +208,17 @@ const Courses = () => {
                           })}
                         </small>
                       </div>
-                    ) : (
-                      <div className="course-preview-note">
-                        {user ? <FiPlayCircle /> : <FiLock />}{" "}
-                        {user
-                          ? t("coursesPage.freePreview", {
-                              count: course.previewCount,
-                            })
-                          : t("coursesPage.accountRequired")}
-                      </div>
                     )}
-                    <footer>
-                      <div>
-                        <small>
-                          {course.isEnrolled
-                            ? t("coursesPage.yourCourse")
-                            : t("coursesPage.fullAccess")}
-                        </small>
-                        <strong>
+                    <footer className="course-card-footer">
+                      <Link to={accessPath} className="course-cta-btn">
+                        <span>
                           {course.isEnrolled
                             ? t("coursesPage.continueLearning")
-                            : user
-                              ? money(
-                                  course.price,
-                                  course.currency,
-                                  language === "km" ? "km-KH" : "en-US",
-                                )
-                              : t("coursesPage.createToView")}
-                        </strong>
-                      </div>
-                      <Link to={accessPath} className="course-arrow" aria-label={t("coursesPage.viewCourse", { title: course.title })}>
-                        {course.isEnrolled ? <FiArrowRight /> : <FiLock />}
+                            : language === "km"
+                              ? "ចូលរៀនឥឡូវនេះ"
+                              : "Start Learning"}
+                        </span>
+                        <FiArrowRight />
                       </Link>
                     </footer>
                   </div>

@@ -616,48 +616,6 @@
   }
 }
 
-@media (max-width: 520px) {
-  .nav-glass-header {
-    width: calc(100% - 16px);
-    padding: 0 7px 0 11px;
-    gap: 6px;
-    height: 52px;
-  }
-
-  .nav-glass-logo {
-    gap: 6px;
-    font-size: 0.88rem;
-  }
-
-  .nav-logo-icon {
-    width: 26px !important;
-    height: 26px !important;
-  }
-
-  .nav-glass-actions {
-    gap: 4px;
-  }
-
-  /* Theme toggle remains available inside the mobile drawer */
-  .nav-glass-actions > button[aria-label*="mode"] {
-    display: none;
-  }
-
-  .icon-btn {
-    min-width: 34px;
-    height: 34px;
-    padding: 0 7px;
-    font-size: 0.8rem;
-  }
-
-  .nav-glass-actions .btn-sm {
-    height: 34px;
-    padding: 0 10px;
-    font-size: 0.76rem;
-    white-space: nowrap;
-  }
-}
-
 /* ==========================================================================
    PHASE A: 3-PILLAR GROUPED NAVIGATION & WORKSPACE ACTION
    ========================================================================== */
