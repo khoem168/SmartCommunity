@@ -4,8 +4,6 @@ import {
   IoArrowForwardOutline,
   IoBriefcaseOutline,
   IoCalendarOutline,
-  IoCheckmarkCircleOutline,
-  IoCloudUploadOutline,
   IoLocationOutline,
   IoSearchOutline,
 } from "react-icons/io5";
@@ -30,7 +28,8 @@ const formatDate = (value) =>
 const Jobs = () => {
   const navigate = useNavigate();
   const { user } = useGlobleContext();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isKm = language === "km";
   const [internships, setInternships] = useState([]);
   const [applications, setApplications] = useState([]);
   const [query, setQuery] = useState("");
@@ -167,39 +166,6 @@ const Jobs = () => {
           <p className="jobs-hero-description">
             {t("jobsPage.heroDescription")}
           </p>
-
-          <div
-            className="jobs-hero-features"
-            aria-label={t("jobsPage.heroFeaturesLabel")}
-          >
-            <article className="jobs-hero-feature">
-              <span className="jobs-hero-feature-icon" aria-hidden="true">
-                <IoSearchOutline />
-              </span>
-              <span className="jobs-hero-feature-copy">
-                <strong>{t("jobsPage.exploreFeature")}</strong>
-                <small>{t("jobsPage.filterFeature")}</small>
-              </span>
-            </article>
-            <article className="jobs-hero-feature">
-              <span className="jobs-hero-feature-icon" aria-hidden="true">
-                <IoCloudUploadOutline />
-              </span>
-              <span className="jobs-hero-feature-copy">
-                <strong>{t("jobsPage.uploadFeature")}</strong>
-                <small>{t("jobsPage.uploadFeatureDescription")}</small>
-              </span>
-            </article>
-            <article className="jobs-hero-feature">
-              <span className="jobs-hero-feature-icon" aria-hidden="true">
-                <IoCheckmarkCircleOutline />
-              </span>
-              <span className="jobs-hero-feature-copy">
-                <strong>{t("jobsPage.statusFeature")}</strong>
-                <small>{t("jobsPage.statusFeatureDescription")}</small>
-              </span>
-            </article>
-          </div>
 
           <div className="jobs-hero-actions">
             <a href="#internship-search" className="btn primary jobs-hero-primary">

@@ -6,7 +6,6 @@ import TabBar from "../components/Navbar/TabBar";
 import { FaChevronUp } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
-import ScrollEngagementPopup from "../components/ScrollEngagementPopup";
 import RealtimeToastHub from "../components/ui/RealtimeToastHub";
 import CommandPalette from "../components/ui/CommandPalette";
 
@@ -73,7 +72,6 @@ const RootLayout = () => {
       <TabBar />
       <CommandPalette />
       <RealtimeToastHub />
-      <ScrollEngagementPopup />
       {showButton && (
         <button
           type="button"
