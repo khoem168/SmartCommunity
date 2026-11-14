@@ -244,7 +244,7 @@ const AppContent = () => {
 };
 
 const App = () => (
-  <BrowserRouter>
+  <BrowserRouter basename={import.meta.env.BASE_URL}>
     <AppContent />
   </BrowserRouter>
 );

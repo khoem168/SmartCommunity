@@ -39,44 +39,18 @@ npm run dev
 
 ## Vercel deployment
 
-Vercel detects several deployable directories in this repository. For the main
-website, import **frontend_user** and use these project settings:
+Deploy this repository as one Vercel Services project with the repository root
+selected. The root configuration builds the backend, both Vite frontends, and
+the internal Telegram service independently behind one domain.
 
-| Setting | Value |
-| --- | --- |
-| Root Directory | `frontend_user` |
-| Framework Preset | Vite |
-| Install Command | `npm ci` |
-| Build Command | `npm run build` |
-| Output Directory | `dist` |
+The main website uses /, the separate admin app uses /admin-console/, and the
+backend receives /api, /socket.io, /uploads, and /health traffic. Telegram stays
+internal and unused. Browser API calls default to /api; there are no runtime
+bindings because no server-side service currently calls another service.
 
-The `frontend_user/vercel.json` file supplies the build settings and rewrites
-browser routes to `index.html` so React Router deep links work. Importing the
-frontend does not also deploy `backend`, `frontend_admin`, or `telegram_bot`.
-
-Alternatively, an existing Vercel project with the repository root selected
-can keep using the repository-level `vercel.json`, which builds
-`frontend_user/` and publishes `frontend_user/dist`. Do not mix the root-level
-commands with the `frontend_user` Root Directory.
-
-For either Root Directory choice, add the
-production backend values under **Project Settings → Environment Variables**:
-
-```text
-VITE_API_URL=https://your-api-domain.example/api
-VITE_SOCKET_URL=https://your-api-domain.example
-```
-
-Use the deployed backend's HTTPS address for these variables, not localhost
-or the example domain. Redeploy after changing them because Vite embeds these
-values during the build. Set the backend's `CLIENT_URL` and `APP_URL` to your
-frontend's HTTPS URL as described below.
-
-The frontend can be deployed independently, but authentication and data
-features require a publicly reachable backend and database. The current backend
-also runs a Socket.IO server and needs hosting that supports persistent
-connections. A backend running only on a development computer is not a public
-production API.
+See [the Vercel deployment guide](VERCEL_DEPLOYMENT.md) for the confirmed routing,
+required environment variables, database and storage setup, local testing, and
+runtime limits. This replaces the earlier frontend-only import instructions.
 
 ### Production safety checklist
 

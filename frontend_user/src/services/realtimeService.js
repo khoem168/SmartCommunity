@@ -1,10 +1,9 @@
 import { io } from "socket.io-client";
-import { getAuthToken } from "./api";
+import { API_BASE_URL, getAuthToken } from "./api";
 
 const getSocketUrl = () => {
   if (import.meta.env.VITE_SOCKET_URL) return import.meta.env.VITE_SOCKET_URL;
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
-  return apiUrl.replace(/\/api\/?$/, "");
+  return new URL(API_BASE_URL, window.location.origin).origin;
 };
 
 let socket;
@@ -13,7 +12,7 @@ export const getSocket = () => {
   if (!socket) {
     socket = io(getSocketUrl(), {
       autoConnect: true,
-      transports: ["websocket", "polling"],
+      transports: ["websocket"],
       auth: { token: getAuthToken() },
     });
   }

@@ -5,19 +5,18 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4001;
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
 
-if (!token || !chatId) {
-  console.error("TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID must be set in .env");
-  process.exit(1);
-}
-
-const bot = new TelegramBot(token, { polling: false });
+// This internal service can start without credentials while it is unused.
+const bot = token && chatId ? new TelegramBot(token, { polling: false }) : null;
 app.use(express.json());
 
 app.post("/alert/payment-success", async (req, res) => {
+  if (!bot) {
+    return res.status(503).json({ error: "Telegram alerts are not configured" });
+  }
   const { user, amount, orderId } = req.body;
 
   if (!amount || !orderId) {
@@ -43,6 +42,10 @@ app.get("/", (req, res) => {
   res.json({ status: "Telegram payment alert bot is running" });
 });
 
-app.listen(port, () => {
-  console.log(`Telegram bot server listening on http://localhost:${port}`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Telegram bot server listening on http://localhost:${port}`);
+  });
+}
+
+module.exports = app;

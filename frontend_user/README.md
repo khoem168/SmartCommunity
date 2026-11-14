@@ -10,14 +10,17 @@ npm install
 npm run dev
 ```
 
-The default frontend URL is `http://localhost:5173`. Configure the backend API
-in `.env`:
+The default frontend URL is `http://localhost:5173`. The Vite proxy forwards
+`/api`, `/socket.io`, and `/uploads` to the backend on port 4000. Use the same
+origin by default, or configure a separately hosted API in `.env`:
 
 ```env
-VITE_API_URL=http://localhost:4000/api
+VITE_API_URL=/api
 ```
 
 ## Course learning and KHQR
+
+For deployment with all four services, see [the Vercel guide](../VERCEL_DEPLOYMENT.md).
 
 The `/courses` experience loads its catalog from MariaDB and includes:
 
