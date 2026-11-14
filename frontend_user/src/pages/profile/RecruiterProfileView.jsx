@@ -361,7 +361,11 @@ export default function RecruiterProfileView({ user }) {
         <section className="profile-panel glass">
           <h2>{isKm ? "អំពីក្រុមហ៊ុន និងបរិយាកាសការងារ" : "About the Company"}</h2>
           {company?.description ? (
-            <p className="company-desc-text">{company.description}</p>
+            <p className="company-desc-text">
+              {isKm && company.description.toLowerCase().includes("fast growing digital venture")
+                ? "ក្រុមហ៊ុនបច្ចេកវិទ្យា និងអភិវឌ្ឍន៍ដំណោះស្រាយឌីជីថលឈានមុខគេនៅរាជធានីភ្នំពេញ ដែលផ្តល់ឱកាសហាត់ការ និងការងារជាក់ស្តែងសម្រាប់និស្សិតបច្ចេកវិទ្យា។"
+                : company.description}
+            </p>
           ) : (
             <div className="company-desc-empty">
               <p>{isKm ? "មិនទាន់បានបន្ថែមការពិពណ៌នាពីក្រុមហ៊ុននៅឡើយទេ។ ចុចប៊ូតុង Edit Details ខាងលើដើម្បីបន្ថែម។" : "No description provided yet. Click 'Edit Details' to introduce your company culture to students."}</p>
@@ -395,22 +399,53 @@ export default function RecruiterProfileView({ user }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {internships.map((job) => (
+                  {internships.map((job) => {
+                    const rawType = String(job.internship_type || job.internshipType || "full_time").toLowerCase();
+                    const typeLabel = isKm
+                      ? rawType.includes("full")
+                        ? "ពេញម៉ោង (Full-Time)"
+                        : rawType.includes("part")
+                          ? "ក្រៅម៉ោង (Part-Time)"
+                          : "កម្មសិក្សា (Internship)"
+                      : rawType.replace(/_/g, " ");
+                    const statusLabel = isKm
+                      ? job.status === "open"
+                        ? "បើកទទួលពាក្យ"
+                        : job.status === "closed"
+                          ? "បានបិទ"
+                          : job.status === "filled"
+                            ? "ពេញចំនួន"
+                            : job.status
+                      : job.status;
+                    const rawDate = job.created_at || job.createdAt || job.application_deadline || job.applicationDeadline;
+                    const parsedDate = rawDate ? new Date(rawDate) : null;
+                    const dateLabel =
+                      parsedDate && !Number.isNaN(parsedDate.getTime())
+                        ? parsedDate.toLocaleDateString(isKm ? "km-KH" : "en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })
+                        : isKm
+                          ? "បើកទទួលពាក្យ"
+                          : "Active";
+
+                    return (
                     <tr key={job.id}>
                       <td>
                         <strong>{job.title}</strong>
                       </td>
                       <td>
-                        <span className="job-tag-type">{job.internship_type || "Full-time"}</span>
+                        <span className="job-tag-type">{typeLabel}</span>
                       </td>
                       <td>{job.location || "Remote"}</td>
                       <td>
                         <span className={`hub-status-pill ${job.status}`}>
-                          {job.status}
+                          {statusLabel}
                         </span>
                       </td>
                       <td>
-                        <small>{new Date(job.created_at).toLocaleDateString()}</small>
+                        <small>{dateLabel}</small>
                       </td>
                       <td className="td-action">
                         <Link
@@ -423,7 +458,8 @@ export default function RecruiterProfileView({ user }) {
                         </Link>
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

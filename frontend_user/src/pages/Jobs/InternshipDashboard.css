@@ -336,3 +336,118 @@
     padding: 10px;
   }
 }
+
+/* Dark Mode Refinements */
+[data-theme="dark"] .internship-dashboard-page {
+  background: var(--bg, #0b0f19);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .internship-dashboard-hero {
+  border-bottom-color: rgba(51, 65, 85, 0.7);
+  background:
+    radial-gradient(circle at top right, rgba(59, 130, 246, 0.22), transparent 34%),
+    linear-gradient(135deg, #0f172a, #0b0f19);
+}
+
+[data-theme="dark"] .internship-dashboard-hero h1,
+[data-theme="dark"] .internship-dashboard-stats strong,
+[data-theme="dark"] .managed-internships h3,
+[data-theme="dark"] .application-heading h3 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .internship-dashboard-hero p,
+[data-theme="dark"] .internship-dashboard-stats span,
+[data-theme="dark"] .managed-internships p,
+[data-theme="dark"] .application-heading p,
+[data-theme="dark"] .application-heading small {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .internship-dashboard-stats article,
+[data-theme="dark"] .company-profile-form,
+[data-theme="dark"] .application-tracking-card,
+[data-theme="dark"] .managed-internships article {
+  background: rgba(18, 24, 38, 0.88);
+  border-color: rgba(51, 65, 85, 0.78);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .internship-dashboard-stats svg {
+  background: rgba(59, 130, 246, 0.18);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .company-profile-form .section-header img {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .company-form-grid label,
+[data-theme="dark"] .application-review-controls label {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .company-form-grid input,
+[data-theme="dark"] .company-form-grid select,
+[data-theme="dark"] .company-form-grid textarea,
+[data-theme="dark"] .managed-internships select,
+[data-theme="dark"] .application-review-controls select,
+[data-theme="dark"] .application-review-controls textarea {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .application-status {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .application-status.reviewed {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .application-status.shortlisted {
+  background: rgba(139, 92, 246, 0.2);
+  color: #c4b5fd;
+}
+
+[data-theme="dark"] .application-status.approved,
+[data-theme="dark"] .application-status.open {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+[data-theme="dark"] .application-status.rejected,
+[data-theme="dark"] .application-status.closed,
+[data-theme="dark"] .application-status.filled {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+[data-theme="dark"] .application-cover-letter {
+  background: rgba(15, 23, 42, 0.65);
+  color: #cbd5e1;
+  border: 1px solid rgba(51, 65, 85, 0.6);
+}
+
+[data-theme="dark"] .application-links a {
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(59, 130, 246, 0.32);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .recruiter-note {
+  background: rgba(37, 99, 235, 0.16);
+  border-color: rgba(59, 130, 246, 0.32);
+  color: #bfdbfe;
+}
+
+[data-theme="dark"] .internship-empty {
+  background: rgba(18, 24, 38, 0.72);
+  border-color: rgba(71, 85, 105, 0.7);
+  color: #94a3b8;
+}

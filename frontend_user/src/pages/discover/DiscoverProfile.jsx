@@ -6,12 +6,17 @@ import {
   IoSwapHorizontalOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import {
   createSkillExchangeRequest,
   fetchMembers,
   fetchSkillExchanges,
 } from "../../services/platformService";
 import { createConversation } from "../../services/messageService";
+import {
+  FEATURED_MENTORS_ROSTER,
+  localizePeerHeadline,
+} from "../../utils/bilingualCatalog";
 import MemberAvatar from "./MemberAvatar";
 import { presentMember } from "./memberPresentation";
 import "./Discover.css";
@@ -22,15 +27,64 @@ const findBestSkill = (sourceSkills = [], targetSkills = [], fallback = "") =>
   targetSkills[0] ||
   fallback;
 
-const normalizeMember = (member) => {
+const normalizeMember = (member, isKm = false) => {
   const presentedMember = presentMember(member);
   const skills = presentedMember.skills || {};
-  const teachSkills = skills.teach || skills.candidate || [];
-  const learnSkills = skills.learn || [];
+  const teachSkills =
+    member.teachSkills?.length > 0
+      ? member.teachSkills
+      : skills.teach?.length > 0
+        ? skills.teach
+        : skills.candidate?.length > 0
+          ? skills.candidate
+          : Array.isArray(member.skills) && member.skills.length > 0
+            ? member.skills
+            : ["React.js", "JavaScript", "HTML & CSS"];
+  const rawLearnSkills =
+    member.learnSkills?.length > 0
+      ? member.learnSkills
+      : skills.learn?.length > 0
+        ? skills.learn
+        : ["Node.js & API", "UI/UX Design"];
+  const teachLowerSet = new Set(
+    teachSkills.map((s) => String(s || "").trim().toLowerCase()),
+  );
+  const filteredLearn = rawLearnSkills.filter(
+    (s) => !teachLowerSet.has(String(s || "").trim().toLowerCase()),
+  );
+  const learnSkills =
+    filteredLearn.length > 0
+      ? filteredLearn
+      : ["System Design", "AWS Cloud", "UI/UX Design"].filter(
+          (s) => !teachLowerSet.has(s.toLowerCase()),
+        );
+
+  const rawBio =
+    presentedMember.bio ||
+    member.bioKm ||
+    member.bioEn ||
+    "សមាជិកសហគមន៍ដែលផ្តោតលើការអនុវត្តគម្រោងគេហទំព័រជាក់ស្តែង និងការចែករំលែកចំណេះដឹងបច្ចេកវិទ្យា។";
+
+  const bioText =
+    isKm &&
+    (String(rawBio).toLowerCase().includes("friendly community member") ||
+      String(rawBio).toLowerCase().includes("building the smart community"))
+      ? "ស្ថាបនិក និងអ្នកអភិវឌ្ឍន៍គម្រោង Full-Stack នៃវេទិកា Smart Community ដែលជួយភ្ជាប់និស្សិត ការដោះដូរជំនាញ និងឱកាសការងារបច្ចេកវិទ្យា។"
+      : rawBio;
 
   return {
     ...presentedMember,
-    availability: skills.availability || "Flexible schedule",
+    title: localizePeerHeadline(
+      presentedMember.title || member.profession || member.role,
+      isKm,
+    ),
+    bio: bioText,
+    location: isKm
+      ? "ភ្នំពេញ, កម្ពុជា"
+      : presentedMember.location || "Phnom Penh, Cambodia",
+    availability: isKm
+      ? "ម៉ោងសិក្សាបត់បែន (Flexible)"
+      : skills.availability || "Flexible schedule",
     teachSkills,
     learnSkills,
     matchScore: Math.min(
@@ -43,39 +97,52 @@ const normalizeMember = (member) => {
 const DiscoverProfile = () => {
   const { memberId } = useParams();
   const { user } = useGlobleContext();
+  const { language } = useLanguage();
+  const isKm = language === "km";
   const navigate = useNavigate();
-  const [members, setMembers] = useState([]);
+  const [rawMembers, setRawMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [requests, setRequests] = useState([]);
   const [error, setError] = useState("");
   const currentUserId = user?.id || "";
-  const member = useMemo(
-    () => members.find((item) => String(item.id) === String(memberId)),
-    [memberId, members],
-  );
+
+  useEffect(() => {
+    let active = true;
+    const loadProfile = async () => {
+      setLoading(true);
+      try {
+        const rows = await fetchMembers();
+        if (active) {
+          setRawMembers(rows || []);
+        }
+      } catch (err) {
+        if (active) setError(err.message || "Unable to load profile.");
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    loadProfile();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const member = useMemo(() => {
+    const found =
+      rawMembers.find((item) => String(item.id) === String(memberId)) ||
+      FEATURED_MENTORS_ROSTER.find(
+        (item) => String(item.id) === String(memberId),
+      ) ||
+      rawMembers[0];
+    return found ? normalizeMember(found, isKm) : null;
+  }, [isKm, memberId, rawMembers]);
+
   const existingRequest = requests.find(
     (request) =>
       request.requesterId === currentUserId &&
       request.providerId === member?.id,
   );
-
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const rows = await fetchMembers();
-        setMembers(
-          rows
-            .filter(
-              (item) => !["admin", "recruiter"].includes(item.role),
-            )
-            .map(normalizeMember),
-        );
-      } catch (err) {
-        setError(err.message || "Unable to load profile.");
-      }
-    };
-
-    loadProfile();
-  }, []);
 
   useEffect(() => {
     const loadRequests = async () => {
@@ -128,14 +195,29 @@ const DiscoverProfile = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <main className="discover-page">
+        <section className="discover-empty-state container">
+          <p>{isKm ? "កំពុងទាញយកព័ត៌មានសមាជិក..." : "Loading member profile..."}</p>
+        </section>
+      </main>
+    );
+  }
+
   if (!member) {
     return (
       <main className="discover-page">
         <section className="discover-empty-state container">
-          <h1>Profile not found</h1>
-          <p>{error || "This discover profile does not exist."}</p>
-          <Link className="btn primary small" to="/discover">
-            Back to Discover
+          <h1>{isKm ? "រកមិនឃើញគណនីសមាជិក" : "Profile not found"}</h1>
+          <p>
+            {error ||
+              (isKm
+                ? "គណនីសមាជិកដែលអ្នកស្វែងរកមិនមាននៅក្នុងប្រព័ន្ធទេ។"
+                : "This discover profile does not exist.")}
+          </p>
+          <Link className="btn primary small" to="/skill-exchange">
+            {isKm ? "ត្រឡប់ទៅមជ្ឈមណ្ឌលប្តូរជំនាញ" : "Back to Skill Exchange"}
           </Link>
         </section>
       </main>
@@ -148,15 +230,19 @@ const DiscoverProfile = () => {
         <div className="container discover-profile-layout">
           <aside className="discover-profile-card">
             <MemberAvatar member={member} profile />
-            <p className="eyebrow">{member.role}</p>
+            <p className="eyebrow">
+              {isKm ? "សមាជិកសហគមន៍" : member.role || "Member"}
+            </p>
             <h1>{member.name}</h1>
             <p>{member.title}</p>
-            <strong>{member.matchScore}% match</strong>
+            <strong>
+              {member.matchScore}% {isKm ? "ត្រូវគ្នា" : "match"}
+            </strong>
           </aside>
 
           <section className="discover-profile-details">
-            <Link className="profile-back-link" to="/discover">
-              Back to Discover
+            <Link className="profile-back-link" to="/skill-exchange">
+              ← {isKm ? "ត្រឡប់ទៅមជ្ឈមណ្ឌលប្តូរជំនាញ" : "Back to Skill Exchange"}
             </Link>
             <h2>{member.title}</h2>
             <p>{member.bio}</p>
@@ -174,7 +260,7 @@ const DiscoverProfile = () => {
 
             <div className="discover-profile-swap">
               <div>
-                <h3>Can teach</h3>
+                <h3>{isKm ? "អាចបង្រៀនអ្នក" : "Can teach"}</h3>
                 <div className="skill-list">
                   {member.teachSkills.map((skill) => (
                     <span className="skill-pill teach" key={skill}>
@@ -187,7 +273,7 @@ const DiscoverProfile = () => {
               <IoSwapHorizontalOutline aria-hidden="true" />
 
               <div>
-                <h3>Wants to learn</h3>
+                <h3>{isKm ? "ចង់រៀនបន្ថែម" : "Wants to learn"}</h3>
                 <div className="skill-list">
                   {member.learnSkills.map((skill) => (
                     <span className="skill-pill learn" key={skill}>
@@ -200,7 +286,9 @@ const DiscoverProfile = () => {
 
             {existingRequest && (
               <div className="request-note">
-                Request {existingRequest.status} with {member.name}.
+                {isKm
+                  ? `សំណើប្តូរជំនាញជាមួយ ${member.name} កំពុងស្ថិតក្នុងស្ថានភាព (${existingRequest.status})។`
+                  : `Request ${existingRequest.status} with ${member.name}.`}
               </div>
             )}
 
@@ -211,17 +299,23 @@ const DiscoverProfile = () => {
                 onClick={handleRequest}
                 disabled={Boolean(existingRequest)}
               >
-                {existingRequest?.status || "Request skill exchange"}
+                {existingRequest
+                  ? isKm
+                    ? "បានផ្ញើសំណើរួចហើយ"
+                    : existingRequest.status
+                  : isKm
+                    ? "ស្នើសុំប្តូរជំនាញ"
+                    : "Request skill exchange"}
               </button>
               <button
                 type="button"
                 className="btn outline small"
                 onClick={handleMessage}
               >
-                Message
+                {isKm ? "ផ្ញើសារ" : "Message"}
               </button>
-              <Link className="btn outline small" to="/discover">
-                Browse more matches
+              <Link className="btn outline small" to="/skill-exchange">
+                {isKm ? "ស្វែងរកដៃគូផ្សេងទៀត" : "Browse more matches"}
               </Link>
             </div>
           </section>

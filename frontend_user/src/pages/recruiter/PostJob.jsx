@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import {
   createInternshipRequest,
   fetchCompanyProfile,
@@ -15,6 +16,8 @@ const futureDate = (days) => {
 const PostJob = () => {
   const navigate = useNavigate();
   const { user } = useGlobleContext();
+  const { language } = useLanguage();
+  const isKm = language === "km";
   const [company, setCompany] = useState(null);
   const [loadingCompany, setLoadingCompany] = useState(true);
   const [form, setForm] = useState({
@@ -23,7 +26,7 @@ const PostJob = () => {
     description: "",
     requirements: "",
     responsibilities: "",
-    location: "Remote",
+    location: "Phnom Penh",
     isRemote: true,
     internshipType: "full_time",
     durationWeeks: 12,
@@ -87,9 +90,9 @@ const PostJob = () => {
     return (
       <main className="post-job-page">
         <section className="section container">
-          <h1>Login as a recruiter</h1>
+          <h1>{isKm ? "សូមចូលគណនីជាអ្នកជ្រើសរើសបុគ្គលិក" : "Login as a recruiter"}</h1>
           <Link className="btn primary" to="/login">
-            Login
+            {isKm ? "ចូលគណនី" : "Login"}
           </Link>
         </section>
       </main>
@@ -98,12 +101,18 @@ const PostJob = () => {
     return (
       <main className="post-job-page">
         <section className="section container">
-          <h1>Recruiter access required</h1>
+          <h1>
+            {isKm
+              ? "តម្រូវឱ្យមានសិទ្ធិជាអ្នកជ្រើសរើសបុគ្គលិក"
+              : "Recruiter access required"}
+          </h1>
           <p>
-            Register or login with a recruiter account to publish internships.
+            {isKm
+              ? "សូមចុះឈ្មោះ ឬចូលប្រើប្រាស់ដោយគណនីក្រុមហ៊ុន/អ្នកជ្រើសរើសបុគ្គលិកដើម្បីប្រកាសការងារកម្មសិក្សា។"
+              : "Register or login with a recruiter account to publish internships."}
           </p>
           <Link className="btn outline" to="/jobs">
-            Back to internships
+            {isKm ? "ត្រឡប់ទៅទំព័រការងារ" : "Back to internships"}
           </Link>
         </section>
       </main>
@@ -112,7 +121,7 @@ const PostJob = () => {
     return (
       <main className="post-job-page">
         <section className="section container">
-          Loading company profile...
+          {isKm ? "កំពុងទាញយកព័ត៌មានក្រុមហ៊ុន..." : "Loading company profile..."}
         </section>
       </main>
     );
@@ -120,13 +129,18 @@ const PostJob = () => {
     return (
       <main className="post-job-page">
         <section className="section container company-required">
-          <h1>Create your company profile first</h1>
+          <h1>
+            {isKm
+              ? "សូមបង្កើតព័ត៌មានក្រុមហ៊ុនរបស់អ្នកជាមុនសិន"
+              : "Create your company profile first"}
+          </h1>
           <p>
-            Internships are connected to a verified company account so students
-            know who posted them.
+            {isKm
+              ? "រាល់ឱកាសការងារកម្មសិក្សាត្រូវភ្ជាប់ជាមួយគណនីក្រុមហ៊ុនដែលបានផ្ទៀងផ្ទាត់ ដើម្បីផ្តល់ទំនុកចិត្តដល់និស្សិត។"
+              : "Internships are connected to a verified company account so students know who posted them."}
           </p>
           <Link className="btn primary" to="/profile">
-            Create company profile
+            {isKm ? "បង្កើតព័ត៌មានក្រុមហ៊ុន" : "Create company profile"}
           </Link>
         </section>
       </main>
@@ -134,26 +148,71 @@ const PostJob = () => {
 
   const isVerifiedCompany =
     user?.role === "admin" ||
+    Boolean(company.isVerified) ||
     Boolean(company.is_verified) ||
+    company.verificationStatus === "verified" ||
     company.verification_status === "verified";
 
   if (!isVerifiedCompany) {
     return (
       <main className="post-job-page">
-        <section className="section container company-required" style={{ textAlign: "center", padding: "40px 20px" }}>
-          <div style={{ maxWidth: 640, margin: "0 auto", background: "var(--card-bg, #ffffff)", padding: "36px 32px", borderRadius: 20, boxShadow: "0 12px 36px rgba(0,0,0,0.06)", border: "1px solid var(--line, #e2e8f0)" }}>
+        <section
+          className="section container company-required"
+          style={{ textAlign: "center", padding: "40px 20px" }}
+        >
+          <div
+            style={{
+              maxWidth: 640,
+              margin: "0 auto",
+              background: "var(--card-bg, #ffffff)",
+              padding: "36px 32px",
+              borderRadius: 20,
+              boxShadow: "0 12px 36px rgba(0,0,0,0.06)",
+              border: "1px solid var(--line, #e2e8f0)",
+            }}
+          >
             <span style={{ fontSize: "2.5rem" }}>⏳</span>
-            <h1 style={{ fontSize: "1.6rem", margin: "16px 0 10px" }}>Company Verification Under Review</h1>
-            <p style={{ color: "var(--soft, #64748b)", lineHeight: 1.6, marginBottom: 24 }}>
-              Your company <strong>{company.name}</strong> is currently pending administrator verification.
-              To ensure safety and quality for students, internships can only be published once approved.
+            <h1 style={{ fontSize: "1.6rem", margin: "16px 0 10px" }}>
+              {isKm
+                ? "គណនីក្រុមហ៊ុនកំពុងស្ថិតក្នុងការពិនិត្យផ្ទៀងផ្ទាត់"
+                : "Company Verification Under Review"}
+            </h1>
+            <p
+              style={{
+                color: "var(--soft, #64748b)",
+                lineHeight: 1.6,
+                marginBottom: 24,
+              }}
+            >
+              {isKm ? (
+                <>
+                  គណនីក្រុមហ៊ុន <strong>{company.name}</strong>{" "}
+                  របស់អ្នកកំពុងរង់ចាំការពិនិត្យ និងអនុម័តពីអ្នកគ្រប់គ្រងប្រព័ន្ធ (Admin)។
+                  ដើម្បីធានាសុវត្ថិភាព និងគុណភាពសម្រាប់និស្សិត
+                  ការប្រកាសជ្រើសរើសកម្មសិក្សាអាចដាក់ផ្សាយជាសាធារណៈបានបន្ទាប់ពីគណនីក្រុមហ៊ុនត្រូវបានអនុម័ត។
+                </>
+              ) : (
+                <>
+                  Your company <strong>{company.name}</strong> is currently
+                  pending administrator verification. To ensure safety and
+                  quality for students, internships can only be published once
+                  approved.
+                </>
+              )}
             </p>
-            <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 12,
+                flexWrap: "wrap",
+              }}
+            >
               <Link className="btn primary" to="/dashboard">
-                Go to Workspace
+                {isKm ? "ទៅកាន់ផ្ទាំងការងារ (Workspace)" : "Go to Workspace"}
               </Link>
               <Link className="btn outline" to="/profile">
-                Review Company Details
+                {isKm ? "ពិនិត្យព័ត៌មានក្រុមហ៊ុន" : "Review Company Details"}
               </Link>
             </div>
           </div>
@@ -167,10 +226,15 @@ const PostJob = () => {
       <section className="page-hero post-job-hero">
         <div className="hero-content">
           <p className="eyebrow">{company.name}</p>
-          <h1>Publish an internship opportunity.</h1>
+          <h1>
+            {isKm
+              ? "ប្រកាសឱកាសការងារកម្មសិក្សាថ្មី"
+              : "Publish an internship opportunity."}
+          </h1>
           <p>
-            Add clear learning responsibilities, requirements, dates, and
-            stipend information.
+            {isKm
+              ? "បំពេញព័ត៌មានលម្អិតអំពីតួនាទី លក្ខខណ្ឌតម្រូវ កាលបរិច្ឆេទ និងប្រាក់ឧបត្ថម្ភឱ្យបានច្បាស់លាស់។"
+              : "Add clear learning responsibilities, requirements, dates, and stipend information."}
           </p>
         </div>
       </section>
@@ -178,20 +242,24 @@ const PostJob = () => {
         <form className="post-job-form" onSubmit={submit}>
           <div className="section-header">
             <div>
-              <h2>Internship details</h2>
+              <h2>
+                {isKm ? "ព័ត៌មានលម្អិតនៃកម្មសិក្សា" : "Internship details"}
+              </h2>
               <p>
-                Students will use this information before uploading their CV.
+                {isKm
+                  ? "និស្សិតនឹងពិនិត្យមើលព័ត៌មានទាំងនេះមុនពេលដាក់ពាក្យ និងភ្ជាប់ PDF CV។"
+                  : "Students will use this information before uploading their CV."}
               </p>
             </div>
             <Link className="btn outline" to="/applications">
-              Dashboard
+              {isKm ? "ផ្ទាំងការងារ" : "Dashboard"}
             </Link>
           </div>
           {error && <div className="auth-error">{error}</div>}
           {success && <div className="profile-success">{success}</div>}
           <div className="field-grid">
             <label>
-              Internship title
+              {isKm ? "ចំណងជើងមុខតំណែងកម្មសិក្សា" : "Internship title"}
               <input
                 required
                 value={form.title}
@@ -200,7 +268,7 @@ const PostJob = () => {
               />
             </label>
             <label>
-              Category
+              {isKm ? "ផ្នែក / ប្រភេទជំនាញ" : "Category"}
               <input
                 required
                 value={form.category}
@@ -210,17 +278,21 @@ const PostJob = () => {
             </label>
           </div>
           <label>
-            Description
+            {isKm ? "ការពិពណ៌នាអំពីការងារ" : "Description"}
             <textarea
               required
               value={form.description}
               onChange={(event) => update("description", event.target.value)}
-              placeholder="Describe the role, team, and learning opportunity."
+              placeholder={
+                isKm
+                  ? "ពិពណ៌នាអំពីតួនាទី ក្រុមការងារ និងឱកាសសិក្សាអនុវត្ត..."
+                  : "Describe the role, team, and learning opportunity."
+              }
             />
           </label>
           <div className="field-grid">
             <label>
-              Requirements — one per line
+              {isKm ? "លក្ខខណ្ឌតម្រូវ (មួយជួរមួយចំណុច)" : "Requirements — one per line"}
               <textarea
                 required
                 value={form.requirements}
@@ -229,7 +301,7 @@ const PostJob = () => {
               />
             </label>
             <label>
-              Responsibilities — one per line
+              {isKm ? "ភារកិច្ចទទួលខុសត្រូវ (មួយជួរមួយចំណុច)" : "Responsibilities — one per line"}
               <textarea
                 value={form.responsibilities}
                 onChange={(event) =>
@@ -241,20 +313,20 @@ const PostJob = () => {
           </div>
           <div className="field-grid">
             <label>
-              Internship type
+              {isKm ? "ប្រភេទម៉ោងការងារ" : "Internship type"}
               <select
                 value={form.internshipType}
                 onChange={(event) =>
                   update("internshipType", event.target.value)
                 }
               >
-                <option value="full_time">Full time</option>
-                <option value="part_time">Part time</option>
-                <option value="virtual">Virtual</option>
+                <option value="full_time">{isKm ? "ពេញម៉ោង (Full time)" : "Full time"}</option>
+                <option value="part_time">{isKm ? "ក្រៅម៉ោង (Part time)" : "Part time"}</option>
+                <option value="virtual">{isKm ? "ពីចម្ងាយ (Virtual)" : "Virtual"}</option>
               </select>
             </label>
             <label>
-              Duration in weeks
+              {isKm ? "រយៈពេល (គិតជាសប្តាហ៍)" : "Duration in weeks"}
               <input
                 type="number"
                 min="1"
@@ -268,7 +340,7 @@ const PostJob = () => {
           </div>
           <div className="field-grid">
             <label>
-              Location
+              {isKm ? "ទីតាំងការងារ" : "Location"}
               <input
                 required
                 value={form.location}
@@ -281,20 +353,20 @@ const PostJob = () => {
                 checked={form.isRemote}
                 onChange={(event) => update("isRemote", event.target.checked)}
               />{" "}
-              Remote opportunity
+              {isKm ? "អាចធ្វើការពីចម្ងាយបាន (Remote)" : "Remote opportunity"}
             </label>
           </div>
           <div className="field-grid">
             <label>
-              Stipend description
+              {isKm ? "ការបញ្ជាក់ប្រាក់ឧបត្ថម្ភ" : "Stipend description"}
               <input
                 value={form.stipend}
                 onChange={(event) => update("stipend", event.target.value)}
-                placeholder="$500/month or Unpaid"
+                placeholder="$200/month"
               />
             </label>
             <label>
-              Numeric stipend amount
+              {isKm ? "ចំនួនប្រាក់ឧបត្ថម្ភ ($)" : "Numeric stipend amount"}
               <input
                 type="number"
                 min="0"
@@ -306,7 +378,7 @@ const PostJob = () => {
               />
             </label>
             <label>
-              Openings
+              {isKm ? "ចំនួនជ្រើសរើស" : "Openings"}
               <input
                 type="number"
                 min="1"
@@ -318,7 +390,7 @@ const PostJob = () => {
           </div>
           <div className="field-grid">
             <label>
-              Application deadline
+              {isKm ? "ថ្ងៃផុតកំណត់ទទួលពាក្យ" : "Application deadline"}
               <input
                 required
                 type="date"
@@ -330,7 +402,7 @@ const PostJob = () => {
               />
             </label>
             <label>
-              Expected start date
+              {isKm ? "ថ្ងៃរំពឹងថាចាប់ផ្តើមការងារ" : "Expected start date"}
               <input
                 type="date"
                 min={form.applicationDeadline}
@@ -340,7 +412,13 @@ const PostJob = () => {
             </label>
           </div>
           <button className="btn primary auth-submit" disabled={submitting}>
-            {submitting ? "Publishing..." : "Publish internship"}
+            {submitting
+              ? isKm
+                ? "កំពុងប្រកាស..."
+                : "Publishing..."
+              : isKm
+                ? "ប្រកាសឱកាសកម្មសិក្សា"
+                : "Publish internship"}
           </button>
         </form>
       </section>

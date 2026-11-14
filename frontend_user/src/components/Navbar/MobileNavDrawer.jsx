@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   FiX,
@@ -9,8 +9,9 @@ import {
   FiLogOut,
   FiUser,
   FiArrowRight,
+  FiBell,
 } from "react-icons/fi";
-import logo from "../../assets/logo/logo1.png";
+import logo from "../../assets/logo/logo-mark.png";
 import UserAvatar from "../ui/UserAvatar";
 
 export default function MobileNavDrawer({
@@ -24,6 +25,7 @@ export default function MobileNavDrawer({
   onToggleLanguage,
   isDark,
   onToggleTheme,
+  unreadNotifications = 0,
 }) {
   const location = useLocation();
   const isKm = language === "km";
@@ -32,9 +34,13 @@ export default function MobileNavDrawer({
     pillars[0]?.id || "learning",
   );
 
-  // Close drawer on route change
+  // Close drawer only when user navigates to a different route (NOT on initial mount!)
+  const prevPathRef = useRef(location.pathname);
   useEffect(() => {
-    onClose();
+    if (prevPathRef.current !== location.pathname) {
+      prevPathRef.current = location.pathname;
+      onClose();
+    }
   }, [location.pathname, onClose]);
 
   // Handle escape key
@@ -138,15 +144,42 @@ export default function MobileNavDrawer({
             </div>
           )}
 
-          <Link
-            to={workspace.path}
-            className="drawer-workspace-btn"
-            onClick={onClose}
-          >
-            <FiLayout className="workspace-icon" />
-            <span>{isKm ? workspace.labelKm : workspace.labelEn}</span>
-            <FiArrowRight className="workspace-arrow" />
-          </Link>
+          <div className="drawer-quick-shortcuts">
+            <Link
+              to={workspace.path}
+              className="drawer-workspace-btn"
+              onClick={onClose}
+            >
+              <FiLayout className="workspace-icon" />
+              <span>{isKm ? workspace.labelKm : workspace.labelEn}</span>
+              <FiArrowRight className="workspace-arrow" />
+            </Link>
+
+            {user && (
+              <Link
+                to="/notifications"
+                className="drawer-notif-btn"
+                onClick={onClose}
+              >
+                <div className="drawer-notif-icon-wrap">
+                  <FiBell className="drawer-notif-icon" />
+                  {unreadNotifications > 0 && (
+                    <span className="drawer-notif-badge">
+                      {unreadNotifications > 99 ? "99+" : unreadNotifications}
+                    </span>
+                  )}
+                </div>
+                <span>{isKm ? "ការជូនដំណឹង" : "Notifications"}</span>
+                {unreadNotifications > 0 ? (
+                  <span className="drawer-notif-unread-text">
+                    {unreadNotifications} {isKm ? "ថ្មី" : "new"}
+                  </span>
+                ) : (
+                  <FiArrowRight className="workspace-arrow" />
+                )}
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* Accordion Pillars */}
@@ -205,8 +238,8 @@ export default function MobileNavDrawer({
                           >
                             <Icon />
                           </div>
-                          <div className="drawer-item-copy">
-                            <span className="drawer-item-name">
+                          <div className="drawer-item-text">
+                            <span className="drawer-item-title">
                               {isKm ? item.labelKm : item.labelEn}
                             </span>
                             <small className="drawer-item-desc">
@@ -226,42 +259,43 @@ export default function MobileNavDrawer({
 
         {/* Footer Quick Controls */}
         <div className="mobile-drawer-footer">
-          <button
-            type="button"
-            className="drawer-footer-btn"
-            onClick={onToggleLanguage}
-          >
-            <span>{language === "km" ? "🇰🇭 ភាសាខ្មែរ" : "🇬🇧 English"}</span>
-            <small>{language === "km" ? "ប្តូរ EN" : "Switch KM"}</small>
-          </button>
+          <div className="drawer-footer-actions">
+            <button
+              type="button"
+              className="drawer-action-btn"
+              onClick={onToggleLanguage}
+            >
+              <span>{language === "km" ? "🇰🇭 ភាសាខ្មែរ" : "🇬🇧 English"}</span>
+            </button>
 
-          <button
-            type="button"
-            className="drawer-footer-btn"
-            onClick={onToggleTheme}
-          >
-            {isDark ? <FiSun /> : <FiMoon />}
-            <span>{isDark ? "Light Mode" : "Dark Mode"}</span>
-          </button>
+            <button
+              type="button"
+              className="drawer-action-btn"
+              onClick={onToggleTheme}
+            >
+              {isDark ? <FiSun /> : <FiMoon />}
+              <span>{isDark ? "Light Mode" : "Dark Mode"}</span>
+            </button>
+          </div>
 
           {user && (
-            <div className="drawer-auth-links">
+            <div className="drawer-footer-actions">
               <Link
                 to="/profile"
-                className="drawer-auth-item"
+                className="drawer-action-btn"
                 onClick={onClose}
               >
-                <FiUser /> {isKm ? "ប្រវត្តិរូប" : "Profile"}
+                <FiUser /> <span>{isKm ? "ប្រវត្តិរូប" : "Profile"}</span>
               </Link>
               <button
                 type="button"
-                className="drawer-auth-item logout"
+                className="drawer-logout-btn"
                 onClick={() => {
                   onClose();
                   if (onLogout) onLogout();
                 }}
               >
-                <FiLogOut /> {isKm ? "ចាកចេញ" : "Log out"}
+                <FiLogOut /> <span>{isKm ? "ចាកចេញ" : "Log out"}</span>
               </button>
             </div>
           )}

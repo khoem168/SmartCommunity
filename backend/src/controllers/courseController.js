@@ -18,8 +18,8 @@ const formatCourse = (row) => ({
   level: row.level,
   instructor: row.instructor_name,
   thumbnailUrl: row.thumbnail_url,
-  price: Number(row.price),
-  currency: row.currency,
+  price: 12,
+  currency: "USD",
   duration: row.duration_text,
   lessonCount: Number(row.lesson_count || 0),
   previewCount: Number(row.preview_count || 0),
@@ -71,7 +71,8 @@ const getCourses = async (req, res, next) => {
 const getCourseDetail = async (req, res, next) => {
   try {
     const userId = req.user?.id || 0;
-    const slugOrId = req.params.courseSlug;
+    const rawSlug = req.params.courseSlug;
+    const slugOrId = rawSlug === "react-fundamentals" ? "react-modern-web" : rawSlug;
     const isNum = !isNaN(Number(slugOrId));
     const [[course]] = await db.query(
       `SELECT c.*,
@@ -89,9 +90,10 @@ const getCourseDetail = async (req, res, next) => {
     );
     if (!course) return res.status(404).json({ error: "Course not found." });
 
-    const hasAccess = Boolean(course.is_enrolled);
+    const hasVideoAccess = Boolean(course.is_enrolled);
+    const hasPdfAccess = Boolean(userId);
     const [lessons] = await db.query(
-      `SELECT id, position, title, description, duration_minutes, is_preview
+      `SELECT id, position, title, description, duration_minutes, is_preview, pdf_url
        FROM course_lessons
        WHERE course_id = ?
        ORDER BY position`,
@@ -109,7 +111,10 @@ const getCourseDetail = async (req, res, next) => {
           description: lesson.description,
           durationMinutes: lesson.duration_minutes,
           isPreview: Boolean(lesson.is_preview),
-          isLocked: !lesson.is_preview && !hasAccess,
+          isPdfFree: true,
+          pdfUrl: hasPdfAccess ? lesson.pdf_url : null,
+          isVideoLocked: !hasVideoAccess,
+          isLocked: !hasPdfAccess,
         })),
       },
     });
@@ -120,7 +125,8 @@ const getCourseDetail = async (req, res, next) => {
 
 const getCourseLesson = async (req, res, next) => {
   try {
-    const slugOrId = req.params.courseSlug;
+    const rawSlug = req.params.courseSlug;
+    const slugOrId = rawSlug === "react-fundamentals" ? "react-modern-web" : rawSlug;
     const isNum = !isNaN(Number(slugOrId));
     const [[lesson]] = await db.query(
       `SELECT l.*, c.id AS course_id, c.slug AS course_slug,
@@ -134,23 +140,19 @@ const getCourseLesson = async (req, res, next) => {
       return res.status(404).json({ error: "Lesson not found." });
     }
 
-    let hasAccess = Boolean(lesson.is_preview);
-    if (!hasAccess && req.user?.id) {
-      const [[enrollment]] = await db.query(
-        `SELECT id FROM course_enrollments
-         WHERE user_id = ? AND course_id = ?`,
-        [req.user.id, lesson.course_id],
-      );
-      hasAccess = Boolean(enrollment);
-    }
-    if (!hasAccess) {
-      return res.status(402).json({
-        error: req.user
-          ? "Purchase this course to unlock the lesson."
-          : "Login and purchase this course to unlock the lesson.",
-        code: "COURSE_PAYMENT_REQUIRED",
+    if (!req.user?.id) {
+      return res.status(401).json({
+        error: "Please register or sign in to view free lesson PDFs and course videos.",
+        code: "AUTH_REQUIRED_FOR_LESSON",
       });
     }
+
+    const [[enrollment]] = await db.query(
+      `SELECT id FROM course_enrollments
+       WHERE user_id = ? AND course_id = ?`,
+      [req.user.id, lesson.course_id],
+    );
+    const hasVideoAccess = Boolean(enrollment);
 
     return res.json({
       lesson: {
@@ -163,7 +165,9 @@ const getCourseLesson = async (req, res, next) => {
         description: lesson.description,
         durationMinutes: lesson.duration_minutes,
         isPreview: Boolean(lesson.is_preview),
-        videoUrl: lesson.video_url,
+        isPdfFree: true,
+        isVideoLocked: !hasVideoAccess,
+        videoUrl: hasVideoAccess ? lesson.video_url : null,
         pdfUrl: lesson.pdf_url,
       },
     });
@@ -221,9 +225,10 @@ const createCoursePayment = async (req, res, next) => {
       [req.user.id, courseId],
     );
 
+    const effectivePrice = 12;
     const khqr = generateCourseKhqr({
-      amount: Number(course.price),
-      currency: course.currency,
+      amount: effectivePrice,
+      currency: "USD",
       courseTitle: course.title,
     });
     const [result] = await db.query(
@@ -234,8 +239,8 @@ const createCoursePayment = async (req, res, next) => {
       [
         req.user.id,
         course.id,
-        course.price,
-        course.currency,
+        effectivePrice,
+        "USD",
         khqr.qrCode,
         khqr.qrMd5,
         khqr.expiresAt,

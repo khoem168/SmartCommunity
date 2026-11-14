@@ -26,7 +26,7 @@ const footerGroups = [
     icon: FiUsers,
     links: [
       ["findMentors", "/mentorship"],
-      ["skillExchange", "/community"],
+      ["skillExchange", "/skill-exchange"],
       ["communityForum", "/forum"],
     ],
   },
@@ -35,14 +35,15 @@ const footerGroups = [
     icon: FiBriefcase,
     links: [
       ["internships", "/jobs"],
-      ["discoverMembers", "/discover"],
+      ["cvStudio", "/cv-studio"],
       ["messages", "/messages"],
     ],
   },
 ];
 
 const Footer = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const isKm = language === "km";
 
   return (
     <footer className="site-footer site-footer-no-cta" id="site-footer">
@@ -84,7 +85,11 @@ const Footer = () => {
                 </h3>
                 {links.map(([labelKey, to]) => (
                   <Link to={to} key={to}>
-                    {t(`footer.${labelKey}`)}
+                    {labelKey === "cvStudio"
+                      ? isKm
+                        ? "បង្កើត PDF CV (ឥតគិតថ្លៃ)"
+                        : "Free CV Builder (PDF)"
+                      : t(`footer.${labelKey}`)}
                     <FiArrowRight />
                   </Link>
                 ))}

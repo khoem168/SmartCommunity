@@ -385,16 +385,20 @@ const Messages = () => {
         <aside className="message-sidebar">
           <div className="message-sidebar-header">
             <div>
-              <h2>Conversations</h2>
-              <p>Private and community group messages.</p>
+              <h2>{isKm ? "ប្រអប់សារសន្ទនា" : "Conversations"}</h2>
+              <p>
+                {isKm
+                  ? "សារផ្ទាល់ខ្លួន និងសារក្រុមសហគមន៍។"
+                  : "Private and community group messages."}
+              </p>
             </div>
             {user && (
               <button
                 type="button"
                 className="icon-action"
                 onClick={openGroupCreator}
-                aria-label="Create group"
-                title="Create group"
+                aria-label={isKm ? "បង្កើតក្រុម" : "Create group"}
+                title={isKm ? "បង្កើតក្រុម" : "Create group"}
               >
                 <IoAddOutline />
               </button>
@@ -408,7 +412,9 @@ const Messages = () => {
                 <input
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search conversations"
+                  placeholder={
+                    isKm ? "ស្វែងរកការសន្ទនា..." : "Search conversations"
+                  }
                 />
               </label>
               <div className="conversation-filters">
@@ -479,12 +485,16 @@ const Messages = () => {
                             )}
                           </span>
                           <span className="conversation-preview">
-                            {conversation.lastMessage || "No messages yet"}
+                            {conversation.lastMessage ||
+                              (isKm ? "មិនទាន់មានសារនៅឡើយទេ" : "No messages yet")}
                           </span>
                           <span className="conversation-time">
                             {conversation.type === "group"
-                              ? `${conversation.memberCount} members`
-                              : conversation.role || "Member"}
+                              ? isKm
+                                ? `សមាជិក ${conversation.memberCount} នាក់`
+                                : `${conversation.memberCount} members`
+                              : conversation.role ||
+                                (isKm ? "សមាជិក" : "Member")}
                           </span>
                         </span>
                       </button>
@@ -494,20 +504,36 @@ const Messages = () => {
               ) : (
                 <div className="empty-conversation-pane">
                   <IoMailOpenOutline size={42} />
-                  <h3>No conversations found</h3>
-                  <p>Start a private chat from Discover or create a group.</p>
+                  <h3>
+                    {isKm
+                      ? "មិនទាន់មានការសន្ទនានៅឡើយទេ"
+                      : "No conversations found"}
+                  </h3>
+                  <p>
+                    {isKm
+                      ? "ចាប់ផ្តើមសន្ទនាផ្ទាល់ខ្លួន ឬបង្កើតក្រុមសិក្សាថ្មី។"
+                      : "Start a private chat from Discover or create a group."}
+                  </p>
                   <Link className="btn primary small" to="/discover">
-                    Browse members
+                    {isKm ? "ស្វែងរកសមាជិក" : "Browse members"}
                   </Link>
                 </div>
               )
             ) : (
               <div className="empty-conversation-pane">
                 <IoMailOpenOutline size={42} />
-                <h3>Login to open your inbox</h3>
-                <p>Messages are securely saved with your account.</p>
+                <h3>
+                  {isKm
+                    ? "សូមចូលគណនីដើម្បីបើកប្រអប់សារ"
+                    : "Login to open your inbox"}
+                </h3>
+                <p>
+                  {isKm
+                    ? "រាល់សារសន្ទនាត្រូវបានរក្សាទុកដោយសុវត្ថិភាពជាមួយគណនីរបស់អ្នក។"
+                    : "Messages are securely saved with your account."}
+                </p>
                 <Link className="btn primary small" to="/login">
-                  Login
+                  {isKm ? "ចូលប្រើប្រាស់" : "Login"}
                 </Link>
               </div>
             )}
@@ -533,14 +559,21 @@ const Messages = () => {
               )}
               <div>
                 <h2>
-                  {activeConversation?.displayName || "Select a conversation"}
+                  {activeConversation?.displayName ||
+                    (isKm ? "ជ្រើសរើសការសន្ទនា" : "Select a conversation")}
                 </h2>
                 <p>
                   {activeConversation?.type === "group"
-                    ? `${groupMembers.length || activeConversation.memberCount} members`
+                    ? isKm
+                      ? `សមាជិក ${groupMembers.length || activeConversation.memberCount} នាក់`
+                      : `${groupMembers.length || activeConversation.memberCount} members`
                     : activeConversation
-                      ? "Private conversation"
-                      : "Choose a chat from your inbox."}
+                      ? isKm
+                        ? "ការសន្ទនាផ្ទាល់ខ្លួន"
+                        : "Private conversation"
+                      : isKm
+                        ? "សូមជ្រើសរើសការសន្ទនាពីប្រអប់សាររបស់អ្នក។"
+                        : "Choose a chat from your inbox."}
                 </p>
               </div>
             </div>
@@ -551,16 +584,22 @@ const Messages = () => {
                   className="btn outline small"
                   onClick={leaveActiveGroup}
                 >
-                  Leave group
+                  {isKm ? "ចាកចេញពីក្រុម" : "Leave group"}
                 </button>
               )}
-              <button
-                type="button"
-                className="btn outline small"
-                onClick={() => navigate("/messages")}
-              >
-                <IoArrowBackOutline aria-hidden="true" /> All
-              </button>
+              {activeConversation && (
+                <button
+                  type="button"
+                  className="btn outline small mobile-back-to-all"
+                  onClick={() => {
+                    setActiveId("");
+                    navigate("/messages");
+                  }}
+                >
+                  <IoArrowBackOutline aria-hidden="true" />{" "}
+                  {isKm ? "ទាំងអស់" : "All"}
+                </button>
+              )}
             </div>
           </div>
 
@@ -576,11 +615,47 @@ const Messages = () => {
           <div className="thread-body">
             {!user ? (
               <div className="message-empty">
-                Please login to see your messages.
+                <span className="message-empty-icon">
+                  <IoMailOpenOutline size={32} />
+                </span>
+                <h3>
+                  {isKm
+                    ? "សូមចូលគណនីដើម្បីមើលសាររបស់អ្នក"
+                    : "Sign in to view your messages"}
+                </h3>
+                <p>
+                  {isKm
+                    ? "ភ្ជាប់ទំនាក់ទំនងជាមួយមិត្តភក្តិប្តូរជំនាញ អ្នកណែនាំ និងក្រុមហ៊ុនជ្រើសរើសបុគ្គលិក។"
+                    : "Connect directly with skill swap partners, mentors, and recruiters."}
+                </p>
               </div>
             ) : !activeConversation ? (
               <div className="message-empty">
-                Select a conversation or create a community group.
+                <span className="message-empty-icon">
+                  <IoMailOpenOutline size={32} />
+                </span>
+                <h3>
+                  {isKm
+                    ? "ជ្រើសរើសការសន្ទនា ឬចាប់ផ្តើមសារថ្មី"
+                    : "Select a conversation or start a new chat"}
+                </h3>
+                <p>
+                  {isKm
+                    ? "ជ្រើសរើសការសន្ទនាពីបញ្ជីខាងឆ្វេង ឬស្វែងរកដៃគូប្តូរជំនាញ និងបង្កើតក្រុមសិក្សាថ្មី។"
+                    : "Pick a conversation from the left sidebar, or browse members to start a skill swap chat."}
+                </p>
+                <div className="message-empty-actions">
+                  <Link className="btn primary small" to="/skill-exchange">
+                    {isKm ? "ស្វែងរកដៃគូប្តូរជំនាញ" : "Find Skill Partners"}
+                  </Link>
+                  <button
+                    type="button"
+                    className="btn outline small"
+                    onClick={openGroupCreator}
+                  >
+                    <IoAddOutline /> {isKm ? "បង្កើតក្រុមសិក្សា" : "Create Study Group"}
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="message-list">
@@ -670,12 +745,14 @@ const Messages = () => {
                   ))
                 ) : (
                   <div className="empty-thread">
-                    No messages yet. Send the first message.
+                    {isKm
+                      ? "មិនទាន់មានសារនៅឡើយទេ។ សូមផ្ញើសារដំបូង!"
+                      : "No messages yet. Send the first message."}
                   </div>
                 )}
                 {typingUser && (
                   <div className="typing-indicator">
-                    {typingUser} is typing…
+                    {isKm ? `${typingUser} កំពុងវាយអត្ថបទ…` : `${typingUser} is typing…`}
                   </div>
                 )}
               </div>
@@ -706,7 +783,7 @@ const Messages = () => {
                 value={draft}
                 maxLength={5000}
                 onChange={(event) => setDraft(event.target.value)}
-                placeholder="Write a message…"
+                placeholder={isKm ? "សរសេរសារនៅទីនេះ…" : "Write a message…"}
                 aria-label="Message"
               />
               <div className="compose-actions">
@@ -725,7 +802,7 @@ const Messages = () => {
                     className="btn outline small"
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <IoAttachOutline /> Attach
+                    <IoAttachOutline /> {isKm ? "ភ្ជាប់ឯកសារ" : "Attach"}
                   </button>
                 </div>
                 <button
@@ -733,7 +810,14 @@ const Messages = () => {
                   className="btn primary small"
                   disabled={(!draft.trim() && !attachment) || sending}
                 >
-                  {sending ? "Sending…" : "Send"} <IoSend aria-hidden="true" />
+                  {sending
+                    ? isKm
+                      ? "កំពុងផ្ញើ…"
+                      : "Sending…"
+                    : isKm
+                      ? "ផ្ញើសារ"
+                      : "Send"}{" "}
+                  <IoSend aria-hidden="true" />
                 </button>
               </div>
             </form>

@@ -6,6 +6,7 @@ import {
   IoDocumentTextOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import {
   fetchCompanyProfile,
   fetchInternshipApplications,
@@ -29,11 +30,17 @@ const emptyCompany = {
   companySize: "",
 };
 
-const formatDate = (value) =>
-  value ? new Date(value).toLocaleDateString() : "Not updated";
+const formatDate = (value, isKm = false) =>
+  value
+    ? new Date(value).toLocaleDateString(isKm ? "km-KH" : "en-US")
+    : isKm
+      ? "មិនទាន់ធ្វើបច្ចុប្បន្នភាព"
+      : "Not updated";
 
 const InternshipDashboard = () => {
   const { user } = useGlobleContext();
+  const { language } = useLanguage();
+  const isKm = language === "km";
   const recruiterView = ["recruiter", "admin"].includes(user?.role);
   const [company, setCompany] = useState(null);
   const [companyForm, setCompanyForm] = useState(emptyCompany);
@@ -156,13 +163,29 @@ const InternshipDashboard = () => {
     }
   };
 
+  const statusText = (rawStatus) => {
+    if (!isKm) return rawStatus;
+    const map = {
+      open: "កំពុងបើកទទួលពាក្យ",
+      closed: "បានបិទ",
+      filled: "ពេញចំនួន",
+      pending: "កំពុងរង់ចាំពិនិត្យ",
+      reviewed: "បានពិនិត្យ",
+      shortlisted: "ជាប់បញ្ជីសម្រាំង",
+      approved: "បានអនុម័ត",
+      accepted: "បានទទួលយក",
+      rejected: "បានបដិសេធ",
+    };
+    return map[String(rawStatus || "").toLowerCase()] || rawStatus;
+  };
+
   if (!user) {
     return (
       <main className="internship-dashboard-page">
         <section className="section container internship-empty">
-          <h1>Login to view applications</h1>
+          <h1>{isKm ? "សូមចូលគណនីដើម្បីមើលពាក្យស្នើសុំការងារ" : "Login to view applications"}</h1>
           <Link className="btn primary" to="/login">
-            Login
+            {isKm ? "ចូលគណនី" : "Login"}
           </Link>
         </section>
       </main>
@@ -173,16 +196,26 @@ const InternshipDashboard = () => {
     <main className="internship-dashboard-page">
       <section className="internship-dashboard-hero">
         <div className="container">
-          <p className="eyebrow">Internship Dashboard</p>
+          <p className="eyebrow">
+            {isKm ? "ផ្ទាំងគ្រប់គ្រងកម្មសិក្សា និងការងារ" : "Internship Dashboard"}
+          </p>
           <h1>
             {recruiterView
-              ? "Manage your company, postings, and candidates."
-              : "Track every internship application."}
+              ? isKm
+                ? "គ្រប់គ្រងក្រុមហ៊ុន ការប្រកាសការងារ និងបេក្ខជនរបស់អ្នក"
+                : "Manage your company, postings, and candidates."
+              : isKm
+                ? "តាមដានរាល់ពាក្យស្នើសុំកម្មសិក្សា និងការងាររបស់អ្នក"
+                : "Track every internship application."}
           </h1>
           <p>
             {recruiterView
-              ? "Keep company details current and move candidates through your hiring workflow."
-              : "See when recruiters review, shortlist, approve, or reject your application."}
+              ? isKm
+                ? "ធ្វើបច្ចុប្បន្នភាពព័ត៌មានក្រុមហ៊ុន និងគ្រប់គ្រងដំណើរការជ្រើសរើសបេក្ខជនប្រកបដោយប្រសិទ្ធភាព។"
+                : "Keep company details current and move candidates through your hiring workflow."
+              : isKm
+                ? "ពិនិត្យមើលស្ថានភាពពាក្យស្នើសុំ នៅពេលអ្នកជ្រើសរើសពិនិត្យ សម្រាំង អនុម័ត ឬឆ្លើយតប។"
+                : "See when recruiters review, shortlist, approve, or reject your application."}
           </p>
         </div>
       </section>
@@ -190,7 +223,11 @@ const InternshipDashboard = () => {
       <section className="section container internship-dashboard-content">
         {error && <div className="auth-error">{error}</div>}
         {message && <div className="profile-success">{message}</div>}
-        {loading && <p className="internship-empty">Loading dashboard...</p>}
+        {loading && (
+          <p className="internship-empty">
+            {isKm ? "កំពុងផ្ទុកទិន្នន័យផ្ទាំងគ្រប់គ្រង..." : "Loading dashboard..."}
+          </p>
+        )}
 
         <div className="internship-dashboard-stats">
           <article>
@@ -199,7 +236,13 @@ const InternshipDashboard = () => {
               {recruiterView ? internships.length : applications.length}
             </strong>
             <span>
-              {recruiterView ? "Internship postings" : "Applications"}
+              {recruiterView
+                ? isKm
+                  ? "ការប្រកាសជ្រើសរើស"
+                  : "Internship postings"
+                : isKm
+                  ? "ពាក្យស្នើសុំសរុប"
+                  : "Applications"}
             </span>
           </article>
           <article>
@@ -210,19 +253,39 @@ const InternshipDashboard = () => {
                 : applications.filter((item) => item.status === "pending")
                     .length}
             </strong>
-            <span>{recruiterView ? "Candidates" : "Pending"}</span>
+            <span>
+              {recruiterView
+                ? isKm
+                  ? "បេក្ខជនសរុប"
+                  : "Candidates"
+                : isKm
+                  ? "កំពុងរង់ចាំពិនិត្យ"
+                  : "Pending"}
+            </span>
           </article>
           <article>
             <IoBusinessOutline />
             <strong>
               {recruiterView
                 ? company
-                  ? "Ready"
-                  : "Required"
+                  ? isKm
+                    ? "រួចរាល់"
+                    : "Ready"
+                  : isKm
+                    ? "ទាមទារការបំពេញ"
+                    : "Required"
                 : applications.filter((item) => item.status === "approved")
                     .length}
             </strong>
-            <span>{recruiterView ? "Company profile" : "Approved"}</span>
+            <span>
+              {recruiterView
+                ? isKm
+                  ? "ព័ត៌មានក្រុមហ៊ុន"
+                  : "Company profile"
+                : isKm
+                  ? "បានអនុម័ត"
+                  : "Approved"}
+            </span>
           </article>
         </div>
 
@@ -230,8 +293,12 @@ const InternshipDashboard = () => {
           <form className="company-profile-form" onSubmit={saveCompany}>
             <div className="section-header">
               <div>
-                <h2>Company profile</h2>
-                <p>Create this profile before publishing an internship.</p>
+                <h2>{isKm ? "ព័ត៌មានក្រុមហ៊ុន (Company Profile)" : "Company profile"}</h2>
+                <p>
+                  {isKm
+                    ? "សូមបំពេញព័ត៌មានក្រុមហ៊ុន មុនពេលបង្ហោះជ្រើសរើសបុគ្គលិក ឬកម្មសិក្សា។"
+                    : "Create this profile before publishing an internship."}
+                </p>
               </div>
               {company?.logoUrl && (
                 <img src={company.logoUrl} alt="Company logo" />
@@ -239,7 +306,7 @@ const InternshipDashboard = () => {
             </div>
             <div className="company-form-grid">
               <label>
-                Company name
+                {isKm ? "ឈ្មោះក្រុមហ៊ុន / ស្ថាប័ន" : "Company name"}
                 <input
                   required
                   value={companyForm.name}
@@ -252,7 +319,7 @@ const InternshipDashboard = () => {
                 />
               </label>
               <label>
-                Industry
+                {isKm ? "វិស័យការងារ (Industry)" : "Industry"}
                 <input
                   value={companyForm.industry}
                   onChange={(event) =>
@@ -264,7 +331,7 @@ const InternshipDashboard = () => {
                 />
               </label>
               <label>
-                Contact email
+                {isKm ? "អ៊ីមែលទំនាក់ទំនង" : "Contact email"}
                 <input
                   required
                   type="email"
@@ -278,7 +345,7 @@ const InternshipDashboard = () => {
                 />
               </label>
               <label>
-                Phone
+                {isKm ? "លេខទូរស័ព្ទ" : "Phone"}
                 <input
                   value={companyForm.phone}
                   onChange={(event) =>
@@ -290,7 +357,7 @@ const InternshipDashboard = () => {
                 />
               </label>
               <label>
-                Website
+                {isKm ? "គេហទំព័រ (Website)" : "Website"}
                 <input
                   type="url"
                   value={companyForm.website}
@@ -303,7 +370,7 @@ const InternshipDashboard = () => {
                 />
               </label>
               <label>
-                Location
+                {isKm ? "ទីតាំង" : "Location"}
                 <input
                   value={companyForm.location}
                   onChange={(event) =>
@@ -315,7 +382,7 @@ const InternshipDashboard = () => {
                 />
               </label>
               <label>
-                Company size
+                {isKm ? "ទំហំក្រុមហ៊ុន" : "Company size"}
                 <select
                   value={companyForm.companySize}
                   onChange={(event) =>
@@ -325,16 +392,16 @@ const InternshipDashboard = () => {
                     }))
                   }
                 >
-                  <option value="">Select size</option>
-                  <option>1-10 employees</option>
-                  <option>11-50 employees</option>
-                  <option>51-200 employees</option>
-                  <option>201-1000 employees</option>
-                  <option>1000+ employees</option>
+                  <option value="">{isKm ? "ជ្រើសរើសទំហំក្រុមហ៊ុន" : "Select size"}</option>
+                  <option value="1-10 employees">{isKm ? "១-១០ នាក់" : "1-10 employees"}</option>
+                  <option value="11-50 employees">{isKm ? "១១-៥០ នាក់" : "11-50 employees"}</option>
+                  <option value="51-200 employees">{isKm ? "៥១-២០០ នាក់" : "51-200 employees"}</option>
+                  <option value="201-1000 employees">{isKm ? "២០១-១០០០ នាក់" : "201-1000 employees"}</option>
+                  <option value="1000+ employees">{isKm ? "លើសពី ១០០០ នាក់" : "1000+ employees"}</option>
                 </select>
               </label>
               <label>
-                Logo (JPG, PNG, WebP)
+                {isKm ? "និមិត្តសញ្ញាក្រុមហ៊ុន (Logo: JPG, PNG, WebP)" : "Logo (JPG, PNG, WebP)"}
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
@@ -342,7 +409,7 @@ const InternshipDashboard = () => {
                 />
               </label>
               <label className="wide">
-                Company description
+                {isKm ? "ការពិពណ៌នាអំពីក្រុមហ៊ុន" : "Company description"}
                 <textarea
                   value={companyForm.description}
                   onChange={(event) =>
@@ -355,7 +422,13 @@ const InternshipDashboard = () => {
               </label>
             </div>
             <button className="btn primary" disabled={busy === "company"}>
-              {busy === "company" ? "Saving..." : "Save company profile"}
+              {busy === "company"
+                ? isKm
+                  ? "កំពុងរក្សាទុក..."
+                  : "Saving..."
+                : isKm
+                  ? "រក្សាទុកព័ត៌មានក្រុមហ៊ុន"
+                  : "Save company profile"}
             </button>
           </form>
         )}
@@ -364,11 +437,15 @@ const InternshipDashboard = () => {
           <section>
             <div className="section-header">
               <div>
-                <h2>My internship postings</h2>
-                <p>Open or close applications at any time.</p>
+                <h2>{isKm ? "ការប្រកាសជ្រើសរើសរបស់ខ្ញុំ" : "My internship postings"}</h2>
+                <p>
+                  {isKm
+                    ? "បើក ឬបិទការទទួលពាក្យស្នើសុំបានគ្រប់ពេល។"
+                    : "Open or close applications at any time."}
+                </p>
               </div>
               <Link className="btn primary" to="/post-job">
-                Post internship
+                {isKm ? "+ បង្ហោះជ្រើសរើសថ្មី" : "Post internship"}
               </Link>
             </div>
             {internships.length ? (
@@ -377,11 +454,12 @@ const InternshipDashboard = () => {
                   <article key={item.id}>
                     <div>
                       <span className={`application-status ${item.status}`}>
-                        {item.status}
+                        {statusText(item.status)}
                       </span>
                       <h3>{item.title}</h3>
                       <p>
-                        {item.company} · {item.applicationCount} applicants
+                        {item.company} · {item.applicationCount}{" "}
+                        {isKm ? "បេក្ខជនដាក់ពាក្យ" : "applicants"}
                       </p>
                     </div>
                     <select
@@ -391,15 +469,17 @@ const InternshipDashboard = () => {
                         updatePosting(item.id, event.target.value)
                       }
                     >
-                      <option value="open">Open</option>
-                      <option value="closed">Closed</option>
-                      <option value="filled">Filled</option>
+                      <option value="open">{isKm ? "កំពុងបើកទទួលពាក្យ" : "Open"}</option>
+                      <option value="closed">{isKm ? "បានបិទ" : "Closed"}</option>
+                      <option value="filled">{isKm ? "ពេញចំនួន" : "Filled"}</option>
                     </select>
                   </article>
                 ))}
               </div>
             ) : (
-              <p className="internship-empty">No internships posted yet.</p>
+              <p className="internship-empty">
+                {isKm ? "មិនទាន់មានការប្រកាសជ្រើសរើសនៅឡើយទេ។" : "No internships posted yet."}
+              </p>
             )}
           </section>
         )}
@@ -408,17 +488,27 @@ const InternshipDashboard = () => {
           <div className="section-header">
             <div>
               <h2>
-                {recruiterView ? "Candidate applications" : "My applications"}
+                {recruiterView
+                  ? isKm
+                    ? "ពាក្យស្នើសុំរបស់បេក្ខជន"
+                    : "Candidate applications"
+                  : isKm
+                    ? "ពាក្យស្នើសុំការងាររបស់ខ្ញុំ"
+                    : "My applications"}
               </h2>
               <p>
                 {recruiterView
-                  ? "Review CVs and update each candidate's status."
-                  : "Status changes appear here and in notifications."}
+                  ? isKm
+                    ? "ពិនិត្យ CV និងធ្វើបច្ចុប្បន្នភាពស្ថានភាពបេក្ខជននីមួយៗ។"
+                    : "Review CVs and update each candidate's status."
+                  : isKm
+                    ? "រាល់ការផ្លាស់ប្តូរស្ថានភាពនឹងបង្ហាញនៅទីនេះ និងក្នុងការជូនដំណឹង។"
+                    : "Status changes appear here and in notifications."}
               </p>
             </div>
             {!recruiterView && (
               <Link className="btn outline" to="/jobs">
-                Find internships
+                {isKm ? "ស្វែងរកឱកាសការងារ" : "Find internships"}
               </Link>
             )}
           </div>
@@ -429,7 +519,7 @@ const InternshipDashboard = () => {
                   <div className="application-heading">
                     <div>
                       <span className={`application-status ${item.status}`}>
-                        {item.status}
+                        {statusText(item.status)}
                       </span>
                       <h3>{item.internshipTitle}</h3>
                       <p>
@@ -438,7 +528,10 @@ const InternshipDashboard = () => {
                           : item.company}
                       </p>
                     </div>
-                    <small>Applied {formatDate(item.appliedAt)}</small>
+                    <small>
+                      {isKm ? "ដាក់ពាក្យនៅថ្ងៃទី " : "Applied "}
+                      {formatDate(item.appliedAt, isKm)}
+                    </small>
                   </div>
                   {item.coverLetter && (
                     <p className="application-cover-letter">
@@ -446,23 +539,26 @@ const InternshipDashboard = () => {
                     </p>
                   )}
                   <div className="application-links">
-                    <a href={item.resumeUrl} target="_blank" rel="noreferrer">
-                      View CV: {item.resumeOriginalName || "resume.pdf"}
-                    </a>
+                    {item.resumeUrl && (
+                      <a href={item.resumeUrl} target="_blank" rel="noreferrer">
+                        {isKm ? "មើល CV៖ " : "View CV: "}
+                        {item.resumeOriginalName || "resume.pdf"}
+                      </a>
+                    )}
                     {item.portfolioUrl && (
                       <a
                         href={item.portfolioUrl}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        Portfolio
+                        {isKm ? "គម្រោងស្នាដៃ (Portfolio)" : "Portfolio"}
                       </a>
                     )}
                   </div>
                   {recruiterView ? (
                     <div className="application-review-controls">
                       <label>
-                        Recruiter notes
+                        {isKm ? "កំណត់ចំណាំអ្នកជ្រើសរើស" : "Recruiter notes"}
                         <textarea
                           value={
                             notesById[item.id] ?? item.recruiterNotes ?? ""
@@ -476,7 +572,7 @@ const InternshipDashboard = () => {
                         />
                       </label>
                       <label>
-                        Status
+                        {isKm ? "ស្ថានភាពពាក្យស្នើសុំ" : "Status"}
                         <select
                           value={item.status}
                           disabled={busy === `application-${item.id}`}
@@ -484,18 +580,19 @@ const InternshipDashboard = () => {
                             updateApplication(item.id, event.target.value)
                           }
                         >
-                          <option value="pending">Pending</option>
-                          <option value="reviewed">Reviewed</option>
-                          <option value="shortlisted">Shortlisted</option>
-                          <option value="approved">Approved</option>
-                          <option value="rejected">Rejected</option>
+                          <option value="pending">{isKm ? "កំពុងរង់ចាំពិនិត្យ" : "Pending"}</option>
+                          <option value="reviewed">{isKm ? "បានពិនិត្យ" : "Reviewed"}</option>
+                          <option value="shortlisted">{isKm ? "ជាប់បញ្ជីសម្រាំង" : "Shortlisted"}</option>
+                          <option value="approved">{isKm ? "បានអនុម័ត" : "Approved"}</option>
+                          <option value="rejected">{isKm ? "បានបដិសេធ" : "Rejected"}</option>
                         </select>
                       </label>
                     </div>
                   ) : (
                     item.recruiterNotes && (
                       <p className="recruiter-note">
-                        <strong>Recruiter note:</strong> {item.recruiterNotes}
+                        <strong>{isKm ? "កំណត់ចំណាំអ្នកជ្រើសរើស៖" : "Recruiter note:"}</strong>{" "}
+                        {item.recruiterNotes}
                       </p>
                     )
                   )}
@@ -503,7 +600,9 @@ const InternshipDashboard = () => {
               ))}
             </div>
           ) : (
-            <p className="internship-empty">No applications yet.</p>
+            <p className="internship-empty">
+              {isKm ? "មិនទាន់មានពាក្យស្នើសុំនៅឡើយទេ។" : "No applications yet."}
+            </p>
           )}
         </section>
       </section>

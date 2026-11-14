@@ -27,6 +27,7 @@ import {
   IoTrendingUpOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import { fetchAdminAnalytics } from "../../services/analyticsService";
 import "./AnalyticsDashboard.css";
 
@@ -39,10 +40,10 @@ const colors = [
   "#dc2626",
 ];
 const ranges = [
-  ["7d", "Last 7 days"],
-  ["30d", "Last 30 days"],
-  ["90d", "Last 90 days"],
-  ["12m", "Last 12 months"],
+  ["7d", "Last 7 days", "7 ថ្ងៃចុងក្រោយ"],
+  ["30d", "Last 30 days", "30 ថ្ងៃចុងក្រោយ"],
+  ["90d", "Last 90 days", "90 ថ្ងៃចុងក្រោយ"],
+  ["12m", "Last 12 months", "12 ខែចុងក្រោយ"],
 ];
 
 const number = (value) => new Intl.NumberFormat().format(Number(value || 0));
@@ -68,6 +69,8 @@ const EmptyChart = ({ message = "No data is available yet." }) => (
 
 const AnalyticsDashboard = () => {
   const { user } = useGlobleContext();
+  const { language } = useLanguage();
+  const isKm = language === "km";
   const [range, setRange] = useState("30d");
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -94,20 +97,93 @@ const AnalyticsDashboard = () => {
 
   const roleData = useMemo(
     () =>
-      (analytics?.charts?.roles || []).map((item) => ({
-        ...item,
-        name: capitalize(item.name),
-      })),
-    [analytics],
+      (analytics?.charts?.roles || []).map((item) => {
+        const key = String(item.name || "").toLowerCase();
+        const kmMap = {
+          student: "សិស្ស/និស្សិត",
+          user: "សិស្ស/និស្សិត",
+          mentor: "អ្នកណែនាំ",
+          recruiter: "អ្នកជ្រើសរើសបុគ្គលិក",
+          admin: "អ្នកគ្រប់គ្រង",
+        };
+        return {
+          ...item,
+          name: isKm ? kmMap[key] || capitalize(item.name) : capitalize(item.name),
+        };
+      }),
+    [analytics, isKm],
   );
   const applicationData = useMemo(
     () =>
-      (analytics?.charts?.applicationStatuses || []).map((item) => ({
-        ...item,
-        name: capitalize(item.name),
-      })),
-    [analytics],
+      (analytics?.charts?.applicationStatuses || []).map((item) => {
+        const key = String(item.name || "").toLowerCase();
+        const kmMap = {
+          pending: "កំពុងរង់ចាំ",
+          reviewed: "បានពិនិត្យ",
+          shortlisted: "ជាប់បញ្ជីសម្រាំង",
+          approved: "បានអនុម័ត",
+          accepted: "បានទទួលយក",
+          rejected: "បានបដិសេធ",
+        };
+        return {
+          ...item,
+          name: isKm ? kmMap[key] || capitalize(item.name) : capitalize(item.name),
+        };
+      }),
+    [analytics, isKm],
   );
+  const internshipStatusData = useMemo(
+    () =>
+      (analytics?.charts?.internshipStatuses || []).map((item) => {
+        const key = String(item.name || "").toLowerCase();
+        const kmMap = {
+          open: "កំពុងបើកទទួលពាក្យ",
+          filled: "ពេញចំនួន",
+          closed: "បានបិទ",
+        };
+        return {
+          ...item,
+          name: isKm ? kmMap[key] || capitalize(item.name) : capitalize(item.name),
+        };
+      }),
+    [analytics, isKm],
+  );
+
+  const formatActivityType = (rawType) => {
+    const key = String(rawType || "").toLowerCase();
+    if (!isKm) return capitalize(rawType);
+    const map = {
+      user: "សមាជិកថ្មី",
+      internship: "ឱកាសកម្មសិក្សា",
+      application: "ពាក្យស្នើសុំការងារ",
+      skill_exchange: "ការផ្លាស់ប្តូរជំនាញ",
+      session: "ថ្នាក់រៀនផ្ទាល់",
+    };
+    return map[key] || capitalize(rawType);
+  };
+
+  const formatActivityLabel = (rawLabel, rawType) => {
+    const text = String(rawLabel || "");
+    if (!isKm) return text;
+    if (text.endsWith(" joined the community")) {
+      return `${text.replace(" joined the community", "")} បានចូលរួមក្នុងសហគមន៍`;
+    }
+    if (text.startsWith("Application submitted for ")) {
+      return `បានដាក់ពាក្យស្នើសុំការងារ៖ ${text.replace("Application submitted for ", "")}`;
+    }
+    if (text.startsWith("Learning session: ")) {
+      return `ថ្នាក់រៀនផ្ទាល់៖ ${text.replace("Learning session: ", "")}`;
+    }
+    if (rawType === "internship" && text.includes(" published ")) {
+      const [comp, role] = text.split(" published ");
+      return `${comp} បានបង្ហោះជ្រើសរើស ${role}`;
+    }
+    if (rawType === "skill_exchange" && text.includes(" for ")) {
+      const [offered, requested] = text.split(" for ");
+      return `ប្តូរជំនាញ៖ ${offered} ជាមួយ ${requested}`;
+    }
+    return text;
+  };
 
   if (!user) {
     return (
@@ -144,23 +220,30 @@ const AnalyticsDashboard = () => {
       <section className="analytics-hero">
         <div className="container analytics-hero-inner">
           <div>
-            <p className="eyebrow">Administration analytics</p>
-            <h1>Understand how the community is growing.</h1>
+            <p className="eyebrow">
+              {isKm ? "ទិន្នន័យវិភាគប្រព័ន្ធ" : "Administration analytics"}
+            </p>
+            <h1>
+              {isKm
+                ? "តាមដានការរីកចម្រើននៃសហគមន៍សិក្សា និងអាជីព"
+                : "Understand how the community is growing."}
+            </h1>
             <p>
-              Live reporting across users, skills, mentors, internships,
-              applications, exchanges, and learning sessions.
+              {isKm
+                ? "របាយការណ៍ទិន្នន័យផ្ទាល់អំពីអ្នកប្រើប្រាស់ ជំនាញ អ្នកណែនាំ ឱកាសកម្មសិក្សា ពាក្យស្នើសុំការងារ ការផ្លាស់ប្តូរជំនាញ និងថ្នាក់រៀនផ្ទាល់។"
+                : "Live reporting across users, skills, mentors, internships, applications, exchanges, and learning sessions."}
             </p>
           </div>
           <div className="analytics-controls">
             <label>
-              Reporting range
+              {isKm ? "រយៈពេលរបាយការណ៍" : "Reporting range"}
               <select
                 value={range}
                 onChange={(event) => setRange(event.target.value)}
               >
-                {ranges.map(([value, label]) => (
+                {ranges.map(([value, label, labelKm]) => (
                   <option value={value} key={value}>
-                    {label}
+                    {isKm ? labelKm || label : label}
                   </option>
                 ))}
               </select>
@@ -170,7 +253,7 @@ const AnalyticsDashboard = () => {
               type="button"
               onClick={() => window.print()}
             >
-              <IoDocumentTextOutline /> Print report
+              <IoDocumentTextOutline /> {isKm ? "បោះពុម្ពរបាយការណ៍" : "Print report"}
             </button>
           </div>
         </div>
@@ -180,64 +263,64 @@ const AnalyticsDashboard = () => {
         {error && <div className="analytics-error">{error}</div>}
         {loading && !analytics ? (
           <div className="analytics-loading">
-            Calculating platform analytics…
+            {isKm ? "កំពុងគណនាទិន្នន័យវិភាគប្រព័ន្ធ…" : "Calculating platform analytics…"}
           </div>
         ) : (
           <>
             <div className="analytics-stats-grid">
               <StatCard
                 icon={IoPeopleOutline}
-                label="Total users"
+                label={isKm ? "អ្នកប្រើប្រាស់សរុប" : "Total users"}
                 value={summary.totalUsers}
-                detail={`+${number(summary.newUsers)} in this range`}
+                detail={`+${number(summary.newUsers)} ${isKm ? "ក្នុងអំឡុងពេលនេះ" : "in this range"}`}
               />
               <StatCard
                 icon={IoRibbonOutline}
-                label="Verified mentors"
+                label={isKm ? "អ្នកណែនាំផ្លូវការ" : "Verified mentors"}
                 value={summary.totalMentors}
-                detail={`${number(summary.totalStudents)} learners`}
+                detail={`${number(summary.totalStudents)} ${isKm ? "សិស្ស/និស្សិត" : "learners"}`}
                 tone="purple"
               />
               <StatCard
                 icon={IoBriefcaseOutline}
-                label="Internships"
+                label={isKm ? "ឱកាសកម្មសិក្សា" : "Internships"}
                 value={summary.totalInternships}
-                detail={`${number(summary.openInternships)} currently open`}
+                detail={`${number(summary.openInternships)} ${isKm ? "កំពុងបើកទទួលពាក្យ" : "currently open"}`}
                 tone="orange"
               />
               <StatCard
                 icon={IoPersonAddOutline}
-                label="Applications"
+                label={isKm ? "ពាក្យស្នើសុំការងារ" : "Applications"}
                 value={summary.totalApplications}
-                detail={`+${number(summary.newApplications)} in this range`}
+                detail={`+${number(summary.newApplications)} ${isKm ? "ក្នុងអំឡុងពេលនេះ" : "in this range"}`}
                 tone="blue"
               />
               <StatCard
                 icon={IoSwapHorizontalOutline}
-                label="Skill exchanges"
+                label={isKm ? "ការផ្លាស់ប្តូរជំនាញ" : "Skill exchanges"}
                 value={summary.totalExchanges}
-                detail={`${number(summary.completedExchanges)} completed`}
+                detail={`${number(summary.completedExchanges)} ${isKm ? "បានបញ្ចប់" : "completed"}`}
                 tone="green"
               />
               <StatCard
                 icon={IoCalendarOutline}
-                label="Learning sessions"
+                label={isKm ? "ថ្នាក់រៀនផ្ទាល់" : "Learning sessions"}
                 value={summary.totalSessions}
-                detail={`${number(summary.registrations)} registrations`}
+                detail={`${number(summary.registrations)} ${isKm ? "ការចុះឈ្មោះ" : "registrations"}`}
                 tone="rose"
               />
               <StatCard
                 icon={IoStatsChartOutline}
-                label="Forum posts"
+                label={isKm ? "ការពិភាក្សាក្នុងវេទិកា" : "Forum posts"}
                 value={summary.forumPosts}
-                detail="Published discussions"
+                detail={isKm ? "ប្រធានបទដែលបានបង្ហោះ" : "Published discussions"}
                 tone="cyan"
               />
               <StatCard
                 icon={IoTrendingUpOutline}
-                label="Messages sent"
+                label={isKm ? "សារដែលបានផ្ញើ" : "Messages sent"}
                 value={summary.messages}
-                detail="Community conversations"
+                detail={isKm ? "ការសន្ទនាក្នុងសហគមន៍" : "Community conversations"}
                 tone="indigo"
               />
             </div>
@@ -245,8 +328,12 @@ const AnalyticsDashboard = () => {
             <section className="analytics-panel analytics-growth-panel">
               <div className="analytics-panel-header">
                 <div>
-                  <h2>Platform growth</h2>
-                  <p>New users and key actions during the selected period.</p>
+                  <h2>{isKm ? "កំណើននៃប្រព័ន្ធ (Platform Growth)" : "Platform growth"}</h2>
+                  <p>
+                    {isKm
+                      ? "អ្នកប្រើប្រាស់ថ្មី និងសកម្មភាពសំខាន់ៗក្នុងអំឡុងពេលដែលបានជ្រើសរើស។"
+                      : "New users and key actions during the selected period."}
+                  </p>
                 </div>
               </div>
               <div className="analytics-chart tall">
@@ -291,6 +378,7 @@ const AnalyticsDashboard = () => {
                     <Area
                       type="monotone"
                       dataKey="users"
+                      name={isKm ? "អ្នកប្រើប្រាស់" : "Users"}
                       stroke="#0f766e"
                       fill="url(#usersGradient)"
                       strokeWidth={2}
@@ -298,6 +386,7 @@ const AnalyticsDashboard = () => {
                     <Area
                       type="monotone"
                       dataKey="applications"
+                      name={isKm ? "ពាក្យស្នើសុំការងារ" : "Applications"}
                       stroke="#2563eb"
                       fill="transparent"
                       strokeWidth={2}
@@ -305,6 +394,7 @@ const AnalyticsDashboard = () => {
                     <Area
                       type="monotone"
                       dataKey="exchanges"
+                      name={isKm ? "ការផ្លាស់ប្តូរជំនាញ" : "Skill Exchanges"}
                       stroke="#7c3aed"
                       fill="transparent"
                       strokeWidth={2}
@@ -312,6 +402,7 @@ const AnalyticsDashboard = () => {
                     <Area
                       type="monotone"
                       dataKey="sessions"
+                      name={isKm ? "ថ្នាក់រៀនផ្ទាល់" : "Learning Sessions"}
                       stroke="#ea580c"
                       fill="transparent"
                       strokeWidth={2}
@@ -325,8 +416,12 @@ const AnalyticsDashboard = () => {
               <section className="analytics-panel">
                 <div className="analytics-panel-header">
                   <div>
-                    <h2>User roles</h2>
-                    <p>Active community composition.</p>
+                    <h2>{isKm ? "តួនាទីអ្នកប្រើប្រាស់ (User Roles)" : "User roles"}</h2>
+                    <p>
+                      {isKm
+                        ? "សមាសភាពសមាជិកសកម្មនៅក្នុងសហគមន៍។"
+                        : "Active community composition."}
+                    </p>
                   </div>
                 </div>
                 <div className="analytics-chart">
@@ -361,8 +456,12 @@ const AnalyticsDashboard = () => {
               <section className="analytics-panel">
                 <div className="analytics-panel-header">
                   <div>
-                    <h2>Application pipeline</h2>
-                    <p>Current internship application outcomes.</p>
+                    <h2>{isKm ? "ស្ថានភាពពាក្យស្នើសុំការងារ (Application Pipeline)" : "Application pipeline"}</h2>
+                    <p>
+                      {isKm
+                        ? "លទ្ធផលនៃការដាក់ពាក្យស្នើសុំកម្មសិក្សាបច្ចុប្បន្ន។"
+                        : "Current internship application outcomes."}
+                    </p>
                   </div>
                 </div>
                 <div className="analytics-chart">
@@ -375,14 +474,14 @@ const AnalyticsDashboard = () => {
                         <Tooltip />
                         <Bar
                           dataKey="value"
-                          name="Applications"
+                          name={isKm ? "ពាក្យស្នើសុំ" : "Applications"}
                           fill="#2563eb"
                           radius={[7, 7, 0, 0]}
                         />
                       </BarChart>
                     </ResponsiveContainer>
                   ) : (
-                    <EmptyChart message="No internship applications yet." />
+                    <EmptyChart message={isKm ? "មិនទាន់មានពាក្យស្នើសុំកម្មសិក្សាទេ។" : "No internship applications yet."} />
                   )}
                 </div>
               </section>
@@ -391,24 +490,24 @@ const AnalyticsDashboard = () => {
             <div className="analytics-rate-grid">
               {[
                 [
-                  "Verified users",
+                  isKm ? "គណនីបានផ្ទៀងផ្ទាត់" : "Verified users",
                   rates.verification,
-                  "Profiles with verified email",
+                  isKm ? "គណនីដែលបានបញ្ជាក់អ៊ីមែល" : "Profiles with verified email",
                 ],
                 [
-                  "Application success",
+                  isKm ? "អត្រាជោគជ័យពាក្យការងារ" : "Application success",
                   rates.applicationSuccess,
-                  "Approved or accepted",
+                  isKm ? "ត្រូវបានអនុម័ត ឬទទួលយក" : "Approved or accepted",
                 ],
                 [
-                  "Exchange completion",
+                  isKm ? "ការបញ្ចប់ការប្តូរជំនាញ" : "Exchange completion",
                   rates.exchangeCompletion,
-                  "Skill exchanges completed",
+                  isKm ? "វគ្គផ្លាស់ប្តូរជំនាញដែលបានបញ្ចប់" : "Skill exchanges completed",
                 ],
                 [
-                  "Session attendance",
+                  isKm ? "ការចូលរួមថ្នាក់រៀនផ្ទាល់" : "Session attendance",
                   rates.sessionAttendance,
-                  "Registrations that attended",
+                  isKm ? "អ្នកចុះឈ្មោះដែលបានចូលរួម" : "Registrations that attended",
                 ],
               ].map(([label, value, description]) => (
                 <article key={label}>
@@ -432,8 +531,12 @@ const AnalyticsDashboard = () => {
               <section className="analytics-panel">
                 <div className="analytics-panel-header">
                   <div>
-                    <h2>Popular skills</h2>
-                    <p>Most common teach, learn, and candidate skills.</p>
+                    <h2>{isKm ? "ជំនាញពេញនិយម (Popular Skills)" : "Popular skills"}</h2>
+                    <p>
+                      {isKm
+                        ? "ជំនាញបង្រៀន រៀន និងជំនាញបេក្ខជនដែលពេញនិយមបំផុត។"
+                        : "Most common teach, learn, and candidate skills."}
+                    </p>
                   </div>
                 </div>
                 <div className="analytics-chart">
@@ -452,20 +555,20 @@ const AnalyticsDashboard = () => {
                         <YAxis
                           type="category"
                           dataKey="skill"
-                          width={95}
+                          width={125}
                           tick={{ fontSize: 11 }}
                         />
                         <Tooltip />
                         <Bar
                           dataKey="users"
-                          name="Users"
+                          name={isKm ? "អ្នកប្រើប្រាស់" : "Users"}
                           fill="#0f766e"
                           radius={[0, 7, 7, 0]}
                         />
                       </BarChart>
                     </ResponsiveContainer>
                   ) : (
-                    <EmptyChart message="Users have not added profile skills yet." />
+                    <EmptyChart message={isKm ? "មិនទាន់មានទិន្នន័យជំនាញនៅឡើយទេ។" : "Users have not added profile skills yet."} />
                   )}
                 </div>
               </section>
@@ -473,37 +576,36 @@ const AnalyticsDashboard = () => {
               <section className="analytics-panel">
                 <div className="analytics-panel-header">
                   <div>
-                    <h2>Internship status</h2>
-                    <p>Availability across all postings.</p>
+                    <h2>{isKm ? "ស្ថានភាពឱកាសកម្មសិក្សា" : "Internship status"}</h2>
+                    <p>{isKm ? "ស្ថានភាពបើកទទួលពាក្យនៃការងារទាំងអស់។" : "Availability across all postings."}</p>
                   </div>
                 </div>
                 <div className="analytics-chart">
-                  {analytics?.charts?.internshipStatuses?.length ? (
+                  {internshipStatusData.length ? (
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
-                          data={analytics.charts.internshipStatuses}
+                          data={internshipStatusData}
                           dataKey="value"
                           nameKey="name"
-                          outerRadius={105}
-                          label={({ name, value }) =>
-                            `${capitalize(name)}: ${value}`
-                          }
+                          innerRadius={58}
+                          outerRadius={96}
+                          paddingAngle={3}
+                          label={({ name, value }) => `${name}: ${value}`}
                         >
-                          {analytics.charts.internshipStatuses.map(
-                            (entry, index) => (
-                              <Cell
-                                key={entry.name}
-                                fill={colors[index % colors.length]}
-                              />
-                            ),
-                          )}
+                          {internshipStatusData.map((entry, index) => (
+                            <Cell
+                              key={entry.name}
+                              fill={colors[(index + 1) % colors.length]}
+                            />
+                          ))}
                         </Pie>
                         <Tooltip />
+                        <Legend />
                       </PieChart>
                     </ResponsiveContainer>
                   ) : (
-                    <EmptyChart message="No internships have been posted." />
+                    <EmptyChart message={isKm ? "មិនទាន់មានឱកាសកម្មសិក្សាត្រូវបានបង្ហោះទេ។" : "No internships have been posted."} />
                   )}
                 </div>
               </section>
@@ -513,17 +615,17 @@ const AnalyticsDashboard = () => {
               <section className="analytics-panel">
                 <div className="analytics-panel-header">
                   <div>
-                    <h2>Top internships</h2>
-                    <p>Postings ranked by applications.</p>
+                    <h2>{isKm ? "ឱកាសកម្មសិក្សាឈានមុខ" : "Top internships"}</h2>
+                    <p>{isKm ? "ចាត់ថ្នាក់តាមចំនួនពាក្យស្នើសុំ។" : "Postings ranked by applications."}</p>
                   </div>
                 </div>
                 <div className="analytics-table-wrap">
                   <table>
                     <thead>
                       <tr>
-                        <th>Internship</th>
-                        <th>Applications</th>
-                        <th>Success</th>
+                        <th>{isKm ? "ឱកាសកម្មសិក្សា" : "Internship"}</th>
+                        <th>{isKm ? "ពាក្យស្នើសុំ" : "Applications"}</th>
+                        <th>{isKm ? "ជោគជ័យ" : "Success"}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -545,17 +647,17 @@ const AnalyticsDashboard = () => {
               <section className="analytics-panel">
                 <div className="analytics-panel-header">
                   <div>
-                    <h2>Mentor performance</h2>
-                    <p>Ratings and mentorship activity.</p>
+                    <h2>{isKm ? "សកម្មភាពអ្នកណែនាំ (Mentor Performance)" : "Mentor performance"}</h2>
+                    <p>{isKm ? "ការវាយតម្លៃ និងចំនួនវគ្គណែនាំ។" : "Ratings and mentorship activity."}</p>
                   </div>
                 </div>
                 <div className="analytics-table-wrap">
                   <table>
                     <thead>
                       <tr>
-                        <th>Mentor</th>
-                        <th>Bookings</th>
-                        <th>Rating</th>
+                        <th>{isKm ? "អ្នកណែនាំ" : "Mentor"}</th>
+                        <th>{isKm ? "ការកក់" : "Bookings"}</th>
+                        <th>{isKm ? "ពិន្ទុ" : "Rating"}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -565,7 +667,11 @@ const AnalyticsDashboard = () => {
                             <td>
                               <strong>{item.name}</strong>
                               <small>
-                                {item.profession || "Community mentor"}
+                                {item.profession && !["beginner", "intermediate", "advanced"].includes(String(item.profession).toLowerCase())
+                                  ? item.profession
+                                  : isKm
+                                    ? "អ្នកណែនាំសហគមន៍"
+                                    : "Community mentor"}
                               </small>
                             </td>
                             <td>{item.mentorships}</td>
@@ -582,8 +688,12 @@ const AnalyticsDashboard = () => {
             <section className="analytics-panel">
               <div className="analytics-panel-header">
                 <div>
-                  <h2>Recent platform activity</h2>
-                  <p>The latest important events across the community.</p>
+                  <h2>{isKm ? "សកម្មភាពថ្មីៗក្នុងប្រព័ន្ធ" : "Recent platform activity"}</h2>
+                  <p>
+                    {isKm
+                      ? "ព្រឹត្តិការណ៍ និងសកម្មភាពសំខាន់ៗចុងក្រោយនៅក្នុងសហគមន៍។"
+                      : "The latest important events across the community."}
+                  </p>
                 </div>
               </div>
               <div className="analytics-activity-list">
@@ -592,10 +702,10 @@ const AnalyticsDashboard = () => {
                     <article key={`${item.type}-${item.createdAt}-${index}`}>
                       <span>{index + 1}</span>
                       <div>
-                        <strong>{item.label}</strong>
+                        <strong>{formatActivityLabel(item.label, item.type)}</strong>
                         <small>
-                          {capitalize(item.type)} ·{" "}
-                          {new Date(item.createdAt).toLocaleString()}
+                          {formatActivityType(item.type)} ·{" "}
+                          {new Date(item.createdAt).toLocaleString(isKm ? "km-KH" : "en-US")}
                         </small>
                       </div>
                     </article>

@@ -15,6 +15,20 @@ export const fetchNotifications = async () => {
   return response.notifications || [];
 };
 
+export const fetchUnreadNotificationCount = async () => {
+  try {
+    const response = await apiFetch(`/notifications/unread-count?_t=${Date.now()}`);
+    return Number(response?.unread || 0);
+  } catch {
+    try {
+      const fallback = await fetchNotificationCenter({ limit: 1 });
+      return Number(fallback?.stats?.unread || 0);
+    } catch {
+      return 0;
+    }
+  }
+};
+
 export const markNotificationReadRequest = async (notificationId) => {
   return apiFetch(`/notifications/${notificationId}/read`, {
     method: "PATCH",

@@ -250,21 +250,26 @@
 .hub-filter-chips {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  overflow-x: auto;
-  padding-bottom: 0.25rem;
+  padding-bottom: 0.15rem;
 }
 
 .hub-chip {
-  padding: 0.4rem 0.9rem;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
   background: var(--bg);
   color: var(--soft);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  white-space: nowrap;
+  white-space: nowrap !important;
+  flex-shrink: 0;
   transition: all 0.15s ease;
 }
 
@@ -597,7 +602,7 @@
 
 .hub-requests-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 1.25rem;
 }
 
@@ -1297,4 +1302,41 @@
     padding: 0.5rem 0.875rem;
     font-size: 0.8125rem;
   }
+}
+
+/* Dark Mode Refinements */
+[data-theme="dark"] .hub-tab-count,
+[data-theme="dark"] .hub-badge-count {
+  background: rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .hub-chip {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+[data-theme="dark"] .hub-modal-close {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .hub-modal-close:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .hub-completed-badge,
+[data-theme="dark"] .hub-tag-pill.teach {
+  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .hub-tag-pill.learn {
+  color: #93c5fd;
+  background: rgba(99, 102, 241, 0.2);
+}
+
+[data-theme="dark"] .hub-modal-badge.gold {
+  color: #fbbf24;
+  background: rgba(245, 179, 1, 0.2);
 }

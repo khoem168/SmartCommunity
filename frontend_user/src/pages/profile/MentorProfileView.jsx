@@ -148,7 +148,12 @@ export default function MentorProfileView({
 
               <h1>{user.fullName}</h1>
               <p className="profile-headline">
-                {user.profession || "Senior Tech Specialist"} {user.company && `at ${user.company}`}
+                {!user.profession || ["beginner", "intermediate", "advanced"].includes(String(user.profession).toLowerCase())
+                  ? isKm
+                    ? "អ្នកណែនាំជំនាញអភិវឌ្ឍន៍ប្រព័ន្ធ Full-Stack & Cloud"
+                    : "Senior Full-Stack & Cloud Specialist"
+                  : user.profession}{" "}
+                {user.company && `at ${user.company}`}
               </p>
 
               <div className="profile-social-links">
@@ -161,7 +166,8 @@ export default function MentorProfileView({
                   <IoTimeOutline /> {user.experienceYears || 5}+ {isKm ? "ឆ្នាំបទពិសោធន៍" : "Years Experience"}
                 </span>
                 <span>
-                  <IoCalendarOutline /> {skillData.availability || "Flexible Schedule"}
+                  <IoCalendarOutline />{" "}
+                  {isKm ? "ម៉ោងណែនាំបត់បែន (Flexible Schedule)" : skillData.availability || "Flexible Schedule"}
                 </span>
               </div>
             </div>

@@ -333,13 +333,14 @@
 }
 
 .session-card {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 14px;
   padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  border-radius: 26px;
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.07);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 12px 32px -10px rgba(15, 23, 42, 0.06);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   transition:
@@ -415,11 +416,51 @@
   background: #dbeafe;
 }
 
+[data-theme="dark"] .session-status {
+  background: rgba(37, 99, 235, 0.2);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.32);
+}
+
+[data-theme="dark"] .session-status.ongoing {
+  background: rgba(22, 163, 74, 0.2);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.32);
+}
+
+[data-theme="dark"] .session-status.completed {
+  background: rgba(71, 85, 105, 0.35);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+[data-theme="dark"] .session-status.cancelled {
+  background: rgba(220, 38, 38, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.32);
+}
+
+[data-theme="dark"] .session-level {
+  background: rgba(147, 51, 234, 0.2);
+  color: #d8b4fe;
+  border: 1px solid rgba(192, 132, 252, 0.32);
+}
+
+[data-theme="dark"] .session-category {
+  background: rgba(37, 99, 235, 0.16);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.28);
+}
+
 .session-card h2 {
   margin: 0;
   color: #0f172a;
   font-size: 1.3rem;
   letter-spacing: -0.025em;
+}
+
+[data-theme="dark"] .session-card h2 {
+  color: #f8fafc;
 }
 
 .session-description {
@@ -431,6 +472,10 @@
   line-height: 1.55;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+[data-theme="dark"] .session-description {
+  color: #94a3b8;
 }
 
 .session-host {
@@ -466,12 +511,22 @@
   color: #64748b;
 }
 
+[data-theme="dark"] .session-host small,
+[data-theme="dark"] .attendance-row small {
+  color: #94a3b8;
+}
+
 .session-meta,
 .detail-session-meta {
   display: grid;
   gap: 8px;
   color: #475569;
   font-size: 0.88rem;
+}
+
+[data-theme="dark"] .session-meta,
+[data-theme="dark"] .detail-session-meta {
+  color: #cbd5e1;
 }
 
 .session-meta span,
@@ -483,7 +538,23 @@
 
 .session-card-actions {
   margin-top: auto;
-  padding-top: 4px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+[data-theme="dark"] .session-card-actions {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.session-card-actions .btn {
+  width: 100%;
+  min-height: 42px;
+  border-radius: 12px !important;
+  justify-content: center;
+  font-weight: 700;
 }
 
 .sessions-empty {
@@ -500,9 +571,19 @@
   text-align: center;
 }
 
+[data-theme="dark"] .sessions-empty {
+  background: rgba(18, 24, 38, 0.82);
+  border-color: rgba(71, 85, 105, 0.7);
+  color: #94a3b8;
+}
+
 .sessions-empty h2 {
   margin: 8px 0 0;
   color: #0f172a;
+}
+
+[data-theme="dark"] .sessions-empty h2 {
+  color: #f8fafc;
 }
 
 .session-detail-backdrop {
@@ -530,6 +611,13 @@
   box-shadow: 0 35px 90px rgba(15, 23, 42, 0.3);
 }
 
+[data-theme="dark"] .session-detail-panel,
+[data-theme="dark"] .create-session-panel {
+  background: #141c2e;
+  border: 1px solid rgba(71, 85, 105, 0.65);
+  color: #f8fafc;
+}
+
 .session-detail-panel h2,
 .create-session-panel h2 {
   margin: 0;
@@ -538,10 +626,19 @@
   letter-spacing: -0.035em;
 }
 
+[data-theme="dark"] .session-detail-panel h2,
+[data-theme="dark"] .create-session-panel h2 {
+  color: #f8fafc;
+}
+
 .session-detail-panel > p {
   margin: 0;
   color: #64748b;
   line-height: 1.65;
+}
+
+[data-theme="dark"] .session-detail-panel > p {
+  color: #94a3b8;
 }
 
 .session-close {
@@ -560,6 +657,12 @@
   cursor: pointer;
 }
 
+[data-theme="dark"] .session-close {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
 .session-close.inline {
   position: static;
 }
@@ -574,6 +677,13 @@
   background: #f8fafc;
 }
 
+[data-theme="dark"] .session-materials,
+[data-theme="dark"] .attendance-board,
+[data-theme="dark"] .session-feedback {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(51, 65, 85, 0.7);
+}
+
 .session-materials h3,
 .attendance-board h3,
 .session-feedback h3 {
@@ -581,11 +691,21 @@
   color: #1e293b;
 }
 
+[data-theme="dark"] .session-materials h3,
+[data-theme="dark"] .attendance-board h3,
+[data-theme="dark"] .session-feedback h3 {
+  color: #f8fafc;
+}
+
 .session-materials a {
   overflow: hidden;
   color: #2563eb;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+[data-theme="dark"] .session-materials a {
+  color: #60a5fa;
 }
 
 .attendance-row {
@@ -599,6 +719,11 @@
   background: #fff;
 }
 
+[data-theme="dark"] .attendance-row {
+  background: #1e293b;
+  border-color: #334155;
+}
+
 .attendance-avatar {
   width: 36px;
   height: 36px;
@@ -610,15 +735,31 @@
   color: #475569;
 }
 
+[data-theme="dark"] .attendance-label {
+  background: rgba(71, 85, 105, 0.4);
+  color: #cbd5e1;
+}
+
 .attendance-label.attended {
   background: #dcfce7;
   color: #15803d;
+}
+
+[data-theme="dark"] .attendance-label.attended {
+  background: rgba(22, 163, 74, 0.2);
+  color: #4ade80;
 }
 
 .attendance-label.cancelled,
 .attendance-label.absent {
   background: #fee2e2;
   color: #b91c1c;
+}
+
+[data-theme="dark"] .attendance-label.cancelled,
+[data-theme="dark"] .attendance-label.absent {
+  background: rgba(220, 38, 38, 0.2);
+  color: #f87171;
 }
 
 .session-feedback label {
@@ -633,6 +774,12 @@
   border-radius: 12px;
   resize: vertical;
   font: inherit;
+}
+
+[data-theme="dark"] .session-feedback textarea {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f8fafc;
 }
 
 .feedback-saved {
@@ -655,6 +802,10 @@
   color: #64748b;
 }
 
+[data-theme="dark"] .create-session-header p {
+  color: #94a3b8;
+}
+
 .create-session-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -666,6 +817,10 @@
   gap: 6px;
   color: #334155;
   font-weight: 700;
+}
+
+[data-theme="dark"] .create-session-grid label {
+  color: #e2e8f0;
 }
 
 .create-session-grid .wide {
@@ -683,6 +838,14 @@
   outline: 0;
   font: inherit;
   font-weight: 400;
+}
+
+[data-theme="dark"] .create-session-grid input,
+[data-theme="dark"] .create-session-grid select,
+[data-theme="dark"] .create-session-grid textarea {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f8fafc;
 }
 
 .create-session-grid textarea {

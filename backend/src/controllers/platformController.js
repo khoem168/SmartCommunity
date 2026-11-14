@@ -603,6 +603,8 @@ const getSkillExchanges = async (req, res, next) => {
         title: `${row.skill_offered || "Skill"} for ${row.skill_requested || "learning"}`,
         offeredBy: row.requester_name,
         offeredByAvatar: row.requester_avatar,
+        requesterName: row.requester_name,
+        requesterAvatar: row.requester_avatar,
         requesterId: row.requester_id,
         providerId: row.provider_id,
         providerName: row.provider_name,

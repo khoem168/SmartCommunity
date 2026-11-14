@@ -14,6 +14,14 @@
   transition: background 0.35s ease, color 0.35s ease;
 }
 
+.auth-shell .skip-link:not(:focus-visible) {
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 /* --------------------------------------------------------------------------
    MINIMAL GLASS TOPBAR
    -------------------------------------------------------------------------- */
@@ -21,12 +29,12 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  min-height: 64px;
+  min-height: 54px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 10px clamp(16px, 3.5vw, 48px);
+  padding: 6px clamp(16px, 3.5vw, 48px);
   background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(28px) saturate(190%);
   -webkit-backdrop-filter: blur(28px) saturate(190%);
@@ -59,26 +67,27 @@
 }
 
 .auth-nav-logo {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(37, 99, 235, 0.2);
   display: block;
 }
 
 .auth-nav-brand-text {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: 1.08rem;
+  font-weight: 800;
   letter-spacing: -0.025em;
   color: var(--text);
 }
 
-.auth-nav-brand-text strong {
-  font-weight: 800;
+.auth-nav-brand-text .logo-accent {
   color: #2563eb;
-  margin-right: 2px;
 }
 
-[data-theme="dark"] .auth-nav-brand-text strong {
+[data-theme="dark"] .auth-nav-brand-text .logo-accent {
   color: #60a5fa;
 }
 
@@ -211,33 +220,69 @@
 }
 
 .auth-icon-pill {
-  width: 38px;
-  height: 38px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.85);
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.92);
   color: var(--text);
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.95rem;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .auth-icon-pill:hover {
-  transform: scale(1.06);
+  transform: translateY(-1px);
   border-color: rgba(37, 99, 235, 0.3);
+  color: #2563eb;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .auth-icon-pill:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
 .auth-lang-pill {
-  font-size: 0.76rem;
+  width: auto;
+  height: 36px;
+  padding: 0 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  gap: 6px;
+}
+
+.auth-lang-pill .lang-opt {
+  color: #64748b;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+
+.auth-lang-pill .lang-opt.active {
+  color: #2563eb;
   font-weight: 800;
-  letter-spacing: 0.02em;
+}
+
+.auth-lang-pill .lang-sep {
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+[data-theme="dark"] .auth-lang-pill .lang-opt {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .auth-lang-pill .lang-opt.active {
+  color: #60a5fa;
+}
+
+.auth-lang-globe {
+  color: #2563eb;
+  flex-shrink: 0;
 }
 
 [data-theme="dark"] .auth-icon-pill {
@@ -261,7 +306,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: clamp(16px, 3vw, 36px) 16px clamp(24px, 4vw, 48px);
+  padding: 8px 16px 10px;
   box-sizing: border-box;
 }
 

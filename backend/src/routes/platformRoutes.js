@@ -94,6 +94,7 @@ const {
   deleteReadNotifications,
   getNotificationPreferences,
   getNotifications,
+  getUnreadNotificationCount,
   markAllNotificationsRead,
   markNotificationRead,
   registerPushToken,
@@ -316,6 +317,11 @@ router.patch(
   requireAuth,
   requireRole("recruiter", "admin"),
   updateApplicationStatus,
+);
+router.get(
+  "/notifications/unread-count",
+  requireAuth,
+  getUnreadNotificationCount,
 );
 router.get("/notifications", requireAuth, getNotifications);
 router.patch(

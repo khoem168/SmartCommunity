@@ -1,12 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FiSearch, FiBell, FiSun, FiMoon, FiMenu } from "react-icons/fi";
-import logo from "../../assets/logo/logo1.png";
+import {
+  FiSearch,
+  FiBell,
+  FiSun,
+  FiMoon,
+  FiMenu,
+  FiGlobe,
+} from "react-icons/fi";
+import logo from "../../assets/logo/logo-mark.png";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { useTheme } from "../../context/ThemeContext";
 import { NavProfile } from "./NavProfile";
-import { fetchNotifications } from "../../services/notificationService";
+import {
+  fetchNotifications,
+  fetchUnreadNotificationCount,
+} from "../../services/notificationService";
 import { getSocket } from "../../services/realtimeService";
 import { getHybridNav } from "./navPillars";
 import MoreDropdown from "./MoreDropdown";
@@ -27,35 +37,70 @@ export default function Navbar() {
 
   // Notification badge polling and realtime socket
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setUnreadNotifications(0);
+      return;
+    }
     let active = true;
-    fetchNotifications()
-      .then((list) => {
-        if (!active) return;
-        const unreadCount = (list || []).filter((n) => !n.isRead).length;
-        setUnreadNotifications(unreadCount);
-      })
-      .catch(() => {});
+
+    const refreshBadge = (forcedCount) => {
+      if (typeof forcedCount === "number") {
+        setUnreadNotifications(Math.max(0, Math.floor(forcedCount)));
+        return;
+      }
+      fetchUnreadNotificationCount()
+        .then((count) => {
+          if (!active) return;
+          setUnreadNotifications(Math.max(0, Number(count) || 0));
+        })
+        .catch(() => {});
+    };
+
+    refreshBadge();
+
+    const handleUpdate = (e) => {
+      if (e?.detail && typeof e.detail.unread === "number") {
+        refreshBadge(e.detail.unread);
+      } else {
+        refreshBadge();
+      }
+    };
+    const handleFocus = () => refreshBadge();
+
+    window.addEventListener("nav-badges:update", handleUpdate);
+    window.addEventListener("focus", handleFocus);
+
     return () => {
       active = false;
+      window.removeEventListener("nav-badges:update", handleUpdate);
+      window.removeEventListener("focus", handleFocus);
     };
-  }, [user]);
+  }, [user, location.pathname]);
 
   useEffect(() => {
     if (!user?.id) return;
     const socket = getSocket();
     const handleNotification = () => {
-      fetchNotifications()
-        .then((list) => {
-          const unreadCount = (list || []).filter((n) => !n.isRead).length;
-          setUnreadNotifications(unreadCount);
+      fetchUnreadNotificationCount()
+        .then((count) => {
+          setUnreadNotifications(count);
         })
         .catch(() => {});
     };
 
+    const handleCount = (data) => {
+      if (typeof data?.unread === "number") {
+        setUnreadNotifications(Math.max(0, data.unread));
+      } else {
+        handleNotification();
+      }
+    };
+
     socket.on("notification:new", handleNotification);
+    socket.on("notification:count", handleCount);
     return () => {
       socket.off("notification:new", handleNotification);
+      socket.off("notification:count", handleCount);
     };
   }, [user]);
 
@@ -105,7 +150,12 @@ export default function Navbar() {
             const isActive =
               link.path === "/"
                 ? location.pathname === "/"
-                : location.pathname.startsWith(link.path);
+                : link.path === "/skill-exchange"
+                  ? ["/skill-exchange", "/exchange", "/discover", "/community", "/skill-requests"].some((p) =>
+                      location.pathname.startsWith(p)
+                    )
+                  : location.pathname.startsWith(link.path);
+            const LinkIcon = link.icon;
 
             return (
               <Link
@@ -113,7 +163,8 @@ export default function Navbar() {
                 to={link.path}
                 className={`nav-item-link ${isActive ? "on" : ""}`}
               >
-                {language === "km" ? link.labelKm : link.labelEn}
+                {LinkIcon && <LinkIcon className="nav-item-icon" aria-hidden="true" />}
+                <span>{language === "km" ? link.labelKm : link.labelEn}</span>
               </Link>
             );
           })}
@@ -122,94 +173,90 @@ export default function Navbar() {
           {nav.moreItems && nav.moreItems.length > 0 && (
             <MoreDropdown items={nav.moreItems} language={language} />
           )}
-
-          {/* Direct 1-Click Workspace Action (Shown when logged in) */}
-          {user && (
-            <Link
-              to={nav.workspace.path}
-              className={`nav-workspace-pill ${
-                location.pathname.startsWith(nav.workspace.path) ? "active" : ""
-              }`}
-              title={language === "km" ? nav.workspace.labelKm : nav.workspace.labelEn}
-            >
-              <span className="workspace-pill-pulse" aria-hidden="true" />
-              <span className="workspace-pill-label">
-                {language === "km" ? nav.workspace.labelKm : nav.workspace.labelEn}
-              </span>
-            </Link>
-          )}
         </nav>
 
-        {/* Global Utility Actions */}
+        {/* Global Utility Actions & Account Zone */}
         <div className="nav-glass-actions" id="navAct">
-          {/* Spotlight Quick Search Button */}
-          <button
-            type="button"
-            className="icon-btn nav-search-trigger"
-            onClick={handleOpenSearch}
-            aria-label={language === "km" ? "ស្វែងរក (⌘K)" : "Search (⌘K)"}
-            title={language === "km" ? "ស្វែងរក (⌘K)" : "Search (⌘K)"}
-          >
-            <FiSearch className="nav-glyph" aria-hidden="true" />
-            <span className="nav-search-shortcut">⌘K</span>
-          </button>
-
-          {/* Notifications */}
-          {user && (
-            <Link
-              to="/notifications"
-              className="icon-btn"
-              aria-label={t("nav.notifications") || "Notifications"}
-              title="Notifications"
+          <div className="nav-utility-cluster">
+            {/* Spotlight Quick Search Pill Button */}
+            <button
+              type="button"
+              className="icon-btn nav-action-btn nav-search-pill-btn"
+              onClick={handleOpenSearch}
+              aria-label={language === "km" ? "ស្វែងរក (⌘K)" : "Search (⌘K)"}
+              title={language === "km" ? "ស្វែងរក (⌘K)" : "Search (⌘K)"}
             >
-              <FiBell className="nav-glyph" aria-hidden="true" />
-              {unreadNotifications > 0 && (
-                <span className="badge-dot">
-                  {unreadNotifications > 99 ? "99+" : unreadNotifications}
-                </span>
-              )}
-            </Link>
-          )}
+              <FiSearch className="nav-glyph" aria-hidden="true" />
+              <span className="nav-search-pill-label">
+                {language === "km" ? "ស្វែងរក..." : "Search..."}
+              </span>
+            </button>
 
-          {/* Theme Mode Toggle */}
-          <button
-            type="button"
-            className="icon-btn"
-            onClick={toggleTheme}
-            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            title={isDark ? "Light mode" : "Dark mode"}
-          >
-            <span className="nav-glyph-wrap" aria-hidden="true">
-              {isDark ? <FiSun /> : <FiMoon />}
-            </span>
-          </button>
+            {/* Notifications */}
+            {user && (
+              <Link
+                to="/notifications"
+                className="icon-btn nav-action-btn"
+                aria-label={t("nav.notifications") || "Notifications"}
+                title={language === "km" ? "ការជូនដំណឹង" : "Notifications"}
+              >
+                <FiBell className="nav-glyph" aria-hidden="true" />
+                {unreadNotifications > 0 && (
+                  <span className="badge-dot">
+                    {unreadNotifications > 99 ? "99+" : unreadNotifications}
+                  </span>
+                )}
+              </Link>
+            )}
 
-          {/* Bilingual Language Switcher */}
-          <button
-            type="button"
-            className="icon-btn lang-toggle-btn"
-            onClick={toggleLanguage}
-            aria-label="Toggle language"
-            title="Toggle language"
-          >
-            {language === "km" ? "EN" : "ខ្មែរ"}
-          </button>
+            {/* Theme Mode Toggle */}
+            <button
+              type="button"
+              className="icon-btn nav-action-btn theme-toggle-btn"
+              onClick={toggleTheme}
+              aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              title={isDark ? "Light mode" : "Dark mode"}
+            >
+              <span className="nav-glyph-wrap" aria-hidden="true">
+                {isDark ? <FiSun /> : <FiMoon />}
+              </span>
+            </button>
 
-          {/* Compact User Profile Dropdown or Sign In */}
+            {/* Bilingual Language Switcher */}
+            <button
+              type="button"
+              className="icon-btn nav-action-btn lang-toggle-btn"
+              onClick={toggleLanguage}
+              aria-label="Toggle language"
+              title={language === "km" ? "Switch to English" : "ប្តូរទៅភាសាខ្មែរ"}
+            >
+              <FiGlobe className="lang-globe-icon" aria-hidden="true" />
+              <span>{language === "km" ? "EN" : "ខ្មែរ"}</span>
+            </button>
+          </div>
+
+          <span className="nav-actions-divider" aria-hidden="true" />
+
+          {/* Compact User Profile Dropdown or Guest Auth Pills */}
           {user ? (
             <div className="nav-acct-wrap">
               <NavProfile user={user} onLogout={logout} />
             </div>
           ) : (
-            <Link to="/login" className="btn btn-primary btn-sm">
-              {t("nav.signIn") || (language === "km" ? "ចូលគណនី" : "Sign in")}
-            </Link>
+            <div className="nav-guest-auth-group">
+              <Link to="/login" className="nav-login-pill">
+                {language === "km" ? "ចូលគណនី" : "Sign in"}
+              </Link>
+              <Link to="/register" className="nav-signin-cta">
+                {language === "km" ? "ចុះឈ្មោះ" : "Get Started"}
+              </Link>
+            </div>
           )}
 
           {/* Mobile Menu Hamburger Toggle */}
           <button
             type="button"
-            className="icon-btn nav-mobile-toggle-btn"
+            className="icon-btn nav-action-btn nav-mobile-toggle-btn"
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMobileMenuOpen}
@@ -231,6 +278,7 @@ export default function Navbar() {
         onToggleLanguage={toggleLanguage}
         isDark={isDark}
         onToggleTheme={toggleTheme}
+        unreadNotifications={unreadNotifications}
       />
     </>
   );

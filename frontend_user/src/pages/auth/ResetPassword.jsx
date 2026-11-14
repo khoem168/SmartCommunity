@@ -36,8 +36,11 @@ const ResetPassword = () => {
     setError("");
 
     if (!token) return setError(t("auth.missingToken"));
-    if (password.length < 6) {
-      return setError(isKm ? "លេខសម្ងាត់ត្រូវមានយ៉ាងហោចណាស់ ៦ តួអក្សរ" : "Password must be at least 6 characters");
+    if (password.length < 8) {
+      return setError(t("auth.passwordMinLength"));
+    }
+    if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/\d/.test(password)) {
+      return setError(t("auth.passwordComplexity"));
     }
     if (password !== confirmPassword) {
       return setError(t("auth.passwordsMismatch"));
@@ -57,17 +60,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <section className="auth-card ios-glass-card">
-      {/* Brand Badge */}
-      <div className="auth-brand-badge">
-        <div className="auth-logo-squircle recovery-squircle">
-          <FiShield className="recovery-key-icon" />
-        </div>
-        <span className="auth-brand-eyebrow">
-          <span>{isKm ? "សុវត្ថិភាពគណនី" : "Account Security"}</span>
-        </span>
-      </div>
-
+    <section className="auth-card auth-card-unified auth-card-login ios-glass-card">
       <div className="auth-header">
         <h1>{t("auth.resetTitle")}</h1>
         <p>{t("auth.resetDescription")}</p>

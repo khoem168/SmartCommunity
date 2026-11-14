@@ -61,9 +61,9 @@
 
 .mentor-summary h1 {
   margin: 6px 0 10px;
-  font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+  font-size: clamp(1.9rem, 3.2vw, 2.75rem);
   font-weight: 800;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
   color: var(--text, #0f172a);
 }
 

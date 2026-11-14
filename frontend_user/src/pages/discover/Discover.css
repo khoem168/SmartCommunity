@@ -834,6 +834,26 @@
   flex: 1 1 128px;
   justify-content: center;
 }
+
+.discover-actions > .btn.outline {
+  border: 1.5px solid #cbd5e1;
+  background: #f8fafc;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.discover-actions > .btn.outline:hover:not(:disabled) {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+[data-theme="dark"] .discover-actions > .btn.outline {
+  border-color: rgba(148, 163, 184, 0.35);
+  background: rgba(30, 41, 59, 0.75);
+  color: #f8fafc;
+}
+
 .discover-actions > button {
   cursor: pointer;
 }
@@ -1182,4 +1202,64 @@ html[lang="km"] .discover-page .discover-hero h1 {
   .discover-page .discover-tools.section {
     padding-block: 24px 12px;
   }
+}
+
+/* Dark Mode Refinements */
+[data-theme="dark"] .discover-card,
+[data-theme="dark"] .request-card,
+[data-theme="dark"] .discover-empty-state,
+[data-theme="dark"] .discover-profile-card,
+[data-theme="dark"] .discover-profile-details,
+[data-theme="dark"] .request-modal {
+  background: rgba(18, 24, 38, 0.88);
+  border-color: rgba(51, 65, 85, 0.75);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .discover-swap,
+[data-theme="dark"] .discover-profile-swap > div,
+[data-theme="dark"] .request-learning-stats article,
+[data-theme="dark"] .request-form,
+[data-theme="dark"] .skill-tag-editor {
+  background: rgba(15, 23, 42, 0.65);
+  border-color: rgba(51, 65, 85, 0.7);
+}
+
+[data-theme="dark"] .skill-pill.teach,
+[data-theme="dark"] .skill-pill.learn,
+[data-theme="dark"] .discover-card-header strong,
+[data-theme="dark"] .discover-profile-card strong {
+  background: rgba(59, 130, 246, 0.18);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .skill-pill.more {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .profile-preview {
+  border-top-color: #334155;
+}
+
+[data-theme="dark"] .profile-preview span,
+[data-theme="dark"] .request-form-header h4,
+[data-theme="dark"] .request-form label {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .request-form select,
+[data-theme="dark"] .request-form textarea,
+[data-theme="dark"] .request-form-header button {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .request-note {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(251, 191, 36, 0.3);
+  color: #fde68a;
 }

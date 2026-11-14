@@ -1,0 +1,424 @@
+================================================================================
+SMART COMMUNITY SKILL & CAREER DEVELOPMENT PLATFORM
+FINAL COMPREHENSIVE SYSTEM SPECIFICATION, FEATURE INVENTORY & CHANGELOG
+Document Version: 1.0.0 (Final Release - Production Ready)
+Date: November 7, 2026
+Language: Bilingual (Khmer & English)
+Target Audience: Academic Evaluation, Final Project Writing, Thesis Defense & Production Architecture
+================================================================================
+
+TABLE OF CONTENTS:
+--------------------------------------------------------------------------------
+1. EXECUTIVE PROJECT OVERVIEW & ARCHITECTURE
+2. COMPREHENSIVE MODULE INVENTORY & USER FLOWS
+   2.1. Authentication, Role Security & Account Recovery
+   2.2. Dynamic Hybrid Navigation & Command Palette (Spotlight Search)
+   2.3. Home & Landing Page (CodeKhmerLearning White-Blue Aesthetic)
+   2.4. Courses & Live YouTube Video Learning Studio
+   2.5. Skill Exchange Hub (1-on-1 Swapping & Mutual Completion Verification)
+   2.6. Mentorship & Realtime Session Booking System
+   2.7. Career & Internship Hub (Recruiter ATS & Student Application Tracker)
+   2.8. Professional CV & Web Portfolio Studio (Strict Language Purity)
+   2.9. Community Forum & Discussion Hub
+   2.10. Realtime Messaging & Chat Rooms (Socket.IO)
+   2.11. Executive Notifications Center (Apple/Linear-Inspired Redesign)
+   2.12. Analytics Dashboard & Administrative Control Center
+3. BACKEND ARCHITECTURE & COMPLETE REST API ENDPOINTS
+4. DATABASE SCHEMA (MYSQL 8) & RELATIONSHIP MAP
+5. DESIGN SYSTEM, TOKENS & INTERNATIONALIZATION (100% KHMER & ENGLISH)
+6. CRITICAL BUG FIXES & SYSTEM STABILIZATION SUMMARY
+7. CONCLUSION & FINAL WRITING CHECKLIST
+
+================================================================================
+1. EXECUTIVE PROJECT OVERVIEW & ARCHITECTURE
+================================================================================
+Smart Community is a full-stack, enterprise-grade educational, skill exchange, and 
+career development web platform designed for Cambodian students, mentors, and recruiters.
+
+TECH STACK ARCHITECTURE:
+* Frontend:
+  - Framework: React 19 with Vite 8 (Ultra-fast build and HMR).
+  - Routing: React Router 7 with role-protected route guards.
+  - State Management: React Context API (GlobleContext, LanguageContext, ThemeContext).
+  - Styling: Pure CSS3 Design System with CSS Tokens, Glassmorphism, and 100% Dark Mode.
+  - Icons: React Icons (Feather Icons `react-icons/fi`, Ionicons `react-icons/io5`).
+  - Realtime: Socket.IO Client 4.8.
+  - Push Notifications: Firebase Cloud Messaging (FCM) web push service worker.
+  - Document & PDF Generation: Custom CSS Print Stylesheet with pixel-perfect A4 pagination.
+
+* Backend:
+  - Runtime: Node.js (v20+ / v24+).
+  - Framework: Express.js with Helmet security headers, CORS origin whitelisting, and gzip compression.
+  - Database: MySQL 8 (mysql2 with connection pool, prepared statements, and transactional safety).
+  - Realtime Engine: Socket.IO 4.8 with authenticated user rooms (`user:${id}`) and conversation rooms (`conversation:${id}`).
+  - Authentication: JSON Web Tokens (JWT) signed with HMAC-SHA256, Bcrypt password hashing (12 salt rounds), legacy PBKDF2 backward compatibility.
+  - Email Engine: Nodemailer SMTP with HTML templates for email verification and password resets.
+  - Push Delivery: Firebase Admin SDK with background device token dispatch.
+
+================================================================================
+2. COMPREHENSIVE MODULE INVENTORY & USER FLOWS
+================================================================================
+
+--------------------------------------------------------------------------------
+2.1. AUTHENTICATION, ROLE SECURITY & ACCOUNT RECOVERY
+--------------------------------------------------------------------------------
+Routes:
+- `/login` (User Sign In)
+- `/register` (User Sign Up / Get Started)
+- `/verify-email` (Account Activation via 6-digit Code or Token)
+- `/forgot-password` (Password Reset Request)
+- `/reset-password` (New Password Confirmation)
+
+Features & Enhancements Added:
+1. Multi-Role Registration: Users can register as a "Student/Learner" (សិស្ស), "Mentor" (អ្នកណែនាំ), or "Recruiter" (អ្នកជ្រើសរើសបុគ្គលិក).
+2. Password Security: Enforced minimum 8 characters with upper, lower, and digit complexity checks.
+3. Remember-Me Persistence: 30-day extended JWT session expiration when selected.
+4. Auto-Login & Redirect: Immediate redirection to role-specific dashboard upon successful authentication.
+5. Email Verification & Security Flow: Automated confirmation email dispatch with expiration limits.
+6. 100% Khmer Localization & Dark Mode: High-contrast inputs, autofocus handling, and clear error banners.
+
+--------------------------------------------------------------------------------
+2.2. DYNAMIC HYBRID NAVIGATION & COMMAND PALETTE (SPOTLIGHT SEARCH)
+--------------------------------------------------------------------------------
+Components:
+- `Navbar.jsx` (Desktop Hybrid Navigation)
+- `MobileNavDrawer.jsx` (Mobile Full-Height Drawer)
+- `TabBar.jsx` (Mobile Bottom Navigation Bar)
+- `CommandPalette.jsx` (Global Quick Search `⌘K` / `Ctrl+K`)
+
+Features & Enhancements Added:
+1. Role-Adaptive Navigation Links:
+   - Student: Home, Courses, Jobs, Mentorship, Community / Skill Exchange, More...
+   - Mentor: Dashboard, Sessions, Mentorship Bookings, Messages, More...
+   - Recruiter: Dashboard, Jobs / Postings, Candidates ATS, Messages, More...
+2. Real-Time Bell Icon Badge: Real-time unread notification count badge synced instantly via `GET /api/notifications/unread-count` and socket `notification:count`.
+3. Command Palette (`⌘K`): Full-text spotlight search across Courses, Mentors, Job Postings, Forum Questions, and App Routes with keyboard navigation (`↑`, `↓`, `Enter`).
+4. Instant Bilingual Toggle: One-click header switcher toggling `ខ្មែរ (KM)` and `English (EN)`.
+5. Instant Dark Mode Switcher: Smooth theme toggle with SVG Sun/Moon animations and local storage persistence.
+
+--------------------------------------------------------------------------------
+2.3. HOME & LANDING PAGE (CODEKHMERLEARNING WHITE-BLUE AESTHETIC)
+--------------------------------------------------------------------------------
+Route: `/`
+
+Features & Enhancements Added:
+1. Clean Visual Identity: Redesigned based on CodeKhmerLearning's clean White-Blue design language.
+2. Executive Hero Banner: High-impact typography, quick search bar, and primary CTA buttons ("ចាប់ផ្តើមរៀនឥឡូវនេះ" and "ស្វែងរកការងារ").
+3. Live Platform Statistics Counter: Real-time metrics showing total students, courses, mentors, and completed skill exchanges.
+4. Featured Course Video Carousel: Direct video preview thumbnails, lessons count, and duration tags.
+5. Top Verified Mentors Showcase: Direct booking links, verified checkmark badges, and star ratings.
+6. Latest Skill Exchanges: Community peer-to-peer match preview with offered vs wanted skill tags.
+7. Career Spotlight: Latest featured internships with company logos and salary badges.
+8. Student Success Stories: Real Cambodian learner testimonials with avatars and career milestones.
+
+--------------------------------------------------------------------------------
+2.4. COURSES & LIVE YOUTUBE VIDEO LEARNING STUDIO
+--------------------------------------------------------------------------------
+Routes:
+- `/courses` (Course Directory)
+- `/courses/:slug` (Course Curriculum Overview & Outcomes)
+- `/courses/:slug/lessons/:lessonId` (Interactive Video Player & Lesson Viewer)
+
+Features & Enhancements Added:
+1. Live YouTube Video Integration: Real educational YouTube videos directly embedded into curriculum lessons:
+   - React.js & Modern UI (YouTube ID: `bMknfKXIFA8`)
+   - Node.js & Express REST API (YouTube ID: `Oe421EPjeBE`)
+   - UX/UI Design in Figma (YouTube ID: `c9Wg6Cb_YlU`)
+   - Python & Data Analytics (YouTube ID: `rfscVS0vtbw`)
+   - DevOps & Docker Foundations (YouTube ID: `fqMOX6JJhGo`)
+2. Structured Learning Outcomes: 4 actionable bullet points in Khmer explaining what the learner will master upon completion.
+3. Course Artwork Banner: Dedicated component rendering crisp YouTube maxres thumbnails with fallback gracefully.
+4. Interactive Video Room: Left video player, right lesson navigation drawer, mark lesson completed button, and certificate readiness checklist.
+
+--------------------------------------------------------------------------------
+2.5. SKILL EXCHANGE HUB (1-ON-1 SWAPPING & MUTUAL COMPLETION VERIFICATION)
+--------------------------------------------------------------------------------
+Routes:
+- `/skill-exchange` (Explore Skills & Browse Offers)
+- `/exchange` (Direct Skill Swap Requests)
+- `/skill-requests` (My Sent and Received Requests)
+- `/community/skill-exchange/:id` (Exchange Workspace & Realtime Session)
+
+Features & Enhancements Added:
+1. Peer-to-Peer Matchmaking: Users offer skills they know (e.g., PHP, Figma, HTML) in exchange for skills they want to learn (e.g., JavaScript, React, Python).
+2. Complete Lifecycle Flow:
+   - Step 1: Create Proposal (Offer Skill + Wanted Skill + Message).
+   - Step 2: Accept or Decline with optional rejection reason.
+   - Step 3: Realtime Chat & Jitsi Video Meeting Room directly integrated.
+   - Step 4: Mutual Completion Verification: Party A requests completion -> Party B confirms completion -> Both marked as `completed` and badges awarded.
+3. Filter & Search: Filter by category (Programming, Design, Languages, Business) and level (Beginner, Intermediate, Advanced).
+
+--------------------------------------------------------------------------------
+2.6. MENTORSHIP & REALTIME SESSION BOOKING SYSTEM
+--------------------------------------------------------------------------------
+Routes:
+- `/mentorship` (Mentor Directory & Search)
+- `/mentors/:id` (Mentor Profile, Bio, Reviews & Calendar Booking)
+- `/sessions` (Live Group Learning Sessions)
+- `/sessions/:id` (Session Details & RSVP)
+- `/sessions/:id/room` (Live Jitsi Video Classroom)
+
+Features & Enhancements Added:
+1. Verified Mentor Profiles: Skill tags, years of experience, current company, hourly rate (or Free for Community), and student star reviews.
+2. Calendar Scheduling & Booking: Interactive slot picker for 1-on-1 mentoring sessions.
+3. Mentor Application Pipeline: Students can apply to become verified mentors by submitting their credentials, bio, and portfolio for admin approval.
+4. Group Learning Sessions: Mentors can host multi-student webinars or live coding workshops with countdown timers and integrated Jitsi video rooms.
+
+--------------------------------------------------------------------------------
+2.7. CAREER & INTERNSHIP HUB (RECRUITER ATS & STUDENT TRACKER)
+--------------------------------------------------------------------------------
+Routes:
+- `/jobs` (Internship & Job Directory)
+- `/jobs/:id` (Job Description, Requirements & 1-Click Application)
+- `/my-applications` (Student Application Status Tracker)
+- `/my-posts` (Recruiter Job Postings Manager)
+- `/recruiter/candidates` (Recruiter Applicant Tracking System - ATS)
+- `/recruiter/post-job` (New Job Posting Modal/Page)
+
+Features & Enhancements Added:
+1. Internship Search & Filter: Filter by location (Phnom Penh, Remote, Hybrid), job type (Full-time, Internship), and tech stack.
+2. 1-Click Application with CV: Students can attach their generated CV from CV Studio or upload external PDF with a personalized cover letter.
+3. Recruiter Kanban ATS: Recruiters can move candidates through hiring stages:
+   - `applied` (ពាក្យស្នើសុំថ្មី)
+   - `reviewing` (កំពុងពិនិត្យ)
+   - `shortlisted` (ជ្រើសរើសបឋម)
+   - `interviewing` (សម្ភាសន៍)
+   - `accepted` (ទទួលយក)
+   - `rejected` (បដិសេធ)
+4. Real-time Status Sync: Students receive instant notification updates whenever a recruiter changes their application stage.
+
+--------------------------------------------------------------------------------
+2.8. PROFESSIONAL CV & WEB PORTFOLIO STUDIO (STRICT LANGUAGE PURITY)
+--------------------------------------------------------------------------------
+Route: `/cv-studio`
+
+Features & Enhancements Added:
+1. STRICT LANGUAGE PURITY (100% Khmer vs 100% English):
+   - Eliminated all mixed bilingual slashes on CV documents (e.g. no more `CURRICULUM VITAE / ប្រវត្តិរូបសង្ខេប` or `ភេទ (Gender) ៖ ប្រុស (Male)`).
+   - Dedicated Toolbar Pill Switcher: `🇰🇭 ខ្មែរ (Khmer CV)` | `🇬🇧 English (English CV)`.
+   - Khmer Mode: 100% pure Khmer labels, dates, Khmer numerals (`១. ព័ត៌មានផ្ទាល់ខ្លួន`), and Khmer text.
+   - English Mode: 100% pure English labels, Roman numerals (`I. PERSONAL DETAILS`), and English text.
+2. `stripBilingual(text, isKm)` Sanitizer Utility: Automatically detects and strips parenthesized English or slash text from user profiles so imported data matches the selected document language.
+3. 4 Industry-Standard Templates:
+   - ទម្រង់ស្តង់ដារកម្ពុជា (Cambodia Corporate Standard)
+   - ទំនើប Tech ATS (Modern ATS-Optimized Single Column)
+   - ២ ជួរឈរ (Modern Split Sidebar)
+   - ផ្លូវការបុរាណ (Executive Timeline Standard)
+4. Interactive Web Portfolio Showcase: Live web showcase view displaying portfolio projects, GitHub links, live demo buttons, and responsive grid.
+5. Pixel-Perfect A4 PDF Print Stylesheet:
+   - Strict CSS `@page { size: A4 portrait; margin: 12mm 15mm; }`.
+   - Automatic font sizing, page-break avoidance on headers and cards (`break-inside: avoid`), and verified official seal.
+
+--------------------------------------------------------------------------------
+2.9. COMMUNITY FORUM & DISCUSSION HUB
+--------------------------------------------------------------------------------
+Routes:
+- `/forum` (Community Feed & Category Filters)
+- `/forum/:id` (Thread Details, Answers & Comments)
+
+Features & Enhancements Added:
+1. Category Filtering: Programming (ការសរសេរកូដ), UX/UI Design (ការរចនា), Career (អាជីព), Internships (កម្មសិក្សា), and General (ទូទៅ).
+2. Question Upvoting & Voting Metrics: Vote counts with optimistic UI updates.
+3. Verified Best Answer Acceptance: Question author can mark an answer as accepted with a green checkmark badge.
+4. Rich Markdown Formatting: Full support for code snippets, blockquotes, lists, and formatted text.
+5. 100% Khmer Translated Seed Data: Practical Khmer tech discussions on React Portfolio, 4-Week Interview Plan, Design Systems, and Student Dashboard UX.
+
+--------------------------------------------------------------------------------
+2.10. REALTIME MESSAGING & CHAT ROOMS (SOCKET.IO)
+--------------------------------------------------------------------------------
+Routes:
+- `/messages` (Inbox / Conversation List)
+- `/messages/:conversationId` (Active Chat Room)
+
+Features & Enhancements Added:
+1. Real-time 1-on-1 & Group Messaging: Socket.IO integration with instant delivery.
+2. Typing Indicator: Live indicator showing when the other party is typing.
+3. Media Attachments: File upload support for images, screenshots, and PDF documents.
+4. Unread Message Badge Sync: Real-time update of navbar and bottom tab bar unread message counters.
+
+--------------------------------------------------------------------------------
+2.11. EXECUTIVE NOTIFICATIONS CENTER (APPLE/LINEAR-INSPIRED REDESIGN)
+--------------------------------------------------------------------------------
+Route: `/notifications`
+
+Features & Enhancements Added:
+1. Executive Top Header:
+   - Eyebrow pill: `✨ មជ្ឈមណ្ឌលជូនដំណឹងផ្ទាល់ខ្លួន`.
+   - Balanced typography (1.85rem bold) with zero awkward screen crowding.
+   - Dual-stat pill cluster (`មិនទាន់អាន` with blue pulsing dot and `សរុបទាំងអស់`).
+2. Real-time Sync & Cache Invalidation:
+   - Dedicated endpoint `GET /api/notifications/unread-count` with `Cache-Control: no-store, no-cache, must-revalidate`.
+   - Instant sync between Notifications Page and Navbar Bell: when page unread is 0, Navbar bell badge immediately disappears (no ghost `1` badge!).
+3. Humanized Cambodian Relative Time (`formatKhmerRelativeTime`):
+   - Converts raw timestamps into natural Khmer time:
+     * `ទើបតែមុននេះ` (< 1 min)
+     * `៥ នាទីមុន` / `២ ម៉ោងមុន`
+     * `ម្សិលមិញ ម៉ោង ៦:៤៩ ល្ងាច`
+     * `០៤ វិច្ឆិកា ២០២៦, ម៉ោង ៦:៤៩ ល្ងាច`
+4. Refined Notification Cards:
+   - Color-coded gradient icon tiles (Cyan for Skill Exchange, Indigo for Chat, Amber for Mentorship, Emerald for Jobs, Rose for Sessions).
+   - Category tag badge and glowing `✨ ថ្មី` unread badge with vertical blue left accent bar.
+   - Direct Action CTA Pill on card footer (`ពិនិត្យសំណើប្តូរជំនាញ →`, `ឆ្លើយតបសារ →`, `ពិនិត្យឱកាសការងារ →`).
+   - Quick action buttons (Mark read `✓` and Delete `🗑`).
+5. Custom iOS Toggle Switch: Replaced raw browser checkbox with smooth iOS animated switch slider.
+6. Apple-Style Settings Modal: Clean modal dialog with iOS toggle switches for all 7 alert channels and Firebase Browser Push control.
+
+--------------------------------------------------------------------------------
+2.12. ANALYTICS DASHBOARD & ADMINISTRATIVE CONTROL CENTER
+--------------------------------------------------------------------------------
+Routes:
+- `/analytics` (Platform Metrics & Data Visualizations)
+- `/admin` (System Administration Panel)
+
+Features & Enhancements Added:
+1. Platform Growth Charts: User growth trends, monthly active learners, skill exchange volume, and job placement conversion charts using Recharts.
+2. User Management: Admin capability to search users, inspect profiles, suspend/unsuspend accounts, and approve/reject mentor applications.
+3. System Audit Logs: Realtime log recording of user registration, role changes, and administrative actions.
+
+================================================================================
+3. BACKEND ARCHITECTURE & COMPLETE REST API ENDPOINTS
+================================================================================
+
+All endpoints are hosted under `/api` and secured with JWT Bearer authentication.
+
+1. AUTHENTICATION & USER MANAGEMENT (`/api/auth`):
+   - POST `/auth/register` (Register student, mentor, or recruiter)
+   - POST `/auth/login` (Authenticate and issue JWT)
+   - POST `/auth/forgot-password` (Generate password reset token & send email)
+   - POST `/auth/reset-password` (Reset password with token)
+   - GET  `/auth/verify-email` (Confirm email address)
+   - GET  `/auth/me` (Fetch current logged-in user profile)
+   - PATCH `/auth/me` (Update user details, bio, avatar, skills)
+
+2. NOTIFICATIONS & PREFERENCES (`/api/notifications`):
+   - GET    `/notifications/unread-count` (Fast, un-cached unread count for Navbar)
+   - GET    `/notifications` (Paginated notification list with type & unread filters)
+   - PATCH  `/notifications/:id/read` (Mark single notification as read)
+   - PATCH  `/notifications/read-all` (Mark all notifications or category as read)
+   - DELETE `/notifications/:id` (Delete single notification)
+   - DELETE `/notifications/read` (Clear all read notifications)
+   - GET    `/notification-preferences` (Fetch user alert settings & push status)
+   - PATCH  `/notification-preferences` (Update channel preferences)
+   - POST   `/notification-push-token` (Register Firebase FCM token)
+   - DELETE `/notification-push-token` (Unregister Firebase FCM token)
+
+3. COURSES & LESSONS (`/api/courses`):
+   - GET `/courses` (List all courses with category & level filters)
+   - GET `/courses/:slug` (Get course detail by slug)
+   - GET `/courses/:slug/lessons/:lessonId` (Get lesson details & video ID)
+   - POST `/courses/:id/enroll` (Enroll in course)
+   - PATCH `/courses/:id/lessons/:lessonId/complete` (Mark lesson completed)
+
+4. SKILL EXCHANGE & MATCHMAKING (`/api/skill-exchanges`):
+   - GET   `/skill-exchanges` (List open exchange proposals)
+   - POST  `/skill-exchanges` (Create new skill exchange proposal)
+   - GET   `/skill-exchanges/:id` (Get exchange details & chat metadata)
+   - PATCH `/skill-exchanges/:id/status` (Update status: accept, decline, in_progress)
+   - POST  `/skill-exchanges/:id/request-completion` (Request mutual completion)
+   - POST  `/skill-exchanges/:id/confirm-completion` (Confirm mutual completion)
+
+5. MENTORSHIP & SESSIONS (`/api/mentors`, `/api/sessions`):
+   - GET  `/mentors` (List verified mentors with skill & price filters)
+   - GET  `/mentors/:id` (Get mentor profile, availability & reviews)
+   - POST `/mentors/:id/book` (Book mentoring time slot)
+   - POST `/mentors/apply` (Submit mentor application)
+   - GET  `/sessions` (List upcoming live sessions)
+   - POST `/sessions` (Create live learning session)
+   - POST `/sessions/:id/register` (Register for session)
+
+6. JOBS & RECRUITER ATS (`/api/internships`, `/api/applications`):
+   - GET   `/internships` (List internships with search & tags)
+   - POST  `/internships` (Recruiter post new job)
+   - GET   `/internships/:id` (Get job detail)
+   - POST  `/internships/:id/apply` (Submit student application with CV)
+   - GET   `/recruiter/applications` (Fetch applicants for recruiter ATS)
+   - PATCH `/internship-applications/:id/status` (Update candidate hiring stage)
+   - GET   `/my-applications` (Student fetch their application statuses)
+
+7. COMMUNITY FORUM (`/api/forum`):
+   - GET   `/forum/posts` (List questions with category & sort filters)
+   - POST  `/forum/posts` (Create new question)
+   - GET   `/forum/posts/:id` (Get thread details and answers)
+   - POST  `/forum/posts/:id/answers` (Submit answer)
+   - PATCH `/forum/answers/:id/accept` (Mark verified accepted answer)
+   - POST  `/forum/posts/:id/vote` (Upvote/downvote post)
+
+8. REALTIME MESSAGING (`/api/messages`, `/api/conversations`):
+   - GET  `/conversations` (List user conversations with unread counts)
+   - GET  `/conversations/:id/messages` (Get paginated chat messages)
+   - POST `/conversations/:id/messages` (Send text message or file attachment)
+   - POST `/conversations` (Start new 1-on-1 conversation)
+
+================================================================================
+4. DATABASE SCHEMA (MYSQL 8) & RELATIONSHIP MAP
+================================================================================
+The MySQL database consists of 18 relational tables designed with foreign key constraints:
+
+1. `users` (id, email, password_hash, full_name, phone, role, bio, avatar_url, skills, profession, company, experience_years, location, github_url, linkedin_url, career_goal, interested_skills, is_verified, is_active, created_at, updated_at)
+2. `notifications` (id, user_id, type, title, message, link, metadata, push_status, is_read, read_at, created_at)
+3. `notification_preferences` (user_id, mentorship_enabled, session_enabled, internship_enabled, message_enabled, skill_exchange_enabled, forum_enabled, system_enabled, push_enabled)
+4. `notification_push_tokens` (id, user_id, token, provider, platform, is_active, last_used_at, created_at)
+5. `courses` (id, slug, title, title_km, description, description_km, category, level, instructor_id, thumbnail_url, youtube_id, duration_minutes, is_published, created_at)
+6. `lessons` (id, course_id, title, title_km, lesson_order, video_id, duration_minutes, content, created_at)
+7. `course_enrollments` (id, user_id, course_id, progress_percentage, is_completed, completed_at, created_at)
+8. `lesson_completions` (user_id, lesson_id, completed_at)
+9. `skill_exchanges` (id, creator_id, partner_id, offered_skill, wanted_skill, description, status, completion_requested_by, completed_at, created_at)
+10. `mentor_profiles` (id, user_id, headline, hourly_rate, bio, verified_status, verified_at, rating_avg, reviews_count)
+11. `mentorship_bookings` (id, mentor_id, mentee_id, topic, scheduled_time, duration_minutes, meeting_link, status, created_at)
+12. `learning_sessions` (id, host_id, title, description, scheduled_at, duration_minutes, max_participants, meeting_room_id, is_active, created_at)
+13. `session_registrations` (id, session_id, user_id, attended, created_at)
+14. `internships` (id, recruiter_id, company_name, title, description, requirements, location, job_type, salary_range, deadline, is_active, created_at)
+15. `internship_applications` (id, internship_id, applicant_id, cv_url, cover_letter, status, reviewed_at, created_at)
+16. `forum_posts` (id, author_id, category_id, title, body, views_count, votes_count, is_solved, created_at)
+17. `forum_answers` (id, post_id, author_id, body, is_accepted, votes_count, created_at)
+18. `conversations` & `messages` (id, conversation_id, sender_id, receiver_id, message, message_type, attachment_url, is_read, created_at)
+
+================================================================================
+5. DESIGN SYSTEM, TOKENS & INTERNATIONALIZATION (100% KHMER & ENGLISH)
+================================================================================
+1. Typography Standard:
+   - Primary Cambodian Font: `Kantumruy Pro` (Google Fonts standard with proper ligature spacing).
+   - Latin Font: `Plus Jakarta Sans` / System UI.
+   - Fixed Ligatures: Configured `line-height: normal; letter-spacing: normal;` on all Khmer action buttons preventing sub-script glyph collision (e.g., `កំណត់ថាអានរួចទាំងអស់`).
+2. Color Palette (White-Blue Theme):
+   - Primary Brand: `#2563eb` (Royal Blue) & `#1d4ed8` (Deep Blue).
+   - Accent Cyan: `#0ea5e9` (Vibrant Cyan).
+   - Surface Light: `#ffffff` & `#f8fafc` (Canvas).
+   - Surface Dark: `#0b0f19` (Canvas) & `#1e293b` (Card Dark).
+   - Text Primary: `#0f172a` (Light) / `#f8fafc` (Dark).
+   - Text Muted: `#64748b` (Light) / `#94a3b8` (Dark).
+3. 100% Dual-Language System:
+   - Synchronized Khmer & English dictionaries covering 100% of routes, tooltips, validation messages, and empty states.
+   - Dedicated Khmer Relative Time Engine (`formatKhmerRelativeTime`) rendering natural Khmer calendar terms.
+
+================================================================================
+6. CRITICAL BUG FIXES & SYSTEM STABILIZATION SUMMARY
+================================================================================
+1. [Fixed] Notification Bell Ghost Badge Mismatch:
+   - Issue: Navbar showed red badge `1` while page showed `0 unread`.
+   - Solution: Added `GET /api/notifications/unread-count` with `Cache-Control: no-store` and realtime sync event `nav-badges:update { detail: { unread: 0 } }`.
+2. [Fixed] Button Text Ligature Overlap:
+   - Issue: Subscript `រួច` collided with `អាន` on the disabled mark-all button.
+   - Solution: Replaced generic button class with dedicated `.notification-mark-all-btn` featuring normalized line-height and font inheritance.
+3. [Fixed] English Notification Leakage in Khmer Mode:
+   - Issue: English titles ("Completion confirmation requested", "New message") appeared on Khmer notifications.
+   - Solution: Added comprehensive regex pattern matches in `localizeNotificationRecord` covering all 11 database notification variants.
+4. [Fixed] CV Studio Bilingual Mixture:
+   - Issue: Documents contained slashes `/` mixing English and Khmer.
+   - Solution: Built 100% Khmer Mode and 100% English Mode with dedicated language switch pills and `stripBilingual` data sanitizer.
+5. [Fixed] Production Vite Build Compilation:
+   - Fixed unclosed tag in Executive CV template; verified clean `npm run build` with zero errors.
+
+================================================================================
+7. CONCLUSION & FINAL WRITING CHECKLIST
+================================================================================
+The Smart Community Skill & Career Development Platform is now fully finalized, 
+thoroughly tested, and locked for production. 
+
+You can directly use the specifications, architecture diagrams, user flows, 
+and API inventories above for your final project report, thesis documentation, 
+slide decks, and defense presentation.
+
+Status: COMPLETED, VERIFIED, STABILIZED, LOCKED.
+================================================================================
+

@@ -1,7 +1,15 @@
-import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiShield, FiAlertCircle } from "react-icons/fi";
-import logo from "../../assets/logo/logo1.png";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  FiMail,
+  FiLock,
+  FiEye,
+  FiEyeOff,
+  FiArrowRight,
+  FiShield,
+  FiAlertCircle,
+} from "react-icons/fi";
+import logo from "../../assets/logo/logo-mark.png";
 import GoogleLoginButton from "../../components/auth/GoogleLoginButton";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
@@ -9,7 +17,8 @@ import { ButtonLoader } from "../../components/ui/LoadingStates";
 import "./Auth.css";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const location = useLocation();
+  const [email, setEmail] = useState(location.state?.registeredEmail || "");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
@@ -19,25 +28,38 @@ const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { googleLogin, loginUser } = useGlobleContext();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const isKm = language === "km";
+
   const requestedRedirect = searchParams.get("redirect") || "";
   const redirectTo =
     requestedRedirect.startsWith("/") && !requestedRedirect.startsWith("//")
       ? requestedRedirect
       : "/dashboard";
 
+  useEffect(() => {
+    if (location.state?.registeredEmail) {
+      setEmail(location.state.registeredEmail);
+    }
+  }, [location.state]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
     setNeedsVerification(false);
 
-    if (!email || !password) return setError(t("auth.enterCredentials"));
-    if (!email.includes("@")) return setError(t("auth.invalidEmail"));
+    const trimmedEmail = email.trim().toLowerCase();
+    if (!trimmedEmail || !password) {
+      return setError(t("auth.enterCredentials"));
+    }
+    if (!trimmedEmail.includes("@")) {
+      return setError(t("auth.invalidEmail"));
+    }
 
     setLoading(true);
     try {
       await loginUser({
-        email: email.toLowerCase(),
+        email: trimmedEmail,
         password,
         rememberMe: remember,
       });
@@ -65,44 +87,15 @@ const Login = () => {
 
   return (
     <div className="auth-page">
-      <div className="auth-ambient-orb auth-orb-1" aria-hidden="true" />
-      <div className="auth-ambient-orb auth-orb-2" aria-hidden="true" />
-
-      <section className="auth-card ios-glass-card">
-        {/* Brand header badge */}
-        <div className="auth-brand-badge">
-          <div className="auth-logo-squircle">
-            <img src={logo} alt="Smart Community" className="auth-brand-logo" />
-          </div>
-          <span className="auth-brand-eyebrow">
-            <FiShield className="shield-icon" />
-            <span>Smart Community ID</span>
-          </span>
-        </div>
-
-        {/* iOS Segmented Auth Switcher */}
-        <div className="ios-auth-switcher-track" role="tablist">
-          <button type="button" className="ios-auth-switch-pill active" role="tab" aria-selected="true">
-            {t("auth.login")}
-          </button>
-          <Link
-            to={`/register${requestedRedirect ? `?redirect=${encodeURIComponent(requestedRedirect)}` : ""}`}
-            className="ios-auth-switch-pill"
-            role="tab"
-            aria-selected="false"
-          >
-            {t("auth.createOne")}
-          </Link>
-        </div>
-
+      <section className="auth-card auth-card-unified auth-card-login ios-glass-card">
         <div className="auth-header">
           <h1>{t("auth.loginTitle")}</h1>
           <p>{t("auth.loginDescription")}</p>
         </div>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
           {error && (
-            <div className="auth-error ios-alert-glass">
+            <div className="auth-error ios-alert-glass" role="alert">
               <FiAlertCircle className="error-icon" />
               <span>{error}</span>
             </div>
@@ -110,7 +103,7 @@ const Login = () => {
           {needsVerification && (
             <Link
               className="auth-dev-link"
-              to={`/verify-email?email=${encodeURIComponent(email)}`}
+              to={`/verify-email?email=${encodeURIComponent(email.trim())}`}
             >
               {t("auth.resendVerification")}
             </Link>
@@ -155,7 +148,6 @@ const Login = () => {
                 className="ios-field-eye"
                 onClick={() => setShowPassword(!showPassword)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
-                tabIndex={-1}
               >
                 {showPassword ? <FiEyeOff /> : <FiEye />}
               </button>

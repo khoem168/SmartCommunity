@@ -202,7 +202,7 @@ const getAdminAnalytics = async (req, res, next) => {
       db.query(
         `SELECT type, label, createdAt FROM (
            SELECT 'user' AS type, CONCAT(full_name, ' joined the community') AS label,
-                  created_at AS createdAt FROM users
+                  created_at AS createdAt FROM users WHERE is_active = 1
            UNION ALL
            SELECT 'internship', CONCAT(company, ' published ', title), created_at
                   FROM internships
@@ -227,11 +227,22 @@ const getAdminAnalytics = async (req, res, next) => {
     const exchanges = exchangeSummaryRows[0] || {};
     const sessions = sessionSummaryRows[0] || {};
     const community = communitySummaryRows[0] || {};
+    const normalizeSkillLabel = (raw) => {
+      const s = String(raw || "").trim();
+      const lower = s.toLowerCase();
+      if (lower === "react" || lower === "react.js") return "React.js";
+      if (lower === "node.js" || lower === "node.js & api") return "Node.js";
+      if (lower === "sql" || lower === "sql & mysql" || lower === "database") return "SQL & MySQL";
+      if (lower === "html" || lower === "css" || lower === "html & css") return "HTML & CSS";
+      if (lower === "laravel") return "Laravel";
+      if (lower === "aws" || lower === "aws cloud") return "AWS Cloud";
+      return s;
+    };
     const skillCounts = new Map();
     for (const row of skillRows) {
       const uniqueSkills = new Set(
         parseSkills(row.skills)
-          .map((skill) => String(skill).trim())
+          .map(normalizeSkillLabel)
           .filter(Boolean),
       );
       for (const skill of uniqueSkills) {

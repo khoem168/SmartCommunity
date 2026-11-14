@@ -11,21 +11,26 @@ import {
   fetchSkillExchangeDetail,
   updateSkillExchangeProgressRequest,
 } from "../../services/platformService";
+import { useLanguage } from "../../context/LanguageContext";
 import { getSocket } from "../../services/realtimeService";
 import "./Community.css";
 
-const formatDate = (value) =>
+const formatDate = (value, isKm = false) =>
   value
-    ? new Intl.DateTimeFormat("en", {
+    ? new Intl.DateTimeFormat(isKm ? "km-KH" : "en", {
         dateStyle: "medium",
         timeStyle: "short",
       }).format(
         new Date(typeof value === "string" ? value.replace(" ", "T") : value),
       )
-    : "Not scheduled";
+    : isKm
+      ? "មិនទាន់កំណត់ពេល"
+      : "Not scheduled";
 
 const SkillExchangeDetail = () => {
   const { exchangeId } = useParams();
+  const { language } = useLanguage();
+  const isKm = language === "km";
   const [exchange, setExchange] = useState(null);
   const [updates, setUpdates] = useState([]);
   const [progress, setProgress] = useState(0);
@@ -106,38 +111,72 @@ const SkillExchangeDetail = () => {
   if (loading)
     return (
       <main className="exchange-detail-page community-loading">
-        Loading exchange...
+        {isKm ? "កំពុងទាញយកព័ត៌មានការផ្លាស់ប្តូរជំនាញ..." : "Loading exchange..."}
       </main>
     );
   if (!exchange) {
+    const localizedError =
+      isKm && error && error.toLowerCase().includes("not found")
+        ? "រកមិនឃើញទិន្នន័យការផ្លាស់ប្តូរជំនាញនេះ ឬមិនមែនជារបស់គណនីអ្នកទេ។"
+        : error;
     return (
       <main className="exchange-detail-page">
-        <section className="section container">
-          <h1>Skill exchange unavailable</h1>
-          <p>
-            {error ||
-              "This exchange was not found or does not belong to your account."}
+        <section
+          className="section container"
+          style={{
+            maxWidth: 620,
+            margin: "48px auto",
+            padding: "42px 32px",
+            borderRadius: 24,
+            background: "#fff",
+            border: "1px solid rgba(15, 23, 42, 0.08)",
+            boxShadow: "0 18px 42px -18px rgba(15, 23, 42, 0.08)",
+            textAlign: "center",
+          }}
+        >
+          <h1 style={{ fontSize: "clamp(1.6rem, 2.8vw, 2.2rem)", marginBottom: 12 }}>
+            {isKm ? "រកមិនឃើញការផ្លាស់ប្តូរជំនាញនេះទេ" : "Skill exchange unavailable"}
+          </h1>
+          <p style={{ color: "#64748b", marginBottom: 22 }}>
+            {localizedError ||
+              (isKm
+                ? "ការផ្លាស់ប្តូរជំនាញនេះមិនមាននៅក្នុងប្រព័ន្ធ ឬមិនមែនជារបស់គណនីអ្នកទេ។"
+                : "This exchange was not found or does not belong to your account.")}
           </p>
-          <Link to="/community" className="btn outline">
-            Back to community
+          <Link to="/skill-exchange" className="btn primary">
+            {isKm ? "ត្រឡប់ទៅមជ្ឈមណ្ឌលប្តូរជំនាញ" : "Back to Skill Exchange"}
           </Link>
         </section>
       </main>
     );
   }
 
+  const statusLabel = isKm
+    ? {
+        accepted: "កំពុងដំណើរការ",
+        completed: "បានបញ្ចប់",
+        pending: "កំពុងរង់ចាំ",
+        cancelled: "បានបោះបង់",
+        rejected: "បានបដិសេធ",
+      }[exchange.status] || exchange.status
+    : exchange.status;
+
   return (
     <main className="exchange-detail-page">
       <section className="exchange-hero">
         <div className="container exchange-detail-layout">
           <div>
-            <p className="eyebrow">Skill Exchange · {exchange.status}</p>
+            <p className="eyebrow">
+              {isKm ? "ការផ្លាស់ប្តូរជំនាញ" : "Skill Exchange"} · {statusLabel}
+            </p>
             <h1>
-              {exchange.offeredSkill} for {exchange.requestedSkill}
+              {exchange.offeredSkill} {isKm ? "ប្តូរជាមួយ" : "for"} {exchange.requestedSkill}
             </h1>
             <p>
               {exchange.details ||
-                `${exchange.requesterName} and ${exchange.providerName} are exchanging skills.`}
+                (isKm
+                  ? `${exchange.requesterName} និង ${exchange.providerName} កំពុងផ្លាស់ប្តូរជំនាញជាមួយគ្នា។`
+                  : `${exchange.requesterName} and ${exchange.providerName} are exchanging skills.`)}
             </p>
             <div className="exchange-participants">
               <span>{exchange.requesterName}</span>
@@ -147,14 +186,14 @@ const SkillExchangeDetail = () => {
           </div>
           <div className="exchange-detail-actions">
             <Link to="/skill-requests" className="btn outline">
-              All requests
+              {isKm ? "សំណើទាំងអស់" : "All requests"}
             </Link>
             {exchange.conversationId && (
               <Link
                 className="btn primary"
                 to={`/messages/${exchange.conversationId}`}
               >
-                <IoChatbubbleEllipsesOutline /> Chat
+                <IoChatbubbleEllipsesOutline /> {isKm ? "ផ្ញើសារ" : "Chat"}
               </Link>
             )}
             {exchange.meetingLink && (
@@ -164,7 +203,7 @@ const SkillExchangeDetail = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                <IoVideocamOutline /> Meeting
+                <IoVideocamOutline /> {isKm ? "ចូលបន្ទប់ប្រជុំ" : "Meeting"}
               </a>
             )}
           </div>
@@ -177,8 +216,11 @@ const SkillExchangeDetail = () => {
         <section className="exchange-progress-panel">
           <div className="progress-heading">
             <div>
-              <h2>Learning progress</h2>
-              <p>Scheduled: {formatDate(exchange.scheduledDate)}</p>
+              <h2>{isKm ? "វឌ្ឍនភាពនៃការសិក្សា" : "Learning progress"}</h2>
+              <p>
+                {isKm ? "កាលវិភាគ៖ " : "Scheduled: "}
+                {formatDate(exchange.scheduledDate, isKm)}
+              </p>
             </div>
             <strong>{exchange.progressPercent}%</strong>
           </div>
@@ -186,10 +228,10 @@ const SkillExchangeDetail = () => {
             <span style={{ width: `${exchange.progressPercent}%` }} />
           </div>
 
-          {exchange.status === "accepted" && (
+          {exchange.status === "accepted" && exchange.isParticipant !== false && (
             <form className="exchange-progress-form" onSubmit={saveProgress}>
               <label>
-                Progress: {progress}%
+                {isKm ? "វឌ្ឍនភាព៖" : "Progress:"} {progress}%
                 <input
                   type="range"
                   min="0"
@@ -200,17 +242,27 @@ const SkillExchangeDetail = () => {
                 />
               </label>
               <label>
-                Learning note
+                {isKm ? "កំណត់ត្រាសិក្សា" : "Learning note"}
                 <textarea
                   value={note}
                   onChange={(event) => setNote(event.target.value)}
-                  placeholder="What did you learn or complete?"
+                  placeholder={
+                    isKm
+                      ? "តើអ្នកបានរៀន ឬសម្រេចអ្វីខ្លះក្នុងវគ្គនេះ?"
+                      : "What did you learn or complete?"
+                  }
                   maxLength="500"
                 />
               </label>
               <div className="progress-actions">
                 <button className="btn primary" disabled={busy}>
-                  {busy ? "Saving..." : "Save progress"}
+                  {busy
+                    ? isKm
+                      ? "កំពុងរក្សាទុក..."
+                      : "Saving..."
+                    : isKm
+                      ? "រក្សាទុកវឌ្ឍនភាព"
+                      : "Save progress"}
                 </button>
                 <button
                   type="button"
@@ -219,8 +271,12 @@ const SkillExchangeDetail = () => {
                   onClick={confirmCompletion}
                 >
                   {exchange.currentUserCompleted
-                    ? "You confirmed completion"
-                    : "Confirm my completion"}
+                    ? isKm
+                      ? "អ្នកបានបញ្ជាក់ការបញ្ចប់រួចហើយ"
+                      : "You confirmed completion"
+                    : isKm
+                      ? "បញ្ជាក់ការបញ្ចប់វគ្គ"
+                      : "Confirm my completion"}
                 </button>
               </div>
             </form>
@@ -237,7 +293,7 @@ const SkillExchangeDetail = () => {
         </section>
 
         <section className="exchange-progress-panel">
-          <h2>Progress updates</h2>
+          <h2>{isKm ? "ប្រវត្តិវឌ្ឍនភាព" : "Progress updates"}</h2>
           <div className="progress-timeline">
             {updates.length ? (
               updates.map((update) => (
@@ -247,13 +303,15 @@ const SkillExchangeDetail = () => {
                     <strong>
                       {update.userName} · {update.progressPercent}%
                     </strong>
-                    <p>{update.note || "Progress updated"}</p>
-                    <small>{formatDate(update.createdAt)}</small>
+                    <p>{update.note || (isKm ? "បានធ្វើបច្ចុប្បន្នភាពវឌ្ឍនភាព" : "Progress updated")}</p>
+                    <small>{formatDate(update.createdAt, isKm)}</small>
                   </div>
                 </article>
               ))
             ) : (
-              <p className="community-empty">No progress updates yet.</p>
+              <p className="community-empty">
+                {isKm ? "មិនទាន់មានកំណត់ត្រាវឌ្ឍនភាពនៅឡើយទេ។" : "No progress updates yet."}
+              </p>
             )}
           </div>
         </section>

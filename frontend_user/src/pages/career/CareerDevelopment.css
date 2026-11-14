@@ -32,6 +32,26 @@
   gap: 28px;
 }
 
+.career-hero .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: #2563eb;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+[data-theme="dark"] .career-hero .eyebrow {
+  color: #60a5fa;
+  background: rgba(37, 99, 235, 0.16);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
 .career-hero h1 {
   max-width: 820px;
   margin: 12px 0 16px;
@@ -216,6 +236,16 @@
   cursor: pointer;
 }
 
+[data-theme="dark"] .roadmap-timeline li::before {
+  background: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .roadmap-timeline button {
+  background: #1e293b;
+  border-color: #334155;
+  color: #60a5fa;
+}
+
 .roadmap-timeline .completed button {
   border-color: #2563eb;
   background: #2563eb;
@@ -238,6 +268,11 @@
   color: #64748b;
 }
 
+[data-theme="dark"] .roadmap-step-heading span,
+[data-theme="dark"] .roadmap-timeline p {
+  color: #94a3b8;
+}
+
 .roadmap-resources,
 .career-skill-list {
   display: flex;
@@ -257,17 +292,26 @@
   font-weight: 700;
 }
 
+[data-theme="dark"] .roadmap-resources span,
+[data-theme="dark"] .career-skill-list span {
+  background: rgba(37, 99, 235, 0.16);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
 .career-path-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  align-items: stretch;
   gap: 16px;
 }
 
 .career-path-card {
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   gap: 14px;
-  padding: 21px;
+  height: 100%;
+  padding: 22px;
   border: 1px solid #e2e8f0;
   border-radius: 20px;
   background: #fff;
@@ -276,6 +320,17 @@
     transform 180ms ease,
     border-color 180ms ease,
     box-shadow 180ms ease;
+}
+
+.career-path-card .career-path-meta {
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.career-path-card > .btn {
+  width: 100%;
+  justify-content: center;
+  border-radius: 12px;
 }
 
 .career-path-card:hover {
@@ -330,6 +385,10 @@
   gap: clamp(18px, 3vw, 28px);
 }
 
+.assessment-layout.no-result {
+  grid-template-columns: 1fr;
+}
+
 .assessment-list {
   display: grid;
   gap: 14px;
@@ -337,13 +396,19 @@
 
 .assessment-list article {
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr);
-  gap: 14px;
-  padding: 18px;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
   border: 1px solid rgba(203, 213, 225, 0.86);
   border-radius: 18px;
   background: #fff;
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.045);
+}
+
+[data-theme="dark"] .assessment-list article {
+  background: rgba(18, 24, 38, 0.88);
+  border-color: rgba(51, 65, 85, 0.8);
 }
 
 .assessment-list article > svg {
@@ -355,10 +420,19 @@
   color: #2563eb;
 }
 
+[data-theme="dark"] .assessment-list article > svg {
+  background: rgba(37, 99, 235, 0.18);
+  color: #60a5fa;
+}
+
 .assessment-list h3 {
   margin: 0 0 7px;
   color: #0f172a;
   font-size: 1.05rem;
+}
+
+[data-theme="dark"] .assessment-list h3 {
+  color: #f8fafc;
 }
 
 .assessment-list p {
@@ -367,22 +441,37 @@
   line-height: 1.65;
 }
 
+[data-theme="dark"] .assessment-list p {
+  color: #94a3b8;
+}
+
 .assessment-list span {
   display: inline-flex;
   width: fit-content;
-  margin-top: 12px;
-  padding: 6px 10px;
-  border: 1px solid rgba(37, 99, 235, 0.12);
+  margin-top: 10px;
+  padding: 5px 12px;
+  border: 1px solid rgba(37, 99, 235, 0.14);
   border-radius: 999px;
   background: #eff6ff;
   color: #2563eb;
-  font-size: 0.82rem;
-  font-weight: 760;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .assessment-list span {
+  background: rgba(37, 99, 235, 0.16);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.3);
 }
 
 .assessment-list button {
-  grid-column: 2;
+  grid-column: 3;
   width: fit-content;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 12px !important;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .assessment-result-panel {
@@ -402,6 +491,17 @@
     linear-gradient(180deg, #fff, #f8fafc);
 }
 
+[data-theme="dark"] .assessment-result-panel {
+  border-color: rgba(51, 65, 85, 0.8);
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(59, 130, 246, 0.18),
+      transparent 35%
+    ),
+    linear-gradient(180deg, rgba(18, 24, 38, 0.94), rgba(15, 23, 42, 0.92));
+}
+
 .assessment-score {
   display: grid;
   place-items: center;
@@ -415,6 +515,12 @@
   box-shadow: 0 14px 30px rgba(37, 99, 235, 0.12);
 }
 
+[data-theme="dark"] .assessment-score {
+  background: #0f172a;
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #60a5fa;
+}
+
 .assessment-score span {
   color: #64748b;
   font-size: 0.72rem;
@@ -425,6 +531,10 @@
   color: #2563eb;
   font-size: 2.1rem;
   line-height: 1;
+}
+
+[data-theme="dark"] .assessment-score strong {
+  color: #60a5fa;
 }
 
 .career-radar-chart {
@@ -441,9 +551,17 @@
   border-top: 1px solid #e2e8f0;
 }
 
+[data-theme="dark"] .assessment-recommendations {
+  border-top-color: #1e293b;
+}
+
 .assessment-recommendations h3 {
   margin: 0;
   color: #0f172a;
+}
+
+[data-theme="dark"] .assessment-recommendations h3 {
+  color: #f8fafc;
 }
 
 .assessment-recommendations p {
@@ -454,6 +572,12 @@
   background: #eff6ff;
   color: #1e40af;
   line-height: 1.62;
+}
+
+[data-theme="dark"] .assessment-recommendations p {
+  background: rgba(37, 99, 235, 0.16);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #bfdbfe;
 }
 
 .assessment-form {
@@ -470,10 +594,19 @@
   background: #fff;
 }
 
+[data-theme="dark"] .assessment-form fieldset {
+  background: rgba(18, 24, 38, 0.88);
+  border-color: rgba(51, 65, 85, 0.8);
+}
+
 .assessment-form legend {
   padding: 0 7px;
   color: #0f172a;
   font-weight: 800;
+}
+
+[data-theme="dark"] .assessment-form legend {
+  color: #f8fafc;
 }
 
 .assessment-form small {
@@ -483,6 +616,11 @@
   background: #eff6ff;
   color: #2563eb;
   font-weight: 700;
+}
+
+[data-theme="dark"] .assessment-form small {
+  background: rgba(37, 99, 235, 0.16);
+  color: #93c5fd;
 }
 
 .assessment-form fieldset > div {
@@ -509,11 +647,24 @@
     transform 160ms ease;
 }
 
+[data-theme="dark"] .assessment-form label {
+  background: #0f172a;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
 .assessment-form label:hover,
 .assessment-form label:focus-within {
   border-color: rgba(37, 99, 235, 0.28);
   background: #eff6ff;
   box-shadow: 0 10px 22px rgba(37, 99, 235, 0.08);
+}
+
+[data-theme="dark"] .assessment-form label:hover,
+[data-theme="dark"] .assessment-form label:focus-within {
+  border-color: #60a5fa;
+  background: rgba(37, 99, 235, 0.16);
+  color: #ffffff;
 }
 
 .assessment-form input[type="radio"] {
@@ -536,14 +687,16 @@
 .career-article-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  align-items: stretch;
   gap: 14px;
 }
 
 .career-article-grid article {
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
-  padding: 18px;
+  height: 100%;
+  padding: 20px;
   border: 1px solid #e2e8f0;
   border-radius: 18px;
   background: #fff;
@@ -749,6 +902,60 @@
 
 [data-theme="dark"] .career-article-reader > p {
   color: #cbd5e1;
+}
+
+[data-theme="dark"] .career-section-header select {
+  background: rgba(18, 24, 38, 0.88);
+  border-color: rgba(71, 85, 105, 0.8);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .roadmap-resources span,
+[data-theme="dark"] .career-skill-list span,
+[data-theme="dark"] .assessment-list span {
+  background: rgba(37, 99, 235, 0.18);
+  border-color: rgba(59, 130, 246, 0.32);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .assessment-list article > svg {
+  background: rgba(37, 99, 235, 0.22);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .assessment-recommendations {
+  border-top-color: rgba(51, 65, 85, 0.7);
+}
+
+[data-theme="dark"] .assessment-recommendations h3 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .assessment-recommendations p {
+  background: rgba(37, 99, 235, 0.14);
+  border-color: rgba(59, 130, 246, 0.28);
+  color: #bfdbfe;
+}
+
+[data-theme="dark"] .assessment-form fieldset {
+  background: rgba(15, 23, 42, 0.65);
+  border-color: rgba(51, 65, 85, 0.72);
+}
+
+[data-theme="dark"] .assessment-form legend {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .assessment-form label {
+  background: rgba(30, 41, 59, 0.65);
+  border-color: rgba(71, 85, 105, 0.75);
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .assessment-form label:hover,
+[data-theme="dark"] .assessment-form label:focus-within {
+  background: rgba(37, 99, 235, 0.2);
+  border-color: rgba(96, 165, 250, 0.45);
 }
 
 [data-theme="dark"] .career-empty {

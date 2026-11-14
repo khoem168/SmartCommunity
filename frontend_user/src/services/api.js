@@ -45,6 +45,9 @@ export const apiFetch = async (path, options = {}) => {
       headers,
     });
   } catch (cause) {
+    if (cause?.name === "AbortError") {
+      throw cause;
+    }
     const error = new Error(
       "Cannot connect to the server. Check your internet connection and try again.",
     );

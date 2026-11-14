@@ -264,7 +264,7 @@ export default function CalendarPage() {
         <div className="filter-chips">
           {[
             { id: "all", labelEn: "All Activities", labelKm: "សកម្មភាពទាំងអស់" },
-            { id: "mentorship", labelEn: "Mentorship", labelKm: "Mentorship" },
+            { id: "mentorship", labelEn: "Mentorship", labelKm: "ការណែនាំ" },
             { id: "learning_session", labelEn: "Live Classes", labelKm: "ថ្នាក់រៀនផ្ទាល់" },
             { id: "interview", labelEn: "Interviews", labelKm: "សម្ភាសន៍" },
             { id: "skill_exchange", labelEn: "Skill Swaps", labelKm: "ផ្លាស់ប្តូរជំនាញ" },
@@ -447,8 +447,27 @@ export default function CalendarPage() {
                       </div>
 
                       <div className="agenda-card-body">
-                        <h4 className="agenda-event-title">{ev.title}</h4>
-                        {ev.description && <p className="agenda-event-desc">{ev.description}</p>}
+                        <h4 className="agenda-event-title">
+                          {isKm && String(ev.title || "").startsWith("Skill Swap:")
+                            ? ev.title.replace("Skill Swap:", "ផ្លាស់ប្តូរជំនាញ៖")
+                            : isKm && String(ev.title || "").toLowerCase().includes("full-stack portfolio review")
+                              ? "ការពិនិត្យកែលម្អគម្រោង Full-Stack Portfolio"
+                              : ev.title}
+                        </h4>
+                        {ev.description && (
+                          <p className="agenda-event-desc">
+                            {isKm && String(ev.description).includes("is sharing")
+                              ? ev.description
+                                  .replace("is sharing", "ចែករំលែកជំនាញ")
+                                  .replace("while learning", "និងរៀនជំនាញ")
+                                  .replace("and learning", "និងរៀន")
+                                  .replace("from", "ពី")
+                                  .replace("with", "ជាមួយ")
+                              : isKm && String(ev.description).toLowerCase().includes("discuss react & node.js")
+                                ? "ពិភាក្សាអំពីស្ថាបត្យកម្ម React.js និង Node.js សម្រាប់គម្រោងបញ្ចប់ការសិក្សា"
+                                : ev.description}
+                          </p>
+                        )}
 
                         <div className="agenda-meta-grid">
                           <div className="meta-slot">
@@ -456,13 +475,21 @@ export default function CalendarPage() {
                             <span>{formatTimeRange(ev.startAt, ev.endAt, isKm)}</span>
                           </div>
                           <div className="meta-slot">
-                            <span className="meta-duration">({ev.durationMinutes} min)</span>
+                            <span className="meta-duration">
+                              ({ev.durationMinutes} {isKm ? "នាទី" : "min"})
+                            </span>
                           </div>
                           {ev.partner?.name && (
                             <div className="meta-slot">
                               <FiUsers size={14} />
                               <span>
-                                {ev.participantRole === "mentor" ? "Student: " : "With: "}
+                                {ev.participantRole === "mentor"
+                                  ? isKm
+                                    ? "សិស្ស៖ "
+                                    : "Student: "
+                                  : isKm
+                                    ? "ជាមួយ៖ "
+                                    : "With: "}
                                 <strong>{ev.partner.name}</strong>
                               </span>
                             </div>

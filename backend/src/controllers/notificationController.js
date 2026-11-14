@@ -7,8 +7,22 @@ const { firebaseConfigured } = require("../services/firebaseNotificationService"
 
 const allowedTypes = new Set(Object.keys(preferenceColumns));
 
+const getUnreadNotificationCount = async (req, res, next) => {
+  try {
+    const [[result]] = await db.query(
+      "SELECT SUM(CASE WHEN is_read = 0 THEN 1 ELSE 0 END) AS unread FROM notifications WHERE user_id = ?",
+      [req.user.id],
+    );
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    return res.json({ unread: Number(result?.unread || 0) });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 const getNotifications = async (req, res, next) => {
   try {
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
     const type = String(req.query.type || "");
     const unreadOnly = String(req.query.unreadOnly || "") === "true";
     const page = Math.max(1, Number(req.query.page) || 1);
@@ -50,6 +64,11 @@ const getNotifications = async (req, res, next) => {
     const total = totalResult[0][0];
     const rows = rowsResult[0];
     const typeStats = typeStatsResult[0];
+    const globalUnread = typeStats.reduce(
+      (sum, row) => sum + Number(row.unread || 0),
+      0,
+    );
+
     return res.json({
       notifications: rows.map((row) => {
         let metadata = null;
@@ -69,6 +88,7 @@ const getNotifications = async (req, res, next) => {
       stats: {
         total: Number(total.total || 0),
         unread: Number(total.unread || 0),
+        globalUnread,
         byType: Object.fromEntries(
           typeStats.map((row) => [
             row.type,
@@ -82,6 +102,20 @@ const getNotifications = async (req, res, next) => {
   }
 };
 
+const emitUnreadCount = async (req) => {
+  try {
+    const io = req.app?.get("io");
+    if (!io) return;
+    const [[countResult]] = await db.query(
+      "SELECT SUM(CASE WHEN is_read = 0 THEN 1 ELSE 0 END) AS unread FROM notifications WHERE user_id = ?",
+      [req.user.id],
+    );
+    io.to(`user:${req.user.id}`).emit("notification:count", {
+      unread: Number(countResult?.unread || 0),
+    });
+  } catch {}
+};
+
 const markNotificationRead = async (req, res, next) => {
   try {
     const [result] = await db.query(
@@ -92,6 +126,7 @@ const markNotificationRead = async (req, res, next) => {
     if (!result.affectedRows) {
       return res.status(404).json({ error: "Notification not found." });
     }
+    await emitUnreadCount(req);
     return res.json({ message: "Notification marked as read." });
   } catch (err) {
     return next(err);
@@ -111,6 +146,7 @@ const markAllNotificationsRead = async (req, res, next) => {
        WHERE user_id = ? AND is_read = 0${typeClause}`,
       params,
     );
+    await emitUnreadCount(req);
     return res.json({ message: "Notifications marked as read." });
   } catch (err) {
     return next(err);
@@ -126,6 +162,7 @@ const deleteNotification = async (req, res, next) => {
     if (!result.affectedRows) {
       return res.status(404).json({ error: "Notification not found." });
     }
+    await emitUnreadCount(req);
     return res.json({ message: "Notification deleted." });
   } catch (err) {
     return next(err);
@@ -138,6 +175,7 @@ const deleteReadNotifications = async (req, res, next) => {
       "DELETE FROM notifications WHERE user_id = ? AND is_read = 1",
       [req.user.id],
     );
+    await emitUnreadCount(req);
     return res.json({
       message: "Read notifications cleared.",
       deleted: result.affectedRows,
@@ -255,6 +293,7 @@ module.exports = {
   deleteReadNotifications,
   getNotificationPreferences,
   getNotifications,
+  getUnreadNotificationCount,
   markAllNotificationsRead,
   markNotificationRead,
   registerPushToken,

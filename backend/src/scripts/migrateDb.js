@@ -1322,6 +1322,9 @@ const run = async () => {
      WHERE LOWER(REPLACE(full_name, ' ', '')) = 'mutkalin'`,
   );
 
+  const seedAllCourses = require("./seedAllCourses");
+  await seedAllCourses();
+
   console.log("Database migration completed.");
   await db.end();
 };

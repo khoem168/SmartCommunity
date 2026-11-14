@@ -35,8 +35,12 @@ const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
+  const isLocalDevOrigin =
+    process.env.NODE_ENV !== "production" &&
+    origin &&
+    /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
   const allowedOrigin =
-    allowedOrigins.includes("*") || !origin || allowedOrigins.includes(origin)
+    allowedOrigins.includes("*") || !origin || allowedOrigins.includes(origin) || isLocalDevOrigin
       ? origin || allowedOrigins[0]
       : allowedOrigins[0];
 

@@ -208,12 +208,15 @@ const CareerDevelopment = () => {
             <p>{t("careerPage.heroDescription")}</p>
           </div>
           <div className="career-hero-actions">
+            <Link className="btn primary" to="/cv-studio">
+              {isKm ? "📄 បង្កើត PDF CV ឥតគិតថ្លៃ" : "📄 Free CV Builder (PDF)"}
+            </Link>
             {user ? (
-              <Link className="btn primary" to="/profile">
+              <Link className="btn outline" to="/profile">
                 {t("careerPage.updateGoal")}
               </Link>
             ) : (
-              <Link className="btn primary" to="/login">
+              <Link className="btn outline" to="/login">
                 {t("careerPage.loginTrack")}
               </Link>
             )}
@@ -287,7 +290,7 @@ const CareerDevelopment = () => {
                     <div className="roadmap-step-heading">
                       <h3>{step.title}</h3>
                       <span>
-                        {step.skill} Â· {step.estimatedHours} hours
+                        {step.skill} · {step.estimatedHours} {isKm ? "ម៉ោង" : "hours"}
                       </span>
                     </div>
                     <p>{step.description}</p>
@@ -307,11 +310,22 @@ const CareerDevelopment = () => {
                   <div className="milestone-bridge-icon">📚</div>
                   <div>
                     <h3>
-                      Next Milestone: Step {bridgeData.nextMilestone.position} · {bridgeData.nextMilestone.title}
+                      {isKm
+                        ? `ជំហានបន្ទាប់: ដំណាក់កាលទី ${bridgeData.nextMilestone.position} · ${bridgeData.nextMilestone.title}`
+                        : `Next Milestone: Step ${bridgeData.nextMilestone.position} · ${bridgeData.nextMilestone.title}`}
                     </h3>
                     <p>
-                      Recommended Academy courses to master{" "}
-                      <strong>{bridgeData.nextMilestone.skill}</strong> faster:
+                      {isKm ? (
+                        <>
+                          វគ្គសិក្សាណែនាំដើម្បីចេះជំនាញ{" "}
+                          <strong>{bridgeData.nextMilestone.skill}</strong> បានកាន់តែលឿន៖
+                        </>
+                      ) : (
+                        <>
+                          Recommended Academy courses to master{" "}
+                          <strong>{bridgeData.nextMilestone.skill}</strong> faster:
+                        </>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -340,7 +354,7 @@ const CareerDevelopment = () => {
                             to={`/courses/${c.slug}`}
                             className="btn primary small milestone-learn-btn"
                           >
-                            Start Course →
+                            {isKm ? "ចាប់ផ្តើមរៀន →" : "Start Course →"}
                           </Link>
                         </div>
                       </article>
@@ -349,13 +363,17 @@ const CareerDevelopment = () => {
                 ) : (
                   <div className="milestone-courses-empty">
                     <p>
-                      Explore Academy courses covering {bridgeData.nextMilestone.skill}:
+                      {isKm
+                        ? `ស្វែងរកវគ្គសិក្សាពាក់ព័ន្ធនឹងជំនាញ ${bridgeData.nextMilestone.skill}៖`
+                        : `Explore Academy courses covering ${bridgeData.nextMilestone.skill}:`}
                     </p>
                     <Link
                       to={`/courses?q=${encodeURIComponent(bridgeData.nextMilestone.skill)}`}
                       className="btn outline small"
                     >
-                      Search Courses for {bridgeData.nextMilestone.skill} →
+                      {isKm
+                        ? `ស្វែងរកវគ្គសិក្សា ${bridgeData.nextMilestone.skill} →`
+                        : `Search Courses for ${bridgeData.nextMilestone.skill} →`}
                     </Link>
                   </div>
                 )}
@@ -363,7 +381,9 @@ const CareerDevelopment = () => {
                 {bridgeData.nextMilestone.recommendedPeers?.length > 0 && (
                   <div className="milestone-peers-callout">
                     <span>
-                      🤝 Community Peers teaching {bridgeData.nextMilestone.skill}:
+                      {isKm
+                        ? `🤝 សមាជិកសហគមន៍ដែលបង្រៀនជំនាញ ${bridgeData.nextMilestone.skill}៖`
+                        : `🤝 Community Peers teaching ${bridgeData.nextMilestone.skill}:`}
                     </span>
                     <div className="milestone-peer-tags">
                       {bridgeData.nextMilestone.recommendedPeers.map((p) => (
@@ -387,19 +407,22 @@ const CareerDevelopment = () => {
                   <div className="matching-jobs-header">
                     <div>
                       <span className="matching-jobs-eyebrow">
-                        Direct Career Bridge
+                        {isKm ? "ស្ពានភ្ជាប់អាជីពផ្ទាល់" : "Direct Career Bridge"}
                       </span>
                       <h3>
-                        🎯 Open Opportunities for Your Target Role:{" "}
-                        {overview.roadmap.path.targetRole}
+                        🎯{" "}
+                        {isKm
+                          ? `ឱកាសការងារសម្រាប់គោលដៅអាជីពរបស់អ្នក: ${overview.roadmap.path.targetRole}`
+                          : `Open Opportunities for Your Target Role: ${overview.roadmap.path.targetRole}`}
                       </h3>
                       <p>
-                        Real internships actively seeking candidates aligned
-                        with this roadmap:
+                        {isKm
+                          ? "កម្មសិក្សា និងការងារពិតប្រាកដដែលកំពុងជ្រើសរើសបេក្ខជនតាមផែនទីអាជីពនេះ៖"
+                          : "Real internships actively seeking candidates aligned with this roadmap:"}
                       </p>
                     </div>
                     <Link to="/jobs" className="btn outline small">
-                      View All in Jobs →
+                      {isKm ? "មើលការងារទាំងអស់ →" : "View All in Jobs →"}
                     </Link>
                   </div>
 
@@ -424,7 +447,7 @@ const CareerDevelopment = () => {
                                     : "score-med"
                                 }`}
                               >
-                                ✨ {job.matchScore}% Match
+                                ✨ {job.matchScore}% {isKm ? "ត្រូវគ្នា" : "Match"}
                               </span>
                             )}
                           </div>
@@ -440,10 +463,18 @@ const CareerDevelopment = () => {
                               {job.stipend ||
                                 (job.stipendAmount
                                   ? `$${job.stipendAmount}`
-                                  : "Competitive")}
+                                  : isKm
+                                    ? "ប្រាក់ឧបត្ថម្ភសមរម្យ"
+                                    : "Competitive")}
                             </span>
                             <Link to="/jobs" className="btn primary small">
-                              {job.hasApplied ? "Applied ✓" : "Apply in Jobs →"}
+                              {job.hasApplied
+                                ? isKm
+                                  ? "បានដាក់ពាក្យ ✓"
+                                  : "Applied ✓"
+                                : isKm
+                                  ? "ដាក់ពាក្យការងារ →"
+                                  : "Apply in Jobs →"}
                             </Link>
                           </div>
                         </article>
@@ -544,14 +575,28 @@ const CareerDevelopment = () => {
               <p>{t("careerPage.assessmentDescription")}</p>
             </div>
           </div>
-          <div className="assessment-layout">
+          <div className={`assessment-layout ${latestAssessment ? "has-result" : "no-result"}`}>
             <div className="assessment-list">
               {assessments.map((assessment) => (
                 <article key={assessment.id}>
                   <IoClipboardOutline />
                   <div>
-                    <h3>{assessment.title}</h3>
-                    <p>{assessment.description}</p>
+                    <h3>
+                      {isKm &&
+                      String(assessment.title || "")
+                        .toLowerCase()
+                        .includes("career readiness")
+                        ? "ការវាយតម្លៃសមត្ថភាពត្រៀមខ្លួនសម្រាប់អាជីព"
+                        : assessment.title}
+                    </h3>
+                    <p>
+                      {isKm &&
+                      String(assessment.title || "")
+                        .toLowerCase()
+                        .includes("career readiness")
+                        ? "វាស់វែងកម្រិតត្រៀមខ្លួនរបស់អ្នកលើជំនាញបច្ចេកទេស ការរៀបចំ Portfolio និងការសម្ភាសន៍ការងារ។"
+                        : assessment.description}
+                    </p>
                     <span>
                       {t("careerPage.questions", {
                         count: assessment.questionCount,
@@ -695,11 +740,39 @@ const CareerDevelopment = () => {
             />
           ) : (
             <div className="career-article-grid">
-              {visibleArticles.map((article) => (
+              {visibleArticles.map((article) => {
+                const titleKey = String(article.title || "").trim().toLowerCase();
+                const kmArticleMap = {
+                  "how to choose a career path without guessing": {
+                    categoryKm: "ការរៀបចំផែនការអាជីព",
+                    titleKm: "របៀបជ្រើសរើសផ្លូវអាជីពបច្ចេកវិទ្យាឱ្យត្រូវនឹងសមត្ថភាពពិតប្រាកដ",
+                    excerptKm: "ប្រើប្រាស់ភស្តុតាងពីគម្រោងសិក្សា ចំណូលចិត្ត និងមតិយោបល់ពីអ្នកណែនាំ ដើម្បីជ្រើសរើសទិសដៅអាជីពបន្ទាប់របស់អ្នកឱ្យបានច្បាស់លាស់។",
+                  },
+                  "build a portfolio that proves your skills": {
+                    categoryKm: "គម្រោង Portfolio",
+                    titleKm: "របៀបរៀបចំ Portfolio ដែលបង្ហាញពីសមត្ថភាពពិតប្រាកដរបស់អ្នក",
+                    excerptKm: "Portfolio ដែលល្អមិនគ្រាន់តែបង្ហាញរូបភាពទេ ប៉ុន្តែពន្យល់ពីការសម្រេចចិត្តបច្ចេកទេស បញ្ហាប្រឈម លទ្ធផល និងអ្វីដែលអ្នកបានរៀន។",
+                  },
+                  "prepare for technical interviews with a feedback loop": {
+                    categoryKm: "ការសម្ភាសន៍ការងារ",
+                    titleKm: "តិចនិកត្រៀមសម្ភាសន៍បច្ចេកទេសប្រកបដោយប្រសិទ្ធភាព",
+                    excerptKm: "ប្រែក្លាយការហាត់សមសម្ភាសន៍ឱ្យទៅជាប្រព័ន្ធប្រចាំសប្តាហ៍ ដោយពិនិត្យចំណុចខ្វះខាត និងកែលម្អជាមួយមិត្តភក្តិ ឬអ្នកណែនាំ។",
+                  },
+                  "make your first internship count": {
+                    categoryKm: "កម្មសិក្សាការងារ",
+                    titleKm: "គន្លឹះធ្វើឱ្យការហាត់ការ (Internship) លើកដំបូងទទួលបានជោគជ័យខ្ពស់",
+                    excerptKm: "កំណត់គោលដៅច្បាស់លាស់ កត់ត្រាវឌ្ឍនភាពការងារ និងប្រែក្លាយបទពិសោធន៍ហាត់ការទៅជាភស្តុតាងសមត្ថភាពសម្រាប់ការងារពេញម៉ោង។",
+                  },
+                };
+                const mapped = kmArticleMap[titleKey];
+                const displayCat = isKm && mapped ? mapped.categoryKm : article.category;
+                const displayTitle = isKm && mapped ? mapped.titleKm : article.title;
+                const displayExcerpt = isKm && mapped ? mapped.excerptKm : article.excerpt;
+                return (
                 <article key={article.id}>
-                  <span>{article.category}</span>
-                  <h3>{article.title}</h3>
-                  <p>{article.excerpt}</p>
+                  <span>{displayCat}</span>
+                  <h3>{displayTitle}</h3>
+                  <p>{displayExcerpt}</p>
                   <div>
                     <small>
                       {t("careerPage.minRead", {
@@ -719,7 +792,8 @@ const CareerDevelopment = () => {
                     </button>
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
           )}
         </section>

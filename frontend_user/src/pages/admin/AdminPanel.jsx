@@ -28,6 +28,7 @@ import {
   IoShieldCheckmarkOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import {
   downloadAdminReport,
   fetchAdminAuditLogs,
@@ -80,6 +81,8 @@ const initialCollection = {
 
 const AdminPanel = () => {
   const { user, isLoading } = useGlobleContext();
+  const { language } = useLanguage();
+  const isKm = language === "km";
   const [messageApi, contextHolder] = message.useMessage();
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(false);
@@ -277,7 +280,7 @@ const AdminPanel = () => {
 
   const userColumns = [
     {
-      title: "User",
+      title: isKm ? "អ្នកប្រើប្រាស់" : "User",
       key: "user",
       render: (_, record) => (
         <div className="admin-primary-cell">
@@ -287,27 +290,32 @@ const AdminPanel = () => {
       ),
     },
     {
-      title: "Role",
+      title: isKm ? "តួនាទី" : "Role",
       dataIndex: "role",
       render: (value) => <Tag>{pretty(value)}</Tag>,
     },
     {
-      title: "Account",
+      title: isKm ? "គណនី" : "Account",
       dataIndex: "isActive",
       render: (value) => <StatusTag value={value ? "active" : "suspended"} />,
     },
     {
-      title: "Verified",
+      title: isKm ? "ផ្ទៀងផ្ទាត់" : "Verified",
       dataIndex: "isVerified",
-      render: (value) => (value ? <Tag color="green">Yes</Tag> : <Tag>No</Tag>),
+      render: (value) =>
+        value ? (
+          <Tag color="green">{isKm ? "បាទ/ចាស" : "Yes"}</Tag>
+        ) : (
+          <Tag>{isKm ? "ទេ" : "No"}</Tag>
+        ),
     },
-    { title: "Last login", dataIndex: "lastLogin", render: dateTime },
+    { title: isKm ? "ចូលប្រើចុងក្រោយ" : "Last login", dataIndex: "lastLogin", render: dateTime },
     {
       title: "",
       key: "action",
       render: (_, record) => (
         <Button type="link" onClick={() => openUserEditor(record)}>
-          Manage
+          {isKm ? "គ្រប់គ្រង" : "Manage"}
         </Button>
       ),
     },
@@ -315,7 +323,7 @@ const AdminPanel = () => {
 
   const mentorColumns = [
     {
-      title: "Applicant",
+      title: isKm ? "បេក្ខជន" : "Applicant",
       key: "applicant",
       render: (_, record) => (
         <div className="admin-primary-cell">
@@ -325,7 +333,7 @@ const AdminPanel = () => {
       ),
     },
     {
-      title: "Experience",
+      title: isKm ? "បទពិសោធន៍" : "Experience",
       key: "experience",
       render: (_, record) => (
         <div className="admin-primary-cell">
@@ -337,13 +345,13 @@ const AdminPanel = () => {
       ),
     },
     {
-      title: "Status",
+      title: isKm ? "ស្ថានភាព" : "Status",
       dataIndex: "status",
       render: (value) => <StatusTag value={value} />,
     },
-    { title: "Applied", dataIndex: "createdAt", render: dateTime },
+    { title: isKm ? "ថ្ងៃដាក់ពាក្យ" : "Applied", dataIndex: "createdAt", render: dateTime },
     {
-      title: "Review",
+      title: isKm ? "ការពិនិត្យ" : "Review",
       key: "review",
       render: (_, record) => (
         <Space>
@@ -353,7 +361,7 @@ const AdminPanel = () => {
             disabled={record.status === "approved"}
             onClick={() => openReview("mentor", record, "approved")}
           >
-            Approve
+            {isKm ? "អនុម័ត" : "Approve"}
           </Button>
           <Button
             size="small"
@@ -361,7 +369,7 @@ const AdminPanel = () => {
             disabled={record.status === "rejected"}
             onClick={() => openReview("mentor", record, "rejected")}
           >
-            Reject
+            {isKm ? "បដិសេធ" : "Reject"}
           </Button>
         </Space>
       ),
@@ -370,7 +378,7 @@ const AdminPanel = () => {
 
   const companyColumns = [
     {
-      title: "Company",
+      title: isKm ? "ក្រុមហ៊ុន" : "Company",
       key: "company",
       render: (_, record) => (
         <div className="admin-primary-cell">
@@ -383,7 +391,7 @@ const AdminPanel = () => {
       ),
     },
     {
-      title: "Owner",
+      title: isKm ? "ម្ចាស់គណនី" : "Owner",
       key: "owner",
       render: (_, record) => (
         <div className="admin-primary-cell">
@@ -392,14 +400,14 @@ const AdminPanel = () => {
         </div>
       ),
     },
-    { title: "Postings", dataIndex: "internshipCount" },
+    { title: isKm ? "ការងារប្រកាស" : "Postings", dataIndex: "internshipCount" },
     {
-      title: "Status",
+      title: isKm ? "ស្ថានភាព" : "Status",
       dataIndex: "verificationStatus",
       render: (value) => <StatusTag value={value} />,
     },
     {
-      title: "Review",
+      title: isKm ? "ការពិនិត្យ" : "Review",
       key: "review",
       render: (_, record) => (
         <Space wrap>
@@ -408,20 +416,20 @@ const AdminPanel = () => {
             type="primary"
             onClick={() => openReview("company", record, "verified")}
           >
-            Verify
+            {isKm ? "ផ្ទៀងផ្ទាត់" : "Verify"}
           </Button>
           <Button
             size="small"
             danger
             onClick={() => openReview("company", record, "rejected")}
           >
-            Reject
+            {isKm ? "បដិសេធ" : "Reject"}
           </Button>
           <Button
             size="small"
             onClick={() => openReview("company", record, "pending")}
           >
-            Pending
+            {isKm ? "រង់ចាំ" : "Pending"}
           </Button>
         </Space>
       ),
@@ -430,7 +438,7 @@ const AdminPanel = () => {
 
   const internshipColumns = [
     {
-      title: "Internship",
+      title: isKm ? "ឱកាសការងារ" : "Internship",
       key: "internship",
       render: (_, record) => (
         <div className="admin-primary-cell">
@@ -441,14 +449,14 @@ const AdminPanel = () => {
         </div>
       ),
     },
-    { title: "Applications", dataIndex: "applicationCount" },
+    { title: isKm ? "បេក្ខជន" : "Applications", dataIndex: "applicationCount" },
     {
-      title: "Deadline",
+      title: isKm ? "ផុតកំណត់" : "Deadline",
       dataIndex: "applicationDeadline",
       render: (value) => (value ? new Date(value).toLocaleDateString() : "—"),
     },
     {
-      title: "Status",
+      title: isKm ? "ស្ថានភាព" : "Status",
       dataIndex: "status",
       render: (value, record) => (
         <Select
@@ -466,7 +474,7 @@ const AdminPanel = () => {
 
   const auditColumns = [
     {
-      title: "Administrator",
+      title: isKm ? "អ្នកគ្រប់គ្រង" : "Administrator",
       key: "admin",
       render: (_, record) => (
         <div className="admin-primary-cell">
@@ -476,52 +484,109 @@ const AdminPanel = () => {
       ),
     },
     {
-      title: "Action",
+      title: isKm ? "សកម្មភាព" : "Action",
       dataIndex: "action",
-      render: (value) => <Tag color="blue">{pretty(value)}</Tag>,
+      render: (value) => {
+        const key = String(value || "").toLowerCase();
+        const label = isKm
+          ? key.includes("mentor.approved")
+            ? "អនុម័តអ្នកណែនាំ (Mentor)"
+            : key.includes("mentor.rejected")
+              ? "បដិសេធពាក្យអ្នកណែនាំ"
+              : key.includes("company.verified")
+                ? "ផ្ទៀងផ្ទាត់ក្រុមហ៊ុន"
+                : key.includes("user")
+                  ? "កែប្រែគណនីអ្នកប្រើប្រាស់"
+                  : pretty(value)
+          : pretty(value);
+        return <Tag color="blue">{label}</Tag>;
+      },
     },
     {
-      title: "Target",
+      title: isKm ? "គោលដៅ" : "Target",
       key: "target",
-      render: (_, record) =>
-        `${pretty(record.entityType || "system")} ${record.entityId || ""}`,
+      render: (_, record) => {
+        const entity = String(record.entityType || "system").toLowerCase();
+        if (isKm && entity.includes("mentor_application")) {
+          return `ពាក្យសុំអ្នកណែនាំ #${record.entityId || ""}`;
+        }
+        if (isKm && entity.includes("company")) {
+          return `ក្រុមហ៊ុន #${record.entityId || ""}`;
+        }
+        if (isKm && entity.includes("user")) {
+          return `អ្នកប្រើប្រាស់ #${record.entityId || ""}`;
+        }
+        return `${pretty(record.entityType || "system")} ${record.entityId || ""}`;
+      },
     },
     {
-      title: "Details",
+      title: isKm ? "ព័ត៌មានលម្អិត" : "Details",
       dataIndex: "details",
       ellipsis: true,
-      render: (value) => (value ? JSON.stringify(value) : "—"),
+      render: (value) => {
+        if (!value) return "—";
+        const obj =
+          typeof value === "object"
+            ? value
+            : (() => {
+                try {
+                  return JSON.parse(value);
+                } catch {
+                  return null;
+                }
+              })();
+        if (obj && typeof obj === "object") {
+          const parts = [];
+          if (obj.userId) {
+            parts.push(isKm ? `គណនី #${obj.userId}` : `User #${obj.userId}`);
+          }
+          if (obj.status) {
+            parts.push(isKm ? `ស្ថានភាព៖ ${pretty(obj.status)}` : `Status: ${pretty(obj.status)}`);
+          }
+          if (obj.reason) {
+            parts.push(isKm ? `មូលហេតុ៖ ${obj.reason}` : `Reason: ${obj.reason}`);
+          } else if (parts.length > 0) {
+            parts.push(isKm ? "បានអនុម័តដោយជោគជ័យ" : "Completed");
+          }
+          if (parts.length > 0) return parts.join(" • ");
+        }
+        return typeof value === "string" ? value : JSON.stringify(value);
+      },
     },
-    { title: "Time", dataIndex: "createdAt", render: dateTime },
+    { title: isKm ? "ពេលវេលា" : "Time", dataIndex: "createdAt", render: dateTime },
   ];
 
   const overview = (
     <div className="admin-overview">
       <Row gutter={[16, 16]}>
         {[
-          ["Users", dashboard?.summary?.users, <IoPeopleOutline key="users" />],
           [
-            "Suspended users",
+            isKm ? "អ្នកប្រើប្រាស់សរុប" : "Users",
+            dashboard?.summary?.users,
+            <IoPeopleOutline key="users" />,
+          ],
+          [
+            isKm ? "គណនីផ្អាកបណ្ដោះអាសន្ន" : "Suspended users",
             dashboard?.summary?.suspendedUsers,
             <IoShieldCheckmarkOutline key="suspended" />,
           ],
           [
-            "Pending mentors",
+            isKm ? "ពាក្យសុំអ្នកណែនាំរង់ចាំពិនិត្យ" : "Pending mentors",
             dashboard?.summary?.pendingMentors,
             <IoRibbonOutline key="mentors" />,
           ],
           [
-            "Pending companies",
+            isKm ? "ក្រុមហ៊ុនរង់ចាំផ្ទៀងផ្ទាត់" : "Pending companies",
             dashboard?.summary?.pendingCompanies,
             <IoBusinessOutline key="companies" />,
           ],
           [
-            "Open internships",
+            isKm ? "ឱកាសការងារកំពុងបើក" : "Open internships",
             dashboard?.summary?.openInternships,
             <IoDocumentTextOutline key="internships" />,
           ],
           [
-            "Applications",
+            isKm ? "ពាក្យស្នើសុំការងារសរុប" : "Applications",
             dashboard?.summary?.applications,
             <IoDocumentTextOutline key="applications" />,
           ],
@@ -533,7 +598,13 @@ const AdminPanel = () => {
           </Col>
         ))}
       </Row>
-      <Card title="Recent administration activity">
+      <Card
+        title={
+          isKm
+            ? "សកម្មភាពគ្រប់គ្រងប្រព័ន្ធថ្មីៗ"
+            : "Recent administration activity"
+        }
+      >
         <Table
           rowKey="id"
           dataSource={dashboard?.recentActions || []}
@@ -838,15 +909,20 @@ const AdminPanel = () => {
       <section className="admin-hero">
         <div className="container admin-hero-inner">
           <div>
-            <p className="eyebrow">Administration</p>
-            <h1>Platform control center</h1>
+            <p className="eyebrow">
+              {isKm ? "ផ្នែកគ្រប់គ្រងប្រព័ន្ធ" : "Administration"}
+            </p>
+            <h1>
+              {isKm ? "មជ្ឈមណ្ឌលគ្រប់គ្រងប្រព័ន្ធ" : "Platform control center"}
+            </h1>
             <p>
-              Manage accounts, approvals, companies, internships, reports, and
-              the administrative audit trail.
+              {isKm
+                ? "គ្រប់គ្រងគណនីអ្នកប្រើប្រាស់ ការអនុម័តអ្នកណែនាំ ក្រុមហ៊ុន ឱកាសការងារ របាយការណ៍ និងកំណត់ត្រាសវនកម្ម។"
+                : "Manage accounts, approvals, companies, internships, reports, and the administrative audit trail."}
             </p>
           </div>
           <Link className="btn outline" to="/analytics">
-            Open analytics
+            {isKm ? "បើកមើលទិន្នន័យវិភាគ" : "Open analytics"}
           </Link>
         </div>
       </section>
@@ -855,21 +931,41 @@ const AdminPanel = () => {
           activeKey={activeTab}
           onChange={setActiveTab}
           items={[
-            { key: "overview", label: "Overview", children: overview },
-            { key: "users", label: "Users", children: userManagement },
-            { key: "mentors", label: "Mentors", children: mentorManagement },
+            {
+              key: "overview",
+              label: isKm ? "ទិដ្ឋភាពទូទៅ" : "Overview",
+              children: overview,
+            },
+            {
+              key: "users",
+              label: isKm ? "អ្នកប្រើប្រាស់" : "Users",
+              children: userManagement,
+            },
+            {
+              key: "mentors",
+              label: isKm ? "អ្នកណែនាំ" : "Mentors",
+              children: mentorManagement,
+            },
             {
               key: "companies",
-              label: "Companies",
+              label: isKm ? "ក្រុមហ៊ុន" : "Companies",
               children: companyManagement,
             },
             {
               key: "internships",
-              label: "Internships",
+              label: isKm ? "ឱកាសការងារ" : "Internships",
               children: internshipManagement,
             },
-            { key: "reports", label: "Reports", children: reports },
-            { key: "audit", label: "Audit log", children: auditLog },
+            {
+              key: "reports",
+              label: isKm ? "របាយការណ៍" : "Reports",
+              children: reports,
+            },
+            {
+              key: "audit",
+              label: isKm ? "កំណត់ត្រាសវនកម្ម" : "Audit log",
+              children: auditLog,
+            },
           ]}
         />
       </section>

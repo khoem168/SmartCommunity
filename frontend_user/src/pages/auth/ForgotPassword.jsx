@@ -37,17 +37,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <section className="auth-card ios-glass-card">
-      {/* Brand Badge */}
-      <div className="auth-brand-badge">
-        <div className="auth-logo-squircle recovery-squircle">
-          <FiKey className="recovery-key-icon" />
-        </div>
-        <span className="auth-brand-eyebrow">
-          <span>{isKm ? "ស្តារលេខសម្ងាត់ឡើងវិញ" : "Account Recovery"}</span>
-        </span>
-      </div>
-
+    <section className="auth-card auth-card-unified auth-card-login ios-glass-card">
       <div className="auth-header">
         <h1>{t("auth.forgotTitle")}</h1>
         <p>{t("auth.forgotDescription")}</p>

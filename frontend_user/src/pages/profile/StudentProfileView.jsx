@@ -11,6 +11,7 @@ import {
   IoCalendarOutline,
   IoRibbonOutline,
   IoCodeSlashOutline,
+  IoLocationOutline,
 } from "react-icons/io5";
 import UserAvatar from "../../components/ui/UserAvatar";
 import ResumePreviewModal from "./ResumePreviewModal";
@@ -107,7 +108,11 @@ export default function StudentProfileView({
               <p className="profile-headline">
                 {displayProfession}
               </p>
-              {displayLocation && <small className="profile-location">📍 {displayLocation}</small>}
+              {displayLocation && (
+                <small className="profile-location" style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                  <IoLocationOutline /> {displayLocation}
+                </small>
+              )}
 
               <div className="profile-social-links">
                 {user.githubUrl && (
@@ -130,7 +135,7 @@ export default function StudentProfileView({
               className="btn primary profile-cv-btn"
             >
               <IoDocumentTextOutline />
-              <span>{isKm ? "ស្ទូឌីយោ CV & Portfolio" : "Open CV Studio"}</span>
+              <span>{isKm ? "បង្កើត & ទាញយក PDF CV ឥតគិតថ្លៃ" : "Free CV Builder & PDF"}</span>
             </Link>
             <button
               type="button"
@@ -143,6 +148,42 @@ export default function StudentProfileView({
           </div>
         </div>
       </section>
+
+      {/* Quick Post-Login Navigation Bar */}
+      <div className="container" style={{ marginTop: "-14px", marginBottom: "18px" }}>
+        <div
+          className="glass"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "12px",
+            padding: "14px 20px",
+            borderRadius: "16px",
+            border: "1px solid rgba(37, 99, 235, 0.18)",
+            background: "rgba(255, 255, 255, 0.9)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+            <span style={{ fontWeight: 700, fontSize: "0.88rem", color: "#2563eb" }}>
+              {isKm ? "⚡ មុខងាររហ័ស៖" : "⚡ Quick Actions:"}
+            </span>
+            <Link to="/cv-studio" className="btn outline" style={{ padding: "6px 14px", fontSize: "0.84rem" }}>
+              📄 {isKm ? "ជ្រើសរើសគំរូ CV & ទាញយក PDF (ឥតគិតថ្លៃ)" : "Choose CV Templates & Download PDF (Free)"}
+            </Link>
+            <Link to="/skill-exchange" className="btn outline" style={{ padding: "6px 14px", fontSize: "0.84rem" }}>
+              🔄 {isKm ? "ផ្លាស់ប្តូរជំនាញ (Skill Swap)" : "Peer Skill Exchange"}
+            </Link>
+            <Link to="/my-applications" className="btn outline" style={{ padding: "6px 14px", fontSize: "0.84rem" }}>
+              💼 {isKm ? "តាមដានពាក្យសុំការងារ" : "My Job Applications"}
+            </Link>
+            <Link to="/forum" className="btn outline" style={{ padding: "6px 14px", fontSize: "0.84rem" }}>
+              💬 {isKm ? "បណ្តាញសង្គមសហគមន៍" : "Community Social Feed"}
+            </Link>
+          </div>
+        </div>
+      </div>
 
       {/* 2. Overview & Skills Row */}
       <div className="container profile-content">

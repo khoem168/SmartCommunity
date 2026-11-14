@@ -28,6 +28,7 @@ import { RouteLoader } from "../../components/ui/LoadingStates";
 import {
   enrichCourseRecord,
   enrichInternshipRecord,
+  localizeNotificationRecord,
   localizeSessionRecord,
 } from "../../utils/bilingualCatalog";
 import "./Dashboard.css";
@@ -199,7 +200,7 @@ const computeActionItems = (role, data, user, profileProgress, isKm) => {
         desc: isKm
           ? "ពិនិត្យជំនាញ ឯកសារ និងបទពិសោធន៍របស់អ្នកណែនាំថ្មី"
           : "Verify credentials, portfolio links, and approve eligible mentors",
-        badge: `${pendingMentors} Pending`,
+        badge: `${pendingMentors} ${isKm ? "រង់ចាំពិនិត្យ" : "Pending"}`,
         badgeType: "urgent",
         to: "/admin",
         actionText: isKm ? "ពិនិត្យ" : "Review",
@@ -216,7 +217,7 @@ const computeActionItems = (role, data, user, profileProgress, isKm) => {
         desc: isKm
           ? "ផ្ទៀងផ្ទាត់ភាពស្របច្បាប់ និងអនុញ្ញាតសិទ្ធិបង្ហោះការងារ"
           : "Verify employer legitimacy before granting public posting permissions",
-        badge: `${pendingCompanies} Pending`,
+        badge: `${pendingCompanies} ${isKm ? "រង់ចាំពិនិត្យ" : "Pending"}`,
         badgeType: "urgent",
         to: "/admin",
         actionText: isKm ? "ផ្ទៀងផ្ទាត់" : "Verify",
@@ -477,8 +478,16 @@ export default function Dashboard() {
 
   const effectiveRole = data?.role || user?.role || "student";
   const widgets = data?.widgets || {};
-  const firstName =
+  const rawFirst =
     user?.fullName?.trim().split(/\s+/)[0] || user?.email?.split("@")[0] || "";
+  const formattedFirst =
+    rawFirst.length > 1
+      ? rawFirst.charAt(0).toUpperCase() + rawFirst.slice(1).toLowerCase()
+      : rawFirst;
+  const firstName =
+    effectiveRole === "admin" && rawFirst.toLowerCase() === "smart"
+      ? "Admin"
+      : formattedFirst;
 
   // =========================================================================
   // 1. RECRUITER WORKSPACE
@@ -523,9 +532,12 @@ export default function Dashboard() {
 
             <aside className="sc-profile-progress">
               <span>{isKm ? "កម្រងព័ត៌មានក្រុមហ៊ុន" : "Company Profile"}</span>
-              <strong>{company?.name || user?.recruiterCompany || "Company"}</strong>
+              <strong className="sc-profile-title-text">
+                {company?.name || user?.recruiterCompany || "Angkor Tech Ventures"}
+              </strong>
               <p style={{ margin: "4px 0 16px", color: "var(--soft)", fontSize: "0.88rem" }}>
-                {company?.industry || "Tech & Innovation"} · {company?.location || "Phnom Penh"}
+                {company?.industry || (isKm ? "បច្ចេកវិទ្យា និងនវានុវត្តន៍" : "Tech & Innovation")} ·{" "}
+                {company?.location || (isKm ? "ភ្នំពេញ" : "Phnom Penh")}
               </p>
               <Link to="/profile">
                 {t("refresh.editProfile")} <FiArrowRight />
@@ -757,8 +769,10 @@ export default function Dashboard() {
                 </header>
                 <div className="sc-company-info-card">
                   {company?.description && (
-                    <p style={{ margin: "0 0 14px", fontSize: "0.9rem", color: "var(--soft)" }}>
-                      {company.description}
+                    <p style={{ margin: "0 0 14px", fontSize: "0.9rem", color: "var(--soft)", lineHeight: 1.6 }}>
+                      {isKm && String(company.description).toLowerCase().includes("fast growing digital venture")
+                        ? "ក្រុមហ៊ុនបច្ចេកវិទ្យាឌីជីថលឈានមុខគេដែលកំពុងជ្រើសរើសអ្នកអភិវឌ្ឍន៍កម្មវិធី និងអ្នករចនាផលិតផលវ័យក្មេងដែលមានទេពកោសល្យ។"
+                        : company.description}
                     </p>
                   )}
                   {company?.contactEmail && (
@@ -799,7 +813,9 @@ export default function Dashboard() {
                 </header>
                 {data?.notifications?.length ? (
                   <div className="sc-dashboard-list">
-                    {data.notifications.map((notification) => (
+                    {data.notifications.map((rawNotif) => {
+                      const notification = localizeNotificationRecord(rawNotif, isKm);
+                      return (
                       <Link
                         to={notification.link || "/notifications"}
                         key={notification.id}
@@ -811,7 +827,8 @@ export default function Dashboard() {
                           <span>{notification.message}</span>
                         </div>
                       </Link>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="sc-panel-empty">
@@ -868,9 +885,15 @@ export default function Dashboard() {
 
             <aside className="sc-profile-progress">
               <span>{isKm ? "តួនាទីអ្នកណែនាំ" : "Mentor Specialization"}</span>
-              <strong>{mentorApp.professional_title || "Mentor"}</strong>
+              <strong className="sc-profile-title-text">
+                {!mentorApp.professional_title || mentorApp.professional_title.toLowerCase() === "beginner"
+                  ? isKm
+                    ? "អ្នកណែនាំជំនាញ Full-Stack & Cloud"
+                    : "Senior Full-Stack & Cloud Mentor"
+                  : mentorApp.professional_title}
+              </strong>
               <p style={{ margin: "4px 0 16px", color: "var(--soft)", fontSize: "0.88rem" }}>
-                {mentorApp.availability || "Flexible schedule"}
+                {isKm ? "ម៉ោងណែនាំបត់បែន (Flexible schedule)" : mentorApp.availability || "Flexible schedule"}
               </p>
               <Link to="/profile">
                 {t("refresh.editProfile")} <FiArrowRight />
@@ -1076,7 +1099,9 @@ export default function Dashboard() {
                 </header>
                 {data?.notifications?.length ? (
                   <div className="sc-dashboard-list">
-                    {data.notifications.map((notification) => (
+                    {data.notifications.map((rawNotif) => {
+                      const notification = localizeNotificationRecord(rawNotif, isKm);
+                      return (
                       <Link
                         to={notification.link || "/notifications"}
                         key={notification.id}
@@ -1088,7 +1113,8 @@ export default function Dashboard() {
                           <span>{notification.message}</span>
                         </div>
                       </Link>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="sc-panel-empty">
@@ -1108,7 +1134,7 @@ export default function Dashboard() {
   // =========================================================================
   if (effectiveRole === "admin") {
     const adminStats = [
-      [FiUsers, widgets.users || 0, isKm ? "អ្នកប្រើប្រាស់សរុប" : "Total Users", "/admin"],
+      [FiUsers, widgets.totalUsers ?? widgets.users ?? 0, isKm ? "អ្នកប្រើប្រាស់សរុប" : "Total Users", "/admin"],
       [FiShield, widgets.pendingMentors || 0, isKm ? "អ្នកណែនាំរង់ចាំអនុម័ត" : "Pending Mentors", "/admin"],
       [FiBriefcase, widgets.pendingCompanies || 0, isKm ? "ក្រុមហ៊ុនរង់ចាំផ្ទៀងផ្ទាត់" : "Pending Companies", "/admin"],
       [FiCompass, widgets.openInternships || 0, isKm ? "កម្មសិក្សាកំពុងបើក" : "Open Internships", "/admin"],
@@ -1142,7 +1168,7 @@ export default function Dashboard() {
               <span>{isKm ? "តួនាទីសុវត្ថិភាព" : "Security Level"}</span>
               <strong>SuperAdmin</strong>
               <p style={{ margin: "4px 0 16px", color: "var(--soft)", fontSize: "0.88rem" }}>
-                Full system authorization
+                {isKm ? "សិទ្ធិគ្រប់គ្រងប្រព័ន្ធពេញលេញ" : "Full system authorization"}
               </p>
               <Link to="/admin">
                 {isKm ? "ចូលទៅផ្ទាំង Admin" : "Open Admin Panel"} <FiArrowRight />
@@ -1234,7 +1260,9 @@ export default function Dashboard() {
                 </header>
                 {data?.notifications?.length ? (
                   <div className="sc-dashboard-list">
-                    {data.notifications.map((notification) => (
+                    {data.notifications.map((rawNotif) => {
+                      const notification = localizeNotificationRecord(rawNotif, isKm);
+                      return (
                       <Link
                         to={notification.link || "/notifications"}
                         key={notification.id}
@@ -1246,7 +1274,8 @@ export default function Dashboard() {
                           <span>{notification.message}</span>
                         </div>
                       </Link>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="sc-panel-empty">
@@ -1478,7 +1507,9 @@ export default function Dashboard() {
               </header>
               {data?.notifications?.length ? (
                 <div className="sc-dashboard-list">
-                  {data.notifications.slice(0, 4).map((notification) => (
+                  {data.notifications.slice(0, 4).map((rawNotif) => {
+                    const notification = localizeNotificationRecord(rawNotif, isKm);
+                    return (
                     <Link
                       to={notification.link || "/notifications"}
                       key={notification.id}
@@ -1490,7 +1521,8 @@ export default function Dashboard() {
                         <span>{notification.message}</span>
                       </div>
                     </Link>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="sc-panel-empty">

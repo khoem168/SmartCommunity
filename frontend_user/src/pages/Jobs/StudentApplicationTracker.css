@@ -25,6 +25,20 @@
     transparent;
 }
 
+.sc-tracker-hero .eyebrow,
+.sc-tracker-hero .sc-dash-kicker {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  color: #2563eb;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
 .sc-tracker-hero h1 {
   margin: 8px 0 10px;
   font-size: clamp(2.2rem, 4.2vw, 3.4rem);

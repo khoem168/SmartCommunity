@@ -108,7 +108,7 @@ const getSkillMatches = async (req, res, next) => {
   }
 };
 
-const getExchangeForParticipant = async (exchangeId, userId) => {
+const getExchangeById = async (exchangeId) => {
   const [rows] = await db.query(
     `SELECT se.*, requester.full_name AS requester_name,
             provider.full_name AS provider_name, c.id AS conversation_id
@@ -118,43 +118,57 @@ const getExchangeForParticipant = async (exchangeId, userId) => {
      LEFT JOIN conversations c
        ON c.participant1_id = LEAST(se.requester_id, se.provider_id)
       AND c.participant2_id = GREATEST(se.requester_id, se.provider_id)
-     WHERE se.id = ? AND (se.requester_id = ? OR se.provider_id = ?)
+     WHERE se.id = ?
      LIMIT 1`,
-    [exchangeId, userId, userId],
+    [exchangeId],
   );
   return rows[0];
 };
 
-const formatExchange = (row, userId) => ({
-  id: row.id,
-  requesterId: row.requester_id,
-  requesterName: row.requester_name,
-  providerId: row.provider_id,
-  providerName: row.provider_name,
-  offeredSkill: row.skill_offered,
-  requestedSkill: row.skill_requested,
-  details: row.message,
-  rejectionReason: row.rejection_reason,
-  status: row.status,
-  scheduledDate: row.scheduled_date,
-  progressPercent: row.progress_percent || 0,
-  requesterCompleted: Boolean(row.requester_completed_at),
-  providerCompleted: Boolean(row.provider_completed_at),
-  currentUserCompleted:
-    row.requester_id === userId
-      ? Boolean(row.requester_completed_at)
-      : Boolean(row.provider_completed_at),
-  completedAt: row.completed_at,
-  conversationId: row.conversation_id,
-  meetingLink: ["accepted", "completed"].includes(row.status)
-    ? `https://meet.jit.si/smart-community-skill-exchange-${row.id}`
-    : null,
-  createdAt: row.created_at,
-});
+const getExchangeForParticipant = async (exchangeId, userId) => {
+  const row = await getExchangeById(exchangeId);
+  if (!row) return null;
+  if (row.requester_id !== userId && row.provider_id !== userId) return null;
+  return row;
+};
+
+const formatExchange = (row, userId) => {
+  const isParticipant = Boolean(
+    userId && (row.requester_id === userId || row.provider_id === userId),
+  );
+  return {
+    id: row.id,
+    requesterId: row.requester_id,
+    requesterName: row.requester_name,
+    providerId: row.provider_id,
+    providerName: row.provider_name,
+    offeredSkill: row.skill_offered,
+    requestedSkill: row.skill_requested,
+    details: row.message,
+    rejectionReason: row.rejection_reason,
+    status: row.status,
+    scheduledDate: row.scheduled_date,
+    progressPercent: row.progress_percent || 0,
+    isParticipant,
+    requesterCompleted: Boolean(row.requester_completed_at),
+    providerCompleted: Boolean(row.provider_completed_at),
+    currentUserCompleted:
+      row.requester_id === userId
+        ? Boolean(row.requester_completed_at)
+        : Boolean(row.provider_completed_at),
+    completedAt: row.completed_at,
+    conversationId: isParticipant ? row.conversation_id : null,
+    meetingLink:
+      isParticipant && ["accepted", "completed"].includes(row.status)
+        ? `https://meet.jit.si/smart-community-skill-exchange-${row.id}`
+        : null,
+    createdAt: row.created_at,
+  };
+};
 
 const getSkillExchangeDetail = async (req, res, next) => {
   try {
-    const exchange = await getExchangeForParticipant(req.params.exchangeId, req.user.id);
+    const exchange = await getExchangeById(req.params.exchangeId);
     if (!exchange) return res.status(404).json({ error: "Skill exchange not found." });
 
     const [updates] = await db.query(

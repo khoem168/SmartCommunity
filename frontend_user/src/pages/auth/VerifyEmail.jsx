@@ -75,18 +75,7 @@ const VerifyEmail = () => {
   };
 
   return (
-    <section className="auth-card ios-glass-card">
-      {/* Brand Badge */}
-      <div className="auth-brand-badge">
-        <div className="auth-logo-squircle recovery-squircle">
-          <FiMail className="recovery-key-icon" />
-        </div>
-        <span className="auth-brand-eyebrow">
-          <FiShield className="shield-icon" />
-          <span>{isKm ? "ផ្ទៀងផ្ទាត់គណនី" : "Email Verification"}</span>
-        </span>
-      </div>
-
+    <section className="auth-card auth-card-unified auth-card-login ios-glass-card">
       <div className="auth-header">
         <h1>{t("auth.verifyTitle")}</h1>
         <p>{t("auth.verifyDescription")}</p>

@@ -1267,3 +1267,797 @@
     padding: 20px 8px 40px;
   }
 }
+
+/* ==========================================================================
+   COHESIVE DESIGN SYSTEM OVERRIDES (UNIFIED GEOMETRY, RHYTHM & TYPOGRAPHY)
+   ========================================================================== */
+
+.auth-card.ios-glass-card,
+.auth-card-unified {
+  padding: 36px 36px 32px !important;
+  border-radius: 20px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow:
+    0 12px 32px -8px rgba(15, 23, 42, 0.07),
+    0 4px 12px -2px rgba(15, 23, 42, 0.03) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-sizing: border-box;
+}
+
+[data-theme="dark"] .auth-card.ios-glass-card,
+[data-theme="dark"] .auth-card-unified {
+  background: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.6) !important;
+}
+
+.auth-card-login {
+  max-width: 440px !important;
+  width: 100%;
+}
+
+.auth-card-register {
+  max-width: 490px !important;
+  width: 100%;
+}
+
+.auth-card-unified .auth-header,
+.auth-card .auth-header {
+  margin-bottom: 22px;
+  text-align: left;
+}
+
+.auth-card-unified .auth-header h1,
+.auth-card .auth-header h1 {
+  font-size: clamp(1.45rem, 2.2vw, 1.7rem) !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  line-height: 1.35 !important;
+  letter-spacing: -0.02em !important;
+  margin: 0 0 6px !important;
+}
+
+[data-theme="dark"] .auth-card-unified .auth-header h1,
+[data-theme="dark"] .auth-card .auth-header h1 {
+  color: #f8fafc !important;
+}
+
+.auth-card-unified .auth-header p,
+.auth-card .auth-header p {
+  font-size: 0.92rem !important;
+  color: #475569 !important;
+  line-height: 1.6 !important;
+  font-weight: 500;
+  margin: 0 !important;
+}
+
+[data-theme="dark"] .auth-card-unified .auth-header p,
+[data-theme="dark"] .auth-card .auth-header p {
+  color: #94a3b8 !important;
+}
+
+/* Consistent Vertical Spacing in Forms & Step Panes */
+.auth-form,
+.ios-step-pane {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  margin-top: 0 !important;
+}
+
+.auth-card .ios-input-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  margin: 0 !important;
+}
+
+.auth-card .ios-input-group label,
+.auth-card .ios-group-label {
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0;
+}
+
+[data-theme="dark"] .auth-card .ios-input-group label,
+[data-theme="dark"] .auth-card .ios-group-label {
+  color: #f1f5f9 !important;
+}
+
+/* Unified 12px Border Radius for All Inputs, Selects, Textareas & Buttons */
+.auth-form input:not([type="checkbox"]),
+.auth-form select,
+.auth-form textarea {
+  min-height: 46px !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  font-size: 0.93rem !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  box-shadow: none !important;
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease !important;
+}
+
+.ios-field-wrap .ios-field-icon ~ input,
+.ios-field-wrap .ios-field-icon ~ select {
+  padding-left: 42px !important;
+}
+
+.auth-form input:not([type="checkbox"]):focus,
+.auth-form select:focus,
+.auth-form textarea:focus {
+  background: #ffffff !important;
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+}
+
+[data-theme="dark"] .auth-form input:not([type="checkbox"]),
+[data-theme="dark"] .auth-form select,
+[data-theme="dark"] .auth-form textarea {
+  background: rgba(15, 23, 42, 0.7) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .auth-form input:not([type="checkbox"]):focus,
+[data-theme="dark"] .auth-form select:focus,
+[data-theme="dark"] .auth-form textarea:focus {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.22) !important;
+}
+
+.auth-form input::placeholder,
+.auth-form textarea::placeholder {
+  color: #64748b !important;
+  font-size: 0.9rem !important;
+  opacity: 1 !important;
+}
+
+[data-theme="dark"] .auth-form input::placeholder,
+[data-theme="dark"] .auth-form textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Unified 12px Primary, Secondary & Google Buttons */
+.ios-submit-btn {
+  min-height: 46px !important;
+  border-radius: 12px !important;
+  background: #2563eb !important;
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22) !important;
+  margin-top: 2px !important;
+}
+
+.ios-submit-btn:hover:not(:disabled) {
+  background: #1d4ed8 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3) !important;
+}
+
+.ios-google-pill-btn {
+  min-height: 46px !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  font-size: 0.92rem !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+.ios-google-pill-btn:hover {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+  transform: none !important;
+}
+
+[data-theme="dark"] .ios-google-pill-btn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #f8fafc !important;
+}
+
+/* Sleek Unified Step Progress Header on Register */
+.auth-step-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+[data-theme="dark"] .auth-step-progress {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.auth-step-progress-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.auth-step-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563eb;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+[data-theme="dark"] .auth-step-badge-pill {
+  background: rgba(59, 130, 246, 0.18);
+  color: #60a5fa;
+}
+
+.auth-step-current-label {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+[data-theme="dark"] .auth-step-current-label {
+  color: #cbd5e1;
+}
+
+.auth-step-progress-segments {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.auth-clear-step {
+  height: 6px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+  cursor: default;
+  transition: background 0.2s ease;
+}
+
+.auth-clear-step.done {
+  cursor: pointer;
+  background: #2563eb;
+}
+
+.auth-clear-step.active {
+  background: #2563eb;
+}
+
+[data-theme="dark"] .auth-clear-step {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .auth-clear-step.active,
+[data-theme="dark"] .auth-clear-step.done {
+  background: #3b82f6;
+}
+
+/* Harmonious 3-Column Role Selector Cards (12px radius) */
+.role-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.role-cards-grid .role-squircle-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4px;
+  min-height: 92px;
+  padding: 12px 12px !important;
+  border-radius: 12px !important;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: none;
+  transition: all 0.18s ease;
+}
+
+[data-theme="dark"] .role-cards-grid .role-squircle-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.role-cards-grid .role-squircle-card:hover {
+  border-color: #93c5fd;
+  background: #ffffff;
+  transform: none;
+}
+
+.role-cards-grid .role-squircle-card.selected {
+  background: rgba(37, 99, 235, 0.05);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
+[data-theme="dark"] .role-cards-grid .role-squircle-card.selected {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.role-cards-grid .role-card-icon-wrap {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.role-cards-grid .role-card-title {
+  font-size: 0.86rem !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  line-height: 1.35 !important;
+}
+
+[data-theme="dark"] .role-cards-grid .role-card-title {
+  color: #f8fafc !important;
+}
+
+.role-cards-grid .role-card-desc {
+  font-size: 0.74rem !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+  line-height: 1.35 !important;
+  margin-top: 0 !important;
+}
+
+[data-theme="dark"] .role-cards-grid .role-card-desc {
+  color: #94a3b8 !important;
+}
+
+/* Inline Password Rules Checklist (No Cluttered Box) */
+.ios-password-rules-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-top: 4px;
+}
+
+.ios-password-rules-inline .rule-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  transition: color 0.15s ease;
+}
+
+.ios-password-rules-inline .rule-chip.valid {
+  color: #059669;
+}
+
+[data-theme="dark"] .ios-password-rules-inline .rule-chip {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .ios-password-rules-inline .rule-chip.valid {
+  color: #34d399;
+}
+
+/* Verification Info Banner on Step 2 for Mentor & Recruiter */
+.auth-verification-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.05);
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  color: #1e3a8a;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.auth-verification-notice p {
+  margin: 0;
+}
+
+.auth-verification-notice svg {
+  color: #2563eb;
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+[data-theme="dark"] .auth-verification-notice {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(96, 165, 250, 0.25);
+  color: #dbeafe;
+}
+
+/* Step 2 Action Buttons */
+.auth-step-actions {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.auth-step-actions .ios-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-step-actions .ios-back-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+[data-theme="dark"] .auth-step-actions .ios-back-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #f8fafc;
+}
+
+/* Clean Skill Picker on Step 2 (12px radius) */
+.quick-skill-picker {
+  padding: 14px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+[data-theme="dark"] .quick-skill-picker {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.quick-skill-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.quick-skill-header label {
+  margin: 0 !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+}
+
+.quick-skill-hint {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.08);
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.quick-skill-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 10px;
+}
+
+.quick-skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 11px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .quick-skill-chip {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #cbd5e1;
+}
+
+.quick-skill-chip:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.quick-skill-chip.selected {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+.quick-skill-custom-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quick-skill-custom-input {
+  flex: 1;
+  min-height: 38px !important;
+  height: 38px !important;
+  padding: 0 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  font-size: 0.84rem !important;
+}
+
+.quick-skill-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563eb;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.quick-skill-add-btn:hover:not(:disabled) {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.quick-skill-add-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (max-width: 580px) {
+  .auth-card.ios-glass-card,
+  .auth-card-unified {
+    padding: 24px 18px !important;
+    border-radius: 16px !important;
+  }
+  .role-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .role-cards-grid .role-squircle-card {
+    min-height: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+  .role-cards-grid .role-card-icon-wrap {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .auth-card.ios-glass-card,
+  .auth-card-unified {
+    padding: 20px 14px !important;
+  }
+  .auth-step-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+
+/* ==========================================================================
+   100% ZOOM LAPTOP VIEWPORT FIT & DARK MODE AUTOFILL HARMONIZATION
+   ========================================================================== */
+.auth-page {
+  min-height: unset !important;
+  padding: 2px 12px 6px !important;
+}
+
+.auth-card.ios-glass-card,
+.auth-card-unified {
+  padding: 18px 26px 16px !important;
+  border-radius: 18px !important;
+}
+
+.auth-card-login {
+  max-width: 440px !important;
+  width: 100%;
+}
+
+.auth-card-register {
+  max-width: 610px !important;
+  width: 100%;
+}
+
+.auth-card-unified .auth-header,
+.auth-card .auth-header {
+  margin-bottom: 10px !important;
+}
+
+.auth-card-unified .auth-header h1,
+.auth-card .auth-header h1 {
+  font-size: 1.35rem !important;
+  margin: 0 0 2px !important;
+}
+
+.auth-card-unified .auth-header p,
+.auth-card .auth-header p {
+  font-size: 0.82rem !important;
+  line-height: 1.4 !important;
+}
+
+.auth-step-progress {
+  gap: 5px !important;
+  margin-bottom: 10px !important;
+  padding-bottom: 8px !important;
+}
+
+.auth-form,
+.ios-step-pane {
+  gap: 9px !important;
+}
+
+.auth-card .ios-input-group {
+  gap: 4px !important;
+}
+
+.auth-card .ios-input-group label {
+  font-size: 0.81rem !important;
+}
+
+.auth-two-col-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Compact Horizontal Role Cards so Register fits 100% Zoom */
+.role-cards-grid .role-squircle-card {
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 9px !important;
+  min-height: 50px !important;
+  padding: 8px 24px 8px 10px !important;
+}
+
+.role-card-check {
+  top: 6px !important;
+  right: 6px !important;
+  width: 16px !important;
+  height: 16px !important;
+  font-size: 0.68rem !important;
+}
+
+.role-cards-grid .role-card-icon-wrap {
+  margin-bottom: 0 !important;
+  flex-shrink: 0;
+}
+
+.role-card-text-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.role-cards-grid .role-card-title {
+  font-size: 0.8rem !important;
+  line-height: 1.2 !important;
+}
+
+.role-cards-grid .role-card-desc {
+  font-size: 0.68rem !important;
+  line-height: 1.15 !important;
+}
+
+/* Compact Inputs & Buttons */
+.auth-form input:not([type="checkbox"]),
+.auth-form select,
+.auth-form textarea {
+  min-height: 38px !important;
+  height: 38px;
+  padding: 6px 12px !important;
+  font-size: 0.86rem !important;
+}
+
+.auth-form textarea {
+  height: auto;
+  min-height: 76px !important;
+}
+
+.ios-field-wrap .ios-field-icon ~ input,
+.ios-field-wrap .ios-field-icon ~ select {
+  padding-left: 38px !important;
+}
+
+.ios-field-icon {
+  left: 13px !important;
+  z-index: 4 !important;
+}
+
+.ios-field-eye {
+  z-index: 4 !important;
+}
+
+.ios-submit-btn,
+.ios-google-pill-btn,
+.auth-step-actions .ios-back-btn {
+  min-height: 42px !important;
+  height: 42px !important;
+  font-size: 0.9rem !important;
+}
+
+.auth-divider {
+  margin: 2px 0 !important;
+}
+
+.auth-footer-box {
+  margin-top: 2px !important;
+  padding-top: 8px !important;
+}
+
+.auth-footer {
+  margin: 0 !important;
+  font-size: 0.85rem !important;
+}
+
+/* Fix Chrome/Edge White Autofill Box in Dark & Light Mode */
+.auth-form input:-webkit-autofill,
+.auth-form input:-webkit-autofill:hover,
+.auth-form input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #f8fafc inset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  caret-color: #0f172a !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+[data-theme="dark"] .auth-form input:-webkit-autofill,
+[data-theme="dark"] .auth-form input:-webkit-autofill:hover,
+[data-theme="dark"] .auth-form input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #1e293b inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  caret-color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+@media (max-width: 600px) {
+  .auth-two-col-grid {
+    grid-template-columns: 1fr;
+  }
+}

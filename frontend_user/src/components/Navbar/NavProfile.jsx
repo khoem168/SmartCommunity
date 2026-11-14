@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { FiChevronDown } from "react-icons/fi";
 import { fetchSkillExchanges } from "../../services/platformService";
 import { getSocket } from "../../services/realtimeService";
 import { useLanguage } from "../../context/LanguageContext";
@@ -8,10 +9,52 @@ import UserAvatar from "../ui/UserAvatar";
 export const NavProfile = ({ user = {}, onLogout }) => {
   const [open, setOpen] = useState(false);
   const [pendingSkillRequests, setPendingSkillRequests] = useState(0);
+  const containerRef = useRef(null);
   const role = user.role || "member";
   const { t, language } = useLanguage();
   const isKm = language === "km";
   const roleLabel = t(`profile.${role}`) || role;
+  const compactRoleLabel =
+    role === "student"
+      ? isKm
+        ? "សិស្ស"
+        : "Student"
+      : role === "mentor"
+        ? isKm
+          ? "អ្នកណែនាំ"
+          : "Mentor"
+        : role === "recruiter"
+          ? isKm
+            ? "ក្រុមហ៊ុន"
+            : "Recruiter"
+          : role === "admin"
+            ? "Admin"
+            : roleLabel;
+
+  // Click outside and Escape key handler
+  useEffect(() => {
+    if (!open) return;
+
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
 
   const refreshPendingSkillRequests = useCallback(async () => {
     if (!user?.id) {
@@ -66,29 +109,32 @@ export const NavProfile = ({ user = {}, onLogout }) => {
   };
 
   return (
-    <div className="nav-profile" onMouseLeave={() => setOpen(false)}>
+    <div className="nav-profile" ref={containerRef}>
       <button
         type="button"
-        className="profile-pill"
+        className={`profile-pill ${open ? "is-open" : ""}`}
         aria-haspopup="true"
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
         title={user.fullName || user.email}
       >
-        <UserAvatar user={user} className="profile-avatar" />
+        <UserAvatar user={user} size={28} className="profile-avatar" />
         <div className="profile-text">
           <strong title={user.fullName || user.email}>
             {user.fullName || user.email}
           </strong>
-          <small>{roleLabel}</small>
+          <span className={`profile-inline-role role-${role}`}>
+            {compactRoleLabel}
+          </span>
         </div>
+        <FiChevronDown className={`profile-pill-chevron ${open ? "rotated" : ""}`} aria-hidden="true" />
       </button>
 
       {open && (
         <div className="profile-menu" role="menu">
           {/* Full Name & Role Header Card */}
           <div className="profile-menu-header">
-            <UserAvatar user={user} className="profile-menu-header-avatar" />
+            <UserAvatar user={user} size={38} className="profile-menu-header-avatar" />
             <div className="profile-menu-header-info">
               <strong className="profile-menu-header-name" title={user.fullName || user.email}>
                 {user.fullName || user.email}
@@ -103,12 +149,19 @@ export const NavProfile = ({ user = {}, onLogout }) => {
           </div>
           <div className="profile-menu-divider" />
 
+          {/* 1-Click Role-Aware Workspace Jump */}
           <Link
-            to="/dashboard"
+            to={role === "admin" ? "/admin" : "/dashboard"}
             className="profile-menu-item profile-menu-item-highlight"
             onClick={() => setOpen(false)}
           >
-            {isKm ? "ផ្ទាំងការងារ (Workspace)" : "Workspace"}
+            {isKm
+              ? role === "admin"
+                ? "ផ្ទាំងបញ្ជា Admin (Workspace)"
+                : "ផ្ទាំងការងារ (Workspace)"
+              : role === "admin"
+                ? "Admin Workspace"
+                : "My Workspace"}
           </Link>
           <Link
             to="/profile"
@@ -116,6 +169,14 @@ export const NavProfile = ({ user = {}, onLogout }) => {
             onClick={() => setOpen(false)}
           >
             {t("profile.profile")}
+          </Link>
+          <Link
+            to="/cv-studio"
+            className="profile-menu-item"
+            onClick={() => setOpen(false)}
+            style={{ fontWeight: 700, color: "#2563eb" }}
+          >
+            <span>{isKm ? "📄 បង្កើត CV ឥតគិតថ្លៃ (Free PDF)" : "📄 Free CV & PDF Builder"}</span>
           </Link>
           <Link
             to="/settings"
@@ -162,13 +223,22 @@ export const NavProfile = ({ user = {}, onLogout }) => {
           )}
 
           {role === "mentor" && (
-            <Link
-              to="/mentorship"
-              className="profile-menu-item"
-              onClick={() => setOpen(false)}
-            >
-              {t("profile.myMentorships")}
-            </Link>
+            <>
+              <Link
+                to="/sessions"
+                className="profile-menu-item"
+                onClick={() => setOpen(false)}
+              >
+                {isKm ? "ថ្នាក់បង្រៀន Live (Sessions)" : "Live Sessions"}
+              </Link>
+              <Link
+                to="/mentorship"
+                className="profile-menu-item"
+                onClick={() => setOpen(false)}
+              >
+                {t("profile.myMentorships")}
+              </Link>
+            </>
           )}
 
           {role === "admin" && (

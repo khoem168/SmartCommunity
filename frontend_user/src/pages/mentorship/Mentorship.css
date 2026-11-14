@@ -34,6 +34,26 @@
   text-align: center;
 }
 
+.mentorship-hero .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: #2563eb;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+[data-theme="dark"] .mentorship-hero .eyebrow {
+  color: #60a5fa;
+  background: rgba(37, 99, 235, 0.16);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
 .mentorship-hero h1 {
   margin: 12px 0 16px;
   font-size: clamp(2.1rem, 5vw, 3.7rem);
@@ -304,29 +324,102 @@
   color: #ffffff !important;
 }
 
-.mentor-grid,
+.mentor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .mentor-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .mentor-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .mentorship-booking-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
 }
 
-.mentorship-page .mentor-card,
-.mentorship-booking-card {
-  display: grid;
-  align-content: start;
-  gap: 15px;
-  padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  border-radius: 26px;
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.07);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  transition:
-    transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.15),
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
+.mentorship-page .mentor-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  border-radius: 20px;
+  background: var(--bg-surface, #ffffff);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+[data-theme="dark"] .mentorship-page .mentor-card {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.mentorship-page .mentor-card:hover {
+  transform: translateY(-4px);
+  border-color: #2563eb;
+  box-shadow: 0 18px 36px rgba(37, 99, 235, 0.12);
+}
+
+.mentor-card-bio {
+  font-size: 0.86rem;
+  color: var(--soft, #64748b);
+  line-height: 1.55;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mentor-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.mentor-skills .skill-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid rgba(37, 99, 235, 0.16);
+}
+
+[data-theme="dark"] .mentor-skills .skill-pill {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.mentor-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: var(--soft, #64748b);
+  padding: 10px 0;
+  border-top: 1px dashed var(--line, #e2e8f0);
+  margin-top: auto;
+}
+
+[data-theme="dark"] .mentor-meta {
+  border-top-color: #334155;
 }
 
 [data-theme="dark"] .mentorship-page .mentor-card,
@@ -476,6 +569,64 @@
   border-radius: 10px;
   color: #64748b;
   background: #f8fafc;
+}
+
+[data-theme="dark"] .mentorship-empty {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .mentor-card-person > span {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .mentor-meta,
+[data-theme="dark"] .booking-meta {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .mentor-application-status,
+[data-theme="dark"] .booking-status {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+[data-theme="dark"] .mentor-application-status.approved,
+[data-theme="dark"] .booking-status.active {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.3);
+}
+
+[data-theme="dark"] .booking-status.completed {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border-color: rgba(96, 165, 250, 0.3);
+}
+
+[data-theme="dark"] .mentor-application-status.rejected,
+[data-theme="dark"] .booking-status.rejected,
+[data-theme="dark"] .booking-status.cancelled {
+  background: rgba(239, 68, 68, 0.18);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.3);
+}
+
+[data-theme="dark"] .booking-rejection {
+  background: rgba(239, 68, 68, 0.16);
+  color: #fca5a5 !important;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+[data-theme="dark"] .booking-review-form {
+  border-top-color: #334155;
+}
+
+[data-theme="dark"] .booking-review {
+  color: #fbbf24 !important;
 }
 
 @media (max-width: 760px) {

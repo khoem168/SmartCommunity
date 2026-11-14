@@ -36,15 +36,35 @@
   --color-danger: #dc2626;
   --color-bg: #f7f9fc;
   --bg: #f7f9fc;
+  --bg-canvas: #f8fafc;
   --color-surface: #ffffff;
+  --bg-surface: #ffffff;
+  --surface-glass: rgba(255, 255, 255, 0.92);
+  --surface-raised: #ffffff;
   --color-surface-soft: #f1f5f9;
   --text-main: #0f172a;
+  --text-primary: #0f172a;
   --text: #0f172a;
   --text-body: #334155;
+  --text-secondary: #475569;
   --text-muted: #64748b;
   --soft: #64748b;
   --border: #e2e8f0;
+  --border-subtle: #e2e8f0;
+  --border-soft: rgba(226, 232, 240, 0.9);
   --border-strong: #cbd5e1;
+  --line: rgba(15, 23, 42, 0.08);
+  --glass: rgba(255, 255, 255, 0.85);
+  --glass2: rgba(255, 255, 255, 0.92);
+  --chip: rgba(37, 99, 235, 0.08);
+  --blue: #2563eb;
+  --teal: #0d9488;
+  --gold: #f5b301;
+  --red: #ef4444;
+  --radius-pill: 999px;
+  --radius-card: 24px;
+  --radius-modal: 28px;
+  --spring: cubic-bezier(0.16, 1, 0.3, 1);
   --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
   --shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.06);
   --shadow-md: 0 18px 50px rgba(15, 23, 42, 0.1);
@@ -60,15 +80,32 @@
 html[data-theme="dark"] {
   --color-bg: #0b0f19;
   --bg: #0b0f19;
+  --bg-canvas: #0b0f19;
   --color-surface: #151d2f;
+  --bg-surface: #151d2f;
+  --surface-glass: rgba(21, 29, 47, 0.88);
+  --surface-raised: #1e293b;
   --color-surface-soft: #111827;
   --text-main: #f1f5f9;
+  --text-primary: #f8fafc;
   --text: #f1f5f9;
   --text-body: #cbd5e1;
+  --text-secondary: #94a3b8;
   --text-muted: #94a3b8;
   --soft: #94a3b8;
   --border: #1e293b;
+  --border-subtle: #334155;
+  --border-soft: rgba(51, 65, 85, 0.72);
   --border-strong: #334155;
+  --line: rgba(255, 255, 255, 0.1);
+  --glass: rgba(21, 29, 47, 0.85);
+  --glass2: rgba(21, 29, 47, 0.92);
+  --chip: rgba(59, 130, 246, 0.16);
+  --blue: #60a5fa;
+  --teal: #2dd4bf;
+  --gold: #fbbf24;
+  --red: #f87171;
+  color-scheme: dark;
 }
 
 html[lang="km"],
@@ -1611,6 +1648,43 @@ html[data-language="km"] .auth-required-card h1 {
   letter-spacing: -0.025em;
 }
 
+html[data-theme="dark"] .auth-required-state {
+  background:
+    radial-gradient(
+      circle at 18% 12%,
+      rgba(59, 130, 246, 0.2),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 82% 16%,
+      rgba(37, 99, 235, 0.14),
+      transparent 32%
+    ),
+    linear-gradient(180deg, #0b0f19 0%, #0f172a 100%);
+}
+
+html[data-theme="dark"] .auth-required-card {
+  border-color: rgba(51, 65, 85, 0.8);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(21, 29, 47, 0.94),
+      rgba(15, 23, 42, 0.92)
+    ),
+    #151d2f;
+  box-shadow:
+    0 28px 70px rgba(2, 6, 23, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .auth-required-card h1 {
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] .auth-required-card > p:not(.eyebrow) {
+  color: #94a3b8;
+}
+
 @media (prefers-reduced-motion: reduce) {
   :where(.btn, .footer-button, .home-btn, .learning-button) > svg,
   :where(
@@ -1791,10 +1865,28 @@ html:not([data-theme="dark"]) :where(
   -webkit-backdrop-filter: blur(10px);
 }
 
+[data-theme="dark"] .btn.outline {
+  background: rgba(30, 41, 59, 0.88);
+  border-color: rgba(148, 163, 184, 0.28);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .btn.outline:hover {
+  background: rgba(51, 65, 85, 0.95);
+  border-color: rgba(96, 165, 250, 0.5);
+  color: #ffffff;
+}
+
 :where(.btn-tag, .badge, .course-category, .job-type, .skill-pill, .profile-skill, .exchange-status, .session-status, .application-status, .booking-status) {
   border: 1px solid rgba(37, 99, 235, 0.16);
   background: #eff6ff;
   color: #2563eb;
+}
+
+[data-theme="dark"] :where(.btn-tag, .badge, .course-category, .job-type, .skill-pill, .profile-skill, .exchange-status, .session-status, .application-status, .booking-status) {
+  border-color: rgba(96, 165, 250, 0.28);
+  background: rgba(37, 99, 235, 0.18);
+  color: #93c5fd;
 }
 
 :where(input, select, textarea, .search-input) {
@@ -1899,6 +1991,24 @@ html:not([data-theme="dark"]) :where(
     radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.74), transparent 34%),
     linear-gradient(135deg, #eff6ff, #dbeafe);
   color: #2563eb;
+}
+
+[data-theme="dark"] :where(
+    .feature-icon,
+    .dashboard-stat-icon,
+    .dashboard-event-icon,
+    .dashboard-job-icon,
+    .exchange-swap-icon,
+    .realtime-toast-icon,
+    .course-play,
+    .lesson-number,
+    .notification-icon,
+    .admin-report-icon,
+    .auth-required-icon
+  ) {
+  border: 1px solid rgba(59, 130, 246, 0.28);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.22), rgba(59, 130, 246, 0.14));
+  color: #60a5fa;
 }
 
 .section {
@@ -2203,6 +2313,17 @@ html[data-theme="dark"] :where(
   letter-spacing: -0.035em;
 }
 
+[data-theme="dark"] :where(
+    .section-header h2,
+    .career-section-header h2,
+    .community-section-header h2,
+    .courses-library-header h2,
+    .dashboard-section-heading h2,
+    .dashboard-panel-header h2
+  ) {
+  color: #f8fafc;
+}
+
 :where(
     .section-header p,
     .career-section-header p,
@@ -2212,6 +2333,16 @@ html[data-theme="dark"] :where(
   ) {
   max-width: 62ch;
   color: #64748b;
+}
+
+[data-theme="dark"] :where(
+    .section-header p,
+    .career-section-header p,
+    .community-section-header p,
+    .dashboard-section-heading p,
+    .dashboard-panel-header p
+  ) {
+  color: #94a3b8;
 }
 
 :where(
@@ -2250,6 +2381,41 @@ html[data-theme="dark"] :where(
     inset 0 1px 0 rgba(255, 255, 255, 0.75) !important;
 }
 
+[data-theme="dark"] :where(
+    .course-card,
+    .career-path-card,
+    .exchange-card,
+    .mentor-card,
+    .job-card,
+    .session-card,
+    .forum-post-card,
+    .forum-category-card,
+    .discover-card,
+    .request-card,
+    .notification-card,
+    .conversation-card,
+    .dashboard-panel,
+    .dashboard-stat-modern,
+    .dashboard-quick-card,
+    .dashboard-journey-track,
+    .dashboard-next-action-card,
+    .dashboard-insight-card,
+    .active-roadmap-panel,
+    .career-assessment-section,
+    .career-advice-section,
+    .assessment-form,
+    .career-article-reader,
+    .skill-match-card,
+    .community-empty-card,
+    .learning-history-panel,
+    .exchange-progress-panel
+  ) {
+  border-color: rgba(51, 65, 85, 0.72) !important;
+  box-shadow:
+    0 18px 42px rgba(2, 6, 23, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
 :where(
     .course-card,
     .career-path-card,
@@ -2271,6 +2437,28 @@ html[data-theme="dark"] :where(
   box-shadow:
     0 20px 50px rgba(15, 23, 42, 0.09),
     inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
+}
+
+[data-theme="dark"] :where(
+    .course-card,
+    .career-path-card,
+    .exchange-card,
+    .mentor-card,
+    .job-card,
+    .session-card,
+    .forum-post-card,
+    .forum-category-card,
+    .discover-card,
+    .request-card,
+    .notification-card,
+    .conversation-card,
+    .dashboard-stat-modern,
+    .dashboard-quick-card
+  ):hover {
+  border-color: rgba(59, 130, 246, 0.45) !important;
+  box-shadow:
+    0 22px 54px rgba(2, 6, 23, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
 :where(
@@ -2303,6 +2491,18 @@ html[data-theme="dark"] :where(
   border: 1px solid rgba(226, 232, 240, 0.88);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.72);
+}
+
+[data-theme="dark"] :where(
+    .course-filters,
+    .job-filters,
+    .mentor-filters,
+    .category-filters,
+    .forum-filters,
+    .skill-filter-row
+  ) {
+  border-color: rgba(51, 65, 85, 0.75);
+  background: rgba(15, 23, 42, 0.72);
 }
 
 :where(
@@ -2370,6 +2570,16 @@ html[data-theme="dark"] :where(
     #fff;
 }
 
+[data-theme="dark"] :where(
+    .career-stats article,
+    .skill-progress-stats article,
+    .internship-stats article,
+    .analytics-stat,
+    .dashboard-stat-modern
+  ) {
+  background: rgba(18, 24, 38, 0.84);
+}
+
 html:not([data-theme="dark"]) .dashboard-hero {
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
   border-bottom: 1px solid #e2e8f0;
@@ -2430,6 +2640,17 @@ html[data-theme="dark"] .dashboard-hero {
     #fff;
 }
 
+[data-theme="dark"] .assessment-result-panel {
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(59, 130, 246, 0.18),
+      transparent 18rem
+    ),
+    rgba(18, 24, 38, 0.85);
+  border-color: rgba(51, 65, 85, 0.75);
+}
+
 .career-radar-chart {
   min-height: 260px;
 }
@@ -2444,6 +2665,18 @@ html[data-theme="dark"] .dashboard-hero {
     .session-card p
   ) {
   color: #5f6f84;
+}
+
+[data-theme="dark"] :where(
+    .story-quote,
+    .course-card-content > p,
+    .career-path-card > p,
+    .exchange-card > p,
+    .mentor-card p,
+    .job-card p,
+    .session-card p
+  ) {
+  color: #94a3b8;
 }
 
 html[lang="km"]
@@ -2606,4 +2839,42 @@ html[data-language="km"]
   .dashboard-content {
     margin-top: -18px;
   }
+}
+
+/* ==========================================================================
+   GLOBAL CODEKHMERLEARNING CTA BUTTON
+   ========================================================================== */
+.ck-card-cta-full {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-height: 42px !important;
+  padding: 10px 16px !important;
+  border-radius: 12px !important;
+  background: #2563eb !important;
+  color: #ffffff !important;
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  margin-top: auto !important;
+  border: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.22) !important;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease !important;
+}
+
+.ck-card-cta-full:hover {
+  background: #1d4ed8 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.32) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .ck-card-cta-full {
+  background: #3b82f6 !important;
+}
+
+[data-theme="dark"] .ck-card-cta-full:hover {
+  background: #2563eb !important;
 }

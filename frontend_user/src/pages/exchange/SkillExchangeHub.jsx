@@ -22,6 +22,7 @@ import {
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
 import UserAvatar from "../../components/ui/UserAvatar";
+import { localizePeerHeadline } from "../../utils/bilingualCatalog";
 import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
 import {
   fetchSkillMatches,
@@ -150,9 +151,20 @@ export default function SkillExchangeHub({ initialTab = "match" }) {
     };
   }, [loadHubData, user]);
 
-  // Tab 1: Combine matches and filtered members (fallback to allMembers when guest or no personal matches yet)
+  // Tab 1: Combine matches and filtered members (deduplicated & balanced roster)
   const effectiveMatches = useMemo(() => {
-    if (matches && matches.length > 0) return matches;
+    const rawList = matches && matches.length > 0 ? matches : allMembers || [];
+    const seenNames = new Set();
+    const deduped = [];
+    for (const m of rawList) {
+      const nameKey = String(m.name || m.full_name || "")
+        .replace(/\s+/g, "")
+        .toLowerCase();
+      if (!nameKey || seenNames.has(nameKey)) continue;
+      seenNames.add(nameKey);
+      deduped.push(m);
+    }
+
     const fallbackTeach = [
       ["React.js", "JavaScript", "Tailwind CSS"],
       ["Python", "SQL & MySQL", "Data Analysis"],
@@ -169,7 +181,61 @@ export default function SkillExchangeHub({ initialTab = "match" }) {
       ["UX/UI Figma", "React.js"],
       ["Python", "Automation"],
     ];
-    return (allMembers || []).map((m, idx) => ({
+
+    const peers = [
+      {
+        id: "peer-bopha",
+        name: "Bopha Pich",
+        profession: "Frontend Learner",
+        location: "Phnom Penh, Cambodia",
+        matchScore: 94,
+      },
+      {
+        id: "peer-sokha",
+        name: "Sokha Dara",
+        profession: "Backend & Database Learner",
+        location: "Phnom Penh, Cambodia",
+        matchScore: 91,
+      },
+      {
+        id: "peer-chantha",
+        name: "Chantha Soun",
+        profession: "UI/UX Design Learner",
+        location: "Siem Reap, Cambodia",
+        matchScore: 88,
+      },
+      {
+        id: "peer-kosal",
+        name: "Kosal Vorn",
+        profession: "Mobile App Developer",
+        location: "Phnom Penh, Cambodia",
+        matchScore: 85,
+      },
+      {
+        id: "peer-sreypov",
+        name: "Sreypov Meas",
+        profession: "Cloud & DevOps Learner",
+        location: "Battambang, Cambodia",
+        matchScore: 82,
+      },
+      {
+        id: "peer-ratanak",
+        name: "Ratanak Keo",
+        profession: "Data Science Learner",
+        location: "Phnom Penh, Cambodia",
+        matchScore: 80,
+      },
+    ];
+
+    const finalPool =
+      deduped.length >= 4
+        ? deduped
+        : [
+            ...deduped,
+            ...peers.filter((p) => !seenNames.has(p.name.toLowerCase())),
+          ];
+
+    return finalPool.map((m, idx) => ({
       ...m,
       teachSkills:
         m.teachSkills?.length > 0
@@ -525,13 +591,7 @@ export default function SkillExchangeHub({ initialTab = "match" }) {
                         <div className="hub-card-bio">
                           <h3>{match.name}</h3>
                           <p>
-                            {isKm
-                              ? !match.profession ||
-                                String(match.profession).toLowerCase() === "student" ||
-                                String(match.profession).toLowerCase() === "beginner"
-                                ? "និស្សិតបច្ចេកវិទ្យា (Tech Learner)"
-                                : match.profession
-                              : match.profession || match.role}
+                            {localizePeerHeadline(match.profession || match.role, isKm)}
                           </p>
                           <small className="hub-card-loc">
                             📍 {isKm ? "ភ្នំពេញ, កម្ពុជា" : match.location || "Phnom Penh, Cambodia"}
@@ -750,13 +810,13 @@ export default function SkillExchangeHub({ initialTab = "match" }) {
                             <div className="hub-req-user">
                               <UserAvatar
                                 user={{
-                                  name: req.requesterName,
-                                  avatarUrl: req.requesterAvatar,
+                                  name: req.requesterName || req.offeredBy || (isKm ? "សមាជិកសហគមន៍" : "Community Member"),
+                                  avatarUrl: req.requesterAvatar || req.offeredByAvatar,
                                 }}
                                 size={44}
                               />
                               <div>
-                                <h4>{req.requesterName}</h4>
+                                <h4>{req.requesterName || req.offeredBy || (isKm ? "សមាជិកសហគមន៍" : "Community Member")}</h4>
                                 <small>
                                   {isKm ? "ផ្ញើកាលពី៖ " : "Received: "}
                                   {formatScheduledDate(req.createdAt)}
@@ -764,7 +824,15 @@ export default function SkillExchangeHub({ initialTab = "match" }) {
                               </div>
                             </div>
                             <span className={`hub-status-pill ${req.status}`}>
-                              {req.status}
+                              {isKm
+                                ? req.status === "accepted"
+                                  ? "បានយល់ព្រម"
+                                  : req.status === "completed"
+                                    ? "បានបញ្ចប់"
+                                    : req.status === "pending"
+                                      ? "រង់ចាំការឆ្លើយតប"
+                                      : req.status
+                                : req.status}
                             </span>
                           </div>
 
@@ -937,7 +1005,15 @@ export default function SkillExchangeHub({ initialTab = "match" }) {
                               </div>
                             </div>
                             <span className={`hub-status-pill ${req.status}`}>
-                              {req.status}
+                              {isKm
+                                ? req.status === "accepted"
+                                  ? "បានយល់ព្រម"
+                                  : req.status === "completed"
+                                    ? "បានបញ្ចប់"
+                                    : req.status === "pending"
+                                      ? "រង់ចាំការឆ្លើយតប"
+                                      : req.status
+                                : req.status}
                             </span>
                           </div>
 
@@ -1017,8 +1093,12 @@ export default function SkillExchangeHub({ initialTab = "match" }) {
               <div className="hub-sessions-grid">
                 {activeSessions.map((session) => {
                   const isRequester = Number(session.requesterId) === Number(user?.id);
-                  const partnerName = isRequester ? session.providerName : session.requesterName;
-                  const partnerAvatar = isRequester ? session.providerAvatar : session.requesterAvatar;
+                  const partnerName = isRequester
+                    ? session.providerName
+                    : session.requesterName || session.offeredBy;
+                  const partnerAvatar = isRequester
+                    ? session.providerAvatar
+                    : session.requesterAvatar || session.offeredByAvatar;
 
                   const currentUserCompleted = isRequester
                     ? session.requesterCompleted

@@ -33,6 +33,20 @@
   gap: 24px;
 }
 
+.sc-ats-hero .eyebrow,
+.sc-ats-hero .sc-dash-kicker {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  color: #2563eb;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
 .sc-ats-hero h1 {
   margin: 6px 0 10px;
   font-size: clamp(2.2rem, 4vw, 3.2rem);
@@ -84,25 +98,37 @@
   box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
 }
 
+.sc-ats-filter-select {
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.88);
+  color: #0f172a;
+}
+
+[data-theme="dark"] .sc-ats-filter-select {
+  border-color: rgba(148, 163, 184, 0.28);
+  background: rgba(30, 41, 59, 0.88);
+  color: #f8fafc;
+}
+
 /* Kanban Board Columns */
 .sc-kanban-board {
   display: grid;
-  grid-template-columns: repeat(5, minmax(280px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(5, minmax(215px, 1fr));
+  gap: 14px;
   overflow-x: auto;
   padding-bottom: 24px;
 }
 
 .sc-kanban-col {
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  min-height: 520px;
+  min-height: 320px;
 }
 
 [data-theme="dark"] .sc-kanban-col {
@@ -158,6 +184,20 @@
   flex: 1;
 }
 
+.sc-kanban-cards:empty::after {
+  content: "មិនទាន់មានបេក្ខជន";
+  margin: auto;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-align: center;
+  padding: 36px 12px;
+}
+
+html[lang="en"] .sc-kanban-cards:empty::after {
+  content: "No candidates yet";
+}
+
 /* Kanban Candidate Card */
 .sc-candidate-card {
   padding: 16px;
@@ -187,9 +227,11 @@
 }
 
 .sc-candidate-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  flex-shrink: 0;
+  border-radius: 50%;
   object-fit: cover;
   background: #e2e8f0;
 }
@@ -212,10 +254,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
   font-size: 0.76rem;
   color: var(--soft, #64748b);
   padding-top: 8px;
   border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.sc-candidate-card-footer strong,
+.sc-candidate-card-footer span:last-child {
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Modal for Candidate Review & Interview Scheduling */

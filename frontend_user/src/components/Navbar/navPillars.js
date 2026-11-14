@@ -1,4 +1,5 @@
 import {
+  FiHome,
   FiBookOpen,
   FiVideo,
   FiAward,
@@ -23,12 +24,21 @@ export const getHybridNav = (user) => {
   if (role === "recruiter") {
     return {
       directLinks: [
-        { path: "/my-posts", labelEn: "My Jobs", labelKm: "ការងារដែលបានបង្ហោះ" },
-        { path: "/recruiter/candidates", labelEn: "Candidates", labelKm: "បេក្ខជន ATS" },
-        { path: "/recruiter/candidates", labelEn: "Interviews", labelKm: "កាលវិភាគសម្ភាសន៍" },
-        { path: "/profile", labelEn: "Company", labelKm: "ក្រុមហ៊ុន" },
+        { path: "/", labelEn: "Home", labelKm: "ទំព័រដើម", icon: FiHome },
+        { path: "/my-posts", labelEn: "My Jobs", labelKm: "ការងារដែលបានបង្ហោះ", icon: FiBriefcase },
+        { path: "/recruiter/candidates", labelEn: "Candidates", labelKm: "បេក្ខជន ATS", icon: FiUsers },
+        { path: "/profile", labelEn: "Company", labelKm: "ក្រុមហ៊ុន", icon: FiCheckCircle },
       ],
       moreItems: [
+        {
+          path: "/dashboard",
+          labelEn: "My Workspace",
+          labelKm: "ផ្ទាំងការងាររបស់ខ្ញុំ",
+          descEn: "Overview of your recruiting pipeline and activity",
+          descKm: "ទិដ្ឋភាពទូទៅនៃការងារ និងបេក្ខជនដែលបានដាក់ពាក្យ",
+          icon: FiCompass,
+          color: "indigo",
+        },
         {
           path: "/calendar",
           labelEn: "Activity Calendar",
@@ -111,13 +121,22 @@ export const getHybridNav = (user) => {
   if (role === "mentor") {
     return {
       directLinks: [
-        { path: "/sessions", labelEn: "My Sessions", labelKm: "ថ្នាក់បង្រៀន Live" },
-        { path: "/mentorship", labelEn: "Bookings", labelKm: "ការកក់ម៉ោង" },
-        { path: "/mentorship", labelEn: "Availability", labelKm: "កាលវិភាគទំនេរ" },
-        { path: "/community", labelEn: "Mentees", labelKm: "សិស្ស/Mentees" },
-        { path: "/forum", labelEn: "Community", labelKm: "សហគមន៍" },
+        { path: "/", labelEn: "Home", labelKm: "ទំព័រដើម", icon: FiHome },
+        { path: "/sessions", labelEn: "My Sessions", labelKm: "ថ្នាក់បង្រៀន Live", icon: FiVideo },
+        { path: "/mentorship", labelEn: "Bookings", labelKm: "ការកក់ម៉ោង", icon: FiAward },
+        { path: "/community", labelEn: "Mentees", labelKm: "សិស្ស/Mentees", icon: FiUsers },
+        { path: "/forum", labelEn: "Community", labelKm: "សហគមន៍", icon: FiMessageSquare },
       ],
       moreItems: [
+        {
+          path: "/dashboard",
+          labelEn: "My Workspace",
+          labelKm: "ផ្ទាំងការងាររបស់ខ្ញុំ",
+          descEn: "Overview of your mentorship sessions and mentees",
+          descKm: "ទិដ្ឋភាពទូទៅនៃការណែនាំ 1:1 និងសកម្មភាពសិស្ស",
+          icon: FiCompass,
+          color: "indigo",
+        },
         {
           path: "/calendar",
           labelEn: "Activity Calendar",
@@ -181,11 +200,10 @@ export const getHybridNav = (user) => {
   if (role === "admin") {
     return {
       directLinks: [
-        { path: "/admin", labelEn: "Users", labelKm: "អ្នកប្រើប្រាស់" },
-        { path: "/admin", labelEn: "Approvals", labelKm: "ការអនុម័ត" },
-        { path: "/admin", labelEn: "Companies", labelKm: "ក្រុមហ៊ុន" },
-        { path: "/forum", labelEn: "Moderation", labelKm: "គ្រប់គ្រង Forum" },
-        { path: "/analytics", labelEn: "Analytics", labelKm: "ស្ថិតិទូទៅ" },
+        { path: "/", labelEn: "Home", labelKm: "ទំព័រដើម", icon: FiHome },
+        { path: "/admin", labelEn: "Admin Panel", labelKm: "គ្រប់គ្រងប្រព័ន្ធ", icon: FiShield },
+        { path: "/forum", labelEn: "Moderation", labelKm: "គ្រប់គ្រង Forum", icon: FiMessageSquare },
+        { path: "/analytics", labelEn: "Analytics", labelKm: "ស្ថិតិទូទៅ", icon: FiBarChart2 },
       ],
       moreItems: [
         {
@@ -241,14 +259,23 @@ export const getHybridNav = (user) => {
   // 4. STUDENT / GUEST HYBRID NAVIGATION (1-CLICK CORE LINKS + MORE MENU)
   return {
     directLinks: [
-      { path: "/", labelEn: "Home", labelKm: "ទំព័រដើម" },
-      { path: "/courses", labelEn: "Courses", labelKm: "វគ្គសិក្សា" },
-      { path: "/skill-exchange", labelEn: "Skill Swap", labelKm: "ប្តូរជំនាញ" },
-      { path: "/mentorship", labelEn: "Mentors", labelKm: "អ្នកណែនាំ" },
-      { path: "/jobs", labelEn: "Jobs", labelKm: "ការងារ" },
-      { path: "/forum", labelEn: "Community", labelKm: "សហគមន៍" },
+      { path: "/", labelEn: "Home", labelKm: "ទំព័រដើម", icon: FiHome },
+      { path: "/courses", labelEn: "Courses", labelKm: "វគ្គសិក្សា", icon: FiVideo },
+      { path: "/skill-exchange", labelEn: "Skill Swap", labelKm: "ប្តូរជំនាញ", icon: FiRepeat },
+      { path: "/mentorship", labelEn: "Mentors", labelKm: "អ្នកណែនាំ", icon: FiAward },
+      { path: "/jobs", labelEn: "Jobs", labelKm: "ការងារ", icon: FiBriefcase },
+      { path: "/forum", labelEn: "Community", labelKm: "សហគមន៍", icon: FiMessageSquare },
     ],
     moreItems: [
+      {
+        path: "/dashboard",
+        labelEn: "My Workspace",
+        labelKm: "ផ្ទាំងការងាររបស់ខ្ញុំ",
+        descEn: "Your learning progress, sessions, and career overview",
+        descKm: "តាមដានវឌ្ឍនភាពសិក្សា ការប្តូរជំនាញ និងអាជីពរបស់អ្នក",
+        icon: FiCompass,
+        color: "indigo",
+      },
       {
         path: "/calendar",
         labelEn: "Activity Calendar",
@@ -286,20 +313,20 @@ export const getHybridNav = (user) => {
         color: "rose",
       },
       {
-        path: "/profile",
-        labelEn: "1-Click CV & Portfolio",
-        labelKm: "ប្រវត្តិរូបសង្ខេប & CV",
-        descEn: "Showcase skills and generate professional resumes",
-        descKm: "បង្ហាញជំនាញ និងបង្កើត CV ស្អាតដោយចុចតែម្តង",
+        path: "/cv-studio",
+        labelEn: "Free CV Builder (PDF)",
+        labelKm: "បង្កើត CV ឥតគិតថ្លៃ (PDF)",
+        descEn: "Choose templates, preview & download PDF CV for free",
+        descKm: "ជ្រើសរើសគំរូ CV ស្អាតៗ មើលផ្ទាល់ និងទាញយកជា PDF ដោយឥតគិតថ្លៃ",
         icon: FiFileText,
         color: "indigo",
       },
       {
-        path: "/community",
-        labelEn: "Discover Members",
-        labelKm: "ស្វែងរកសមាជិក",
-        descEn: "Find peer learners and project partners",
-        descKm: "ស្វែងរកមិត្តភក្តិរៀនកូដ និងដៃគូបង្កើត Project",
+        path: "/profile",
+        labelEn: "My Profile & Portfolio",
+        labelKm: "ប្រវត្តិរូប និងស្នាដៃរបស់ខ្ញុំ",
+        descEn: "Manage your personal profile, skills, and projects",
+        descKm: "គ្រប់គ្រងប្រវត្តិរូប ជំនាញ និងគម្រោងស្នាដៃរបស់អ្នក",
         icon: FiUsers,
         color: "emerald",
       },
@@ -333,24 +360,25 @@ export const getHybridNav = (user) => {
       },
       {
         id: "career",
-        labelEn: "Career",
-        labelKm: "អាជីព",
+        labelEn: "Career & Free CV",
+        labelKm: "អាជីព & បង្កើត CV",
         pillarNumber: "02",
         items: [
+          { path: "/cv-studio", labelEn: "Free CV Builder (PDF)", labelKm: "បង្កើត CV ឥតគិតថ្លៃ (PDF)", descEn: "Multi-template PDF resume builder", descKm: "ជ្រើសរើសគំរូ CV និងទាញយក PDF ឥតគិតថ្លៃ", icon: FiFileText, color: "indigo" },
           { path: "/jobs", labelEn: "Internships & Job Board", labelKm: "កម្មសិក្សា និងការងារ", descEn: "Find matching openings", descKm: "ស្វែងរកការងារជាក់ស្តែង", icon: FiBriefcase, color: "emerald" },
           { path: "/career", labelEn: "Career Roadmap", labelKm: "ផែនទីបង្ហាញផ្លូវអាជីព", descEn: "Step-by-step competencies", descKm: "ដំណើរឆ្ពោះទៅកាន់ការងារ", icon: FiCompass, color: "purple" },
           { path: "/my-applications", labelEn: "My Application Tracker", labelKm: "តាមដានពាក្យសុំការងារ", descEn: "Monitor recruitment stages", descKm: "តាមដានដំណាក់កាលសម្ភាសន៍", icon: FiCheckCircle, color: "blue" },
-          { path: "/profile", labelEn: "1-Click CV & Profile", labelKm: "ប្រវត្តិរូបសង្ខេប & CV", descEn: "Instant resume generator", descKm: "បង្កើត CV ស្អាតដោយចុចតែម្តង", icon: FiFileText, color: "indigo" },
+          { path: "/profile", labelEn: "My Profile & Portfolio", labelKm: "ប្រវត្តិរូបរបស់ខ្ញុំ", descEn: "Personal portfolio & records", descKm: "គ្រប់គ្រងប្រវត្តិរូបផ្ទាល់ខ្លួន", icon: FiUsers, color: "blue" },
         ],
       },
       {
         id: "community",
-        labelEn: "Community",
-        labelKm: "សហគមន៍",
+        labelEn: "Community Social",
+        labelKm: "បណ្តាញសង្គមសហគមន៍",
         pillarNumber: "03",
         items: [
-          { path: "/forum", labelEn: "Developer Forum", labelKm: "វេទិកាពិភាក្សា Q&A", descEn: "Code discussions & bugs", descKm: "សួរសំណួរ និងដោះស្រាយកូដ", icon: FiMessageSquare, color: "purple" },
-          { path: "/community", labelEn: "Discover Members", labelKm: "ស្វែងរកសមាជិក", descEn: "Find tech collaborators", descKm: "ស្វែងរកមិត្តភក្តិរៀនកូដ", icon: FiUsers, color: "indigo" },
+          { path: "/forum", labelEn: "Community Social Feed", labelKm: "បណ្តាញសង្គមសហគមន៍ (Social)", descEn: "Posts, tech tips & discussions", descKm: "ចែករំលែកចំណេះដឹង និងពិភាក្សាកូដ", icon: FiMessageSquare, color: "purple" },
+          { path: "/skill-exchange", labelEn: "Discover Skill Partners", labelKm: "ស្វែងរកដៃគូប្តូរជំនាញ", descEn: "Find tech collaborators", descKm: "ស្វែងរកមិត្តភក្តិរៀនកូដ", icon: FiRepeat, color: "indigo" },
           { path: "/messages", labelEn: "Contextual Inbox", labelKm: "ប្រអប់សារសន្ទនា", descEn: "Organized direct chat", descKm: "ផ្ញើសារបែងចែកតាមប្រភេទ", icon: FiMail, color: "blue" },
         ],
       },

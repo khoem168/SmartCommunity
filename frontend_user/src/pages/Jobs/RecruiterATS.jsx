@@ -241,11 +241,10 @@ export default function RecruiterATS({ initialView = "candidates" }) {
               <select
                 value={filterJobId}
                 onChange={(e) => setFilterJobId(e.target.value)}
+                className="sc-ats-filter-select"
                 style={{
                   padding: "8px 14px",
                   borderRadius: "12px",
-                  border: "1px solid rgba(0,0,0,0.1)",
-                  background: "rgba(255,255,255,0.8)",
                   fontSize: "0.88rem",
                   fontWeight: "600",
                 }}
@@ -473,17 +472,36 @@ export default function RecruiterATS({ initialView = "candidates" }) {
         {activeView === "postings" && (
           <section className="sc-ats-postings-list">
             {internships.length ? (
-              internships.map((job) => (
+              internships.map((job) => {
+                const statusLabel = isKm
+                  ? job.status === "open"
+                    ? "បើកទទួលពាក្យ"
+                    : job.status === "closed"
+                      ? "បានបិទ"
+                      : job.status === "filled"
+                        ? "ពេញចំនួន"
+                        : job.status
+                  : job.status;
+                const categoryLabel = isKm
+                  ? job.category === "web"
+                    ? "អភិវឌ្ឍន៍គេហទំព័រ (Web)"
+                    : job.category === "data"
+                      ? "វិទ្យាសាស្ត្រទិន្នន័យ (Data)"
+                      : job.category === "design"
+                        ? "រចនា UX/UI"
+                        : job.category
+                  : job.category;
+                return (
                 <div key={job.id} className="sc-ats-posting-card">
                   <div>
-                    <span className={`application-status ${job.status}`} style={{ marginBottom: "6px", display: "inline-block" }}>
-                      {job.status}
+                    <span className={`application-status ${job.status}`} style={{ marginBottom: "8px", display: "inline-flex", padding: "4px 12px", borderRadius: "999px", fontSize: "0.78rem", fontWeight: 700, background: job.status === "open" ? "#ecfdf5" : "#f1f5f9", color: job.status === "open" ? "#059669" : "#475569", border: job.status === "open" ? "1px solid #a7f3d0" : "1px solid #cbd5e1" }}>
+                      {statusLabel}
                     </span>
                     <h3 style={{ margin: "2px 0 4px", fontSize: "1.2rem", fontWeight: "700" }}>
                       {job.title}
                     </h3>
                     <p style={{ margin: 0, color: "var(--soft)", fontSize: "0.88rem" }}>
-                      {job.category} · {job.openings || 1} {isKm ? "កន្លែង" : "openings"} ·{" "}
+                      {categoryLabel} · {job.openings || 1} {isKm ? "កន្លែង" : "openings"} ·{" "}
                       {job.applicationCount || 0} {isKm ? "បេក្ខជនបានដាក់ពាក្យ" : "applicants"}
                     </p>
                   </div>
@@ -499,9 +517,9 @@ export default function RecruiterATS({ initialView = "candidates" }) {
                         fontWeight: "700",
                       }}
                     >
-                      <option value="open">Open</option>
-                      <option value="closed">Closed</option>
-                      <option value="filled">Filled</option>
+                      <option value="open">{isKm ? "បើកទទួលពាក្យ (Open)" : "Open"}</option>
+                      <option value="closed">{isKm ? "បានបិទ (Closed)" : "Closed"}</option>
+                      <option value="filled">{isKm ? "ពេញចំនួន (Filled)" : "Filled"}</option>
                     </select>
 
                     <button
@@ -516,7 +534,8 @@ export default function RecruiterATS({ initialView = "candidates" }) {
                     </button>
                   </div>
                 </div>
-              ))
+                );
+              })
             ) : (
               <div style={{ textAlign: "center", padding: "48px 0" }}>
                 <p>{isKm ? "អ្នកមិនទាន់បានប្រកាសការងារនៅឡើយទេ។" : "No internships posted yet."}</p>

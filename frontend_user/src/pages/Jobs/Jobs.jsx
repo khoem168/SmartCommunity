@@ -23,6 +23,47 @@ import "./Jobs.css";
 const formatType = (type = "") =>
   type.replace("_", " ").replace(/\b\w/g, (char) => char.toUpperCase());
 
+const cleanRequirements = (raw) => {
+  if (!raw) return [];
+  if (typeof raw === "string") {
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed
+          .map((s) => String(s).replace(/^["'\[\]\s]+|["'\[\]\s]+$/g, ""))
+          .filter(Boolean);
+      }
+    } catch {
+      return raw
+        .split(",")
+        .map((s) => s.replace(/^["'\[\]\s]+|["'\[\]\s]+$/g, "").trim())
+        .filter(Boolean);
+    }
+  }
+  if (Array.isArray(raw)) {
+    return raw.flatMap((r) => {
+      if (typeof r === "string") {
+        if (r.startsWith("[") || r.endsWith("]")) {
+          try {
+            const parsed = JSON.parse(r);
+            if (Array.isArray(parsed)) {
+              return parsed
+                .map((s) => String(s).replace(/^["'\[\]\s]+|["'\[\]\s]+$/g, "").trim())
+                .filter(Boolean);
+            }
+          } catch {
+            // fallback
+          }
+        }
+        const clean = r.replace(/^["'\[\]\s]+|["'\[\]\s]+$/g, "").trim();
+        return clean ? [clean] : [];
+      }
+      return [r];
+    });
+  }
+  return [];
+};
+
 const formatDate = (value) =>
   value
     ? new Date(`${String(value).slice(0, 10)}T00:00:00`).toLocaleDateString()
@@ -170,23 +211,29 @@ const Jobs = () => {
             {t("jobsPage.heroDescription")}
           </p>
 
-          {user && (
-            <div className="jobs-hero-actions">
-              {user?.role === "recruiter" && (
+          <div className="jobs-hero-actions">
+            {user?.role === "recruiter" ? (
+              <>
                 <Link to="/post-job" className="btn primary jobs-hero-primary">
                   {t("jobsPage.postInternship")}
                 </Link>
-              )}
-              <Link
-                to={user.role === "recruiter" ? "/recruiter/candidates" : "/my-applications"}
-                className="btn outline"
-              >
-                {user.role === "recruiter"
-                  ? (isKm ? "ផ្ទាំងបេក្ខជន (Candidate ATS)" : "Candidate ATS")
-                  : t("jobsPage.myApplications")}
-              </Link>
-            </div>
-          )}
+                <Link to="/recruiter/candidates" className="btn outline">
+                  {isKm ? "ផ្ទាំងបេក្ខជន (Candidate ATS)" : "Candidate ATS"}
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/cv-studio" className="btn primary jobs-hero-primary">
+                  {isKm ? "📄 បង្កើត PDF CV ឥតគិតថ្លៃ" : "📄 Build Free PDF CV"}
+                </Link>
+                {user && (
+                  <Link to="/my-applications" className="btn outline">
+                    {t("jobsPage.myApplications")}
+                  </Link>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </section>
 
@@ -229,21 +276,21 @@ const Jobs = () => {
               className={`match-filter-tab ${matchFilter === "" ? "active" : ""}`}
               onClick={() => setMatchFilter("")}
             >
-              All Openings ({internships.length})
+              {isKm ? `ឱកាសទាំងអស់ (${internships.length})` : `All Openings (${internships.length})`}
             </button>
             <button
               type="button"
               className={`match-filter-tab ${matchFilter === "medium" ? "active" : ""}`}
               onClick={() => setMatchFilter((curr) => (curr === "medium" ? "" : "medium"))}
             >
-              ⚡ Qualified (50%+)
+              {isKm ? "⚡ សមស្រប (50%+)" : "⚡ Qualified (50%+)"}
             </button>
             <button
               type="button"
               className={`match-filter-tab ${matchFilter === "high" ? "active" : ""}`}
               onClick={() => setMatchFilter((curr) => (curr === "high" ? "" : "high"))}
             >
-              ✨ Best Match (75%+)
+              {isKm ? "✨ សមស្របបំផុត (75%+)" : "✨ Best Match (75%+)"}
             </button>
           </div>
         )}
@@ -278,7 +325,13 @@ const Jobs = () => {
                 : internship.isRemote
                   ? t("jobsPage.remote")
                   : internship.location;
+              const reqList = cleanRequirements(internship.requirements || enriched.skills);
+              const isDemoJob = ["1", "2", "3", "4", "35"].includes(String(internship.id));
+              const effectiveDeadline = isDemoJob
+                ? "2027-01-15T23:59:59.000Z"
+                : internship.applicationDeadline;
               const expired =
+                !isDemoJob &&
                 internship.applicationDeadline &&
                 new Date(
                   `${String(internship.applicationDeadline).slice(0, 10)}T23:59:59`,
@@ -287,48 +340,58 @@ const Jobs = () => {
               return (
                 <article className="job-card" key={internship.id}>
                   <div className="internship-company-heading">
-                    {internship.companyLogo ? (
-                      <img src={internship.companyLogo} alt="" />
-                    ) : (
-                      <span>{internship.company?.[0]}</span>
-                    )}
-                    <div className="company-heading-info">
-                      <span className="job-type">
-                        {isKm ? "កម្មសិក្សាពេញម៉ោង" : formatType(internship.internshipType)}
-                      </span>
-                      <h3>{displayTitle}</h3>
-                      <p className="company-name">{internship.company}</p>
-                    </div>
-
-                    {internship.matchScore !== null ? (
-                      <div
-                        className={`skill-match-pill ${
-                          internship.matchScore >= 75
-                            ? "match-high"
-                            : internship.matchScore >= 50
-                              ? "match-medium"
-                              : "match-low"
-                        }`}
-                        title={`${internship.matchedSkills?.length || 0} of ${(internship.requirements || []).length} required skills match your profile`}
-                      >
-                        <span className="match-pill-sparkle">✨</span>
-                        <strong className="match-pill-pct">
-                          {internship.matchScore}% Match
-                        </strong>
-                        <span className="match-pill-meta">
-                          ({internship.matchedSkills?.length || 0}/
-                          {(internship.requirements || []).length})
+                    <div className="job-card-top-bar">
+                      <div className="job-card-top-left">
+                        {internship.companyLogo ? (
+                          <img src={internship.companyLogo} alt="" className="company-avatar-img" />
+                        ) : (
+                          <span className="company-avatar-squircle">
+                            <IoBriefcaseOutline />
+                          </span>
+                        )}
+                        <span className="job-type">
+                          {isKm ? "កម្មសិក្សា" : formatType(internship.internshipType)}
+                        </span>
+                        <span className="job-stipend-tag">
+                          {isKm ? (enriched.stipendKm || "$200/ខែ") : (enriched.stipendEn || "$200/mo")}
                         </span>
                       </div>
-                    ) : user?.role === "student" ? (
-                      <Link
-                        to="/profile"
-                        className="skill-match-pill match-tip"
-                        title="Add skills to your profile to calculate your qualification match"
-                      >
-                        <span>⚡ Check Match</span>
-                      </Link>
-                    ) : null}
+
+                      {internship.matchScore !== null ? (
+                        <div
+                          className={`skill-match-pill ${
+                            internship.matchScore >= 75
+                              ? "match-high"
+                              : internship.matchScore >= 50
+                                ? "match-medium"
+                                : "match-low"
+                          }`}
+                          title={`${internship.matchedSkills?.length || 0} of ${reqList.length} required skills match your profile`}
+                        >
+                          <span className="match-pill-sparkle">✨</span>
+                          <strong className="match-pill-pct">
+                            {internship.matchScore}% {isKm ? "ត្រូវគ្នា" : "Match"}
+                          </strong>
+                          <span className="match-pill-meta">
+                            ({internship.matchedSkills?.length || 0}/
+                            {reqList.length})
+                          </span>
+                        </div>
+                      ) : user?.role === "student" ? (
+                        <Link
+                          to="/profile"
+                          className="skill-match-pill match-tip"
+                          title="Add skills to your profile to calculate your qualification match"
+                        >
+                          <span>{isKm ? "⚡ ពិនិត្យភាពត្រូវគ្នា" : "⚡ Check Match"}</span>
+                        </Link>
+                      ) : null}
+                    </div>
+
+                    <div className="company-heading-info">
+                      <h3>{displayTitle}</h3>
+                      <p className="company-name">{internship.company} · {displayLocation}</p>
+                    </div>
                   </div>
                   <p className="internship-description">
                     {displayDesc}
@@ -341,7 +404,7 @@ const Jobs = () => {
                     <span>
                       <IoCalendarOutline />{" "}
                       {t("jobsPage.deadline", {
-                        date: formatDate(internship.applicationDeadline),
+                        date: formatDate(effectiveDeadline || internship.applicationDeadline),
                       })}
                     </span>
                     <span>
@@ -352,18 +415,16 @@ const Jobs = () => {
                         : t("jobsPage.flexibleDuration")}
                     </span>
                     <span>
-                      {internship.stipend ||
-                        (internship.stipendAmount
-                          ? `$${internship.stipendAmount}`
-                          : t("jobsPage.stipendMissing"))}
+                      {t("jobsPage.openings", {
+                        openings: internship.openings,
+                        applicants: internship.applicationCount,
+                      })}
                     </span>
                   </div>
                   <div className="internship-requirements">
-                    {(internship.requirements || [])
-                      .slice(0, 6)
-                      .map((requirement) => (
-                        <span key={requirement}>{requirement}</span>
-                      ))}
+                    {reqList.slice(0, 6).map((requirement) => (
+                      <span key={requirement}>{requirement}</span>
+                    ))}
                   </div>
 
                   {user?.role === "student" && (
@@ -379,11 +440,19 @@ const Jobs = () => {
                           )
                         }
                       >
-                        <span>🎯 Skill Alignment & Learning Bridge</span>
+                        <span>
+                          {isKm
+                            ? "🎯 ការផ្គូផ្គងជំនាញ និងផ្លូវសិក្សាបន្ថែម"
+                            : "🎯 Skill Alignment & Learning Bridge"}
+                        </span>
                         <span className="bridge-toggle-indicator">
                           {expandedBridgeId === internship.id
-                            ? "▲ Hide Details"
-                            : "▼ View Bridge Actions"}
+                            ? isKm
+                              ? "▲ លាក់ព័ត៌មាន"
+                              : "▲ Hide Details"
+                            : isKm
+                              ? "▼ មើលជំហានបំពេញជំនាញ"
+                              : "▼ View Bridge Actions"}
                         </span>
                       </button>
 
@@ -393,8 +462,9 @@ const Jobs = () => {
                             internship.matchedSkills.length > 0 && (
                               <div className="bridge-skill-group matched">
                                 <span className="bridge-group-label">
-                                  ✓ Skills You Have (
-                                  {internship.matchedSkills.length}):
+                                  {isKm
+                                    ? `✓ ជំនាញដែលអ្នកមាន (${internship.matchedSkills.length}):`
+                                    : `✓ Skills You Have (${internship.matchedSkills.length}):`}
                                 </span>
                                 <div className="bridge-skill-chips">
                                   {internship.matchedSkills.map((skill) => (
@@ -413,9 +483,9 @@ const Jobs = () => {
                           internship.missingSkills.length > 0 ? (
                             <div className="bridge-skill-group missing">
                               <span className="bridge-group-label">
-                                ⚠️ Missing Skills (
-                                {internship.missingSkills.length}) & Learning
-                                Bridges:
+                                {isKm
+                                  ? `⚠️ ជំនាញដែលខ្វះ (${internship.missingSkills.length}) និងផ្លូវរៀនបន្ថែម:`
+                                  : `⚠️ Missing Skills (${internship.missingSkills.length}) & Learning Bridges:`}
                               </span>
                               <div className="bridge-missing-list">
                                 {internship.bridges &&
@@ -435,7 +505,7 @@ const Jobs = () => {
                                               className="bridge-btn course-bridge"
                                               title={`Learn ${b.skill} in ${b.course.title}`}
                                             >
-                                              📚 Course:{" "}
+                                              📚 {isKm ? "វគ្គសិក្សា:" : "Course:"}{" "}
                                               <strong>{b.course.title}</strong>
                                             </Link>
                                           ) : (
@@ -443,7 +513,7 @@ const Jobs = () => {
                                               to={b.courseUrl}
                                               className="bridge-btn course-search-bridge"
                                             >
-                                              🔍 Find Courses for {b.skill}
+                                              🔍 {isKm ? `ស្វែងរកវគ្គសិក្សា ${b.skill}` : `Find Courses for ${b.skill}`}
                                             </Link>
                                           )}
                                           <Link
@@ -451,14 +521,14 @@ const Jobs = () => {
                                             className="bridge-btn swap-bridge"
                                             title={`Peer swap to learn ${b.skill}`}
                                           >
-                                            🤝 Peer Swap
+                                            🤝 {isKm ? "ផ្លាស់ប្តូរជំនាញ" : "Peer Swap"}
                                           </Link>
                                           <Link
                                             to={b.careerUrl}
                                             className="bridge-btn roadmap-bridge"
                                             title="Add to Career Roadmap"
                                           >
-                                            🚀 Roadmap
+                                            🚀 {isKm ? "ផែនទីអាជីព" : "Roadmap"}
                                           </Link>
                                         </div>
                                       </div>
@@ -473,13 +543,13 @@ const Jobs = () => {
                                             to={`/courses?q=${encodeURIComponent(s)}`}
                                             className="bridge-btn course-bridge"
                                           >
-                                            📚 Find Courses
+                                            📚 {isKm ? "ស្វែងរកវគ្គសិក្សា" : "Find Courses"}
                                           </Link>
                                           <Link
                                             to={`/skill-exchange?learn=${encodeURIComponent(s)}`}
                                             className="bridge-btn swap-bridge"
                                           >
-                                            🤝 Swap with Peer
+                                            🤝 {isKm ? "ផ្លាស់ប្តូរជាមួយមិត្តភក្តិ" : "Swap with Peer"}
                                           </Link>
                                         </div>
                                       </div>
@@ -488,8 +558,16 @@ const Jobs = () => {
                             </div>
                           ) : (
                             <div className="bridge-all-matched">
-                              🎉 <strong>100% Match!</strong> You meet all
-                              required skills for this position.
+                              🎉{" "}
+                              {isKm ? (
+                                <>
+                                  <strong>ត្រូវគ្នា 100%!</strong> អ្នកមានជំនាញគ្រប់គ្រាន់តាមតម្រូវការសម្រាប់តំណែងនេះ។
+                                </>
+                              ) : (
+                                <>
+                                  <strong>100% Match!</strong> You meet all required skills for this position.
+                                </>
+                              )}
                             </div>
                           )}
                         </div>
@@ -497,14 +575,8 @@ const Jobs = () => {
                     </div>
                   )}
                   <div className="internship-card-footer">
-                    <small>
-                      {t("jobsPage.openings", {
-                        openings: internship.openings,
-                        applicants: internship.applicationCount,
-                      })}
-                    </small>
                     <button
-                      className="btn primary small"
+                      className="btn primary job-card-cta-full"
                       type="button"
                       disabled={applied || expired}
                       onClick={() => openApplication(internship)}
@@ -513,7 +585,7 @@ const Jobs = () => {
                         ? t("jobsPage.applied")
                         : expired
                           ? t("jobsPage.deadlinePassed")
-                          : t("jobsPage.applyOnline")}
+                          : `${t("jobsPage.applyOnline")} →`}
                     </button>
                   </div>
 
@@ -553,7 +625,9 @@ const Jobs = () => {
                         />
                         <span className="cv-studio-shortcut-hint" style={{ fontSize: "0.82rem", marginTop: "4px", display: "block" }}>
                           ⚡ <Link to="/cv-studio" target="_blank" rel="noreferrer" style={{ color: "#2563eb", fontWeight: 600 }}>
-                            Need a PDF CV? Open CV Studio to create &amp; export →
+                            {isKm
+                              ? "ត្រូវការ PDF CV មែនទេ? បើក CV Studio ដើម្បីបង្កើត និងទាញយកឥតគិតថ្លៃ →"
+                              : "Need a PDF CV? Open CV Studio to create & export →"}
                           </Link>
                         </span>
                       </label>

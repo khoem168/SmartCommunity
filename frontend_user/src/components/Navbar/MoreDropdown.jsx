@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FiChevronDown, FiArrowRight } from "react-icons/fi";
+import { FiChevronDown, FiArrowRight, FiMoreHorizontal } from "react-icons/fi";
 
 export default function MoreDropdown({ items = [], language }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -84,6 +84,7 @@ export default function MoreDropdown({ items = [], language }) {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label={isKm ? "មុខងារផ្សេងៗ (More)" : "More options"}
       >
+        <FiMoreHorizontal className="nav-item-icon" aria-hidden="true" />
         <span>{isKm ? "ផ្សេងៗ" : "More"}</span>
         <FiChevronDown
           className={`more-chevron ${isOpen ? "rotated" : ""}`}

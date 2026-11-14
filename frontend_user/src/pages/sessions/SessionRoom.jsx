@@ -6,6 +6,7 @@ import {
   IoVideocamOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import UserAvatar from "../../components/ui/UserAvatar";
 import {
   joinLearningSession,
@@ -16,6 +17,8 @@ import "./LearningSessions.css";
 const SessionRoom = () => {
   const { sessionId } = useParams();
   const { user } = useGlobleContext();
+  const { language } = useLanguage();
+  const isKm = language === "km";
   const [meetingLink, setMeetingLink] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -45,24 +48,37 @@ const SessionRoom = () => {
     return (
       <main className="session-room-state">
         <IoVideocamOutline size={54} />
-        <h1>Login to join this session</h1>
+        <h1>{isKm ? "សូមចូលគណនីដើម្បីចូលរួមថ្នាក់រៀននេះ" : "Login to join this session"}</h1>
         <Link className="btn primary" to="/login">
-          Login
+          {isKm ? "ចូលគណនី" : "Login"}
         </Link>
       </main>
     );
   }
 
   if (loading || error) {
+    const localizedError =
+      isKm && error && error.toLowerCase().includes("not available to join")
+        ? "ថ្នាក់រៀនផ្ទាល់នេះមិនទាន់បើកឱ្យចូលរួម ឬអ្នកមិនទាន់បានចុះឈ្មោះចូលរួមនៅឡើយទេ។"
+        : isKm && error
+          ? "មិនអាចចូលរួមបន្ទប់សិក្សាផ្ទាល់នេះបានទេនៅពេលនេះ។"
+          : error;
+
     return (
       <main className="session-room-state">
         <IoVideocamOutline size={54} />
         <h1>
-          {loading ? "Preparing your Jitsi room…" : "Meeting unavailable"}
+          {loading
+            ? isKm
+              ? "កំពុងរៀបចំបន្ទប់សិក្សាផ្ទាល់ Jitsi…"
+              : "Preparing your Jitsi room…"
+            : isKm
+              ? "បន្ទប់សិក្សាផ្ទាល់មិនទាន់អាចចូលបានទេ"
+              : "Meeting unavailable"}
         </h1>
-        {error && <p>{error}</p>}
+        {localizedError && <p>{localizedError}</p>}
         <Link className="btn outline" to={`/sessions/${sessionId}`}>
-          <IoArrowBackOutline /> Back to session
+          <IoArrowBackOutline /> {isKm ? "ត្រឡប់ទៅព័ត៌មានថ្នាក់រៀន" : "Back to session"}
         </Link>
       </main>
     );
@@ -74,8 +90,12 @@ const SessionRoom = () => {
         <div className="session-room-identity">
           <UserAvatar user={user} className="session-room-avatar" />
           <div className="session-room-copy">
-            <strong>{user.fullName || "Smart Community member"}</strong>
-            <span>Smart Community live session · Jitsi meeting room</span>
+            <strong>{user.fullName || (isKm ? "សមាជិកសហគមន៍" : "Smart Community member")}</strong>
+            <span>
+              {isKm
+                ? "ថ្នាក់រៀនផ្ទាល់ Smart Community · បន្ទប់សិក្សា Jitsi"
+                : "Smart Community live session · Jitsi meeting room"}
+            </span>
           </div>
         </div>
         <div>
@@ -85,14 +105,14 @@ const SessionRoom = () => {
             target="_blank"
             rel="noreferrer"
           >
-            <IoOpenOutline /> Open in new tab
+            <IoOpenOutline /> {isKm ? "បើកក្នុងផ្ទាំងថ្មី" : "Open in new tab"}
           </a>
           <Link
             className="btn primary small"
             to={`/sessions/${sessionId}`}
             onClick={saveLeave}
           >
-            Leave session
+            {isKm ? "ចាកចេញពីថ្នាក់រៀន" : "Leave session"}
           </Link>
         </div>
       </header>

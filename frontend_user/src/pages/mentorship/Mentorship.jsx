@@ -23,7 +23,10 @@ import { getSocket } from "../../services/realtimeService";
 import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
 import { useLanguage } from "../../context/LanguageContext";
 import UserAvatar from "../../components/ui/UserAvatar";
-import { localizeMentorRecord } from "../../utils/bilingualCatalog";
+import {
+  localizeMentorRecord,
+  FEATURED_MENTORS_ROSTER,
+} from "../../utils/bilingualCatalog";
 import "./Mentorship.css";
 
 const formatDate = (value) =>
@@ -73,7 +76,24 @@ const Mentorship = () => {
     setError("");
     try {
       const mentorRows = await fetchMentors();
-      setMentors(mentorRows);
+      const dbList = mentorRows || [];
+      const normalizeMentorName = (val) =>
+        String(val || "")
+          .replace(/\s+/g, "")
+          .toUpperCase();
+      const merged = [
+        ...dbList,
+        ...FEATURED_MENTORS_ROSTER.filter(
+          (f) =>
+            !dbList.some(
+              (m) =>
+                String(m.id) === String(f.id) ||
+                normalizeMentorName(m.name || m.full_name) ===
+                  normalizeMentorName(f.name),
+            ),
+        ),
+      ];
+      setMentors(merged);
       if (user) {
         const [bookingRows, applicationData] = await Promise.all([
           fetchMentorships(),
@@ -477,11 +497,47 @@ const Mentorship = () => {
               </div>
             </div>
             <div className="mentorship-booking-grid">
-              {bookings.map((booking) => (
+              {bookings.map((booking) => {
+                const topicDisplay =
+                  isKm &&
+                  String(booking.topic || "")
+                    .toLowerCase()
+                    .includes("full-stack portfolio")
+                    ? "ការពិនិត្យកែលម្អគម្រោង Full-Stack Portfolio"
+                    : booking.topic;
+                const descDisplay =
+                  isKm &&
+                  String(booking.description || "")
+                    .toLowerCase()
+                    .includes("discuss react & node.js")
+                    ? "ពិភាក្សាអំពីស្ថាបត្យកម្ម React.js និង Node.js សម្រាប់គម្រោងបញ្ចប់ការសិក្សា"
+                    : booking.description;
+                const statusDisplay = isKm
+                  ? booking.status === "pending"
+                    ? "រង់ចាំការអនុម័ត"
+                    : booking.status === "active"
+                      ? "បានអនុម័ត"
+                      : booking.status === "completed"
+                        ? "បានបញ្ចប់"
+                        : booking.status === "rejected"
+                          ? "បានបដិសេធ"
+                          : "បានបោះបង់"
+                  : booking.status;
+                const freqDisplay = isKm
+                  ? booking.meetingFrequency === "weekly"
+                    ? "រៀងរាល់សប្តាហ៍"
+                    : booking.meetingFrequency === "biweekly"
+                      ? "រៀងរាល់ ២ សប្តាហ៍"
+                      : booking.meetingFrequency === "monthly"
+                        ? "រៀងរាល់ខែ"
+                        : booking.meetingFrequency
+                  : booking.meetingFrequency;
+
+                return (
                 <article className="mentorship-booking-card" key={booking.id}>
                   <div className="booking-heading">
                     <div>
-                      <h3>{booking.topic}</h3>
+                      <h3>{topicDisplay}</h3>
                       <p>
                         {booking.currentUserRole === "mentor"
                           ? t("mentorshipPage.studentName", {
@@ -493,10 +549,10 @@ const Mentorship = () => {
                       </p>
                     </div>
                     <span className={`booking-status ${booking.status}`}>
-                      {booking.status}
+                      {statusDisplay}
                     </span>
                   </div>
-                  <p>{booking.description}</p>
+                  <p>{descDisplay}</p>
                   <div className="booking-meta">
                     <span>
                       <IoCalendarOutline /> {formatDate(booking.requestedTime)}
@@ -506,7 +562,7 @@ const Mentorship = () => {
                         count: booking.durationMinutes,
                       })}
                     </span>
-                    <span>{booking.meetingFrequency}</span>
+                    <span>{freqDisplay}</span>
                   </div>
                   {booking.rejectionReason && (
                     <p className="booking-rejection">
@@ -690,12 +746,13 @@ const Mentorship = () => {
                     )}
                   {booking.review && (
                     <p className="booking-review">
-                      <IoStar /> {booking.review.rating}/5 Â·{" "}
+                      <IoStar /> {booking.review.rating}/5 ·{" "}
                       {booking.review.review}
                     </p>
                   )}
                 </article>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}
@@ -744,7 +801,7 @@ const Mentorship = () => {
                     </div>
                     <p className="mentor-card-bio">{mentor.displayBio}</p>
                     <div className="mentor-skills">
-                      {(mentor.skills || []).slice(0, 5).map((item) => (
+                      {(mentor.skills || []).slice(0, 3).map((item) => (
                         <span className="skill-pill" key={item}>
                           {item}
                         </span>
@@ -752,19 +809,19 @@ const Mentorship = () => {
                     </div>
                     <div className="mentor-meta">
                       <span>
-                        <IoStar /> {mentor.rating || (isKm ? "ថ្មី" : "New")}{" "}
+                        <IoStar style={{ color: "#eab308" }} />{" "}
+                        <strong>{mentor.rating || (isKm ? "ថ្មី" : "New")}</strong>{" "}
                         {mentor.reviewCount ? `(${mentor.reviewCount})` : ""}
                       </span>
                       <span>
                         <IoPeopleOutline /> {mentor.displaySessions}
                       </span>
-                      <span>{mentor.displayLocation}</span>
                     </div>
                     <Link
                       to={`/mentorship/${mentor.id}`}
-                      className="btn primary small"
+                      className="ck-card-cta-full"
                     >
-                      {t("mentorshipPage.viewBook")}
+                      {isKm ? "មើល និងកក់ការណែនាំ" : "View & Book Session"}
                     </Link>
                   </article>
                 );

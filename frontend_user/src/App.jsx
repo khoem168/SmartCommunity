@@ -4,6 +4,7 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
+  Navigate,
 } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout";
 import AuthLayout from "./layouts/AuthLayout";
@@ -13,8 +14,6 @@ import {
   NotFoundPage,
   RouteErrorBoundary,
 } from "./pages/errors/RouteErrorPage";
-
-import { Navigate } from "react-router-dom";
 import { useGlobleContext } from "./context/GlobleContext";
 
 const Home = lazy(() => import("./pages/home/Home"));
@@ -115,6 +114,14 @@ const routes = createBrowserRouter(
           element={protectedPage(() => <RecruiterATS initialView="postings" />, "Loading your job postings...", ["recruiter", "admin"])}
         />
         <Route
+          path="recruiter/internships"
+          element={protectedPage(() => <RecruiterATS initialView="postings" />, "Loading your job postings...", ["recruiter", "admin"])}
+        />
+        <Route
+          path="internships-dashboard"
+          element={protectedPage(InternshipDashboard, "Loading internship dashboard...", ["recruiter", "admin"])}
+        />
+        <Route
           path="my-posts"
           element={protectedPage(() => <RecruiterATS initialView="postings" />, "Loading your posts...", ["recruiter", "admin"])}
         />
@@ -125,7 +132,8 @@ const routes = createBrowserRouter(
         />
 
         <Route path="career" element={pageElement(CareerDevelopment, "Loading career roadmap...")} />
-        <Route path="cv-studio" element={protectedPage(CvStudioPage, "Preparing CV Studio...")} />
+        <Route path="cv-studio" element={pageElement(CvStudioPage, "Preparing CV Studio...")} />
+        <Route path="cv-builder" element={<Navigate to="/cv-studio" replace />} />
         <Route path="my-cv" element={<Navigate to="/cv-studio" replace />} />
         <Route path="mentorship" element={pageElement(Mentorship, "Loading mentors...")} />
         <Route path="mentorship/:mentorId" element={pageElement(MentorDetail, "Loading mentor profile...")} />

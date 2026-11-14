@@ -18,6 +18,14 @@ import {
 } from "react-icons/fi";
 import { fetchGlobalSearch } from "../../services/searchService";
 import { useLanguage } from "../../context/LanguageContext";
+import UserAvatar from "../../components/ui/UserAvatar";
+import {
+  enrichCourseRecord,
+  enrichInternshipRecord,
+  localizeForumPost,
+  localizeMentorRecord,
+  localizePeerHeadline,
+} from "../../utils/bilingualCatalog";
 import "./SearchResultsPage.css";
 
 // Helper component for query text highlighting
@@ -110,14 +118,18 @@ export default function SearchResultsPage() {
         controller.signal
       );
 
-      setResults(data);
+      if (!controller.signal.aborted) {
+        setResults(data);
+      }
     } catch (err) {
-      if (err.name !== "AbortError") {
+      if (!controller.signal.aborted && err?.name !== "AbortError") {
         console.error("Search failed:", err);
         setError(isKm ? "មានបញ្ហាក្នុងការទាញយកទិន្នន័យស្វែងរក។ សូមព្យាយាមម្តងទៀត។" : "Failed to load search results. Please try again.");
       }
     } finally {
-      setLoading(false);
+      if (!controller.signal.aborted) {
+        setLoading(false);
+      }
     }
   }, [queryParam, typeParam, levelParam, priceParam, jobTypeParam, sortParam, isKm]);
 
@@ -213,7 +225,7 @@ export default function SearchResultsPage() {
         <div className="search-hero-content">
           <div className="search-badge-pill">
             <FiSearch className="badge-icon" />
-            <span>{isKm ? "ប្រព័ន្ធស្វែងរកទូទាំងវេទិកា V6" : "Unified Global Discovery V6"}</span>
+            <span>{isKm ? "ប្រព័ន្ធស្វែងរកទូទាំងវេទិកា" : "Unified Global Discovery"}</span>
           </div>
 
           <h1 className="search-hero-title">
@@ -487,42 +499,49 @@ export default function SearchResultsPage() {
                   </div>
 
                   <div className="search-cards-grid">
-                    {results.data.courses.map((course) => (
-                      <article key={course.id} className="search-card course-card glass">
-                        {course.imageUrl && (
+                    {results.data.courses.map((rawCourse, idx) => {
+                      const enriched = enrichCourseRecord(rawCourse, idx);
+                      const cTitle = isKm ? enriched.titleKm : rawCourse.title;
+                      const cDesc = isKm ? enriched.descKm : rawCourse.description;
+                      const cCat = isKm ? enriched.catKm : rawCourse.courseCategory;
+                      const cLevel = isKm ? enriched.levelKm : rawCourse.level;
+                      return (
+                      <article key={rawCourse.id} className="search-card course-card glass">
+                        {rawCourse.imageUrl && (
                           <div className="card-media-wrap">
-                            <img src={course.imageUrl} alt={course.title} className="card-thumb" />
-                            <span className="badge-pill level-pill">{course.level}</span>
+                            <img src={rawCourse.imageUrl} alt={cTitle} className="card-thumb" />
+                            <span className="badge-pill level-pill">{cLevel}</span>
                           </div>
                         )}
                         <div className="card-body">
-                          <span className="card-category-tag">{course.courseCategory}</span>
+                          <span className="card-category-tag">{cCat}</span>
                           <h3 className="card-title">
-                            <Link to={course.route}>
-                              <HighlightedText text={course.title} highlight={queryParam} />
+                            <Link to={rawCourse.route}>
+                              <HighlightedText text={cTitle} highlight={queryParam} />
                             </Link>
                           </h3>
                           <p className="card-instructor">
-                            <FiUsers className="inline-icon" /> {course.subtitle}
+                            <FiUsers className="inline-icon" /> {rawCourse.subtitle}
                           </p>
                           <p className="card-description">
-                            <HighlightedText text={course.description} highlight={queryParam} />
+                            <HighlightedText text={cDesc} highlight={queryParam} />
                           </p>
                           <div className="card-footer-row">
                             <span className="card-price">
-                              {course.price === 0 ? (
+                              {rawCourse.price === 0 ? (
                                 <strong className="text-free">{isKm ? "ឥតគិតថ្លៃ" : "Free"}</strong>
                               ) : (
-                                <strong>${course.price} {course.currency}</strong>
+                                <strong>${rawCourse.price} {rawCourse.currency}</strong>
                               )}
                             </span>
-                            <Link to={course.route} className="btn btn-outline-sm">
+                            <Link to={rawCourse.route} className="btn btn-outline-sm">
                               {isKm ? "មើលវគ្គសិក្សា" : "Explore Course"} <FiArrowRight />
                             </Link>
                           </div>
                         </div>
                       </article>
-                    ))}
+                      );
+                    })}
                   </div>
                 </section>
               )}
@@ -549,40 +568,46 @@ export default function SearchResultsPage() {
                   </div>
 
                   <div className="search-cards-grid">
-                    {results.data.mentors.map((mentor) => (
-                      <article key={mentor.id} className="search-card mentor-card glass">
+                    {results.data.mentors.map((rawMentor) => {
+                      const locMentor = localizeMentorRecord(
+                        {
+                          ...rawMentor,
+                          name: rawMentor.title,
+                          title: rawMentor.subtitle,
+                          bio: rawMentor.description,
+                          avatar_url: rawMentor.imageUrl,
+                        },
+                        isKm,
+                      );
+                      return (
+                      <article key={rawMentor.id} className="search-card mentor-card glass">
                         <div className="mentor-card-header">
-                          <img
-                            src={
-                              mentor.imageUrl ||
-                              `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                                mentor.title
-                              )}&background=2563eb&color=fff`
-                            }
-                            alt={mentor.title}
+                          <UserAvatar
+                            user={{ name: rawMentor.title, avatarUrl: locMentor.avatarUrl }}
                             className="mentor-avatar"
+                            size={52}
                           />
                           <div className="mentor-header-info">
                             <h3 className="card-title">
-                              <Link to={mentor.route}>
-                                <HighlightedText text={mentor.title} highlight={queryParam} />
+                              <Link to={rawMentor.route}>
+                                <HighlightedText text={rawMentor.title} highlight={queryParam} />
                               </Link>
-                              {mentor.isVerified && (
+                              {rawMentor.isVerified && (
                                 <FiCheckCircle className="verified-badge-icon" title="Verified Mentor" />
                               )}
                             </h3>
                             <p className="mentor-profession">
-                              <HighlightedText text={mentor.subtitle} highlight={queryParam} />
+                              <HighlightedText text={locMentor.displayTitle} highlight={queryParam} />
                             </p>
                           </div>
                         </div>
                         <div className="card-body">
                           <p className="card-description">
-                            <HighlightedText text={mentor.description} highlight={queryParam} />
+                            <HighlightedText text={locMentor.displayBio} highlight={queryParam} />
                           </p>
-                          {mentor.skills && mentor.skills.length > 0 && (
+                          {locMentor.skills && locMentor.skills.length > 0 && (
                             <div className="skills-pill-group">
-                              {mentor.skills.map((skill, idx) => (
+                              {locMentor.skills.map((skill, idx) => (
                                 <span key={idx} className="skill-mini-pill">
                                   {skill}
                                 </span>
@@ -591,15 +616,16 @@ export default function SearchResultsPage() {
                           )}
                           <div className="card-footer-row">
                             <span className="meta-text">
-                              <FiMapPin className="inline-icon" /> {mentor.location}
+                              <FiMapPin className="inline-icon" /> {locMentor.displayLocation}
                             </span>
-                            <Link to={mentor.route} className="btn btn-outline-sm">
+                            <Link to={rawMentor.route} className="btn btn-outline-sm">
                               {isKm ? "កក់ម៉ោងពិភាក្សា" : "Book Mentor"} <FiArrowRight />
                             </Link>
                           </div>
                         </div>
                       </article>
-                    ))}
+                      );
+                    })}
                   </div>
                 </section>
               )}
@@ -626,7 +652,13 @@ export default function SearchResultsPage() {
                   </div>
 
                   <div className="search-cards-grid">
-                    {results.data.jobs.map((job) => (
+                    {results.data.jobs.map((job, idx) => {
+                      const enriched = enrichInternshipRecord(job, idx);
+                      const jTitle = isKm ? enriched.titleKm : job.title;
+                      const jDesc = isKm ? enriched.descKm : job.description;
+                      const jLoc = isKm ? enriched.locationKm : job.location;
+                      const jStipend = isKm ? enriched.stipendKm : job.stipend;
+                      return (
                       <article key={job.id} className="search-card job-card glass">
                         <div className="job-card-header">
                           <div className="company-logo-avatar">
@@ -639,7 +671,7 @@ export default function SearchResultsPage() {
                           <div className="job-header-meta">
                             <h3 className="card-title">
                               <Link to={job.route}>
-                                <HighlightedText text={job.title} highlight={queryParam} />
+                                <HighlightedText text={jTitle} highlight={queryParam} />
                               </Link>
                             </h3>
                             <p className="company-name">
@@ -652,13 +684,13 @@ export default function SearchResultsPage() {
                         </div>
                         <div className="card-body">
                           <p className="card-description">
-                            <HighlightedText text={job.description} highlight={queryParam} />
+                            <HighlightedText text={jDesc} highlight={queryParam} />
                           </p>
                           <div className="job-badges-group">
-                            <span className="badge-pill">{job.jobType.replace("_", " ")}</span>
-                            <span className="badge-pill stipend-pill">{job.stipend}</span>
+                            <span className="badge-pill">{isKm ? "កម្មសិក្សា" : job.jobType.replace("_", " ")}</span>
+                            <span className="badge-pill stipend-pill">{jStipend}</span>
                             <span className="meta-text">
-                              <FiMapPin className="inline-icon" /> {job.location}
+                              <FiMapPin className="inline-icon" /> {jLoc}
                             </span>
                           </div>
                           <div className="card-footer-row">
@@ -676,7 +708,8 @@ export default function SearchResultsPage() {
                           </div>
                         </div>
                       </article>
-                    ))}
+                      );
+                    })}
                   </div>
                 </section>
               )}
@@ -703,18 +736,18 @@ export default function SearchResultsPage() {
                   </div>
 
                   <div className="search-cards-grid">
-                    {results.data.skills.map((skillUser) => (
+                    {results.data.skills
+                      .filter((item, index, arr) => {
+                        const key = String(item.title || "").replace(/\s+/g, "").toLowerCase();
+                        return arr.findIndex((x) => String(x.title || "").replace(/\s+/g, "").toLowerCase() === key) === index;
+                      })
+                      .map((skillUser) => (
                       <article key={skillUser.id} className="search-card skill-card glass">
                         <div className="skill-card-header">
-                          <img
-                            src={
-                              skillUser.imageUrl ||
-                              `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                                skillUser.title
-                              )}&background=6366f1&color=fff`
-                            }
-                            alt={skillUser.title}
+                          <UserAvatar
+                            user={{ name: skillUser.title, avatarUrl: skillUser.imageUrl }}
                             className="member-avatar"
+                            size={52}
                           />
                           <div>
                             <h3 className="card-title">
@@ -722,14 +755,16 @@ export default function SearchResultsPage() {
                                 <HighlightedText text={skillUser.title} highlight={queryParam} />
                               </Link>
                             </h3>
-                            <p className="member-role">{skillUser.subtitle}</p>
+                            <p className="member-role">
+                              {localizePeerHeadline(skillUser.subtitle, isKm)}
+                            </p>
                           </div>
                         </div>
                         <div className="card-body">
                           {skillUser.offeredSkills?.length > 0 && (
                             <div className="swap-skills-block">
                               <span className="swap-label teach-label">
-                                {isKm ? "ចេះបង្រៀន (Can Teach):" : "Can Teach:"}
+                                {isKm ? "ចេះបង្រៀន៖" : "Can Teach:"}
                               </span>
                               <div className="skills-pill-group">
                                 {skillUser.offeredSkills.map((s, i) => (
@@ -743,7 +778,7 @@ export default function SearchResultsPage() {
                           {skillUser.wantedSkills?.length > 0 && (
                             <div className="swap-skills-block">
                               <span className="swap-label learn-label">
-                                {isKm ? "ចង់រៀន (Wants to Learn):" : "Wants to Learn:"}
+                                {isKm ? "ចង់រៀន៖" : "Wants to Learn:"}
                               </span>
                               <div className="skills-pill-group">
                                 {skillUser.wantedSkills.map((s, i) => (
@@ -756,7 +791,8 @@ export default function SearchResultsPage() {
                           )}
                           <div className="card-footer-row">
                             <span className="meta-text">
-                              <FiMapPin className="inline-icon" /> {skillUser.location}
+                              <FiMapPin className="inline-icon" />{" "}
+                              {isKm ? "ភ្នំពេញ, កម្ពុជា" : skillUser.location}
                             </span>
                             <Link to={skillUser.route} className="btn btn-outline-sm">
                               {isKm ? "ស្នើប្តូរជំនាញ" : "Request Swap"} <FiArrowRight />
@@ -791,27 +827,37 @@ export default function SearchResultsPage() {
                   </div>
 
                   <div className="search-cards-grid">
-                    {results.data.community.map((post) => (
-                      <article key={post.id} className="search-card forum-card glass">
+                    {results.data.community.map((rawPost) => {
+                      const post = localizeForumPost(
+                        {
+                          ...rawPost,
+                          body: rawPost.description,
+                          categoryName: rawPost.forumCategory,
+                        },
+                        isKm,
+                      );
+                      return (
+                      <article key={rawPost.id} className="search-card forum-card glass">
                         <div className="card-body">
-                          <span className="card-category-tag">{post.forumCategory}</span>
+                          <span className="card-category-tag">{post.categoryName}</span>
                           <h3 className="card-title">
-                            <Link to={post.route}>
+                            <Link to={rawPost.route}>
                               <HighlightedText text={post.title} highlight={queryParam} />
                             </Link>
                           </h3>
                           <p className="card-description">
-                            <HighlightedText text={post.description} highlight={queryParam} />
+                            <HighlightedText text={post.body} highlight={queryParam} />
                           </p>
                           <div className="card-footer-row">
-                            <span className="meta-text">{post.subtitle}</span>
-                            <Link to={post.route} className="btn btn-outline-sm">
+                            <span className="meta-text">{rawPost.subtitle}</span>
+                            <Link to={rawPost.route} className="btn btn-outline-sm">
                               {isKm ? "អានការពិភាក្សា" : "Read Discussion"} <FiArrowRight />
                             </Link>
                           </div>
                         </div>
                       </article>
-                    ))}
+                      );
+                    })}
                   </div>
                 </section>
               )}

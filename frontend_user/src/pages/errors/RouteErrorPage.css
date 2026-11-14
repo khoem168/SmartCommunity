@@ -78,9 +78,58 @@
 
 .route-error-card h1 {
   margin: 0;
+  color: #0f172a;
   font-size: clamp(1.8rem, 4vw, 2.7rem);
   line-height: 1.15;
   letter-spacing: -0.035em;
+}
+
+[data-theme="dark"] .route-error-page {
+  color: #f8fafc;
+  background: #0b0f19;
+}
+
+[data-theme="dark"] .route-error-orb {
+  border-color: rgba(59, 130, 246, 0.22);
+}
+
+[data-theme="dark"] .route-error-card {
+  border-color: rgba(51, 65, 85, 0.85);
+  background: rgba(21, 29, 47, 0.94);
+  box-shadow: 0 28px 70px rgba(2, 6, 23, 0.65);
+}
+
+[data-theme="dark"] .route-error-icon {
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #60a5fa;
+  background: rgba(37, 99, 235, 0.16);
+}
+
+[data-theme="dark"] .route-error-code,
+[data-theme="dark"] .route-error-kicker {
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .route-error-card h1 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .route-error-description {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .route-error-actions a:not(.route-error-primary),
+[data-theme="dark"] .route-error-actions button:not(.route-error-primary) {
+  border-color: #334155;
+  color: #e2e8f0;
+  background: #1e293b;
+}
+
+[data-theme="dark"] .route-error-actions a:not(.route-error-primary):hover,
+[data-theme="dark"] .route-error-actions button:not(.route-error-primary):hover {
+  border-color: #60a5fa;
+  background: #25344d;
+  color: #ffffff;
 }
 
 .route-error-description {

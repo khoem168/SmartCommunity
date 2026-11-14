@@ -126,7 +126,11 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
-  align-items: start;
+  align-items: stretch;
+}
+
+.profile-overview-grid > .profile-panel {
+  height: 100%;
 }
 
 .profile-record-grid > :last-child:nth-child(odd) {
@@ -582,6 +586,7 @@
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
 /* Verification Pills */
@@ -726,12 +731,19 @@
 }
 
 .stat-ats-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.35rem;
   font-weight: 700;
   color: #9333ea;
   font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.recruiter-stat-card small {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--soft);
 }
 
 /* Recruiter Jobs Table */
@@ -922,4 +934,111 @@
   background: var(--text);
   color: var(--bg);
   border-color: var(--text);
+}
+
+/* ==========================================================================
+   DARK THEME OVERRIDES FOR PROFILE PAGE
+   ========================================================================== */
+[data-theme="dark"] .profile-panel {
+  background: rgba(18, 24, 38, 0.86);
+  border-color: rgba(51, 65, 85, 0.72);
+  box-shadow: 0 20px 44px rgba(2, 6, 23, 0.5);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .profile-panel h2,
+[data-theme="dark"] .profile-section-heading h2 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .profile-info-list span {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .profile-info-list svg,
+[data-theme="dark"] .activity-grid svg {
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .profile-edit-form label,
+[data-theme="dark"] .profile-edit-grid label,
+[data-theme="dark"] .profile-record-form label {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .profile-edit-form input,
+[data-theme="dark"] .profile-edit-form select,
+[data-theme="dark"] .profile-edit-form textarea,
+[data-theme="dark"] .profile-skill-edit-row input,
+[data-theme="dark"] .profile-edit-grid input,
+[data-theme="dark"] .profile-edit-grid textarea,
+[data-theme="dark"] .profile-record-form input,
+[data-theme="dark"] .profile-record-form textarea {
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(71, 85, 105, 0.75);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .profile-record {
+  background: rgba(15, 23, 42, 0.65);
+  border-color: rgba(51, 65, 85, 0.7);
+}
+
+[data-theme="dark"] .profile-record h3 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .profile-record p,
+[data-theme="dark"] .profile-record small,
+[data-theme="dark"] .profile-muted,
+[data-theme="dark"] .profile-placeholder-list {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .profile-record-actions button {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(71, 85, 105, 0.8);
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .profile-career-goal {
+  border-top-color: rgba(51, 65, 85, 0.7);
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .profile-skill,
+[data-theme="dark"] .profile-skill.interested {
+  background: rgba(37, 99, 235, 0.18);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.28);
+}
+
+[data-theme="dark"] .activity-grid div {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(51, 65, 85, 0.65);
+}
+
+[data-theme="dark"] .activity-grid strong {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .activity-grid span {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .company-logo-wrap {
+  background: rgba(18, 24, 38, 0.9);
+  border-color: rgba(51, 65, 85, 0.75);
+}
+
+[data-theme="dark"] .recruiter-stat-card,
+[data-theme="dark"] .mentor-stat-card,
+[data-theme="dark"] .mentor-booking-card {
+  background: rgba(18, 24, 38, 0.82);
+  border-color: rgba(51, 65, 85, 0.72);
+}
+
+[data-theme="dark"] .job-tag-type {
+  background: rgba(51, 65, 85, 0.65);
+  color: #cbd5e1;
 }

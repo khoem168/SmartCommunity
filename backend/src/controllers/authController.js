@@ -51,6 +51,19 @@ const developmentUrl = (key, delivery) =>
     ? { [key]: delivery.url }
     : {};
 
+const toSkillArray = (value) => {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item || "").trim()).filter(Boolean);
+  }
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+  return [];
+};
+
 const register = async (req, res, next) => {
   try {
     const verificationRequired = isEmailVerificationRequired();
@@ -62,6 +75,10 @@ const register = async (req, res, next) => {
       skillsToTeach = [],
       skillsToLearn = [],
       candidateSkills = [],
+      mentorExpertise = [],
+      mentorTitle,
+      mentorExperience,
+      careerGoal,
       experienceLevel,
       availability,
       recruiterCompany,
@@ -69,6 +86,12 @@ const register = async (req, res, next) => {
       location,
     } = req.body;
     const email = normalizeEmail(req.body.email);
+
+    if (String(role || "").trim().toLowerCase() === "admin") {
+      return res.status(403).json({
+        error: "Admin accounts cannot be registered publicly.",
+      });
+    }
 
     if (!String(fullName || "").trim() || !email || !password) {
       return res
@@ -88,21 +111,28 @@ const register = async (req, res, next) => {
         .json({ error: "An account already exists with this email." });
     }
 
-    const requestedRole = normalizeRole(role);
+    const teachList = toSkillArray(skillsToTeach);
+    const learnList = toSkillArray(skillsToLearn);
+    const candidateList = toSkillArray(candidateSkills);
+    const mentorExpertiseList = toSkillArray(mentorExpertise);
+
+    const requestedRole = normalizeRole(role, false);
     const normalizedRole = requestedRole === "mentor" ? "student" : requestedRole;
     const skills = JSON.stringify({
-      teach: skillsToTeach,
-      learn: skillsToLearn,
-      candidate: candidateSkills,
+      teach: requestedRole === "mentor" && mentorExpertiseList.length ? mentorExpertiseList : teachList,
+      learn: learnList,
+      candidate: candidateList,
       availability,
       experienceLevel,
     });
     const passwordHash = await hashPassword(password);
+    const resolvedProfession =
+      mentorTitle || jobTitle || experienceLevel || careerGoal || null;
     const [result] = await db.query(
       `INSERT INTO users
-       (email, password_hash, full_name, role, bio, skills, profession, company, location,
+       (email, password_hash, full_name, role, bio, skills, profession, company, location, career_goal,
         is_verified, is_active, auth_provider, email_verified_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 'local', ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 'local', ?)`,
       [
         email,
         passwordHash,
@@ -110,28 +140,31 @@ const register = async (req, res, next) => {
         normalizedRole,
         bio || null,
         skills,
-        jobTitle || experienceLevel || null,
+        resolvedProfession,
         recruiterCompany || null,
         location || null,
+        careerGoal || null,
         verificationRequired ? 0 : 1,
         verificationRequired ? null : new Date(),
       ],
     );
 
     if (requestedRole === "mentor") {
-      const expertise = [...skillsToTeach, ...candidateSkills]
-        .map((item) => String(item).trim())
-        .filter(Boolean);
+      const expertise = Array.from(
+        new Set([...mentorExpertiseList, ...teachList, ...candidateList]),
+      );
+      const parsedExpYears = Math.max(0, Number.parseInt(mentorExperience, 10) || 0);
       await db.query(
         `INSERT INTO mentor_applications
          (user_id, professional_title, company, expertise, experience_years,
           motivation, availability, status)
-         VALUES (?, ?, ?, ?, 0, ?, ?, 'pending')`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')`,
         [
           result.insertId,
-          String(jobTitle || experienceLevel || "Community Mentor").slice(0, 150),
+          String(mentorTitle || jobTitle || experienceLevel || "Community Mentor").slice(0, 150),
           recruiterCompany || null,
           JSON.stringify(expertise.length ? expertise : ["Mentorship"]),
+          parsedExpYears,
           String(bio || "I would like to support community learners.").slice(0, 2000),
           String(availability || "Flexible schedule").slice(0, 150),
         ],
@@ -156,11 +189,26 @@ const register = async (req, res, next) => {
       );
     }
 
+    const onboardingStatus =
+      requestedRole === "mentor" || requestedRole === "recruiter"
+        ? "pending_verification"
+        : "active";
+
     if (!verificationRequired) {
+      const [createdRows] = await db.query(
+        `SELECT ${userColumns} FROM users WHERE id = ?`,
+        [result.insertId],
+      );
+      const authPayload = createdRows[0]
+        ? buildAuthResponse(createdRows[0], true)
+        : {};
       return res.status(201).json({
         message: "Account created. You can now log in.",
         email,
+        requestedRole,
+        onboardingStatus,
         requiresVerification: false,
+        ...authPayload,
       });
     }
 
@@ -178,6 +226,8 @@ const register = async (req, res, next) => {
           ? "Account created, but email delivery is unavailable. Try resending verification later."
           : "Account created. Use the development verification link to continue.",
       email,
+      requestedRole,
+      onboardingStatus,
       requiresVerification: true,
       ...developmentUrl("devVerificationUrl", delivery),
     });
@@ -209,11 +259,14 @@ const login = async (req, res, next) => {
     const user = sanitizeUser(account);
     const verificationRequired = isEmailVerificationRequired();
     const placeholder = isPlaceholderHash(account.password_hash);
-    const allowDemoPasswords = process.env.NODE_ENV !== "production";
+    const allowDemoPasswords =
+      process.env.NODE_ENV !== "production" &&
+      process.env.ALLOW_DEMO_PASSWORDS === "true";
     const validPassword =
       (await verifyPassword(password, account.password_hash)) ||
       (allowDemoPasswords &&
         placeholder &&
+        user.role !== "admin" &&
         password === demoPasswordForRole(user.role));
     if (!validPassword) {
       return res.status(401).json({ error: "Invalid email or password." });

@@ -10,7 +10,12 @@ import {
   IoTrashOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
+import { useLanguage } from "../../context/LanguageContext";
 import UserAvatar from "../../components/ui/UserAvatar";
+import {
+  localizeForumAnswer,
+  localizeForumPost,
+} from "../../utils/bilingualCatalog";
 import {
   acceptForumAnswerRequest,
   createForumAnswerRequest,
@@ -25,11 +30,13 @@ import {
 } from "../../services/forumService";
 import "./Forum.css";
 
-const formatDate = (value) =>
-  new Intl.DateTimeFormat("en", {
+const formatDate = (value, isKm = false) => {
+  if (!value) return "";
+  return new Intl.DateTimeFormat(isKm ? "km-KH" : "en", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
+};
 
 const Avatar = ({ name, image }) => (
   <UserAvatar
@@ -42,6 +49,8 @@ const ForumDetail = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
   const { user } = useGlobleContext();
+  const { language } = useLanguage();
+  const isKm = language === "km";
   const [data, setData] = useState(null);
   const [answer, setAnswer] = useState("");
   const [comment, setComment] = useState("");
@@ -56,7 +65,12 @@ const ForumDetail = () => {
     try {
       setData(await fetchForumPost(postId));
     } catch (err) {
-      setError(err.message || "Unable to load this post.");
+      setError(
+        err.message ||
+          (isKm
+            ? "មិនអាចទាញយកទិន្នន័យការពិភាក្សានេះបានទេ។"
+            : "Unable to load this post.")
+      );
     } finally {
       setLoading(false);
     }
@@ -82,7 +96,12 @@ const ForumDetail = () => {
       await loadPost();
       return true;
     } catch (err) {
-      setError(err.message || "The action could not be completed.");
+      setError(
+        err.message ||
+          (isKm
+            ? "មិនអាចបំពេញសកម្មភាពនេះបានទេ។"
+            : "The action could not be completed.")
+      );
       return false;
     } finally {
       setBusy("");
@@ -95,7 +114,7 @@ const ForumDetail = () => {
       await runAction(
         "answer",
         () => createForumAnswerRequest(postId, answer),
-        "Your response was published.",
+        isKm ? "ចម្លើយរបស់អ្នកត្រូវបានបង្ហោះរួចរាល់។" : "Your response was published.",
       )
     )
       setAnswer("");
@@ -107,7 +126,7 @@ const ForumDetail = () => {
       await runAction(
         "comment",
         () => createForumCommentRequest(postId, comment),
-        "Your comment was published.",
+        isKm ? "មតិយោបល់របស់អ្នកត្រូវបានបង្ហោះរួចរាល់។" : "Your comment was published.",
       )
     )
       setComment("");
@@ -115,7 +134,11 @@ const ForumDetail = () => {
 
   const removePost = async () => {
     if (
-      !window.confirm("Delete this post and all of its answers and comments?")
+      !window.confirm(
+        isKm
+          ? "តើអ្នកពិតជាចង់លុបការពិភាក្សានេះ និងរាល់ចម្លើយទាំងអស់មែនទេ?"
+          : "Delete this post and all of its answers and comments?",
+      )
     )
       return;
     setBusy("delete-post");
@@ -123,7 +146,12 @@ const ForumDetail = () => {
       await deleteForumPostRequest(postId);
       navigate("/forum");
     } catch (err) {
-      setError(err.message || "Unable to delete this post.");
+      setError(
+        err.message ||
+          (isKm
+            ? "មិនអាចលុបការពិភាក្សានេះបានទេ។"
+            : "Unable to delete this post.")
+      );
       setBusy("");
     }
   };
@@ -131,24 +159,50 @@ const ForumDetail = () => {
   if (loading && !data)
     return (
       <main className="container forum-detail-loading">
-        Loading discussion...
+        {isKm ? "កំពុងទាញយកការពិភាក្សា..." : "Loading discussion..."}
       </main>
     );
   if (!data)
     return (
       <main className="container forum-detail-loading">
-        <div className="forum-alert error">{error || "Post not found."}</div>
-        <Link to="/forum">Return to forum</Link>
+        <div className="forum-alert error">
+          {error || (isKm ? "រកមិនឃើញការពិភាក្សានេះទេ។" : "Post not found.")}
+        </div>
+        <Link to="/forum">
+          {isKm ? "ត្រឡប់ទៅវេទិកាសហគមន៍" : "Return to forum"}
+        </Link>
       </main>
     );
 
-  const { post, answers, comments } = data;
+  const rawPost = data.post;
+  const post = localizeForumPost(rawPost, isKm);
+  const answers = (data.answers || []).map((a) => localizeForumAnswer(a, isKm));
+  const comments = data.comments || [];
+
+  const postTypeLabel = isKm
+    ? post.postType === "question"
+      ? "សំណួរ"
+      : post.postType === "resource"
+        ? "ធនធានសិក្សា"
+        : "ការពិភាក្សា"
+    : post.postType;
+
+  const roleLabel = (role) => {
+    if (!isKm) return role;
+    const r = String(role || "").toLowerCase();
+    if (r === "student") return "សិស្ស/និស្សិត";
+    if (r === "mentor") return "អ្នកណែនាំ";
+    if (r === "recruiter") return "អ្នកជ្រើសរើសបុគ្គលិក";
+    if (r === "admin") return "អ្នកគ្រប់គ្រងប្រព័ន្ធ";
+    return role;
+  };
 
   return (
     <main className="forum-detail-page">
       <div className="container forum-detail-wrap">
         <Link className="forum-back" to="/forum">
-          <IoArrowBackOutline /> Back to community forum
+          <IoArrowBackOutline />{" "}
+          {isKm ? "ត្រឡប់ទៅវេទិកាសហគមន៍" : "Back to community forum"}
         </Link>
         {error && <div className="forum-alert error">{error}</div>}
         {message && <div className="forum-alert success">{message}</div>}
@@ -157,16 +211,18 @@ const ForumDetail = () => {
           <div className="forum-detail-header">
             <div className="forum-post-meta">
               <span className={`forum-type ${post.postType}`}>
-                {post.postType}
+                {postTypeLabel}
               </span>
               <span
                 className="forum-category-pill"
-                style={{ "--category-color": post.category.color }}
+                style={{ "--category-color": post.category?.color }}
               >
-                {post.category.name}
+                {post.category?.name}
               </span>
               {post.status === "closed" && (
-                <span className="forum-closed">Closed</span>
+                <span className="forum-closed">
+                  {isKm ? "បានបិទ" : "Closed"}
+                </span>
               )}
             </div>
             {post.canModerate && (
@@ -183,12 +239,22 @@ const ForumDetail = () => {
                             post.status === "closed" ? "published" : "closed",
                         }),
                       post.status === "closed"
-                        ? "Post reopened."
-                        : "Post closed.",
+                        ? isKm
+                          ? "បានបើកការពិភាក្សាឡើងវិញ។"
+                          : "Post reopened."
+                        : isKm
+                          ? "បានបិទការពិភាក្សា។"
+                          : "Post closed.",
                     )
                   }
                 >
-                  {post.status === "closed" ? "Reopen" : "Close post"}
+                  {post.status === "closed"
+                    ? isKm
+                      ? "បើកឡើងវិញ"
+                      : "Reopen"
+                    : isKm
+                      ? "បិទការពិភាក្សា"
+                      : "Close post"}
                 </button>
                 <button
                   className="danger"
@@ -208,7 +274,7 @@ const ForumDetail = () => {
             <div>
               <strong>{post.authorName}</strong>
               <span>
-                {post.authorRole} · {formatDate(post.createdAt)}
+                {roleLabel(post.authorRole)} · {formatDate(post.createdAt, isKm)}
               </span>
             </div>
           </div>
@@ -225,13 +291,15 @@ const ForumDetail = () => {
               }
             >
               {post.liked ? <IoHeart /> : <IoHeartOutline />} {post.likeCount}{" "}
-              likes
+              {isKm ? "ចូលចិត្ត" : "likes"}
             </button>
             <span>
-              <IoEyeOutline /> {post.viewsCount} views
+              <IoEyeOutline /> {post.viewsCount}{" "}
+              {isKm ? "ចំនួនមើល" : "views"}
             </span>
             <span>
-              <IoChatbubbleOutline /> {answers.length} responses
+              <IoChatbubbleOutline /> {answers.length}{" "}
+              {isKm ? "ការឆ្លើយតប" : "responses"}
             </span>
           </div>
         </article>
@@ -239,10 +307,16 @@ const ForumDetail = () => {
         <section className="forum-answer-section">
           <div className="forum-section-heading">
             <div>
-              <span className="forum-eyebrow">Community knowledge</span>
+              <span className="forum-eyebrow">
+                {isKm ? "ចំណេះដឹងសហគមន៍" : "Community knowledge"}
+              </span>
               <h2>
                 {answers.length}{" "}
-                {answers.length === 1 ? "response" : "responses"}
+                {isKm
+                  ? "ការឆ្លើយតប"
+                  : answers.length === 1
+                    ? "response"
+                    : "responses"}
               </h2>
             </div>
           </div>
@@ -253,7 +327,8 @@ const ForumDetail = () => {
             >
               {item.isAccepted && (
                 <div className="accepted-banner">
-                  <IoCheckmarkCircle /> Accepted answer
+                  <IoCheckmarkCircle />{" "}
+                  {isKm ? "ចម្លើយដែលបានទទួលស្គាល់" : "Accepted answer"}
                 </div>
               )}
               <div className="forum-author">
@@ -261,7 +336,7 @@ const ForumDetail = () => {
                 <div>
                   <strong>{item.authorName}</strong>
                   <span>
-                    {item.authorRole} · {formatDate(item.createdAt)}
+                    {roleLabel(item.authorRole)} · {formatDate(item.createdAt, isKm)}
                   </span>
                 </div>
               </div>
@@ -290,11 +365,12 @@ const ForumDetail = () => {
                         runAction(
                           `accept-${item.id}`,
                           () => acceptForumAnswerRequest(item.id),
-                          "Answer accepted.",
+                          isKm ? "បានទទួលស្គាល់ចម្លើយ។" : "Answer accepted.",
                         )
                       }
                     >
-                      <IoCheckmarkCircle /> Accept answer
+                      <IoCheckmarkCircle />{" "}
+                      {isKm ? "ទទួលស្គាល់ចម្លើយ" : "Accept answer"}
                     </button>
                   )}
                 {item.canModerate && (
@@ -306,11 +382,11 @@ const ForumDetail = () => {
                       runAction(
                         `delete-answer-${item.id}`,
                         () => deleteForumAnswerRequest(item.id),
-                        "Response deleted.",
+                        isKm ? "បានលុបចម្លើយ។" : "Response deleted.",
                       )
                     }
                   >
-                    <IoTrashOutline /> Delete
+                    <IoTrashOutline /> {isKm ? "លុប" : "Delete"}
                   </button>
                 )}
               </div>
@@ -319,7 +395,15 @@ const ForumDetail = () => {
 
           {post.status === "published" && (
             <form className="forum-response-form" onSubmit={submitAnswer}>
-              <h3>{user ? "Share your response" : "Join the conversation"}</h3>
+              <h3>
+                {user
+                  ? isKm
+                    ? "ចែករំលែកចម្លើយរបស់អ្នក"
+                    : "Share your response"
+                  : isKm
+                    ? "ចូលរួមការពិភាក្សា"
+                    : "Join the conversation"}
+              </h3>
               {user ? (
                 <>
                   <textarea
@@ -328,19 +412,32 @@ const ForumDetail = () => {
                     rows="5"
                     value={answer}
                     onChange={(event) => setAnswer(event.target.value)}
-                    placeholder="Write a helpful, respectful response..."
+                    placeholder={
+                      isKm
+                        ? "សរសេរចម្លើយណែនាំ ឬចែករំលែកបទពិសោធន៍របស់អ្នកនៅទីនេះ..."
+                        : "Write a helpful, respectful response..."
+                    }
                   />
                   <button
                     className="btn primary"
                     disabled={busy === "answer"}
                     type="submit"
                   >
-                    {busy === "answer" ? "Publishing..." : "Publish response"}
+                    {busy === "answer"
+                      ? isKm
+                        ? "កំពុងបង្ហោះ..."
+                        : "Publishing..."
+                      : isKm
+                        ? "បង្ហោះចម្លើយ"
+                        : "Publish response"}
                   </button>
                 </>
               ) : (
                 <p>
-                  <Link to="/login">Login</Link> to answer this post.
+                  <Link to="/login">{isKm ? "ចូលគណនី" : "Login"}</Link>{" "}
+                  {isKm
+                    ? "ដើម្បីឆ្លើយតបក្នុងការពិភាក្សានេះ។"
+                    : "to answer this post."}
                 </p>
               )}
             </form>
@@ -348,7 +445,9 @@ const ForumDetail = () => {
         </section>
 
         <section className="forum-comment-section">
-          <h2>Comments ({comments.length})</h2>
+          <h2>
+            {isKm ? `មតិយោបល់ (${comments.length})` : `Comments (${comments.length})`}
+          </h2>
           <div className="forum-comments">
             {comments.map((item) => (
               <div className="forum-comment" key={item.id}>
@@ -356,7 +455,7 @@ const ForumDetail = () => {
                 <div>
                   <div>
                     <strong>{item.authorName}</strong>
-                    <span>{formatDate(item.createdAt)}</span>
+                    <span>{formatDate(item.createdAt, isKm)}</span>
                   </div>
                   <p>{item.body}</p>
                   {item.canModerate && (
@@ -368,11 +467,11 @@ const ForumDetail = () => {
                         runAction(
                           `delete-comment-${item.id}`,
                           () => deleteForumCommentRequest(item.id),
-                          "Comment deleted.",
+                          isKm ? "បានលុបមតិយោបល់។" : "Comment deleted.",
                         )
                       }
                     >
-                      Delete
+                      {isKm ? "លុប" : "Delete"}
                     </button>
                   )}
                 </div>
@@ -386,10 +485,12 @@ const ForumDetail = () => {
                 minLength="2"
                 value={comment}
                 onChange={(event) => setComment(event.target.value)}
-                placeholder="Add a short comment"
+                placeholder={
+                  isKm ? "បន្ថែមមតិយោបល់ខ្លីៗ..." : "Add a short comment"
+                }
               />
               <button disabled={busy === "comment"} type="submit">
-                Comment
+                {isKm ? "បញ្ចេញមតិ" : "Comment"}
               </button>
             </form>
           )}

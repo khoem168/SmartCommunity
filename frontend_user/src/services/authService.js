@@ -43,11 +43,13 @@ export const googleLoginRequest = async ({ credential, rememberMe = false }) =>
     rememberMe,
   );
 
-export const registerRequest = (payload) =>
-  apiFetch("/auth/register", {
+export const registerRequest = async (payload) => {
+  const response = await apiFetch("/auth/register", {
     method: "POST",
     body: JSON.stringify(payload),
   });
+  return saveSession(response, true);
+};
 
 export const verifyEmailRequest = (token) =>
   apiFetch("/auth/verify-email", {

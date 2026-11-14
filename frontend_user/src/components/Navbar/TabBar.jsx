@@ -98,7 +98,12 @@ export default function TabBar() {
       },
       { to: "/courses", Icon: FiBookOpen, label: isKm ? "រៀន" : "Learn" },
       { to: "/jobs", Icon: FiBriefcase, label: isKm ? "ការងារ" : "Jobs" },
-      { to: user ? "/messages" : "/forum", Icon: FiMessageSquare, label: isKm ? "សារ" : "Messages", badge: unreadMessages },
+      {
+        to: user ? "/messages" : "/forum",
+        Icon: FiMessageSquare,
+        label: isKm ? (user ? "សារ" : "សហគមន៍") : (user ? "Messages" : "Community"),
+        badge: unreadMessages,
+      },
     ];
   };
 
