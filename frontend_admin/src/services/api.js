@@ -1,4 +1,4 @@
-export const API_BASE_URL = (import.meta.env.VITE_API_URL || "/api").replace(/\/+$/, "");
+export const API_BASE_URL = (import.meta.env?.VITE_API_URL || "/api").replace(/\/+$/, "");
 
 const TOKEN_KEY = "smartCommunityAdminToken";
 
@@ -47,10 +47,19 @@ export const apiFetch = async (path, options = {}) => {
 
   if (!response.ok) {
     const error = new Error(
-      payload?.error || payload?.message || "The request could not be completed.",
+      payload?.error || payload?.message ||
+      (response.status >= 500
+        ? "The server is temporarily unavailable. Please try again later."
+        : "The request could not be completed."),
     );
     error.status = response.status;
-    error.code = payload?.code;
+    error.code = payload?.code || (response.status >= 500 ? "SERVER_UNAVAILABLE" : undefined);
+    throw error;
+  }
+  if (!isJson && response.status !== 204) {
+    const error = new Error("The server returned an unexpected response. Please try again later.");
+    error.code = "INVALID_API_RESPONSE";
+    error.status = response.status;
     throw error;
   }
   return payload;

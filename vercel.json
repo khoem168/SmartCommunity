@@ -13,7 +13,7 @@
       "installCommand": "npm ci",
       "buildCommand": "npm run build",
       "outputDirectory": "dist",
-      "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+      "rewrites": [{ "source": "/(.*)", "destination": "/admin-console/index.html" }]
     },
     "frontend_user": {
       "root": "frontend_user",
@@ -36,8 +36,12 @@
     { "source": "/uploads/:path*", "destination": { "service": "backend" } },
     { "source": "/health", "destination": { "service": "backend" } },
     {
-      "source": "/admin-console/:path*",
-      "destination": { "service": "frontend_admin", "path": "/:path*" }
+      "source": "/admin-console",
+      "destination": { "service": "frontend_admin" }
+    },
+    {
+      "source": "/admin-console/(.*)",
+      "destination": { "service": "frontend_admin" }
     },
     {
       "source": "/(.*)",

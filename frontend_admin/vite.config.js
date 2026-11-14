@@ -5,6 +5,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/admin-console/',
   plugins: [react()],
+  // Publish files at their public URL paths; Services preserves the request path.
+  build: {
+    outDir: 'dist/admin-console',
+  },
   server: {
     port: 5174,
     proxy: {

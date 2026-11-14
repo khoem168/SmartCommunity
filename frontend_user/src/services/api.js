@@ -1,5 +1,5 @@
 const configuredApiUrl =
-  import.meta.env.VITE_API_URL || "/api";
+  import.meta.env?.VITE_API_URL || "/api";
 
 export const API_BASE_URL = configuredApiUrl.replace(/\/+$/, "");
 const TOKEN_STORAGE_KEY = "smartCommunityToken";
@@ -63,11 +63,21 @@ export const apiFetch = async (path, options = {}) => {
 
   if (!response.ok) {
     const message =
-      data?.error || data?.message || response.statusText || "Request failed.";
+      data?.error || data?.message ||
+      (response.status >= 500
+        ? "The server is temporarily unavailable. Please try again later."
+        : response.statusText || `Request failed (${response.status}).`);
     const error = new Error(message);
     error.response = response;
     error.body = data;
-    error.code = data?.code;
+    error.code = data?.code || (response.status >= 500 ? "SERVER_UNAVAILABLE" : undefined);
+    throw error;
+  }
+
+  if (!isJson && response.status !== 204) {
+    const error = new Error("The server returned an unexpected response. Please try again later.");
+    error.code = "INVALID_API_RESPONSE";
+    error.response = response;
     throw error;
   }
 

@@ -15,10 +15,11 @@ build settings. Do not select `frontend_user` as the project root for this mode.
 | `telegram_bot` | None | Unused internal payment-alert service |
 
 More specific routes precede the website catch-all. Backend paths retain their
-prefixes: Express already mounts its API under `/api`. Admin route lookup strips
-`/admin-console` to find built files; the browser keeps the public prefix, which
-matches the Vite base and React Router basename. Both SPAs have service-scoped
-`index.html` fallbacks for deep links.
+prefixes: Express already mounts its API under `/api`. The admin build writes
+to `frontend_admin/dist/admin-console`, and the service publishes `dist`, so
+its files exist at the same `/admin-console/*` paths used by the browser.
+The admin service falls back to `/admin-console/index.html` for deep links.
+The main website falls back to `/index.html`.
 
 The frontend subdirectories retain standalone Vercel configuration files, but
 the root configuration explicitly includes the settings needed by Services mode.
@@ -95,7 +96,31 @@ npm --prefix frontend_user run build
 npm --prefix frontend_admin run build
 npm --prefix backend test
 node --test tests/vercel-services.test.cjs
+node --test tests/admin-build.test.cjs tests/api-responses.test.cjs
 ```
+
+## Diagnosing a deployed API failure
+
+If registration and courses both fail, open `/health` first. A Vercel
+`FUNCTION_INVOCATION_FAILED` response means the backend did not serve the request;
+inspect the deployment runtime logs before changing form validation or CORS.
+The `/health` handler does not query the database. The backend validates required
+production environment values when it starts, so missing settings can prevent
+even this endpoint from responding.
+
+For `https://smartcommunity-one.vercel.app`, set `APP_URL`, `CLIENT_URL`, and
+`API_PUBLIC_URL` to `https://smartcommunity-one.vercel.app` (without `/register`).
+Configure hosted database credentials and a strong `JWT_SECRET` separately in
+Vercel. Never copy local database values such as `127.0.0.1`, `localhost`, or an
+empty database password into the production settings. Redeploy after updating
+environment variables. Do not disable production validation to bypass errors.
+
+After `/health` returns JSON with HTTP 200, an empty POST to `/api/auth/register`
+should return validation JSON with HTTP 400, and `/api/courses` should return
+JSON with HTTP 200. If database-backed routes still fail, check connectivity,
+TLS settings and schema migrations in the runtime logs. Verification email
+delivery also needs the configured mail provider before registration can be
+tested end to end.
 
 ## Runtime limits
 
