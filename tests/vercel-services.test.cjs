@@ -57,6 +57,7 @@ test("unknown API paths return JSON 404 instead of the website", async () => {
 
 test("exported server handles Socket.IO upgrades and enforces authentication", async () => {
   const socket = io(apiOrigin, {
+    addTrailingSlash: false,
     transports: ["websocket"],
     reconnection: false,
     autoConnect: false,

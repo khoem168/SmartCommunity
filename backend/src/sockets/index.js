@@ -20,6 +20,9 @@ const setupSockets = (server) => {
   }
 
   const io = new SocketServer(server, {
+    // Vercel routes "/socket.io" and "/socket.io/x" to this service, but sends
+    // the default "/socket.io/" to the website. The client omits the slash too.
+    addTrailingSlash: false,
     cors: {
       origin: parseOrigins(),
       methods: ["GET", "POST", "PATCH"],

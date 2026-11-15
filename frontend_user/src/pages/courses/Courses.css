@@ -1271,3 +1271,80 @@
   background: #3b82f6;
   color: #ffffff;
 }
+
+/* --------------------------------------------------------------------------
+   PHONE: compact course list
+   Twenty full-size cards made this page about 13,000px tall on a phone. Each
+   course becomes one row (thumbnail + title + level + lessons/duration) and the
+   whole row opens the course. Details repeated on every card are hidden here.
+   -------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+  .courses-grid {
+    gap: 12px;
+  }
+
+  .courses-grid .ck-course-card {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .courses-grid .ck-course-card:hover {
+    transform: none;
+  }
+
+  .courses-grid .ck-course-media-link {
+    flex: 0 0 38%;
+    max-width: 150px;
+    border-radius: 10px;
+  }
+
+  /* The duration badge is repeated in the meta row beside the thumbnail. */
+  .courses-grid .ckl-artwork-banner > span {
+    display: none;
+  }
+
+  .courses-grid .ck-course-body {
+    padding: 0;
+    min-width: 0;
+  }
+
+  .courses-grid .ck-card-title {
+    order: -1;
+    min-height: 0;
+    margin-bottom: 6px;
+    font-size: 0.98rem;
+    line-height: 1.4;
+  }
+
+  .courses-grid .ck-card-title a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .courses-grid .ck-card-access-row {
+    justify-content: flex-start;
+    margin-bottom: 6px;
+  }
+
+  .courses-grid .ck-card-access-pills,
+  .courses-grid .ck-card-desc,
+  .courses-grid .ck-instructor-line {
+    display: none;
+  }
+
+  /* index.css forces this button to display: flex with !important. */
+  .courses-grid .ck-card-cta-full {
+    display: none !important;
+  }
+
+  .courses-grid .ck-card-meta-row {
+    gap: 12px;
+    margin: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+}

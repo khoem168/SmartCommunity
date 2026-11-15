@@ -12,6 +12,8 @@ export const getSocket = () => {
   if (!socket) {
     socket = io(getSocketUrl(), {
       autoConnect: true,
+      // Must match the server: "/socket.io/" is not routed to the API on Vercel.
+      addTrailingSlash: false,
       transports: ["websocket"],
       auth: { token: getAuthToken() },
     });

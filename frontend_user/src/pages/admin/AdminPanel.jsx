@@ -591,8 +591,8 @@ const AdminPanel = () => {
             <IoDocumentTextOutline key="applications" />,
           ],
         ].map(([title, value, icon]) => (
-          <Col xs={24} sm={12} lg={8} key={title}>
-            <Card>
+          <Col xs={12} sm={12} lg={8} key={title}>
+            <Card className="admin-stat-card">
               <Statistic title={title} value={value || 0} prefix={icon} />
             </Card>
           </Col>

@@ -29,7 +29,9 @@ export default defineConfig({
               test: /node_modules[\\/](antd|@ant-design|antd-style|@emotion|rc-[^\\/]+)[\\/]/,
               priority: 35,
               entriesAware: true,
-              maxSize: 320 * 1024,
+              // No maxSize: splitting Ant Design by size produced chunks that
+              // import each other in a cycle, and the admin page crashed with
+              // "q is not a function" before anything rendered.
             },
             {
               name: "charts",

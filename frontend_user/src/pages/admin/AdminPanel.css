@@ -348,3 +348,9 @@
     max-width: none !important;
   }
 }
+
+/* Stat cards sit two per row on phones; keep both cards in a row the same
+   height when one label wraps onto a second line. */
+.admin-stat-card {
+  height: 100%;
+}
