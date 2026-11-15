@@ -97,6 +97,7 @@ npm --prefix frontend_admin run build
 npm --prefix backend test
 node --test tests/vercel-services.test.cjs
 node --test tests/admin-build.test.cjs tests/api-responses.test.cjs
+node --test tests/backend-startup.test.cjs
 ```
 
 ## Diagnosing a deployed API failure
@@ -105,8 +106,13 @@ If registration and courses both fail, open `/health` first. A Vercel
 `FUNCTION_INVOCATION_FAILED` response means the backend did not serve the request;
 inspect the deployment runtime logs before changing form validation or CORS.
 The `/health` handler does not query the database. The backend validates required
-production environment values when it starts, so missing settings can prevent
-even this endpoint from responding.
+production environment values when it starts. An invalid configuration now
+returns HTTP 503 with `INVALID_PRODUCTION_CONFIGURATION` and a
+`configurationFields` list of variable names, never their values. Every API
+request remains blocked until those settings are fixed and the app is redeployed.
+Other application startup errors return `BACKEND_STARTUP_FAILED`; their details
+remain in private runtime logs. A plain Vercel invocation error can still indicate
+a failure outside the application's startup handler.
 
 For `https://smartcommunity-one.vercel.app`, set `APP_URL`, `CLIENT_URL`, and
 `API_PUBLIC_URL` to `https://smartcommunity-one.vercel.app` (without `/register`).
