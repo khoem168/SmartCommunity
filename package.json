@@ -11,6 +11,7 @@
     "build:frontend": "npm --prefix frontend_user run build",
     "check-db": "npm --prefix backend run check-db",
     "migrate-db": "npm --prefix backend run migrate-db",
+    "bootstrap-db": "node backend/src/scripts/bootstrapDb.js",
     "seed": "npm --prefix backend run seed:showcase"
   }
 }

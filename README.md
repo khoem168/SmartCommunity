@@ -59,7 +59,8 @@ provider's private environment settings and replace every example value. In
 production the server intentionally refuses to start unless all of these are
 safe:
 
-- `NODE_ENV=production`
+- `NODE_ENV=production` (Vercel sets this at runtime by itself; do not add it
+  there, or the frontend builds lose their devDependencies)
 - `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` use hosted database values
 - `JWT_SECRET` is a unique random secret with at least 32 characters
 - `CLIENT_URL` lists the exact HTTPS frontend origin (never `*`)

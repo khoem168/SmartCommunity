@@ -620,6 +620,22 @@ const run = async () => {
     "status_updated_at",
     "status_updated_at datetime DEFAULT NULL AFTER status_updated_by",
   );
+  // Interview scheduling is read by the calendar, inbox and recruiter views.
+  await addColumn(
+    "internship_applications",
+    "interview_scheduled_at",
+    "interview_scheduled_at datetime DEFAULT NULL AFTER status_updated_at",
+  );
+  await addColumn(
+    "internship_applications",
+    "interview_meeting_link",
+    "interview_meeting_link varchar(500) DEFAULT NULL AFTER interview_scheduled_at",
+  );
+  await addColumn(
+    "internship_applications",
+    "interview_note",
+    "interview_note text DEFAULT NULL AFTER interview_meeting_link",
+  );
 
   await db.query(`
     ALTER TABLE internship_applications
