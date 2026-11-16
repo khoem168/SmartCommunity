@@ -14,6 +14,7 @@ const {
   verifyPassword,
 } = require("../utils/auth");
 const { consumeAuthToken, createAuthToken } = require("../utils/authTokens");
+const twoFactor = require("../services/twoFactorService");
 const {
   sendPasswordResetEmail,
   sendVerificationEmail,
@@ -44,6 +45,77 @@ const buildAuthResponse = (row, rememberMe = false) => {
     token: signToken(user, { rememberMe }),
     rememberMe,
   };
+};
+
+// After the password (or Google) check: accounts with two-factor
+// authentication get a short-lived challenge instead of a session, unless
+// this browser was trusted within the last 30 days.
+const finishLogin = async (req, res, account, rememberMe) => {
+  if (
+    (await twoFactor.isEnabled(account.id)) &&
+    !(await twoFactor.isTrustedDevice(account.id, req.body.trustedDeviceToken))
+  ) {
+    return res.json({
+      twoFactorRequired: true,
+      challengeToken: twoFactor.signChallenge(account.id, rememberMe),
+      rememberMe,
+    });
+  }
+  return res.json(buildAuthResponse(account, rememberMe));
+};
+
+const twoFactorFailure = (res, result) => {
+  if (result.reason === "LOCKED") {
+    return res.status(429).json({
+      error: "Too many wrong codes. Try again in 10 minutes.",
+      code: "TWO_FACTOR_LOCKED",
+      lockedUntil: result.lockedUntil || null,
+    });
+  }
+  if (result.reason === "UNREADABLE_SECRET") {
+    return res.status(409).json({
+      error: "Two-factor authentication needs to be reset by an administrator.",
+      code: "TWO_FACTOR_RESET_REQUIRED",
+    });
+  }
+  return res.status(400).json({
+    error: "That code is not correct. Check the time on your phone and try the newest code.",
+    code: "TWO_FACTOR_INVALID_CODE",
+    attemptsLeft: result.attemptsLeft,
+  });
+};
+
+const verifyTwoFactorLogin = async (req, res, next) => {
+  try {
+    const challenge = twoFactor.verifyChallenge(req.body.challengeToken);
+    if (!challenge) {
+      return res.status(401).json({
+        error: "This sign-in step expired. Sign in again.",
+        code: "TWO_FACTOR_CHALLENGE_EXPIRED",
+      });
+    }
+    const [rows] = await db.query(
+      `SELECT ${userColumns} FROM users WHERE id = ? AND is_active = 1`,
+      [challenge.sub],
+    );
+    const account = rows[0];
+    if (!account) return res.status(401).json({ error: "Invalid sign-in.", code: "TWO_FACTOR_CHALLENGE_EXPIRED" });
+
+    const result = await twoFactor.verifySecondFactor(account.id, {
+      code: req.body.code,
+      recoveryCode: req.body.recoveryCode,
+    });
+    if (!result.ok) return twoFactorFailure(res, result);
+
+    const response = buildAuthResponse(account, Boolean(challenge.rememberMe));
+    if (req.body.trustDevice === true) {
+      response.trustedDevice = await twoFactor.createTrustedDevice(account.id, req.headers["user-agent"]);
+    }
+    if (result.usedRecovery) response.recoveryCodesLeft = result.recoveryCodesLeft;
+    return res.json(response);
+  } catch (err) {
+    return next(err);
+  }
 };
 
 const developmentUrl = (key, delivery) =>
@@ -299,7 +371,7 @@ const login = async (req, res, next) => {
       account.id,
     ]);
 
-    return res.json(buildAuthResponse(account, Boolean(rememberMe)));
+    return finishLogin(req, res, account, Boolean(rememberMe));
   } catch (err) {
     return next(err);
   }
@@ -458,7 +530,7 @@ const googleLogin = async (req, res, next) => {
     }
 
     await db.query("UPDATE users SET last_login = NOW() WHERE id = ?", [account.id]);
-    return res.json(buildAuthResponse(account, Boolean(req.body.rememberMe)));
+    return finishLogin(req, res, account, Boolean(req.body.rememberMe));
   } catch (err) {
     if (err.message?.toLowerCase().includes("token")) {
       return res.status(401).json({ error: "Google login token is invalid or expired." });
@@ -492,6 +564,8 @@ const updateProfile = async (req, res, next) => {
 const me = async (req, res) => res.json({ user: req.user });
 
 module.exports = {
+  verifyTwoFactorLogin,
+  twoFactorFailure,
   forgotPassword,
   googleLogin,
   login,

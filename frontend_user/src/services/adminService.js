@@ -16,6 +16,9 @@ export const fetchAdminDashboard = () => apiFetch("/admin/dashboard");
 export const fetchAdminUsers = (filters) =>
   apiFetch(`/admin/users${queryString(filters)}`);
 
+export const resetAdminUserTwoFactor = (userId) =>
+  apiFetch(`/admin/users/${userId}/two-factor/reset`, { method: "POST", body: "{}" });
+
 export const updateAdminUser = (userId, updates) =>
   apiFetch(`/admin/users/${userId}`, {
     method: "PATCH",

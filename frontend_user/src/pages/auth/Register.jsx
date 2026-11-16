@@ -345,7 +345,11 @@ const Register = () => {
     setError("");
     setLoading(true);
     try {
-      await googleLogin({ credential, rememberMe: true });
+      const result = await googleLogin({ credential, rememberMe: true });
+      if (result?.twoFactorRequired) {
+        navigate("/login", { state: { twoFactorChallenge: result } });
+        return;
+      }
       navigate("/dashboard");
     } catch (err) {
       setError(err.message || t("auth.googleRegisterError"));

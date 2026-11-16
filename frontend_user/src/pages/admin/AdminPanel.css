@@ -354,3 +354,7 @@
 .admin-stat-card {
   height: 100%;
 }
+
+.admin-2fa-required {
+  padding-top: 24px;
+}

@@ -15,15 +15,17 @@ const {
   updateAdminUser,
 } = require("../controllers/adminController");
 const { requireAuth, requireRole } = require("../middleware/auth");
+const { adminReset, requireAdminTwoFactor } = require("../controllers/twoFactorController");
 
 const router = express.Router();
 
-router.use(requireAuth, requireRole("admin"));
+router.use(requireAuth, requireRole("admin"), requireAdminTwoFactor);
 router.get("/overview", getAdminOverview);
 router.get("/dashboard", getAdminDashboard);
 router.get("/analytics", getAdminAnalytics);
 router.get("/users", listAdminUsers);
 router.patch("/users/:userId", updateAdminUser);
+router.post("/users/:userId/two-factor/reset", adminReset);
 router.get("/mentor-applications", listAdminMentorApplications);
 router.patch(
   "/mentor-applications/:applicationId",

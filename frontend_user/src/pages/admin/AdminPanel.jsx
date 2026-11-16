@@ -41,6 +41,7 @@ import {
   reviewAdminCompany,
   reviewAdminMentorApplication,
   updateAdminInternship,
+  resetAdminUserTwoFactor,
   updateAdminUser,
 } from "../../services/adminService";
 import kmKH from "antd/es/locale/km_KH";
@@ -87,6 +88,9 @@ const AdminPanel = () => {
   const { language } = useLanguage();
   const isKm = language === "km";
   const [messageApi, contextHolder] = message.useMessage();
+  const [modalApi, modalContextHolder] = Modal.useModal();
+  // Admin tools stay locked until this administrator turns on 2FA.
+  const [twoFactorBlocked, setTwoFactorBlocked] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(false);
   const [dashboard, setDashboard] = useState(null);
@@ -163,7 +167,8 @@ const AdminPanel = () => {
         setAudit({ items: result.logs, pagination: result.pagination });
       }
     } catch (error) {
-      messageApi.error(error.message || "Unable to load administration data.");
+      if (error.code === "TWO_FACTOR_SETUP_REQUIRED") setTwoFactorBlocked(true);
+      else messageApi.error(error.message || "Unable to load administration data.");
     } finally {
       setLoading(false);
     }
@@ -281,6 +286,26 @@ const AdminPanel = () => {
     onChange: onPage,
   });
 
+  // For members locked out of 2FA (lost phone and recovery codes).
+  const confirmTwoFactorReset = (record) =>
+    modalApi.confirm({
+      title: isKm ? "កំណត់ការផ្ទៀងផ្ទាត់ពីរជំហានឡើងវិញ?" : "Reset two-step verification?",
+      content: isKm
+        ? `${record.fullName || record.email} នឹងអាចចូលគណនីដោយពាក្យសម្ងាត់តែប៉ុណ្ណោះ រហូតដល់គាត់បើក 2FA ម្តងទៀត។ សូមធ្វើបែបនេះតែក្រោយពេលបានបញ្ជាក់អត្តសញ្ញាណរបស់គាត់។`
+        : `${record.fullName || record.email} will be able to sign in with a password only until they turn 2FA on again. Only do this after confirming who they are.`,
+      okText: isKm ? "កំណត់ឡើងវិញ" : "Reset",
+      okButtonProps: { danger: true },
+      cancelText: isKm ? "បោះបង់" : "Cancel",
+      onOk: async () => {
+        try {
+          await resetAdminUserTwoFactor(record.id);
+          messageApi.success(isKm ? "បានកំណត់ 2FA ឡើងវិញ។" : "2FA reset.");
+        } catch (error) {
+          messageApi.error(error.message);
+        }
+      },
+    });
+
   const userColumns = [
     {
       title: isKm ? "អ្នកប្រើប្រាស់" : "User",
@@ -317,9 +342,16 @@ const AdminPanel = () => {
       title: "",
       key: "action",
       render: (_, record) => (
-        <Button type="link" onClick={() => openUserEditor(record)}>
-          {isKm ? "គ្រប់គ្រង" : "Manage"}
-        </Button>
+        <Space size={0}>
+          <Button type="link" onClick={() => openUserEditor(record)}>
+            {isKm ? "គ្រប់គ្រង" : "Manage"}
+          </Button>
+          {record.id !== user?.id && (
+            <Button type="link" danger onClick={() => confirmTwoFactorReset(record)}>
+              {isKm ? "កំណត់ 2FA ឡើងវិញ" : "Reset 2FA"}
+            </Button>
+          )}
+        </Space>
       ),
     },
   ];
@@ -912,6 +944,24 @@ const AdminPanel = () => {
     <ConfigProvider locale={isKm ? kmKH : enUS}>
     <main className="admin-page">
       {contextHolder}
+      {modalContextHolder}
+      {twoFactorBlocked && (
+        <div className="container admin-2fa-required">
+          <Alert
+            type="warning"
+            showIcon
+            message={isKm ? "សូមបើកការផ្ទៀងផ្ទាត់ពីរជំហានជាមុនសិន" : "Turn on two-step verification first"}
+            description={
+              <>
+                {isKm
+                  ? "ដើម្បីការពារប្រព័ន្ធ ឧបករណ៍គ្រប់គ្រងត្រូវការ 2FA។ ចំណាយពេលប្រហែល ១ នាទី។ "
+                  : "To protect the platform, admin tools require 2FA. It takes about a minute. "}
+                <Link to="/settings">{isKm ? "ទៅកាន់ការកំណត់ → សុវត្ថិភាព" : "Go to Settings → Security"}</Link>
+              </>
+            }
+          />
+        </div>
+      )}
       <section className="admin-hero">
         <div className="container admin-hero-inner">
           <div>

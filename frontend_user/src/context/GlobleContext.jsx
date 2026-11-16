@@ -3,6 +3,7 @@ import {
   fetchCurrentUser,
   googleLoginRequest,
   loginRequest,
+  verifyTwoFactorRequest,
   logoutRequest,
   registerRequest,
   updateProfileRequest,
@@ -52,10 +53,19 @@ const GlobleContext = ({ children }) => {
     document.documentElement.dataset.theme = user.darkMode ? "dark" : "light";
   }, [user]);
 
+  // Returns the user, or { twoFactorRequired, challengeToken } when the
+  // account needs its authenticator code (see completeTwoFactor).
   const loginUser = async (credentials) => {
     const response = await loginRequest(credentials);
+    if (response.twoFactorRequired) return response;
     setUser(response.user);
     return response.user;
+  };
+
+  const completeTwoFactor = async (details) => {
+    const response = await verifyTwoFactorRequest(details);
+    setUser(response.user);
+    return response;
   };
 
   const refreshUser = async () => {
@@ -66,6 +76,7 @@ const GlobleContext = ({ children }) => {
 
   const googleLogin = async (credentials) => {
     const response = await googleLoginRequest(credentials);
+    if (response.twoFactorRequired) return response;
     setUser(response.user);
     return response.user;
   };
@@ -100,6 +111,7 @@ const GlobleContext = ({ children }) => {
         user,
         isLoading,
         loginUser,
+        completeTwoFactor,
         googleLogin,
         refreshUser,
         registerUser,

@@ -1338,6 +1338,50 @@ const run = async () => {
      WHERE LOWER(REPLACE(full_name, ' ', '')) = 'mutkalin'`,
   );
 
+  // Two-factor authentication: encrypted authenticator secrets, hashed
+  // one-time recovery codes, and hashed "trust this device" tokens.
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS user_two_factor (
+      user_id int(11) NOT NULL,
+      secret_enc varchar(255) DEFAULT NULL,
+      pending_secret_enc varchar(255) DEFAULT NULL,
+      enabled_at datetime DEFAULT NULL,
+      last_used_step bigint DEFAULT NULL,
+      failed_attempts int(11) NOT NULL DEFAULT 0,
+      locked_until datetime DEFAULT NULL,
+      created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      PRIMARY KEY (user_id),
+      CONSTRAINT fk_two_factor_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  `);
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS user_two_factor_recovery (
+      id int(11) NOT NULL AUTO_INCREMENT,
+      user_id int(11) NOT NULL,
+      code_hash char(64) NOT NULL,
+      used_at datetime DEFAULT NULL,
+      created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (id),
+      KEY idx_recovery_user (user_id, code_hash),
+      CONSTRAINT fk_recovery_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  `);
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS user_trusted_devices (
+      id int(11) NOT NULL AUTO_INCREMENT,
+      user_id int(11) NOT NULL,
+      token_hash char(64) NOT NULL,
+      user_agent varchar(255) DEFAULT NULL,
+      expires_at datetime NOT NULL,
+      created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (id),
+      UNIQUE KEY uq_trusted_token (token_hash),
+      KEY idx_trusted_user (user_id),
+      CONSTRAINT fk_trusted_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  `);
+
   // Daily question counts for the site assistant (per user, per guest IP,
   // and one "site" row), used to cap usage and cost.
   await db.query(`

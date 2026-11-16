@@ -228,3 +228,24 @@ career roadmaps and the signed-in user's own progress through read-only tools
   daily bill.
 - The assistant cannot change anything: every tool is a parameterised SELECT,
   and personal data is limited to the signed-in user's own progress.
+
+## Two-step verification (2FA)
+
+Members can turn on authenticator-app codes (Google Authenticator, Microsoft
+Authenticator, Authy and similar) in **Settings → Security**. It is free: codes
+are standard TOTP (RFC 6238), generated on the phone and checked with Node's
+crypto module, with no SMS or outside service.
+
+- Sign-in becomes password (or Google) followed by a 6-digit code. "Trust this
+  device for 30 days" skips the code on that browser; the password is still
+  needed.
+- Ten one-time recovery codes are issued at setup; members can make new ones.
+- Five wrong codes lock the code step for 10 minutes. Codes cannot be reused.
+- Admin tools (`/api/admin/*`, the admin console) require the administrator to
+  have 2FA on, unless `REQUIRE_ADMIN_2FA=false`. Administrators can reset a
+  member's 2FA from the users table in the admin panel.
+- Secrets are stored encrypted (AES-256-GCM) with `TWO_FACTOR_ENCRYPTION_KEY`,
+  or `JWT_SECRET` when that is empty. Changing whichever key is in use makes the
+  stored secrets unreadable, so every member would need a reset.
+- Tables: `user_two_factor`, `user_two_factor_recovery`, `user_trusted_devices`
+  (created by `migrateDb.js`).

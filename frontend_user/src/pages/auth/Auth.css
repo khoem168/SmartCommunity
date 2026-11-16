@@ -2080,3 +2080,95 @@
 .auth-divider {
   color: #64748b;
 }
+
+/* Two-factor sign-in step */
+.two-factor-step {
+  text-align: center;
+}
+
+.two-factor-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 4px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 1.6rem;
+}
+
+.two-factor-step h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.two-factor-text {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.two-factor-label {
+  font-weight: 700;
+  text-align: left;
+}
+
+.two-factor-input {
+  width: 100%;
+  min-height: 56px;
+  padding: 0 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.45em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.two-factor-input.recovery {
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+}
+
+.two-factor-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+.two-factor-trust {
+  justify-content: flex-start;
+}
+
+.two-factor-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.two-factor-links .auth-link-sm {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  gap: 6px;
+}
+
+[data-theme="dark"] .two-factor-icon {
+  background: rgba(37, 99, 235, 0.2);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .two-factor-text {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .two-factor-input {
+  border-color: #475569;
+  background: #1e293b;
+  color: #f8fafc;
+}

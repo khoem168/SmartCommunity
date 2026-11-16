@@ -76,16 +76,49 @@ const query = (filters = {}) => {
   return value ? `?${value}` : "";
 };
 
-export const loginAdmin = async (credentials) => {
-  const response = await apiFetch("/auth/login", {
-    method: "POST",
-    body: JSON.stringify(credentials),
-  });
+// Same "trust this device" token as the main site, so one 2FA check covers
+// both apps in this browser for 30 days.
+const TRUSTED_DEVICE_KEY = "smartCommunityTrustedDevice";
+const readTrustedDevice = () => {
+  try {
+    return window.localStorage.getItem(TRUSTED_DEVICE_KEY) || undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+const acceptAdminSession = (response, rememberMe) => {
   if (response.user?.role !== "admin") {
     throw new Error("This workspace is restricted to administrator accounts.");
   }
-  saveToken(response.token, credentials.rememberMe);
+  saveToken(response.token, rememberMe);
   return response.user;
+};
+
+// Returns the admin user, or { twoFactorRequired, challengeToken } when the
+// account needs its authenticator code (see verifyAdminTwoFactor).
+export const loginAdmin = async (credentials) => {
+  const response = await apiFetch("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ ...credentials, trustedDeviceToken: readTrustedDevice() }),
+  });
+  if (response.twoFactorRequired) return response;
+  return acceptAdminSession(response, credentials.rememberMe);
+};
+
+export const verifyAdminTwoFactor = async ({ challengeToken, code, recoveryCode, trustDevice, rememberMe }) => {
+  const response = await apiFetch("/auth/2fa/verify", {
+    method: "POST",
+    body: JSON.stringify({ challengeToken, code, recoveryCode, trustDevice: Boolean(trustDevice) }),
+  });
+  if (response.trustedDevice?.token) {
+    try {
+      window.localStorage.setItem(TRUSTED_DEVICE_KEY, response.trustedDevice.token);
+    } catch {
+      // Storage blocked: the code is simply asked for again next time.
+    }
+  }
+  return acceptAdminSession(response, response.rememberMe ?? rememberMe);
 };
 
 export const fetchCurrentAdmin = () => apiFetch("/auth/me");

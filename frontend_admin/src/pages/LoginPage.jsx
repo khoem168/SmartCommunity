@@ -7,7 +7,7 @@ import {
   IoShieldCheckmarkOutline,
 } from "react-icons/io5";
 import logo from "../assets/logo/image.png";
-import { loginAdmin } from "../services/api";
+import { loginAdmin, verifyAdminTwoFactor } from "../services/api";
 
 const LoginPage = ({ onLogin }) => {
   const [form, setForm] = useState({
@@ -18,6 +18,11 @@ const LoginPage = ({ onLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  // Second step for accounts with two-step verification.
+  const [challenge, setChallenge] = useState(null);
+  const [code, setCode] = useState("");
+  const [useRecovery, setUseRecovery] = useState(false);
+  const [trustDevice, setTrustDevice] = useState(true);
 
   const change = (event) => {
     const { name, value, checked, type } = event.target;
@@ -32,13 +37,43 @@ const LoginPage = ({ onLogin }) => {
     setLoading(true);
     setError("");
     try {
-      onLogin(await loginAdmin(form));
+      const result = await loginAdmin(form);
+      if (result?.twoFactorRequired) {
+        setChallenge(result);
+        setForm((current) => ({ ...current, password: "" }));
+        return;
+      }
+      onLogin(result);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
+  const submitCode = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      onLogin(
+        await verifyAdminTwoFactor({
+          challengeToken: challenge.challengeToken,
+          rememberMe: challenge.rememberMe,
+          trustDevice,
+          ...(useRecovery ? { recoveryCode: code.trim() } : { code }),
+        }),
+      );
+    } catch (err) {
+      setError(err.message);
+      setCode("");
+      if (err.code === "TWO_FACTOR_CHALLENGE_EXPIRED") setChallenge(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const codeReady = useRecovery ? code.trim().length >= 10 : code.length === 6;
 
   return (
     <main className="login-page">
@@ -64,6 +99,59 @@ const LoginPage = ({ onLogin }) => {
       </section>
 
       <section className="login-panel">
+        {challenge ? (
+        <form className="login-form" onSubmit={submitCode}>
+          <div className="login-brand-mobile">
+            <img src={logo} alt="Smart Community" />
+            <span>Admin</span>
+          </div>
+          <p className="eyebrow">Two-step verification</p>
+          <h2>Enter your code</h2>
+          <p className="login-intro">
+            {useRecovery
+              ? "Enter one of your saved recovery codes. Each works once."
+              : "Open your authenticator app and enter the 6-digit code."}
+          </p>
+
+          {error && <div className="form-alert">{error}</div>}
+
+          <label className="field">
+            <span>{useRecovery ? "Recovery code" : "6-digit code"}</span>
+            <div className="input-with-icon">
+              <IoShieldCheckmarkOutline />
+              <input
+                value={code}
+                onChange={(event) =>
+                  setCode(useRecovery ? event.target.value.slice(0, 20) : event.target.value.replace(/D/g, "").slice(0, 6))
+                }
+                inputMode={useRecovery ? "text" : "numeric"}
+                autoComplete="one-time-code"
+                placeholder={useRecovery ? "xxxxx-xxxxx" : "123456"}
+                autoFocus
+                required
+              />
+            </div>
+          </label>
+
+          <label className="check-field">
+            <input type="checkbox" checked={trustDevice} onChange={(event) => setTrustDevice(event.target.checked)} />
+            <span>Trust this device for 30 days</span>
+          </label>
+
+          <button className="button primary login-button" disabled={loading || !codeReady}>
+            {loading ? <span className="spinner light" /> : "Verify and open dashboard"}
+          </button>
+          <p className="login-help">
+            <button type="button" className="link-button" onClick={() => { setUseRecovery((v) => !v); setCode(""); setError(""); }}>
+              {useRecovery ? "Use a code from the app instead" : "Lost your phone? Use a recovery code"}
+            </button>
+            {" · "}
+            <button type="button" className="link-button" onClick={() => { setChallenge(null); setCode(""); setError(""); }}>
+              Back
+            </button>
+          </p>
+        </form>
+        ) : (
         <form className="login-form" onSubmit={submit}>
           <div className="login-brand-mobile">
             <img src={logo} alt="Smart Community" />
@@ -134,6 +222,7 @@ const LoginPage = ({ onLogin }) => {
             Access is logged. Contact the system owner if your role has changed.
           </p>
         </form>
+        )}
       </section>
     </main>
   );

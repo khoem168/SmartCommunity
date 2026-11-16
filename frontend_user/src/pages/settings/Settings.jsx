@@ -5,6 +5,7 @@ import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { useTheme } from "../../context/ThemeContext";
 import { fetchNotificationPreferences, updateNotificationPreferences } from "../../services/notificationService";
+import SecuritySettings from "./SecuritySettings";
 import "./Settings.css";
 
 const preferenceOptions = [
@@ -74,6 +75,6 @@ const Settings = () => {
     <fieldset><legend>{t("refresh.appearance")}</legend><label className="settings-toggle"><span><FiMoon /> <b>{t("refresh.darkMode")}</b><small>{t("refresh.darkModeText")}</small></span><span className="settings-toggle-control"><input type="checkbox" checked={form.darkMode} onChange={(event) => handleThemeToggle(event.target.checked)} /><span className="settings-toggle-switch" /></span></label></fieldset>
     <fieldset><legend>{t("refresh.notificationTitle")}</legend><p className="settings-help"><FiBell /> {t("refresh.notificationText")}</p><div className="settings-toggle-grid">{preferences ? preferenceOptions.map(([key, label]) => <label className="settings-toggle" key={key}><span><b>{t(`refresh.${label}`)}</b></span><span className="settings-toggle-control"><input type="checkbox" checked={Boolean(preferences[key])} onChange={() => togglePreference(key)} /><span className="settings-toggle-switch" /></span></label>) : <p className="settings-loading">{t("refresh.loading")}</p>}</div><Link className="settings-push-link" to="/notifications">{t("refresh.pushSettings")}</Link></fieldset>
     <div className="settings-actions"><button type="submit" className="btn primary" disabled={busy}><FiSave /> {busy ? t("refresh.saving") : t("refresh.save")}</button>{message && <span className="settings-message">{message}</span>}{error && <span className="settings-error">{error}</span>}</div>
-  </form></div></main>;
+  </form><SecuritySettings /></div></main>;
 };
 export default Settings;

@@ -2463,3 +2463,15 @@ strong {
 .welcome-score div > strong {
   display: block;
 }
+
+/* Text-style buttons on the sign-in page (2FA step) */
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}

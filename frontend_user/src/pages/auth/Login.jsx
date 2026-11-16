@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import logo from "../../assets/logo/logo-mark.png";
 import GoogleLoginButton from "../../components/auth/GoogleLoginButton";
+import TwoFactorStep from "../../components/auth/TwoFactorStep";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { ButtonLoader } from "../../components/ui/LoadingStates";
@@ -25,6 +26,9 @@ const Login = () => {
   const [error, setError] = useState("");
   const [needsVerification, setNeedsVerification] = useState(false);
   const [loading, setLoading] = useState(false);
+  // Set when the account needs its authenticator code after the password.
+  // Register's Google button can also send the user here mid-sign-in.
+  const [challenge, setChallenge] = useState(location.state?.twoFactorChallenge || null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { googleLogin, loginUser } = useGlobleContext();
@@ -58,11 +62,16 @@ const Login = () => {
 
     setLoading(true);
     try {
-      await loginUser({
+      const result = await loginUser({
         email: trimmedEmail,
         password,
         rememberMe: remember,
       });
+      if (result?.twoFactorRequired) {
+        setChallenge(result);
+        setPassword("");
+        return;
+      }
       navigate(redirectTo);
     } catch (err) {
       setError(err.message || t("auth.loginError"));
@@ -76,7 +85,11 @@ const Login = () => {
     setError("");
     setLoading(true);
     try {
-      await googleLogin({ credential, rememberMe: remember });
+      const result = await googleLogin({ credential, rememberMe: remember });
+      if (result?.twoFactorRequired) {
+        setChallenge(result);
+        return;
+      }
       navigate(redirectTo);
     } catch (err) {
       setError(err.message || t("auth.googleError"));
@@ -93,6 +106,16 @@ const Login = () => {
           <p>{t("auth.loginDescription")}</p>
         </div>
 
+        {challenge ? (
+          <TwoFactorStep
+            challenge={challenge}
+            onSuccess={(notice) => navigate(redirectTo, notice ? { state: { notice } } : undefined)}
+            onCancel={() => {
+              setChallenge(null);
+              navigate(location.pathname + location.search, { replace: true, state: null });
+            }}
+          />
+        ) : (
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
           {error && (
             <div className="auth-error ios-alert-glass" role="alert">
@@ -201,6 +224,7 @@ const Login = () => {
             </p>
           </div>
         </form>
+        )}
       </section>
     </div>
   );
