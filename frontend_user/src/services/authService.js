@@ -18,6 +18,22 @@ const saveTrustedDevice = (token) => {
   }
 };
 
+// A random id for this browser, so the server can email the owner when an
+// account signs in from a browser it has not seen before.
+const DEVICE_ID_KEY = "smartCommunityDeviceId";
+const deviceId = () => {
+  try {
+    let id = window.localStorage.getItem(DEVICE_ID_KEY);
+    if (!id) {
+      id = window.crypto.randomUUID();
+      window.localStorage.setItem(DEVICE_ID_KEY, id);
+    }
+    return id;
+  } catch {
+    return undefined;
+  }
+};
+
 const saveSession = (response, rememberMe = false) => {
   if (response.token) saveAuthToken(response.token, rememberMe);
   return response;
@@ -35,7 +51,7 @@ export const loginRequest = async ({ email, password, rememberMe = false }) => {
     try {
       const response = await apiFetch("/auth/login", {
         method: "POST",
-        body: JSON.stringify({ email, password, rememberMe, trustedDeviceToken: readTrustedDevice() }),
+        body: JSON.stringify({ email, password, rememberMe, trustedDeviceToken: readTrustedDevice(), deviceId: deviceId() }),
       });
       return saveSession(response, rememberMe);
     } catch (error) {
@@ -56,7 +72,7 @@ export const googleLoginRequest = async ({ credential, rememberMe = false }) =>
   saveSession(
     await apiFetch("/auth/google", {
       method: "POST",
-      body: JSON.stringify({ credential, rememberMe, trustedDeviceToken: readTrustedDevice() }),
+      body: JSON.stringify({ credential, rememberMe, trustedDeviceToken: readTrustedDevice(), deviceId: deviceId() }),
     }),
     rememberMe,
   );
@@ -65,7 +81,7 @@ export const googleLoginRequest = async ({ credential, rememberMe = false }) =>
 export const verifyTwoFactorRequest = async ({ challengeToken, code, recoveryCode, trustDevice, rememberMe }) => {
   const response = await apiFetch("/auth/2fa/verify", {
     method: "POST",
-    body: JSON.stringify({ challengeToken, code, recoveryCode, trustDevice: Boolean(trustDevice) }),
+    body: JSON.stringify({ challengeToken, code, recoveryCode, trustDevice: Boolean(trustDevice), deviceId: deviceId() }),
   });
   if (response.trustedDevice?.token) saveTrustedDevice(response.trustedDevice.token);
   return saveSession(response, response.rememberMe ?? rememberMe);

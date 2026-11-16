@@ -125,7 +125,37 @@ const sendPasswordResetEmail = async ({ email, fullName, token }) => {
   return { ...result, url };
 };
 
+// Sent when an account signs in from a browser it has not used before.
+const sendLoginAlertEmail = async ({ email, fullName, when, device, ip }) => {
+  const settingsUrl = `${appUrl}/settings`;
+  const resetUrl = `${appUrl}/forgot-password`;
+  const name = fullName || email;
+  return sendAuthEmail({
+    to: email,
+    subject: "New sign-in to your Smart Community account / ការចូលគណនីពីឧបករណ៍ថ្មី",
+    text: [
+      `Hello ${name},`,
+      "",
+      "Your Smart Community account was just signed in from a new device.",
+      `Time: ${when}`,
+      `Device: ${device}`,
+      `IP address: ${ip}`,
+      "",
+      `If this was you, you can ignore this email. If not, reset your password now: ${resetUrl}`,
+      `and turn on two-step verification in Settings: ${settingsUrl}`,
+      "",
+      "គណនី Smart Community របស់អ្នកទើបតែត្រូវបានចូលពីឧបករណ៍ថ្មី។ បើមិនមែនជាអ្នកទេ សូមប្តូរពាក្យសម្ងាត់ភ្លាមៗ។",
+    ].join("\n"),
+    html: `<p>Hello ${escapeHtml(name)},</p>
+<p>Your Smart Community account was just signed in from a <strong>new device</strong>.</p>
+<ul><li>Time: ${escapeHtml(when)}</li><li>Device: ${escapeHtml(device)}</li><li>IP address: ${escapeHtml(ip)}</li></ul>
+<p>If this was you, you can ignore this email. If not, <a href="${resetUrl}">reset your password now</a> and turn on two-step verification in <a href="${settingsUrl}">Settings</a>.</p>
+<p>គណនី Smart Community របស់អ្នកទើបតែត្រូវបានចូលពីឧបករណ៍ថ្មី។ បើមិនមែនជាអ្នកទេ សូម<a href="${resetUrl}">ប្តូរពាក្យសម្ងាត់</a>ភ្លាមៗ។</p>`,
+  });
+};
+
 module.exports = {
+  sendLoginAlertEmail,
   sendPasswordResetEmail,
   sendVerificationEmail,
 };

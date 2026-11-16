@@ -1382,6 +1382,19 @@ const run = async () => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
   `);
 
+  // Browsers each account has signed in from (hashed), for new-device alerts.
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS user_known_devices (
+      user_id int(11) NOT NULL,
+      device_hash char(64) NOT NULL,
+      user_agent varchar(255) DEFAULT NULL,
+      last_seen_at datetime NOT NULL,
+      created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (user_id, device_hash),
+      CONSTRAINT fk_known_device_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  `);
+
   // Daily question counts for the site assistant (per user, per guest IP,
   // and one "site" row), used to cap usage and cost.
   await db.query(`

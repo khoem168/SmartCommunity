@@ -87,6 +87,20 @@ const readTrustedDevice = () => {
   }
 };
 
+// Same browser id as the main site, for new-device sign-in alerts.
+const deviceId = () => {
+  try {
+    let id = window.localStorage.getItem("smartCommunityDeviceId");
+    if (!id) {
+      id = window.crypto.randomUUID();
+      window.localStorage.setItem("smartCommunityDeviceId", id);
+    }
+    return id;
+  } catch {
+    return undefined;
+  }
+};
+
 const acceptAdminSession = (response, rememberMe) => {
   if (response.user?.role !== "admin") {
     throw new Error("This workspace is restricted to administrator accounts.");
@@ -100,7 +114,7 @@ const acceptAdminSession = (response, rememberMe) => {
 export const loginAdmin = async (credentials) => {
   const response = await apiFetch("/auth/login", {
     method: "POST",
-    body: JSON.stringify({ ...credentials, trustedDeviceToken: readTrustedDevice() }),
+    body: JSON.stringify({ ...credentials, trustedDeviceToken: readTrustedDevice(), deviceId: deviceId() }),
   });
   if (response.twoFactorRequired) return response;
   return acceptAdminSession(response, credentials.rememberMe);
@@ -109,7 +123,7 @@ export const loginAdmin = async (credentials) => {
 export const verifyAdminTwoFactor = async ({ challengeToken, code, recoveryCode, trustDevice, rememberMe }) => {
   const response = await apiFetch("/auth/2fa/verify", {
     method: "POST",
-    body: JSON.stringify({ challengeToken, code, recoveryCode, trustDevice: Boolean(trustDevice) }),
+    body: JSON.stringify({ challengeToken, code, recoveryCode, trustDevice: Boolean(trustDevice), deviceId: deviceId() }),
   });
   if (response.trustedDevice?.token) {
     try {

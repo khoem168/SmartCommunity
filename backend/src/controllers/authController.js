@@ -15,6 +15,7 @@ const {
 } = require("../utils/auth");
 const { consumeAuthToken, createAuthToken } = require("../utils/authTokens");
 const twoFactor = require("../services/twoFactorService");
+const { noteSignIn } = require("../services/loginAlertService");
 const {
   sendPasswordResetEmail,
   sendVerificationEmail,
@@ -61,6 +62,7 @@ const finishLogin = async (req, res, account, rememberMe) => {
       rememberMe,
     });
   }
+  noteSignIn(req, account);
   return res.json(buildAuthResponse(account, rememberMe));
 };
 
@@ -112,6 +114,7 @@ const verifyTwoFactorLogin = async (req, res, next) => {
       response.trustedDevice = await twoFactor.createTrustedDevice(account.id, req.headers["user-agent"]);
     }
     if (result.usedRecovery) response.recoveryCodesLeft = result.recoveryCodesLeft;
+    noteSignIn(req, account);
     return res.json(response);
   } catch (err) {
     return next(err);
