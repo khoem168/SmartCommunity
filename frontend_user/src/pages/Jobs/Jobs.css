@@ -1088,3 +1088,38 @@ html[lang="km"] .jobs-hero-feature-copy small {
   color: #34d399;
 }
 
+
+/* A shared rule strips the style from every input in this panel, which made
+   the "remote only" checkbox invisible. Restore it and highlight the chip
+   while the filter is on. */
+.internship-search-panel .remote-filter input[type="checkbox"] {
+  -webkit-appearance: checkbox !important;
+  appearance: auto !important;
+  width: 18px !important;
+  height: 18px !important;
+  min-height: 0 !important;
+  flex: 0 0 auto;
+}
+
+.remote-filter:has(input:checked) {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+[data-theme="dark"] .remote-filter:has(input:checked) {
+  border-color: #3b82f6;
+  background: rgba(37, 99, 235, 0.22);
+  color: #bfdbfe;
+}
+
+@media (max-width: 760px) {
+  .internship-search-panel {
+    border-radius: 22px;
+    padding: 12px;
+  }
+
+  .remote-filter {
+    justify-content: center;
+  }
+}

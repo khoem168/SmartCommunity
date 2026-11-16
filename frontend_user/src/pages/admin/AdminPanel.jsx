@@ -5,6 +5,7 @@ import {
   Button,
   Card,
   Col,
+  ConfigProvider,
   Form,
   Input,
   Modal,
@@ -42,6 +43,8 @@ import {
   updateAdminInternship,
   updateAdminUser,
 } from "../../services/adminService";
+import kmKH from "antd/es/locale/km_KH";
+import enUS from "antd/es/locale/en_US";
 import "./AdminPanel.css";
 
 const { Text, Title } = Typography;
@@ -904,6 +907,9 @@ const AdminPanel = () => {
   }
 
   return (
+    // Ant Design's built-in text ("No data", pagination, confirm buttons)
+    // follows the site language instead of always showing English.
+    <ConfigProvider locale={isKm ? kmKH : enUS}>
     <main className="admin-page">
       {contextHolder}
       <section className="admin-hero">
@@ -1063,6 +1069,7 @@ const AdminPanel = () => {
         )}
       </Modal>
     </main>
+    </ConfigProvider>
   );
 };
 

@@ -51,8 +51,6 @@ const TECH_REELS_STORIES = [
     tagEn: "⚡ 60s React Tip",
     titleKm: "ប្រើប្រាស់ useMemo & useCallback ឱ្យត្រឹមត្រូវ",
     titleEn: "Master useMemo & useCallback in React",
-    author: "Dr. Sokha Chan",
-    roleKm: "Senior Mentor",
     gradient: "linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%)",
     searchKeyword: "React",
   },
@@ -62,8 +60,6 @@ const TECH_REELS_STORIES = [
     tagEn: "🎯 Career & CV",
     titleKm: "៣ ចំណុចដែល HR មើលមុនគេលើ PDF CV របស់និស្សិត IT",
     titleEn: "3 Things Tech Recruiters Check First on Your CV",
-    author: "Dara Kem",
-    roleKm: "Tech Recruiter",
     gradient: "linear-gradient(135deg, #047857 0%, #10b981 100%)",
     searchKeyword: "CV",
   },
@@ -73,8 +69,6 @@ const TECH_REELS_STORIES = [
     tagEn: "🚀 Project Reel",
     titleKm: "របៀបរៀបចំ Portfolio GitHub ឱ្យទាក់ទាញក្រុមហ៊ុន",
     titleEn: "How to Structure Your GitHub Portfolio for Internships",
-    author: "Vannak Pich",
-    roleKm: "Full-Stack Mentor",
     gradient: "linear-gradient(135deg, #4338ca 0%, #6366f1 100%)",
     searchKeyword: "Portfolio",
   },
@@ -84,8 +78,6 @@ const TECH_REELS_STORIES = [
     tagEn: "💡 UI/UX Shorts",
     titleKm: "គោលការណ៍រចនា Dark Mode និងពុម្ពអក្សរខ្មែរឱ្យស្អាត",
     titleEn: "Designing Clean Khmer Typography & Dark Mode UI",
-    author: "Bopha Meas",
-    roleKm: "UI/UX Designer",
     gradient: "linear-gradient(135deg, #be123c 0%, #f43f5e 100%)",
     searchKeyword: "UI",
   },
@@ -401,8 +393,8 @@ const Forum = () => {
               <span className="forum-eyebrow">
                 <IoSparklesOutline />
                 {isKm
-                  ? "បណ្តាញសង្គមចែករំលែកចំណេះដឹង • Q&A • គន្លឹះខ្លីៗ"
-                  : "Social Learning Network • Tech Reels • Q&A Feed"}
+                  ? "បណ្តាញសង្គមចែករំលែកចំណេះដឹង • សំណួរ-ចម្លើយ • គន្លឹះខ្លីៗ"
+                  : "Social Learning Network • Q&A • Quick tips"}
               </span>
               <h1 className="social-main-title">
                 {isKm
@@ -438,8 +430,8 @@ const Forum = () => {
               <span className="reels-badge-title">
                 <IoFlameOutline />{" "}
                 {isKm
-                  ? "គន្លឹះខ្លីៗ & បទពិសោធន៍លេចធ្លោ (Tech Reels / Stories)"
-                  : "Featured Tech Reels & Quick Insights"}
+                  ? "ប្រធានបទពេញនិយម"
+                  : "Popular topics"}
               </span>
               {search && (
                 <button
@@ -473,8 +465,7 @@ const Forum = () => {
                     {isKm ? reel.titleKm : reel.titleEn}
                   </strong>
                   <div className="reel-card-footer">
-                    <span>{reel.author}</span>
-                    <small>{reel.roleKm}</small>
+                    <span>{isKm ? "ចុចដើម្បីស្វែងរកប្រធានបទនេះ" : "Tap to search this topic"}</span>
                   </div>
                 </button>
               ))}

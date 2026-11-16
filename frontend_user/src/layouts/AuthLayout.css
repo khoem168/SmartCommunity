@@ -414,3 +414,17 @@
     justify-content: center;
   }
 }
+
+/* Phones: start the form near the top instead of centring it with a large
+   empty band above, and give the back button a full-size touch area. */
+@media (max-width: 600px) {
+  .auth-stage {
+    align-items: flex-start;
+    padding-top: 24px;
+  }
+
+  .auth-back-home-btn {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}

@@ -2287,3 +2287,96 @@ html[data-language="km"] .ck-hero-title {
     font-size: 0.82rem;
   }
 }
+
+/* --------------------------------------------------------------------------
+   PHONE: shorter home page
+   The popular-courses section was about 3,700px and the team section about
+   2,200px on a phone. Courses use the same compact rows as /courses, and team
+   bios are clamped (the full bio stays on the member's linked profile).
+   -------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+  .ck-courses-grid {
+    gap: 12px;
+  }
+
+  .ck-courses-grid .ck-course-card {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 16px;
+    position: relative;
+  }
+
+  .ck-courses-grid .ck-course-card:hover {
+    transform: none;
+  }
+
+  .ck-courses-grid .ck-course-media-link {
+    flex: 0 0 38%;
+    max-width: 150px;
+    border-radius: 10px;
+  }
+
+  .ck-courses-grid .ckl-artwork-banner > span {
+    display: none;
+  }
+
+  .ck-courses-grid .ck-course-body {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    min-width: 0;
+  }
+
+  .ck-courses-grid .ck-card-title {
+    order: -1;
+    min-height: 0;
+    margin-bottom: 6px;
+    font-size: 0.98rem;
+    line-height: 1.4;
+  }
+
+  .ck-courses-grid .ck-card-title a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .ck-courses-grid .ck-card-access-row {
+    justify-content: flex-start;
+    margin-bottom: 6px;
+  }
+
+  .ck-courses-grid .ck-card-access-pills,
+  .ck-courses-grid .ck-card-desc,
+  .ck-courses-grid .ck-instructor-line {
+    display: none;
+  }
+
+  .ck-courses-grid .ck-card-cta-full {
+    display: none !important;
+  }
+
+  .ck-courses-grid .ck-card-meta-row {
+    gap: 12px;
+    margin: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .ck-supporter-bio {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Small labels were 11.5–11.8px; 12px is the readable floor, more so for Khmer. */
+.ck-card-level-tag,
+.ck-free-pill,
+.ck-supporter-badge {
+  font-size: max(0.75rem, 12px);
+}

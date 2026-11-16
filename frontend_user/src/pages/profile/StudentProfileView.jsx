@@ -29,6 +29,7 @@ const formatDate = (value) => {
 
 export default function StudentProfileView({
   user,
+  isAdminView = false,
   profileData,
   onAvatarUpload,
   onBeginEdit,
@@ -102,7 +103,10 @@ export default function StudentProfileView({
             </div>
             <div>
               <span className="profile-role-tag student">
-                <IoSchoolOutline /> {isKm ? "គណនីសិស្ស / និស្សិត" : "Student / Learner"}
+                <IoSchoolOutline />{" "}
+                {isAdminView
+                  ? isKm ? "អ្នកគ្រប់គ្រងប្រព័ន្ធ" : "Administrator"
+                  : isKm ? "គណនីសិស្ស / និស្សិត" : "Student / Learner"}
               </span>
               <h1>{user.fullName}</h1>
               <p className="profile-headline">

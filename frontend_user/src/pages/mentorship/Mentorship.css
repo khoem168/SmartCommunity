@@ -646,3 +646,12 @@
     flex-direction: column;
   }
 }
+
+/* Phones: the pill shape turns into a lumpy oval once the fields stack. */
+@media (max-width: 760px) {
+  .mentor-search-panel {
+    grid-template-columns: minmax(0, 1fr);
+    border-radius: 22px;
+    padding: 12px;
+  }
+}

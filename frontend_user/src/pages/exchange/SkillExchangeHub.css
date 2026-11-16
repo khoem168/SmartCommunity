@@ -1340,3 +1340,18 @@
   color: #fbbf24;
   background: rgba(245, 179, 1, 0.2);
 }
+
+/* Phones: three tabs with Khmer labels wrapped onto two lines each. Stack the
+   icon above a single-line label instead. */
+@media (max-width: 520px) {
+  .hub-tabs-bar .hub-tab-btn {
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0.55rem 0.35rem;
+    font-size: 0.8125rem;
+    line-height: 1.25;
+    white-space: nowrap;
+    min-width: 0;
+  }
+}

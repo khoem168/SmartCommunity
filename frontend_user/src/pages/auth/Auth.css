@@ -2061,3 +2061,17 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Tap targets: these links and controls measured 17–29px tall on phones.
+   Give each at least a 40px touch area without changing how they look. */
+.auth-link-sm,
+.auth-create-link,
+.auth-checkbox {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+}
+
+.ios-field-eye {
+  min-width: 40px;
+}

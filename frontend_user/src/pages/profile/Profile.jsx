@@ -287,6 +287,8 @@ const ProfileRecordSection = ({
 
 const Profile = () => {
   const { user, updateUser, refreshUser } = useGlobleContext();
+  const { language } = useLanguage();
+  const isKm = language === "km";
   const [profile, setProfile] = useState(null);
   const [editing, setEditing] = useState(false);
   const [adminRoleView, setAdminRoleView] = useState("admin");
@@ -425,18 +427,26 @@ const Profile = () => {
       ? adminRoleView
       : user.role;
 
+  const roleNames = {
+    admin: { km: "អ្នកគ្រប់គ្រង", en: "Admin" },
+    student: { km: "សិស្ស", en: "Student" },
+    recruiter: { km: "អ្នកជ្រើសរើស", en: "Recruiter" },
+    mentor: { km: "អ្នកណែនាំ", en: "Mentor" },
+  };
+
   const renderAdminSwitcher = () => (
     <div className="container" style={{ paddingTop: "1rem" }}>
       <div className="admin-role-switcher glass">
-        <span>👑 Admin Role Preview:</span>
+        <span>{isKm ? "មើលទំព័រជា៖" : "Preview as:"}</span>
         {["admin", "student", "recruiter", "mentor"].map((r) => (
           <button
             key={r}
             type="button"
             className={`role-switch-btn ${adminRoleView === r ? "active" : ""}`}
+            aria-pressed={adminRoleView === r}
             onClick={() => setAdminRoleView(r)}
           >
-            {r.toUpperCase()} VIEW
+            {roleNames[r][isKm ? "km" : "en"]}
           </button>
         ))}
       </div>
@@ -545,6 +555,7 @@ const Profile = () => {
 
           <StudentProfileView
             user={profileUser}
+            isAdminView={effectiveRole === "admin"}
             profileData={profile}
             onAvatarUpload={handleAvatar}
             onBeginEdit={beginEdit}
