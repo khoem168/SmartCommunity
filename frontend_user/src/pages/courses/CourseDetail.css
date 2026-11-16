@@ -1473,3 +1473,8 @@
 }
 
 
+
+/* White on #10b981 measured 2.5:1; #047857 gives about 5.5:1. */
+.pdf-free-chip {
+  background: #047857;
+}

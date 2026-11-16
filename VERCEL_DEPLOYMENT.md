@@ -187,3 +187,24 @@ References: [Services](https://vercel.com/docs/services),
 [bindings](https://vercel.com/docs/services/bindings),
 [Express](https://vercel.com/docs/frameworks/backend/express), and
 [WebSockets](https://vercel.com/docs/functions/websockets).
+
+## Moving the database closer to users
+
+Railway's default region is US West, while most users are in Cambodia, so every
+API request crosses the Pacific. To move:
+
+1. In Railway, add a new MySQL service, set its region to Southeast Asia
+   (Settings → Deploy → Region), add Public Access and deploy.
+2. Create `backend/.env.railway-sea` in the same format as `backend/.env.railway`
+   (DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, DB_SSL=true).
+3. Preview, then copy. The source is only read; the target must be empty, and
+   row counts are compared at the end:
+
+   ```sh
+   node backend/src/scripts/copyDb.js --from backend/.env.railway --to backend/.env.railway-sea
+   node backend/src/scripts/copyDb.js --from backend/.env.railway --to backend/.env.railway-sea --apply
+   ```
+
+4. Update the DB_* variables in Vercel to the new values, set the function
+   region to Singapore (`sin1`), and redeploy. Keep the old database until the
+   site has been checked against the new one.
