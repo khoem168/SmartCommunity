@@ -14,7 +14,7 @@ import { Analytics } from "@vercel/analytics/react";
 const privacySafeEvent = (event) => {
   const url = new URL(event.url);
   url.search = "";
-  url.pathname = url.pathname.replace(/^/certificates/[^/]+/, "/certificates/[code]");
+  if (url.pathname.startsWith("/certificates/")) url.pathname = "/certificates/[code]";
   return { ...event, url: url.toString() };
 };
 
