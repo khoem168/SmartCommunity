@@ -24,6 +24,9 @@ import {
   createKhqrCoursePayment,
   fetchCourse,
   fetchCourseLesson,
+  fetchCourseProgress,
+  markLessonComplete,
+  unmarkLessonComplete,
   verifyKhqrCoursePayment,
 } from "../../services/courseService";
 import { fetchCareerBridge } from "../../services/careerService";
@@ -165,7 +168,37 @@ const CourseDetail = () => {
   const [paymentError, setPaymentError] = useState("");
   const [countdown, setCountdown] = useState("05:00");
   const [bridgeData, setBridgeData] = useState(null);
+  // Lessons marked complete and the certificate, for signed-in members.
+  const [progress, setProgress] = useState(null);
+  const [progressBusy, setProgressBusy] = useState(false);
+  const [justCertified, setJustCertified] = useState(false);
   const pollRef = useRef(null);
+
+  useEffect(() => {
+    if (!user) return undefined;
+    let cancelled = false;
+    fetchCourseProgress(courseSlug)
+      .then((data) => { if (!cancelled) setProgress(data); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [courseSlug, user]);
+
+  const completedIds = useMemo(() => new Set(progress?.completedLessonIds || []), [progress]);
+
+  const toggleLessonComplete = async (lessonId) => {
+    setProgressBusy(true);
+    try {
+      const next = completedIds.has(lessonId)
+        ? await unmarkLessonComplete(courseSlug, lessonId)
+        : await markLessonComplete(courseSlug, lessonId);
+      setProgress(next);
+      if (next.newlyIssued) setJustCertified(true);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setProgressBusy(false);
+    }
+  };
 
   const loadCourse = useCallback(async () => {
     setLoading(true);
@@ -553,6 +586,35 @@ const CourseDetail = () => {
               </span>
             )}
           </header>
+          {user && progress && progress.total > 0 && (
+            <div className="course-progress-box">
+              <div className="course-progress-head">
+                <span>{isKm ? "វឌ្ឍនភាពរបស់អ្នក" : "Your progress"}</span>
+                <strong>{progress.completed}/{progress.total}</strong>
+              </div>
+              <div
+                className="course-progress-bar"
+                role="progressbar"
+                aria-valuenow={progress.progressPercent}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={isKm ? "វឌ្ឍនភាពវគ្គសិក្សា" : "Course progress"}
+              >
+                <span style={{ width: `${progress.progressPercent}%` }} />
+              </div>
+              {progress.certificate ? (
+                <Link className="course-certificate-link" to={`/certificates/${progress.certificate.code}`}>
+                  <FiAward /> {isKm ? "មើលវិញ្ញាបនបត្ររបស់អ្នក" : "View your certificate"}
+                </Link>
+              ) : (
+                <small>
+                  {isKm
+                    ? "បញ្ចប់មេរៀនទាំងអស់ ដើម្បីទទួលបានវិញ្ញាបនបត្រ។"
+                    : "Finish every lesson to earn your certificate."}
+                </small>
+              )}
+            </div>
+          )}
           <div className="lesson-list">
             {course.lessons.map((item) => (
               <button
@@ -561,8 +623,10 @@ const CourseDetail = () => {
                 className={`lesson-item ${selectedLessonId === item.id ? "active" : ""}`}
                 onClick={() => selectLesson(item)}
               >
-                <span className="lesson-item-icon">
-                  {course.isEnrolled ? (
+                <span className={`lesson-item-icon${completedIds.has(item.id) ? " done" : ""}`}>
+                  {completedIds.has(item.id) ? (
+                    <FiCheckCircle aria-label={isKm ? "បានបញ្ចប់" : "Completed"} />
+                  ) : course.isEnrolled ? (
                     <FiPlay />
                   ) : user ? (
                     <FiFileText />
@@ -774,6 +838,31 @@ const CourseDetail = () => {
                     </p>
                     <h2>{getLocalizedLessonTitle(lesson.title)}</h2>
                     <p>{getLocalizedLessonDesc(lesson.title, lesson.description)}</p>
+                    {progress && (
+                      <button
+                        type="button"
+                        className={`lesson-complete-btn${completedIds.has(lesson.id) ? " done" : ""}`}
+                        onClick={() => toggleLessonComplete(lesson.id)}
+                        disabled={progressBusy}
+                        aria-pressed={completedIds.has(lesson.id)}
+                      >
+                        <FiCheckCircle />{" "}
+                        {completedIds.has(lesson.id)
+                          ? isKm ? "បានបញ្ចប់មេរៀននេះ (ចុចដើម្បីដកចេញ)" : "Lesson completed (tap to undo)"
+                          : isKm ? "សម្គាល់ថាបានបញ្ចប់មេរៀននេះ" : "Mark this lesson as complete"}
+                      </button>
+                    )}
+                    {justCertified && progress?.certificate && (
+                      <div className="course-certified-banner" role="status">
+                        <FiAward />
+                        <div>
+                          <strong>{isKm ? "អបអរសាទរ! អ្នកបានបញ្ចប់វគ្គសិក្សានេះ។" : "Congratulations! You finished this course."}</strong>
+                          <Link to={`/certificates/${progress.certificate.code}`}>
+                            {isKm ? "មើល និងទាញយកវិញ្ញាបនបត្រ" : "View and download your certificate"}
+                          </Link>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <span>
                     <FiClock /> {lesson.durationMinutes} {isKm ? "នាទី" : "min"}

@@ -1,4 +1,5 @@
 const express = require("express");
+const certificates = require("../controllers/certificateController");
 const {
   bookSkillExchange,
   createSkillExchange,
@@ -135,6 +136,11 @@ router.get(
   optionalAuth,
   getCourseLesson,
 );
+router.get("/courses/:courseSlug/progress", requireAuth, certificates.getCourseProgress);
+router.post("/courses/:courseSlug/lessons/:lessonId/complete", requireAuth, certificates.completeLesson);
+router.delete("/courses/:courseSlug/lessons/:lessonId/complete", requireAuth, certificates.uncompleteLesson);
+router.get("/certificates/mine", requireAuth, certificates.listMyCertificates);
+router.get("/certificates/:code", certificates.getCertificate);
 router.get("/skill-exchanges/community", getCommunitySkillExchanges);
 router.get("/skill-exchanges", requireAuth, getSkillExchanges);
 router.get("/skill-matches", requireAuth, getSkillMatches);

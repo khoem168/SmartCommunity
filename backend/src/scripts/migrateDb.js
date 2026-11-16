@@ -1382,6 +1382,34 @@ const run = async () => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
   `);
 
+  // Lessons each member has marked complete, and the certificates issued when
+  // every lesson in a course is done.
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS course_lesson_completions (
+      user_id int(11) NOT NULL,
+      lesson_id int(11) NOT NULL,
+      completed_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (user_id, lesson_id),
+      KEY idx_completion_lesson (lesson_id),
+      CONSTRAINT fk_completion_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+      CONSTRAINT fk_completion_lesson FOREIGN KEY (lesson_id) REFERENCES course_lessons (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  `);
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS course_certificates (
+      id int(11) NOT NULL AUTO_INCREMENT,
+      code varchar(20) NOT NULL,
+      user_id int(11) NOT NULL,
+      course_id int(11) NOT NULL,
+      issued_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (id),
+      UNIQUE KEY uq_certificate_code (code),
+      UNIQUE KEY uq_certificate_user_course (user_id, course_id),
+      CONSTRAINT fk_certificate_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+      CONSTRAINT fk_certificate_course FOREIGN KEY (course_id) REFERENCES courses (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  `);
+
   // Browsers each account has signed in from (hashed), for new-device alerts.
   await db.query(`
     CREATE TABLE IF NOT EXISTS user_known_devices (

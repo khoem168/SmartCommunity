@@ -20,6 +20,7 @@ const Home = lazy(() => import("./pages/home/Home"));
 const Dashboard = lazy(() => import("./pages/dashboard/Dashboard"));
 const Courses = lazy(() => import("./pages/courses/Courses"));
 const CourseDetail = lazy(() => import("./pages/courses/CourseDetail"));
+const CertificatePage = lazy(() => import("./pages/certificates/CertificatePage"));
 const LearningSessions = lazy(() => import("./pages/sessions/LearningSessions"));
 const SessionRoom = lazy(() => import("./pages/sessions/SessionRoom"));
 const Discover = lazy(() => import("./pages/discover/Discover"));
@@ -88,6 +89,7 @@ const routes = createBrowserRouter(
         <Route path="dashboard" element={protectedPage(Dashboard, "Preparing your dashboard...")} />
         <Route path="courses" element={pageElement(Courses, "Loading courses...")} />
         <Route path="courses/:courseId" element={pageElement(CourseDetail, "Preparing classroom...")} />
+        <Route path="certificates/:code" element={pageElement(CertificatePage, "Loading certificate...")} />
         <Route path="sessions" element={pageElement(LearningSessions, "Loading live sessions...")} />
         <Route path="sessions/:sessionId" element={pageElement(LearningSessions, "Loading session...")} />
         <Route path="sessions/:sessionId/room" element={protectedPage(SessionRoom, "Preparing session room...")} />

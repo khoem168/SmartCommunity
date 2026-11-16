@@ -1478,3 +1478,150 @@
 .pdf-free-chip {
   background: #047857;
 }
+
+/* Lesson completion and certificate */
+.course-progress-box {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.course-progress-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.course-progress-bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e2e8f0;
+}
+
+.course-progress-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2563eb, #16a34a);
+  transition: width 0.3s ease;
+}
+
+.course-progress-box small {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.course-certificate-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #15803d;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.lesson-item-icon.done {
+  color: #16a34a;
+}
+
+.lesson-complete-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lesson-complete-btn.done {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.lesson-complete-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.course-certified-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f0fdf4, #ecfeff);
+  border: 1px solid #bbf7d0;
+  color: #14532d;
+}
+
+.course-certified-banner svg {
+  flex: 0 0 auto;
+  font-size: 1.6rem;
+  color: #16a34a;
+}
+
+.course-certified-banner div {
+  display: grid;
+  gap: 4px;
+}
+
+.course-certified-banner a {
+  color: #15803d;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .course-progress-box {
+  border-color: #334155;
+  background: #1e293b;
+}
+
+[data-theme="dark"] .course-progress-head {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .course-progress-bar {
+  background: #334155;
+}
+
+[data-theme="dark"] .course-progress-box small {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .course-certificate-link,
+[data-theme="dark"] .course-certified-banner a {
+  color: #86efac;
+}
+
+[data-theme="dark"] .lesson-complete-btn {
+  border-color: #1e40af;
+  background: rgba(37, 99, 235, 0.18);
+  color: #bfdbfe;
+}
+
+[data-theme="dark"] .lesson-complete-btn.done {
+  border-color: #166534;
+  background: rgba(22, 101, 52, 0.25);
+  color: #bbf7d0;
+}
+
+[data-theme="dark"] .course-certified-banner {
+  border-color: #166534;
+  background: rgba(22, 101, 52, 0.2);
+  color: #dcfce7;
+}
