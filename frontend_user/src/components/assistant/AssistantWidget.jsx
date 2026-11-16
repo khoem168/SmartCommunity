@@ -22,6 +22,8 @@ const copy = {
     thinking: "កំពុងគិត…",
     errors: {
       ASSISTANT_NOT_CONFIGURED: "ជំនួយការមិនទាន់ដំណើរការនៅឡើយទេ។",
+      ASSISTANT_KEY_REJECTED: "ជំនួយការមិនទាន់ដំណើរការនៅឡើយទេ។",
+      ASSISTANT_NO_ACCESS: "ជំនួយការមិនទាន់ដំណើរការនៅឡើយទេ។",
       DAILY_LIMIT: "អ្នកបានប្រើអស់ចំនួនសំណួរសម្រាប់ថ្ងៃនេះហើយ។ សូមព្យាយាមម្តងទៀតថ្ងៃស្អែក។",
       GUEST_LIMIT: "អ្នកបានប្រើអស់ចំនួនសំណួរសម្រាប់ភ្ញៀវហើយ។ សូមចូលគណនីដើម្បីសួរបន្ថែម។",
       SITE_LIMIT: "ជំនួយការរវល់ខ្លាំងនៅថ្ងៃនេះ។ សូមព្យាយាមម្តងទៀតថ្ងៃស្អែក។",
@@ -46,6 +48,8 @@ const copy = {
     thinking: "Thinking…",
     errors: {
       ASSISTANT_NOT_CONFIGURED: "The assistant isn't available yet.",
+      ASSISTANT_KEY_REJECTED: "The assistant isn't available yet.",
+      ASSISTANT_NO_ACCESS: "The assistant isn't available yet.",
       DAILY_LIMIT: "You've reached today's question limit. Please try again tomorrow.",
       GUEST_LIMIT: "You've reached the guest question limit. Sign in to ask more.",
       SITE_LIMIT: "The assistant is very busy today. Please try again tomorrow.",

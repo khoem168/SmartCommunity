@@ -37,8 +37,11 @@ const TOOLS = definitions.map((tool) => ({ ...tool, eager_input_streaming: true 
 
 let client;
 const getClient = () => {
-  if (!process.env.ANTHROPIC_API_KEY) return null;
-  if (!client) client = new Anthropic();
+  // Pasting a key into a dashboard often adds a space or line break, which
+  // makes every request fail authentication.
+  const apiKey = String(process.env.ANTHROPIC_API_KEY || "").trim();
+  if (!apiKey) return null;
+  if (!client) client = new Anthropic({ apiKey });
   return client;
 };
 

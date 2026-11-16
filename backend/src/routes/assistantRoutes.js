@@ -87,7 +87,8 @@ router.post("/chat", optionalAuth, async (req, res, next) => {
       // Users see a short reason code; details stay in the server logs.
       const code =
         error instanceof Anthropic.RateLimitError ? "UPSTREAM_BUSY"
-          : error instanceof Anthropic.AuthenticationError ? "ASSISTANT_NOT_CONFIGURED"
+          : error instanceof Anthropic.AuthenticationError ? "ASSISTANT_KEY_REJECTED"
+            : error instanceof Anthropic.PermissionDeniedError ? "ASSISTANT_NO_ACCESS"
             : error instanceof Anthropic.APIError ? "UPSTREAM_ERROR"
               : "SERVER_ERROR";
       console.error("Assistant turn failed:", error.status || "", error.message);
