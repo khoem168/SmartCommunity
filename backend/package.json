@@ -30,6 +30,7 @@
     "test": "npm run test:auth-features && npm run test:email"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
     "bakong-khqr": "^1.0.20",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",

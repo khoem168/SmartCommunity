@@ -1338,6 +1338,17 @@ const run = async () => {
      WHERE LOWER(REPLACE(full_name, ' ', '')) = 'mutkalin'`,
   );
 
+  // Daily question counts for the site assistant (per user, per guest IP,
+  // and one "site" row), used to cap usage and cost.
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS assistant_usage (
+      usage_key varchar(80) NOT NULL,
+      usage_day date NOT NULL,
+      question_count int(11) NOT NULL DEFAULT 0,
+      PRIMARY KEY (usage_key, usage_day)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  `);
+
   const seedAllCourses = require("./seedAllCourses");
   await seedAllCourses();
 

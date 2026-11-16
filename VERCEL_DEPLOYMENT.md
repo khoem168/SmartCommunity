@@ -208,3 +208,23 @@ API request crosses the Pacific. To move:
 4. Update the DB_* variables in Vercel to the new values, set the function
    region to Singapore (`sin1`), and redeploy. Keep the old database until the
    site has been checked against the new one.
+
+## Site AI assistant
+
+A chat button on every page of the user site opens an assistant that answers in
+Khmer or English and looks up courses, mentors, internships, forum posts,
+career roadmaps and the signed-in user's own progress through read-only tools
+(`backend/src/services/assistant/`). It streams replies from
+`POST /api/assistant/chat` as server-sent events.
+
+- Set `ANTHROPIC_API_KEY` in Vercel (Production and Preview) and redeploy. Until
+  it is set, `/api/assistant/status` reports `available: false` and the button
+  stays hidden.
+- `ASSISTANT_MODEL` defaults to `claude-opus-5-5` at low effort; set
+  `claude-haiku-5-5` to cut the cost per question sharply.
+- Daily caps, counted in the `assistant_usage` table: 30 questions per member,
+  10 per guest IP and 200 for the whole site
+  (`ASSISTANT_DAILY_LIMIT_MEMBER`, `_GUEST`, `_SITE`). The site cap bounds the
+  daily bill.
+- The assistant cannot change anything: every tool is a parameterised SELECT,
+  and personal data is limited to the signed-in user's own progress.

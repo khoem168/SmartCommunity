@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import RealtimeToastHub from "../components/ui/RealtimeToastHub";
 import CommandPalette from "../components/ui/CommandPalette";
+import AssistantWidget from "../components/assistant/AssistantWidget";
 
 const RootLayout = () => {
   const location = useLocation();
@@ -72,6 +73,7 @@ const RootLayout = () => {
       <TabBar />
       <CommandPalette />
       <RealtimeToastHub />
+      <AssistantWidget />
       {showButton && (
         <button
           type="button"

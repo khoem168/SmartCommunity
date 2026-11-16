@@ -14,6 +14,7 @@ const platformRoutes = require("./routes/platformRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const calendarRoutes = require("./routes/calendarRoutes");
 const searchRoutes = require("./routes/searchRoutes");
+const assistantRoutes = require("./routes/assistantRoutes");
 const setupSockets = require("./sockets");
 const db = require("./config/db");
 
@@ -88,6 +89,7 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/calendar", calendarRoutes);
 app.use("/api/search", searchRoutes);
+app.use("/api/assistant", assistantRoutes);
 app.use("/api", platformRoutes);
 
 app.use((req, res) => {
