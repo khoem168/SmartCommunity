@@ -11,6 +11,7 @@
     "check": "npm run lint && npm run build"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "antd": "^6.4.3",
     "antd-style": "^4.1.0",
     "firebase": "^12.16.0",
