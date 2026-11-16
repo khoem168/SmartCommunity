@@ -1384,3 +1384,9 @@
   color: #10b981;
 }
 
+
+/* Dark mode: the week/milestone line kept its light-theme slate colour (2.5:1). */
+[data-theme="dark"] .career-path-meta,
+[data-theme="dark"] .career-path-card .career-path-meta {
+  color: #cbd5e1;
+}

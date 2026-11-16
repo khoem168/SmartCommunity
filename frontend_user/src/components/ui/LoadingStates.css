@@ -301,3 +301,16 @@
     background: #e2e8f0;
   }
 }
+
+/* Dark mode: the light placeholder bars flashed bright grey on a dark page. */
+[data-theme="dark"] .skeleton-block {
+  background: linear-gradient(
+    105deg,
+    rgba(51, 65, 85, 0.7) 0%,
+    rgba(71, 85, 105, 0.75) 38%,
+    rgba(100, 116, 139, 0.6) 50%,
+    rgba(71, 85, 105, 0.75) 62%,
+    rgba(51, 65, 85, 0.7) 100%
+  );
+  background-size: 220% 100%;
+}

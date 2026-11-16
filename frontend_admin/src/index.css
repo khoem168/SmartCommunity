@@ -2457,3 +2457,9 @@ strong {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* "Platform status" and "Healthy" ran together on one line. */
+.welcome-score div > small,
+.welcome-score div > strong {
+  display: block;
+}

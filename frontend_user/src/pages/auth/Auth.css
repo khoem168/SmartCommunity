@@ -2075,3 +2075,8 @@
 .ios-field-eye {
   min-width: 40px;
 }
+
+/* "or continue with" measured 2.6:1 against white; #64748b reaches 4.8:1. */
+.auth-divider {
+  color: #64748b;
+}
