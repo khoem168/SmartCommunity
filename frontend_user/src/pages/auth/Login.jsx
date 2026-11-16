@@ -12,6 +12,7 @@ import {
 import logo from "../../assets/logo/logo-mark.png";
 import GoogleLoginButton from "../../components/auth/GoogleLoginButton";
 import TwoFactorStep from "../../components/auth/TwoFactorStep";
+import { passkeysSupported } from "../../services/authService";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { ButtonLoader } from "../../components/ui/LoadingStates";
@@ -31,7 +32,24 @@ const Login = () => {
   const [challenge, setChallenge] = useState(location.state?.twoFactorChallenge || null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { googleLogin, loginUser } = useGlobleContext();
+  const { googleLogin, loginUser, loginWithPasskey } = useGlobleContext();
+  const canUsePasskey = passkeysSupported();
+
+  const handlePasskey = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      await loginWithPasskey({ rememberMe: remember });
+      navigate(redirectTo);
+    } catch (err) {
+      // Closing the fingerprint/face prompt is not an error worth showing.
+      if (err.name !== "NotAllowedError" && err.name !== "AbortError") {
+        setError(err.message || (isKm ? "មិនអាចចូលដោយ Passkey បានទេ។" : "Couldn't sign in with a passkey."));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   const { language, t } = useLanguage();
   const isKm = language === "km";
 
@@ -207,6 +225,12 @@ const Login = () => {
           <div className="auth-divider">
             <span>{t("auth.continueWith")}</span>
           </div>
+
+          {canUsePasskey && (
+            <button type="button" className="auth-passkey-btn" onClick={handlePasskey} disabled={loading}>
+              <FiShield /> {isKm ? "ចូលដោយ Passkey (ស្នាមម្រាមដៃ / មុខ)" : "Sign in with a passkey"}
+            </button>
+          )}
 
           <div className="auth-google-wrapper">
             <GoogleLoginButton

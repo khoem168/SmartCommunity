@@ -1410,6 +1410,27 @@ const run = async () => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
   `);
 
+  // Passkeys: public keys only; the private key never leaves the device.
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS user_passkeys (
+      id int(11) NOT NULL AUTO_INCREMENT,
+      user_id int(11) NOT NULL,
+      credential_id varchar(512) NOT NULL,
+      public_key text NOT NULL,
+      counter bigint NOT NULL DEFAULT 0,
+      transports varchar(255) DEFAULT NULL,
+      device_type varchar(32) DEFAULT NULL,
+      backed_up tinyint(1) NOT NULL DEFAULT 0,
+      name varchar(100) NOT NULL DEFAULT 'Passkey',
+      created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      last_used_at datetime DEFAULT NULL,
+      PRIMARY KEY (id),
+      UNIQUE KEY uq_passkey_credential (credential_id),
+      KEY idx_passkey_user (user_id),
+      CONSTRAINT fk_passkey_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  `);
+
   // Browsers each account has signed in from (hashed), for new-device alerts.
   await db.query(`
     CREATE TABLE IF NOT EXISTS user_known_devices (

@@ -567,6 +567,8 @@ const updateProfile = async (req, res, next) => {
 const me = async (req, res) => res.json({ user: req.user });
 
 module.exports = {
+  buildAuthResponse,
+  userColumns,
   verifyTwoFactorLogin,
   twoFactorFailure,
   forgotPassword,

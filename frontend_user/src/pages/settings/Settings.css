@@ -572,3 +572,60 @@
     margin-left: auto;
   }
 }
+
+/* Passkeys */
+.passkey-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.passkey-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+}
+
+.passkey-list li > svg {
+  flex: 0 0 auto;
+  font-size: 1.3rem;
+  color: #2563eb;
+}
+
+.passkey-list li > div {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+}
+
+.passkey-list small {
+  color: #64748b;
+}
+
+.passkey-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.passkey-add input {
+  flex: 1 1 220px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font: inherit;
+}
+
+[data-theme="dark"] .passkey-list li {
+  border-color: #334155;
+}
+
+[data-theme="dark"] .passkey-list small {
+  color: #94a3b8;
+}

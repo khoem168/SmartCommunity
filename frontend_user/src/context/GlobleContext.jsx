@@ -4,6 +4,7 @@ import {
   googleLoginRequest,
   loginRequest,
   verifyTwoFactorRequest,
+  passkeyLoginRequest,
   logoutRequest,
   registerRequest,
   updateProfileRequest,
@@ -62,6 +63,12 @@ const GlobleContext = ({ children }) => {
     return response.user;
   };
 
+  const loginWithPasskey = async (options) => {
+    const response = await passkeyLoginRequest(options);
+    setUser(response.user);
+    return response.user;
+  };
+
   const completeTwoFactor = async (details) => {
     const response = await verifyTwoFactorRequest(details);
     setUser(response.user);
@@ -112,6 +119,7 @@ const GlobleContext = ({ children }) => {
         isLoading,
         loginUser,
         completeTwoFactor,
+        loginWithPasskey,
         googleLogin,
         refreshUser,
         registerUser,

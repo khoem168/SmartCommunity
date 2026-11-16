@@ -1,3 +1,4 @@
+import { browserSupportsWebAuthn, startAuthentication, startRegistration } from "@simplewebauthn/browser";
 import { apiFetch, clearAuthToken, saveAuthToken } from "./api";
 
 // "Trust this device for 30 days" token from the two-factor step. It only
@@ -86,6 +87,33 @@ export const verifyTwoFactorRequest = async ({ challengeToken, code, recoveryCod
   if (response.trustedDevice?.token) saveTrustedDevice(response.trustedDevice.token);
   return saveSession(response, response.rememberMe ?? rememberMe);
 };
+
+// Passkeys: the browser and phone handle the fingerprint/face prompt.
+export const passkeysSupported = () => browserSupportsWebAuthn();
+
+export const passkeyLoginRequest = async ({ rememberMe = false } = {}) => {
+  const { options, token } = await apiFetch("/auth/passkeys/login/options", {
+    method: "POST",
+    body: JSON.stringify({ rememberMe }),
+  });
+  const response = await startAuthentication({ optionsJSON: options });
+  const result = await apiFetch("/auth/passkeys/login/verify", {
+    method: "POST",
+    body: JSON.stringify({ token, response, deviceId: deviceId() }),
+  });
+  return saveSession(result, result.rememberMe ?? rememberMe);
+};
+
+export const listPasskeysRequest = () => apiFetch("/auth/passkeys");
+export const addPasskeyRequest = async (name) => {
+  const { options, token } = await apiFetch("/auth/passkeys/register/options", { method: "POST", body: "{}" });
+  const response = await startRegistration({ optionsJSON: options });
+  return apiFetch("/auth/passkeys/register/verify", {
+    method: "POST",
+    body: JSON.stringify({ token, response, name }),
+  });
+};
+export const removePasskeyRequest = (id) => apiFetch(`/auth/passkeys/${id}`, { method: "DELETE" });
 
 export const twoFactorStatusRequest = () => apiFetch("/auth/2fa/status");
 export const twoFactorSetupRequest = () => apiFetch("/auth/2fa/setup", { method: "POST", body: "{}" });

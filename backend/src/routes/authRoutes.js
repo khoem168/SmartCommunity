@@ -12,6 +12,8 @@ const {
   verifyTwoFactorLogin,
 } = require("../controllers/authController");
 const twoFactorController = require("../controllers/twoFactorController");
+const passkeys = require("../controllers/passkeyController");
+const { buildAuthResponse, userColumns } = require("../controllers/authController");
 const { requireAuth } = require("../middleware/auth");
 const { authLimiter, loginLimiter, tokenRequestLimiter } = require("../middleware/rateLimits");
 
@@ -34,5 +36,13 @@ router.post("/2fa/setup", requireAuth, twoFactorController.startSetup);
 router.post("/2fa/enable", requireAuth, authLimiter, twoFactorController.confirmSetup);
 router.post("/2fa/disable", requireAuth, authLimiter, twoFactorController.disable);
 router.post("/2fa/recovery-codes", requireAuth, authLimiter, twoFactorController.regenerateRecoveryCodes);
+
+// Passkeys (fingerprint / face / screen-lock sign-in)
+router.post("/passkeys/login/options", loginLimiter, passkeys.loginOptions);
+router.post("/passkeys/login/verify", loginLimiter, passkeys.makeLoginVerify({ buildAuthResponse, userColumns }));
+router.get("/passkeys", requireAuth, passkeys.list);
+router.post("/passkeys/register/options", requireAuth, authLimiter, passkeys.registrationOptions);
+router.post("/passkeys/register/verify", requireAuth, authLimiter, passkeys.registrationVerify);
+router.delete("/passkeys/:passkeyId", requireAuth, passkeys.remove);
 
 module.exports = router;

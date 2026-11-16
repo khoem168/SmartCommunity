@@ -249,3 +249,19 @@ crypto module, with no SMS or outside service.
   stored secrets unreadable, so every member would need a reset.
 - Tables: `user_two_factor`, `user_two_factor_recovery`, `user_trusted_devices`
   (created by `migrateDb.js`).
+
+## Passkeys, certificates, login alerts and analytics
+
+- **Passkeys:** members add one in Settings → Passkeys and then use "Sign in with
+  a passkey" (fingerprint, face or screen lock; no password). The site address
+  comes from `APP_URL`, which must be the exact public HTTPS origin; set
+  `PASSKEY_RP_ID` / `PASSKEY_ORIGINS` only to override it. A passkey with user
+  verification counts as both factors, so it skips the authenticator code.
+  Admin tools still require authenticator-code 2FA to be turned on.
+- **Certificates:** members mark lessons complete; finishing a course issues a
+  certificate at `/certificates/:code` with a QR code for verification, printable
+  as an A4 PDF.
+- **Login alerts:** signing in from a new browser emails the owner. Needs an
+  email provider (`RESEND_API_KEY`, or `SMTP_*` such as a Gmail app password).
+- **Analytics:** enable Web Analytics for the project in Vercel; query strings
+  are stripped from the URLs it records.

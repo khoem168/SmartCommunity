@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.8.0",
+    "@simplewebauthn/server": "^14.1.0",
     "bakong-khqr": "^1.0.20",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",
