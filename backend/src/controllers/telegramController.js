@@ -680,22 +680,122 @@ const webhookHandler = async (req, res) => {
   }
 };
 
+const getAdminTelegramStatus = async (req, res, next) => {
+  try {
+    await security.ensureSecurityTables();
+    const configured = telegram.isConfigured();
+    const [settings, adminChatIds, [[evRow]], [[critRow]], [[blkRow]]] = await Promise.all([
+      security.getSettings(),
+      security.getAdminChatIds(),
+      db.query("SELECT COUNT(*) AS total FROM security_events WHERE created_at >= NOW() - INTERVAL 24 HOUR"),
+      db.query("SELECT COUNT(*) AS total FROM security_events WHERE severity = 'critical' AND created_at >= NOW() - INTERVAL 24 HOUR"),
+      db.query("SELECT COUNT(*) AS total FROM blocked_ips WHERE expires_at IS NULL OR expires_at > NOW()"),
+    ]);
+
+    let botUsername = null;
+    let webhookInfo = null;
+    if (configured) {
+      const [meRes, whInfo] = await Promise.all([
+        telegram.getMe(),
+        telegram.callTelegramApi("getWebhookInfo"),
+      ]);
+      if (meRes?.ok && meRes.result?.username) {
+        botUsername = meRes.result.username;
+      }
+      if (whInfo?.ok && whInfo.result) {
+        webhookInfo = {
+          url: whInfo.result.url || "",
+          pendingUpdateCount: Number(whInfo.result.pending_update_count || 0),
+          lastErrorMessage: whInfo.result.last_error_message || null,
+        };
+      }
+    }
+
+    return res.json({
+      configured,
+      botUsername,
+      webhookInfo,
+      adminChatCount: adminChatIds.length,
+      claimCode: configured ? telegram.getClaimCode() : null,
+      settings,
+      settingMeta: security.SETTING_META,
+      stats24h: {
+        events: Number(evRow?.total || 0),
+        critical: Number(critRow?.total || 0),
+        blockedIps: Number(blkRow?.total || 0),
+      },
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+const updateTelegramSettingEndpoint = async (req, res, next) => {
+  try {
+    const { key, enabled } = req.body || {};
+    if (!key || !(key in security.DEFAULT_SETTINGS)) {
+      return res.status(400).json({ error: "Invalid Telegram alert setting key." });
+    }
+    const settings = await security.setSetting(key, Boolean(enabled));
+    return res.json({ ok: true, settings });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+const sendTestAlertEndpoint = async (req, res, next) => {
+  try {
+    if (!telegram.isConfigured()) {
+      return res.status(400).json({ error: "TELEGRAM_BOT_TOKEN is not configured on the server." });
+    }
+    const adminIds = await security.getAdminChatIds();
+    if (!adminIds.length) {
+      return res.status(400).json({
+        error: "No Super Admin Telegram chat is linked yet. Send /claim <code> to the bot first.",
+      });
+    }
+    const { sent } = await security.sendToAllAdmins(
+      [
+        `✅ <b>Test Alert — Smart Community Security SOC</b>`,
+        `ការភ្ជាប់រវាងវេបសាយ និង Telegram Bot កំពុងដំណើរការ ១០០%!`,
+        ``,
+        `👤 <b>Triggered by:</b> ${telegram.escapeHtml(req.user?.email || "Super Admin")}`,
+        `🕒 <b>Time (KH):</b> ${security.formatPhnomPenhTime()}`,
+      ].join("\n"),
+      { reply_markup: mainMenuKeyboard() },
+    );
+    return res.json({ ok: sent > 0, sent });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 const setupWebhookEndpoint = async (req, res, next) => {
   try {
     if (!telegram.isConfigured()) {
       return res.status(400).json({ error: "TELEGRAM_BOT_TOKEN is not configured." });
     }
+    const originHeader = req.headers?.origin && /^https:\/\//i.test(req.headers.origin)
+      ? req.headers.origin
+      : "";
     const baseUrl = String(
-      req.body?.publicUrl || process.env.PUBLIC_APP_URL || process.env.APP_URL || "https://smartcommunity-one.vercel.app",
+      req.body?.publicUrl ||
+        process.env.PUBLIC_APP_URL ||
+        originHeader ||
+        process.env.APP_URL ||
+        "https://smartcommunity-one.vercel.app",
     ).replace(/\/+$/, "");
     const webhookUrl = `${baseUrl}/api/telegram/webhook`;
-    const [whRes, cmdRes] = await Promise.all([
+    const [meRes, whRes, cmdRes] = await Promise.all([
+      telegram.getMe(),
       telegram.setWebhook(webhookUrl, telegram.getWebhookSecret()),
       telegram.setMyCommands(BOT_COMMANDS),
     ]);
     return res.json({
       ok: Boolean(whRes.ok),
       webhookUrl,
+      botUsername: meRes?.ok ? meRes.result?.username : null,
+      claimCode: telegram.getClaimCode(),
       webhook: whRes,
       commands: cmdRes,
     });
@@ -707,5 +807,8 @@ const setupWebhookEndpoint = async (req, res, next) => {
 module.exports = {
   BOT_COMMANDS,
   webhookHandler,
+  getAdminTelegramStatus,
+  updateTelegramSettingEndpoint,
+  sendTestAlertEndpoint,
   setupWebhookEndpoint,
 };
