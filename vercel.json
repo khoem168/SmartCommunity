@@ -21,7 +21,7 @@
       "installCommand": "npm ci",
       "buildCommand": "npm run build",
       "outputDirectory": "dist",
-      "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+      "rewrites": [{ "source": "/((?!_vercel/).*)", "destination": "/index.html" }]
     },
     "telegram_bot": {
       "root": "telegram_bot",
@@ -44,7 +44,7 @@
       "destination": { "service": "frontend_admin" }
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!_vercel/).*)",
       "destination": { "service": "frontend_user" }
     }
   ]

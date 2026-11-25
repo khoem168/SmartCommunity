@@ -2,13 +2,20 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   IoArrowForwardOutline,
+  IoBookOutline,
   IoBriefcaseOutline,
   IoCalendarOutline,
   IoCheckmarkCircleOutline,
   IoCloudUploadOutline,
+  IoCompassOutline,
   IoDocumentTextOutline,
+  IoFlashOutline,
   IoLocationOutline,
+  IoPeopleOutline,
+  IoRocketOutline,
   IoSearchOutline,
+  IoSparklesOutline,
+  IoWarningOutline,
 } from "react-icons/io5";
 import {
   applyInternshipRequest,
@@ -18,7 +25,10 @@ import {
 import { useGlobleContext } from "../../context/GlobleContext";
 import { ButtonLoader, SkeletonGrid } from "../../components/ui/LoadingStates";
 import { useLanguage } from "../../context/LanguageContext";
-import { enrichInternshipRecord } from "../../utils/bilingualCatalog";
+import {
+  enrichInternshipRecord,
+  FEATURED_INTERNSHIPS_ROSTER,
+} from "../../utils/bilingualCatalog";
 import "./Jobs.css";
 
 const formatType = (type = "") =>
@@ -99,7 +109,7 @@ const Jobs = () => {
     setError("");
     try {
       const rows = await fetchInternships();
-      setInternships(rows);
+      setInternships(Array.isArray(rows) && rows.length > 0 ? rows : FEATURED_INTERNSHIPS_ROSTER);
       if (user?.role === "student") {
         const response = await fetchInternshipApplications();
         setApplications(response.applications || []);
@@ -370,7 +380,7 @@ const Jobs = () => {
                           }`}
                           title={`${internship.matchedSkills?.length || 0} of ${reqList.length} required skills match your profile`}
                         >
-                          <span className="match-pill-sparkle">✨</span>
+                          <span className="match-pill-sparkle"><IoSparklesOutline aria-hidden="true" /></span>
                           <strong className="match-pill-pct">
                             {internship.matchScore}% {isKm ? "ត្រូវគ្នា" : "Match"}
                           </strong>
@@ -385,7 +395,10 @@ const Jobs = () => {
                           className="skill-match-pill match-tip"
                           title="Add skills to your profile to calculate your qualification match"
                         >
-                          <span>{isKm ? "⚡ ពិនិត្យភាពត្រូវគ្នា" : "⚡ Check Match"}</span>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                            <IoFlashOutline aria-hidden="true" />
+                            {isKm ? "ពិនិត្យភាពត្រូវគ្នា" : "Check Match"}
+                          </span>
                         </Link>
                       ) : null}
                     </div>
@@ -442,19 +455,20 @@ const Jobs = () => {
                           )
                         }
                       >
-                        <span>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                          <IoCompassOutline aria-hidden="true" />
                           {isKm
-                            ? "🎯 ការផ្គូផ្គងជំនាញ និងផ្លូវសិក្សាបន្ថែម"
-                            : "🎯 Skill Alignment & Learning Bridge"}
+                            ? "ការផ្គូផ្គងជំនាញ និងផ្លូវសិក្សាបន្ថែម"
+                            : "Skill Alignment & Learning Bridge"}
                         </span>
                         <span className="bridge-toggle-indicator">
                           {expandedBridgeId === internship.id
                             ? isKm
-                              ? "▲ លាក់ព័ត៌មាន"
-                              : "▲ Hide Details"
+                              ? "លាក់ព័ត៌មាន"
+                              : "Hide Details"
                             : isKm
-                              ? "▼ មើលជំហានបំពេញជំនាញ"
-                              : "▼ View Bridge Actions"}
+                              ? "មើលជំហានបំពេញជំនាញ"
+                              : "View Bridge Actions"}
                         </span>
                       </button>
 
@@ -484,10 +498,14 @@ const Jobs = () => {
                           {internship.missingSkills &&
                           internship.missingSkills.length > 0 ? (
                             <div className="bridge-skill-group missing">
-                              <span className="bridge-group-label">
+                              <span
+                                className="bridge-group-label"
+                                style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+                              >
+                                <IoWarningOutline aria-hidden="true" />
                                 {isKm
-                                  ? `⚠️ ជំនាញដែលខ្វះ (${internship.missingSkills.length}) និងផ្លូវរៀនបន្ថែម:`
-                                  : `⚠️ Missing Skills (${internship.missingSkills.length}) & Learning Bridges:`}
+                                  ? `ជំនាញដែលខ្វះ (${internship.missingSkills.length}) និងផ្លូវរៀនបន្ថែម:`
+                                  : `Missing Skills (${internship.missingSkills.length}) & Learning Bridges:`}
                               </span>
                               <div className="bridge-missing-list">
                                 {internship.bridges &&
@@ -497,8 +515,11 @@ const Jobs = () => {
                                         key={b.skill}
                                         className="bridge-card"
                                       >
-                                        <span className="missing-skill-name">
-                                          ⚡ {b.skill}
+                                        <span
+                                          className="missing-skill-name"
+                                          style={{ display: "inline-flex", alignItems: "center", gap: 5 }}
+                                        >
+                                          <IoFlashOutline aria-hidden="true" /> {b.skill}
                                         </span>
                                         <div className="bridge-links">
                                           {b.course ? (
@@ -507,7 +528,8 @@ const Jobs = () => {
                                               className="bridge-btn course-bridge"
                                               title={`Learn ${b.skill} in ${b.course.title}`}
                                             >
-                                              📚 {isKm ? "វគ្គសិក្សា:" : "Course:"}{" "}
+                                              <IoBookOutline aria-hidden="true" />{" "}
+                                              {isKm ? "វគ្គសិក្សា:" : "Course:"}{" "}
                                               <strong>{b.course.title}</strong>
                                             </Link>
                                           ) : (
@@ -515,7 +537,8 @@ const Jobs = () => {
                                               to={b.courseUrl}
                                               className="bridge-btn course-search-bridge"
                                             >
-                                              🔍 {isKm ? `ស្វែងរកវគ្គសិក្សា ${b.skill}` : `Find Courses for ${b.skill}`}
+                                              <IoSearchOutline aria-hidden="true" />{" "}
+                                              {isKm ? `ស្វែងរកវគ្គសិក្សា ${b.skill}` : `Find Courses for ${b.skill}`}
                                             </Link>
                                           )}
                                           <Link
@@ -523,35 +546,42 @@ const Jobs = () => {
                                             className="bridge-btn swap-bridge"
                                             title={`Peer swap to learn ${b.skill}`}
                                           >
-                                            🤝 {isKm ? "ផ្លាស់ប្តូរជំនាញ" : "Peer Swap"}
+                                            <IoPeopleOutline aria-hidden="true" />{" "}
+                                            {isKm ? "ផ្លាស់ប្តូរជំនាញ" : "Peer Swap"}
                                           </Link>
                                           <Link
                                             to={b.careerUrl}
                                             className="bridge-btn roadmap-bridge"
                                             title="Add to Career Roadmap"
                                           >
-                                            🚀 {isKm ? "ផែនទីអាជីព" : "Roadmap"}
+                                            <IoRocketOutline aria-hidden="true" />{" "}
+                                            {isKm ? "ផែនទីអាជីព" : "Roadmap"}
                                           </Link>
                                         </div>
                                       </div>
                                     ))
                                   : internship.missingSkills.map((s) => (
                                       <div key={s} className="bridge-card">
-                                        <span className="missing-skill-name">
-                                          ⚡ {s}
+                                        <span
+                                          className="missing-skill-name"
+                                          style={{ display: "inline-flex", alignItems: "center", gap: 5 }}
+                                        >
+                                          <IoFlashOutline aria-hidden="true" /> {s}
                                         </span>
                                         <div className="bridge-links">
                                           <Link
                                             to={`/courses?q=${encodeURIComponent(s)}`}
                                             className="bridge-btn course-bridge"
                                           >
-                                            📚 {isKm ? "ស្វែងរកវគ្គសិក្សា" : "Find Courses"}
+                                            <IoBookOutline aria-hidden="true" />{" "}
+                                            {isKm ? "ស្វែងរកវគ្គសិក្សា" : "Find Courses"}
                                           </Link>
                                           <Link
                                             to={`/skill-exchange?learn=${encodeURIComponent(s)}`}
                                             className="bridge-btn swap-bridge"
                                           >
-                                            🤝 {isKm ? "ផ្លាស់ប្តូរជាមួយមិត្តភក្តិ" : "Swap with Peer"}
+                                            <IoPeopleOutline aria-hidden="true" />{" "}
+                                            {isKm ? "ផ្លាស់ប្តូរជាមួយមិត្តភក្តិ" : "Swap with Peer"}
                                           </Link>
                                         </div>
                                       </div>
@@ -559,8 +589,11 @@ const Jobs = () => {
                               </div>
                             </div>
                           ) : (
-                            <div className="bridge-all-matched">
-                              🎉{" "}
+                            <div
+                              className="bridge-all-matched"
+                              style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+                            >
+                              <IoCheckmarkCircleOutline aria-hidden="true" />
                               {isKm ? (
                                 <>
                                   <strong>ត្រូវគ្នា 100%!</strong> អ្នកមានជំនាញគ្រប់គ្រាន់តាមតម្រូវការសម្រាប់តំណែងនេះ។
@@ -577,18 +610,28 @@ const Jobs = () => {
                     </div>
                   )}
                   <div className="internship-card-footer">
-                    <button
-                      className="btn primary job-card-cta-full"
-                      type="button"
-                      disabled={applied || expired}
-                      onClick={() => openApplication(internship)}
-                    >
-                      {applied
-                        ? t("jobsPage.applied")
-                        : expired
-                          ? t("jobsPage.deadlinePassed")
-                          : `${t("jobsPage.applyOnline")} →`}
-                    </button>
+                    {internship.isFeaturedPreview ? (
+                      <Link
+                        to="/cv-studio"
+                        className="btn primary job-card-cta-full"
+                      >
+                        {isKm ? "រៀបចំ PDF CV ដើម្បីដាក់ពាក្យ" : "Build PDF CV to Apply"}{" "}
+                        <IoArrowForwardOutline aria-hidden="true" />
+                      </Link>
+                    ) : (
+                      <button
+                        className="btn primary job-card-cta-full"
+                        type="button"
+                        disabled={applied || expired}
+                        onClick={() => openApplication(internship)}
+                      >
+                        {applied
+                          ? t("jobsPage.applied")
+                          : expired
+                            ? t("jobsPage.deadlinePassed")
+                            : `${t("jobsPage.applyOnline")} →`}
+                      </button>
+                    )}
                   </div>
 
                   {applyingId === internship.id && (

@@ -10,6 +10,7 @@ import {
   updateProfileRequest,
 } from "../services/authService";
 import { disconnectSocket, getSocket } from "../services/realtimeService";
+import { getAuthToken } from "../services/api";
 
 const context = createContext();
 // eslint-disable-next-line react-refresh/only-export-components
@@ -21,6 +22,11 @@ const GlobleContext = ({ children }) => {
 
   useEffect(() => {
     const loadUser = async () => {
+      if (!getAuthToken()) {
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
       try {
         const response = await fetchCurrentUser();
         setUser(response.user);

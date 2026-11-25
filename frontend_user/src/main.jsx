@@ -18,13 +18,16 @@ const privacySafeEvent = (event) => {
   return { ...event, url: url.toString() };
 };
 
+const enableVercelAnalytics =
+  import.meta.env.VITE_ENABLE_VERCEL_ANALYTICS === "true";
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>
       <LanguageProvider>
         <GlobleContext>
           <App />
-          <Analytics beforeSend={privacySafeEvent} />
+          {enableVercelAnalytics && <Analytics beforeSend={privacySafeEvent} />}
         </GlobleContext>
       </LanguageProvider>
     </ThemeProvider>
