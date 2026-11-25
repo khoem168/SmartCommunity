@@ -44,41 +44,42 @@ const formatDate = (value) => {
 };
 
 const educationFields = [
-  { name: "institution", label: "School or institution", required: true },
-  { name: "degree", label: "Degree" },
-  { name: "fieldOfStudy", label: "Field of study" },
-  { name: "startDate", label: "Start date", type: "date" },
-  { name: "endDate", label: "End date", type: "date" },
-  { name: "description", label: "Description", type: "textarea" },
+  { name: "institution", label: "School or institution", labelKm: "សាលា ឬគ្រឹះស្ថានសិក្សា", required: true },
+  { name: "degree", label: "Degree", labelKm: "កម្រិតសញ្ញាបត្រ" },
+  { name: "fieldOfStudy", label: "Field of study", labelKm: "ជំនាញសិក្សា" },
+  { name: "startDate", label: "Start date", labelKm: "ថ្ងៃចាប់ផ្តើម", type: "date" },
+  { name: "endDate", label: "End date", labelKm: "ថ្ងៃបញ្ចប់", type: "date" },
+  { name: "description", label: "Description", labelKm: "ការពិពណ៌នាបន្ថែម", type: "textarea" },
 ];
 
 const experienceFields = [
-  { name: "title", label: "Job title", required: true },
-  { name: "company", label: "Company", required: true },
-  { name: "employmentType", label: "Employment type" },
-  { name: "startDate", label: "Start date", type: "date" },
-  { name: "endDate", label: "End date", type: "date" },
-  { name: "isCurrent", label: "I currently work here", type: "checkbox" },
-  { name: "description", label: "Description", type: "textarea" },
+  { name: "title", label: "Job title", labelKm: "តួនាទីការងារ", required: true },
+  { name: "company", label: "Company", labelKm: "ក្រុមហ៊ុន / ស្ថាប័ន", required: true },
+  { name: "employmentType", label: "Employment type", labelKm: "ប្រភេទការងារ (ពេញម៉ោង/កម្មសិក្សា)" },
+  { name: "startDate", label: "Start date", labelKm: "ថ្ងៃចាប់ផ្តើម", type: "date" },
+  { name: "endDate", label: "End date", labelKm: "ថ្ងៃបញ្ចប់", type: "date" },
+  { name: "isCurrent", label: "I currently work here", labelKm: "កំពុងធ្វើការនៅទីនេះបច្ចុប្បន្ន", type: "checkbox" },
+  { name: "description", label: "Description", labelKm: "ការពិពណ៌នាការងារ", type: "textarea" },
 ];
 
 const certificateFields = [
-  { name: "name", label: "Certificate name", required: true },
-  { name: "issuer", label: "Issuer" },
-  { name: "issueDate", label: "Issue date", type: "date" },
-  { name: "credentialUrl", label: "Credential URL", type: "url" },
-  { name: "certificateUrl", label: "Certificate file URL", type: "url" },
+  { name: "name", label: "Certificate name", labelKm: "ឈ្មោះវិញ្ញាបនបត្រ", required: true },
+  { name: "issuer", label: "Issuer", labelKm: "ស្ថាប័នចេញវិញ្ញាបនបត្រ" },
+  { name: "issueDate", label: "Issue date", labelKm: "កាលបរិច្ឆេទទទួលបាន", type: "date" },
+  { name: "credentialUrl", label: "Credential URL", labelKm: "តំណភ្ជាប់ផ្ទៀងផ្ទាត់ (URL)", type: "url" },
+  { name: "certificateUrl", label: "Certificate file URL", labelKm: "តំណភ្ជាប់ឯកសារវិញ្ញាបនបត្រ", type: "url" },
 ];
 
 const projectFields = [
-  { name: "title", label: "Project title", required: true },
-  { name: "description", label: "Description", type: "textarea" },
-  { name: "technologies", label: "Technologies (comma separated)" },
-  { name: "projectUrl", label: "Live project URL", type: "url" },
-  { name: "githubUrl", label: "GitHub URL", type: "url" },
+  { name: "title", label: "Project title", labelKm: "ឈ្មោះគម្រោងស្នាដៃ", required: true },
+  { name: "description", label: "Description", labelKm: "ការពិពណ៌នាគម្រោង", type: "textarea" },
+  { name: "technologies", label: "Technologies (comma separated)", labelKm: "បច្ចេកវិទ្យាប្រើប្រាស់ (បំបែកដោយសញ្ញាក្បៀស)" },
+  { name: "projectUrl", label: "Live project URL", labelKm: "តំណភ្ជាប់គម្រោងផ្ទាល់ (Live URL)", type: "url" },
+  { name: "githubUrl", label: "GitHub URL", labelKm: "តំណភ្ជាប់កូដ GitHub", type: "url" },
   {
     name: "imageFile",
     label: "Project image",
+    labelKm: "រូបភាពគម្រោង",
     type: "file",
     accept: "image/jpeg,image/png,image/webp",
   },
@@ -211,11 +212,11 @@ const ProfileRecordSection = ({
                     }))
                   }
                 />
-                {field.label}
+                {isKm ? field.labelKm || field.label : field.label}
               </label>
             ) : (
               <label key={field.name}>
-                {field.label}
+                {isKm ? field.labelKm || field.label : field.label}
                 {field.type === "textarea" ? (
                   <textarea
                     value={form[field.name] || ""}
@@ -249,7 +250,17 @@ const ProfileRecordSection = ({
             ),
           )}
           <button className="btn primary" disabled={busy}>
-            {busy ? "Saving..." : editingId ? "Update" : "Add to profile"}
+            {busy
+              ? isKm
+                ? "កំពុងរក្សាទុក..."
+                : "Saving..."
+              : editingId
+                ? isKm
+                  ? "ធ្វើបច្ចុប្បន្នភាព"
+                  : "Update"
+                : isKm
+                  ? "បន្ថែមទៅក្នុងប្រវត្តិរូប"
+                  : "Add to profile"}
           </button>
         </form>
       )}
@@ -479,24 +490,28 @@ const Profile = () => {
             <section className="container section">
               <div className="profile-panel profile-editor-panel glass">
                 <div className="profile-section-heading">
-                  <h2>Personal and Career Information</h2>
+                  <h2>
+                    {isKm
+                      ? "ព័ត៌មានផ្ទាល់ខ្លួន និងគោលដៅអាជីព"
+                      : "Personal and Career Information"}
+                  </h2>
                 </div>
                 <form
                   className="profile-edit-form profile-edit-grid"
                   onSubmit={handleSave}
                 >
                   {[
-                    ["fullName", "Full name"],
-                    ["location", "Location"],
-                    ["jobTitle", "Profession or job title"],
-                    ["recruiterCompany", "Company"],
-                    ["githubUrl", "GitHub URL", "url"],
-                    ["linkedinUrl", "LinkedIn URL", "url"],
-                    ["availability", "Availability"],
-                    ["experienceLevel", "Experience level"],
-                    ["skillsToTeach", "Skills I can teach"],
-                    ["skillsToLearn", "Skills I want to learn"],
-                    ["interestedSkills", "Interested skills"],
+                    ["fullName", isKm ? "ឈ្មោះពេញ" : "Full name"],
+                    ["location", isKm ? "ទីតាំង" : "Location"],
+                    ["jobTitle", isKm ? "មុខរបរ ឬតួនាទី" : "Profession or job title"],
+                    ["recruiterCompany", isKm ? "ក្រុមហ៊ុន / សាលា" : "Company"],
+                    ["githubUrl", isKm ? "តំណភ្ជាប់ GitHub" : "GitHub URL", "url"],
+                    ["linkedinUrl", isKm ? "តំណភ្ជាប់ LinkedIn" : "LinkedIn URL", "url"],
+                    ["availability", isKm ? "ពេលវេលាទំនេរ" : "Availability"],
+                    ["experienceLevel", isKm ? "កម្រិតបទពិសោធន៍" : "Experience level"],
+                    ["skillsToTeach", isKm ? "ជំនាញដែលអាចបង្រៀន" : "Skills I can teach"],
+                    ["skillsToLearn", isKm ? "ជំនាញដែលចង់រៀន" : "Skills I want to learn"],
+                    ["interestedSkills", isKm ? "ជំនាញដែលចាប់អារម្មណ៍" : "Interested skills"],
                   ].map(([name, label, type]) => (
                     <label key={name}>
                       {label}
@@ -513,7 +528,7 @@ const Profile = () => {
                     </label>
                   ))}
                   <label className="profile-wide-field">
-                    Bio
+                    {isKm ? "អំពីខ្ញុំ (Bio)" : "Bio"}
                     <textarea
                       value={form.bio || ""}
                       onChange={(event) =>
@@ -525,7 +540,7 @@ const Profile = () => {
                     />
                   </label>
                   <label className="profile-wide-field">
-                    Career goal
+                    {isKm ? "គោលដៅអាជីព" : "Career goal"}
                     <textarea
                       value={form.careerGoal || ""}
                       onChange={(event) =>
@@ -542,10 +557,16 @@ const Profile = () => {
                       type="button"
                       onClick={() => setEditing(false)}
                     >
-                      Cancel
+                      {isKm ? "បោះបង់" : "Cancel"}
                     </button>
                     <button className="btn primary" disabled={busy}>
-                      {busy ? "Saving..." : "Save profile"}
+                      {busy
+                        ? isKm
+                          ? "កំពុងរក្សាទុក..."
+                          : "Saving..."
+                        : isKm
+                          ? "រក្សាទុកប្រវត្តិរូប"
+                          : "Save profile"}
                     </button>
                   </div>
                 </form>

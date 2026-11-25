@@ -66,17 +66,20 @@
     height: 24px;
   }
 
-  .tb-icon {
-    font-size: 1.25rem;
+  .tb-icon,
+  .tabbar-icon {
+    font-size: 1.22rem;
     stroke-width: 2.1;
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
   }
 
-  .tb-label {
-    font-size: 0.67rem;
+  .tb-label,
+  .tabbar-label {
+    font-size: 0.68rem;
     font-weight: 600;
-    line-height: 1.1;
+    line-height: 1.15;
     letter-spacing: -0.01em;
+    white-space: nowrap;
     transition: color 0.2s ease;
   }
 
@@ -88,12 +91,14 @@
     color: #2563eb;
   }
 
-  .tabbar-item.on .tb-icon {
+  .tabbar-item.on .tb-icon,
+  .tabbar-item.on .tabbar-icon {
     transform: translateY(-2px);
     color: #2563eb;
   }
 
-  .tabbar-item.on .tb-label {
+  .tabbar-item.on .tb-label,
+  .tabbar-item.on .tabbar-label {
     color: #0f172a;
     font-weight: 700;
   }
@@ -102,11 +107,13 @@
     color: #60a5fa;
   }
 
-  [data-theme="dark"] .tabbar-item.on .tb-icon {
+  [data-theme="dark"] .tabbar-item.on .tb-icon,
+  [data-theme="dark"] .tabbar-item.on .tabbar-icon {
     color: #60a5fa;
   }
 
-  [data-theme="dark"] .tabbar-item.on .tb-label {
+  [data-theme="dark"] .tabbar-item.on .tb-label,
+  [data-theme="dark"] .tabbar-item.on .tabbar-label {
     color: #f8fafc;
   }
 
@@ -128,7 +135,8 @@
     box-shadow: 0 0 10px rgba(96, 165, 250, 0.8);
   }
 
-  .tb-badge {
+  .tb-badge,
+  .tabbar-badge {
     position: absolute;
     top: -3px;
     right: -8px;
@@ -147,7 +155,8 @@
     border: 1.5px solid rgba(255, 255, 255, 0.9);
   }
 
-  [data-theme="dark"] .tb-badge {
+  [data-theme="dark"] .tb-badge,
+  [data-theme="dark"] .tabbar-badge {
     border-color: rgba(18, 24, 38, 0.9);
   }
 
@@ -160,7 +169,27 @@
 
   /* Ensure page content has bottom padding so floating tab bar never covers it */
   body {
-    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(82px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 380px) {
+  .tabbar,
+  .tabbar.glass {
+    left: 8px;
+    right: 8px;
+    padding: 5px 2px;
+    border-radius: 22px;
+  }
+
+  .tb-label,
+  .tabbar-label {
+    font-size: 0.6rem;
+  }
+
+  .tb-icon,
+  .tabbar-icon {
+    font-size: 1.12rem;
   }
 }
 

@@ -12,6 +12,10 @@ import {
   IoRibbonOutline,
   IoCodeSlashOutline,
   IoLocationOutline,
+  IoFlashOutline,
+  IoSwapHorizontalOutline,
+  IoChatbubbleEllipsesOutline,
+  IoOpenOutline,
 } from "react-icons/io5";
 import UserAvatar from "../../components/ui/UserAvatar";
 import ResumePreviewModal from "./ResumePreviewModal";
@@ -57,7 +61,7 @@ export default function StudentProfileView({
 
   const displayProfession = isKm
     ? user.profession === "Frontend Learning Partner"
-      ? "ដៃគូសិក្សាផ្នែក Frontend (Frontend Learning Partner)"
+      ? "ដៃគូសិក្សាផ្នែក Frontend"
       : user.profession || "និស្សិតកំពុងអភិវឌ្ឍន៍ជំនាញ"
     : user.profession || "Aspiring Software Engineer & Student";
 
@@ -71,7 +75,7 @@ export default function StudentProfileView({
 
   const displayLevel = isKm
     ? (skillData.experienceLevel || "Beginner") === "Beginner"
-      ? "កម្រិតដំបូង (Beginner)"
+      ? "កម្រិតដំបូង"
       : skillData.experienceLevel
     : `${skillData.experienceLevel || "Beginner"} level`;
 
@@ -155,35 +159,27 @@ export default function StudentProfileView({
 
       {/* Quick Post-Login Navigation Bar */}
       <div className="container" style={{ marginTop: "-14px", marginBottom: "18px" }}>
-        <div
-          className="glass"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "12px",
-            padding: "14px 20px",
-            borderRadius: "16px",
-            border: "1px solid rgba(37, 99, 235, 0.18)",
-            background: "rgba(255, 255, 255, 0.9)",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-            <span style={{ fontWeight: 700, fontSize: "0.88rem", color: "#2563eb" }}>
-              {isKm ? "⚡ មុខងាររហ័ស៖" : "⚡ Quick Actions:"}
+        <div className="profile-quick-actions-bar glass">
+          <div className="profile-quick-actions-list">
+            <span className="profile-quick-actions-label">
+              <IoFlashOutline />
+              <span>{isKm ? "មុខងាររហ័ស៖" : "Quick Actions:"}</span>
             </span>
-            <Link to="/cv-studio" className="btn outline" style={{ padding: "6px 14px", fontSize: "0.84rem" }}>
-              📄 {isKm ? "ជ្រើសរើសគំរូ CV & ទាញយក PDF (ឥតគិតថ្លៃ)" : "Choose CV Templates & Download PDF (Free)"}
+            <Link to="/cv-studio" className="btn outline profile-quick-action-pill">
+              <IoDocumentTextOutline />
+              <span>{isKm ? "ជ្រើសរើសគំរូ CV & ទាញយក PDF" : "CV Templates & Free PDF"}</span>
             </Link>
-            <Link to="/skill-exchange" className="btn outline" style={{ padding: "6px 14px", fontSize: "0.84rem" }}>
-              🔄 {isKm ? "ផ្លាស់ប្តូរជំនាញ (Skill Swap)" : "Peer Skill Exchange"}
+            <Link to="/skill-exchange" className="btn outline profile-quick-action-pill">
+              <IoSwapHorizontalOutline />
+              <span>{isKm ? "ផ្លាស់ប្តូរជំនាញគ្នា" : "Peer Skill Exchange"}</span>
             </Link>
-            <Link to="/my-applications" className="btn outline" style={{ padding: "6px 14px", fontSize: "0.84rem" }}>
-              💼 {isKm ? "តាមដានពាក្យសុំការងារ" : "My Job Applications"}
+            <Link to="/my-applications" className="btn outline profile-quick-action-pill">
+              <IoBriefcaseOutline />
+              <span>{isKm ? "តាមដានពាក្យសុំការងារ" : "My Job Applications"}</span>
             </Link>
-            <Link to="/forum" className="btn outline" style={{ padding: "6px 14px", fontSize: "0.84rem" }}>
-              💬 {isKm ? "បណ្តាញសង្គមសហគមន៍" : "Community Social Feed"}
+            <Link to="/forum" className="btn outline profile-quick-action-pill">
+              <IoChatbubbleEllipsesOutline />
+              <span>{isKm ? "បណ្តាញសង្គមសហគមន៍" : "Community Social Feed"}</span>
             </Link>
           </div>
         </div>
@@ -222,7 +218,7 @@ export default function StudentProfileView({
             <h2>{isKm ? "ជំនាញដោះដូរ និងចំណាប់អារម្មណ៍" : "Skills & Interests"}</h2>
             <div className="profile-skill-group">
               <strong className="teach-label">
-                <IoSchoolOutline /> {isKm ? "ជំនាញអាចបង្រៀន (Teach)" : "Skills I Can Teach"}
+                <IoSchoolOutline /> {isKm ? "ជំនាញអាចបង្រៀន" : "Skills I Can Teach"}
               </strong>
               <div className="profile-skill-wrap">
                 {skillsToTeach.length > 0 ? (
@@ -239,7 +235,7 @@ export default function StudentProfileView({
 
             <div className="profile-skill-group">
               <strong className="learn-label">
-                <IoSchoolOutline /> {isKm ? "ជំនាញចង់រៀន (Learn)" : "Skills I Want to Learn"}
+                <IoSchoolOutline /> {isKm ? "ជំនាញចង់រៀន" : "Skills I Want to Learn"}
               </strong>
               <div className="profile-skill-wrap">
                 {skillsToLearn.length > 0 ? (
@@ -271,7 +267,7 @@ export default function StudentProfileView({
 
         {/* 3. Portfolio Projects */}
         {renderRecordSection({
-          title: isKm ? "គម្រោងសំខាន់ៗ (Portfolio Projects)" : "Portfolio Projects",
+          title: isKm ? "គម្រោងស្នាដៃសំខាន់ៗ" : "Portfolio Projects",
           icon: <IoCodeSlashOutline />,
           resource: "projects",
           fields: projectFields,
@@ -306,7 +302,7 @@ export default function StudentProfileView({
                 <div className="project-links-row">
                   {item.projectUrl && (
                     <a href={item.projectUrl} target="_blank" rel="noreferrer">
-                      🔗 Live Demo
+                      <IoOpenOutline /> {isKm ? "មើលគម្រោងផ្ទាល់" : "Live Demo"}
                     </a>
                   )}
                   {item.githubUrl && (
@@ -322,7 +318,7 @@ export default function StudentProfileView({
 
         {/* 4. Practical Work Experience */}
         {renderRecordSection({
-          title: isKm ? "បទពិសោធន៍ការងារ ឬកម្មសិក្សា (Experience)" : "Work Experience & Internships",
+          title: isKm ? "បទពិសោធន៍ការងារ និងកម្មសិក្សា" : "Work Experience & Internships",
           icon: <IoBriefcaseOutline />,
           resource: "experiences",
           fields: experienceFields,
@@ -336,7 +332,7 @@ export default function StudentProfileView({
                 <strong>{item.company}</strong> {item.employmentType && `· ${item.employmentType}`}
               </p>
               <small className="record-dates">
-                {formatDate(item.startDate)} — {item.isCurrent ? "Present" : formatDate(item.endDate)}
+                {formatDate(item.startDate)} — {item.isCurrent ? (isKm ? "បច្ចុប្បន្ន" : "Present") : formatDate(item.endDate)}
               </small>
               {item.description && <p className="record-desc">{item.description}</p>}
             </div>
@@ -345,7 +341,7 @@ export default function StudentProfileView({
 
         {/* 5. Education */}
         {renderRecordSection({
-          title: isKm ? "ប្រវត្តិការសិក្សា (Education)" : "Education",
+          title: isKm ? "ប្រវត្តិការសិក្សា" : "Education",
           icon: <IoSchoolOutline />,
           resource: "education",
           fields: educationFields,
@@ -356,7 +352,7 @@ export default function StudentProfileView({
             <div>
               <h3>{item.institution}</h3>
               <p className="record-subtitle">
-                {[item.degree, item.fieldOfStudy].filter(Boolean).join(" in ")}
+                {[item.degree, item.fieldOfStudy].filter(Boolean).join(" · ")}
               </p>
               <small className="record-dates">
                 {formatDate(item.startDate)} — {formatDate(item.endDate)}
@@ -368,7 +364,7 @@ export default function StudentProfileView({
 
         {/* 6. Certifications */}
         {renderRecordSection({
-          title: isKm ? "វិញ្ញាបនបត្រ (Certificates)" : "Certificates & Credentials",
+          title: isKm ? "វិញ្ញាបនបត្រ និងសញ្ញាបត្រ" : "Certificates & Credentials",
           icon: <IoRibbonOutline />,
           resource: "certificates",
           fields: certificateFields,
@@ -383,7 +379,7 @@ export default function StudentProfileView({
               </p>
               {item.credentialUrl && (
                 <a href={item.credentialUrl} target="_blank" rel="noreferrer" className="record-link">
-                  View Credential ↗
+                  <IoOpenOutline /> {isKm ? "មើលវិញ្ញាបនបត្រ" : "View Credential"}
                 </a>
               )}
             </div>

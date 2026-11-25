@@ -419,14 +419,15 @@ const Messages = () => {
               </label>
               <div className="conversation-filters">
                 {[
-                  { id: "all", label: isKm ? "ទាំងអស់" : "All" },
-                  { id: "job_application", label: isKm ? "💼 ការងារ" : "💼 Jobs" },
-                  { id: "mentorship", label: isKm ? "🎓 គ្រូបង្វឹក" : "🎓 Mentorship" },
-                  { id: "skill_exchange", label: isKm ? "🤝 ប្តូរជំនាញ" : "🤝 Skill Swap" },
-                  { id: "group", label: isKm ? "👥 ក្រុម" : "👥 Groups" },
+                  { id: "all", label: isKm ? "ទាំងអស់" : "All", Icon: null },
+                  { id: "job_application", label: isKm ? "ការងារ" : "Jobs", Icon: IoBriefcaseOutline },
+                  { id: "mentorship", label: isKm ? "គ្រូបង្វឹក" : "Mentorship", Icon: IoSchoolOutline },
+                  { id: "skill_exchange", label: isKm ? "ប្តូរជំនាញ" : "Skill Swap", Icon: IoSwapHorizontalOutline },
+                  { id: "group", label: isKm ? "ក្រុម" : "Groups", Icon: IoPeopleOutline },
                 ].map((tab) => {
                   const unread = categoryUnread[tab.id] || 0;
                   const count = categoryCounts[tab.id] || 0;
+                  const TabIcon = tab.Icon;
                   return (
                     <button
                       type="button"
@@ -434,6 +435,7 @@ const Messages = () => {
                       onClick={() => setFilter(tab.id)}
                       key={tab.id}
                     >
+                      {TabIcon && <TabIcon className="filter-pill-icon" />}
                       <span>{tab.label}</span>
                       {unread > 0 ? (
                         <span className="filter-unread-dot">{unread}</span>
@@ -727,8 +729,10 @@ const Messages = () => {
                         <div className="message-meta">
                           <span>
                             {Number(message.senderId) === Number(user.id)
-                              ? "You"
-                              : message.senderName || "Member"}
+                              ? isKm
+                                ? "អ្នក"
+                                : "You"
+                              : message.senderName || (isKm ? "សមាជិក" : "Member")}
                           </span>
                           <span>
                             {new Date(message.createdAt).toLocaleTimeString(
@@ -830,20 +834,24 @@ const Messages = () => {
           <form className="group-dialog" onSubmit={handleCreateGroup}>
             <div className="group-dialog-header">
               <div>
-                <h2>Create community group</h2>
-                <p>Choose members and start a shared conversation.</p>
+                <h2>{isKm ? "បង្កើតក្រុមសិក្សាសហគមន៍" : "Create community group"}</h2>
+                <p>
+                  {isKm
+                    ? "ជ្រើសរើសសមាជិក និងចាប់ផ្តើមការសន្ទនារួមគ្នា។"
+                    : "Choose members and start a shared conversation."}
+                </p>
               </div>
               <button
                 type="button"
                 className="icon-action"
                 onClick={() => setGroupOpen(false)}
-                aria-label="Close"
+                aria-label={isKm ? "បិទ" : "Close"}
               >
                 <IoCloseOutline />
               </button>
             </div>
             <label>
-              Group name
+              {isKm ? "ឈ្មោះក្រុម" : "Group name"}
               <input
                 required
                 minLength={2}
@@ -855,11 +863,15 @@ const Messages = () => {
                     name: event.target.value,
                   }))
                 }
-                placeholder="Example: Frontend Study Circle"
+                placeholder={
+                  isKm
+                    ? "ឧទាហរណ៍៖ ក្រុមសិក្សា Frontend"
+                    : "Example: Frontend Study Circle"
+                }
               />
             </label>
             <label>
-              Description
+              {isKm ? "ការពិពណ៌នា" : "Description"}
               <textarea
                 maxLength={500}
                 value={groupForm.description}
@@ -869,12 +881,18 @@ const Messages = () => {
                     description: event.target.value,
                   }))
                 }
-                placeholder="What will this group discuss?"
+                placeholder={
+                  isKm
+                    ? "តើក្រុមនេះនឹងពិភាក្សាអំពីប្រធានបទអ្វី?"
+                    : "What will this group discuss?"
+                }
               />
             </label>
             <fieldset>
               <legend>
-                Select members ({groupForm.memberIds.length} selected)
+                {isKm
+                  ? `ជ្រើសរើសសមាជិក (បានជ្រើសរើស ${groupForm.memberIds.length} នាក់)`
+                  : `Select members (${groupForm.memberIds.length} selected)`}
               </legend>
               <div className="group-member-picker">
                 {availableMembers.map((member) => (
@@ -899,14 +917,14 @@ const Messages = () => {
                 className="btn outline"
                 onClick={() => setGroupOpen(false)}
               >
-                Cancel
+                {isKm ? "បោះបង់" : "Cancel"}
               </button>
               <button
                 type="submit"
                 className="btn primary"
                 disabled={!groupForm.name.trim() || !groupForm.memberIds.length}
               >
-                <IoPeopleOutline /> Create group
+                <IoPeopleOutline /> {isKm ? "បង្កើតក្រុម" : "Create group"}
               </button>
             </div>
           </form>

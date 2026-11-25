@@ -36,8 +36,13 @@ const tokenRequestLimiter = createLimiter(
   "Too many email or password requests for this account. Try again later.",
   { keyGenerator: accountAndIpKey },
 );
+const apiLimiter = createLimiter(
+  3000,
+  "Too many requests from this IP address. Please wait a moment and try again.",
+);
 
 module.exports = {
+  apiLimiter,
   authLimiter,
   loginLimiter,
   tokenRequestLimiter,

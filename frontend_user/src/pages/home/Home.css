@@ -2289,81 +2289,26 @@ html[data-language="km"] .ck-hero-title {
 }
 
 /* --------------------------------------------------------------------------
-   PHONE: shorter home page
-   The popular-courses section was about 3,700px and the team section about
-   2,200px on a phone. Courses use the same compact rows as /courses, and team
-   bios are clamped (the full bio stays on the member's linked profile).
+   PHONE: modern compact full-featured course cards on mobile
    -------------------------------------------------------------------------- */
 @media (max-width: 600px) {
   .ck-courses-grid {
-    gap: 12px;
+    gap: 16px;
   }
 
   .ck-courses-grid .ck-course-card {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 16px;
-    position: relative;
-  }
-
-  .ck-courses-grid .ck-course-card:hover {
-    transform: none;
-  }
-
-  .ck-courses-grid .ck-course-media-link {
-    flex: 0 0 38%;
-    max-width: 150px;
-    border-radius: 10px;
-  }
-
-  .ck-courses-grid .ckl-artwork-banner > span {
-    display: none;
+    border-radius: 18px;
   }
 
   .ck-courses-grid .ck-course-body {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    min-width: 0;
+    padding: 16px;
   }
 
   .ck-courses-grid .ck-card-title {
-    order: -1;
     min-height: 0;
     margin-bottom: 6px;
-    font-size: 0.98rem;
+    font-size: 1rem;
     line-height: 1.4;
-  }
-
-  .ck-courses-grid .ck-card-title a::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-  }
-
-  .ck-courses-grid .ck-card-access-row {
-    justify-content: flex-start;
-    margin-bottom: 6px;
-  }
-
-  .ck-courses-grid .ck-card-access-pills,
-  .ck-courses-grid .ck-card-desc,
-  .ck-courses-grid .ck-instructor-line {
-    display: none;
-  }
-
-  .ck-courses-grid .ck-card-cta-full {
-    display: none !important;
-  }
-
-  .ck-courses-grid .ck-card-meta-row {
-    gap: 12px;
-    margin: 0;
-    padding-top: 0;
-    border-top: 0;
   }
 
   .ck-supporter-bio {

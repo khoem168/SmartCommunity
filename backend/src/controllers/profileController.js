@@ -65,8 +65,12 @@ const resourceConfigs = {
 
 const cleanUrl = (value) => {
   if (!value) return null;
+  const raw = String(value).trim();
+  if (raw.startsWith("/uploads/") && !raw.includes("..")) {
+    return raw;
+  }
   try {
-    const url = new URL(String(value));
+    const url = new URL(raw);
     return ["http:", "https:"].includes(url.protocol) ? url.toString() : null;
   } catch {
     return null;

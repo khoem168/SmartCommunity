@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const fs = require("fs/promises");
 const path = require("path");
 const { v2: cloudinary } = require("cloudinary");
+const { assertValidFileSignature } = require("../utils/fileSignature");
 
 const cloudinaryConfigured = () =>
   Boolean(
@@ -66,6 +67,10 @@ const uploadLocally = async (file, publicId) => {
 };
 
 const uploadMessageFile = (file, userId) => {
+  assertValidFileSignature(
+    file,
+    "Chat files must be valid JPG, PNG, WebP, PDF, TXT, DOC, or DOCX files.",
+  );
   const publicId = `message-${userId}-${Date.now()}`;
   if (cloudinaryConfigured()) return uploadToCloudinary(file, publicId);
   return uploadLocally(file, publicId);

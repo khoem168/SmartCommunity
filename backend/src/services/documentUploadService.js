@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const fs = require("fs/promises");
 const path = require("path");
 const { v2: cloudinary } = require("cloudinary");
+const { assertValidFileSignature } = require("../utils/fileSignature");
 
 const cloudinaryConfigured = () =>
   Boolean(
@@ -50,9 +51,11 @@ const uploadLocally = async (file, folder, publicId) => {
   return { url: `${baseUrl}/${relativeUrl}`, provider: "local" };
 };
 
-const uploadDocument = (file, { folder, publicId }) =>
-  cloudinaryConfigured()
+const uploadDocument = (file, { folder, publicId }) => {
+  assertValidFileSignature(file, "Only valid PDF files are allowed for CV uploads.");
+  return cloudinaryConfigured()
     ? uploadToCloudinary(file, folder, publicId)
     : uploadLocally(file, folder, publicId);
+};
 
 module.exports = { uploadDocument };

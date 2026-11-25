@@ -289,14 +289,14 @@ const computeActionItems = (role, data, user, profileProgress, isKm) => {
     actions.push({
       id: "profile-complete",
       icon: FiUser,
-      title: isKm ? "បំពេញប្រវត្តិរូប និងជំនាញ (Complete CV)" : "Complete Profile & Portfolio",
+      title: isKm ? "បំពេញប្រវត្តិរូប និងជំនាញ" : "Complete Profile & Portfolio",
       desc: isKm
         ? `ប្រវត្តិរូបរបស់អ្នកសម្រេចបាន ${profileProgress}% · បន្ថែម Bio និងជំនាញដើម្បីបង្កើនឱកាសការងារ`
         : `Profile is ${profileProgress}% complete · Add bio and skills to boost job match scores`,
       badge: `${profileProgress}%`,
       badgeType: "neutral",
       to: "/profile",
-      actionText: isKm ? "បំពេញ Profile" : "Edit Profile",
+      actionText: isKm ? "បំពេញប្រវត្តិរូប" : "Edit Profile",
     });
   }
 
@@ -304,14 +304,14 @@ const computeActionItems = (role, data, user, profileProgress, isKm) => {
     actions.push({
       id: "career-roadmap",
       icon: FiCompass,
-      title: isKm ? "ជ្រើសរើសផែនទីបង្ហាញផ្លូវអាជីព (Career Roadmap)" : "Explore Career Roadmaps",
+      title: isKm ? "ជ្រើសរើសផែនទីបង្ហាញផ្លូវអាជីព" : "Explore Career Roadmaps",
       desc: isKm
-        ? "ធ្វើតេស្តវាស់សមត្ថភាព និងជ្រើសរើស Roadmap ឆ្ពោះទៅកាន់ការងារដែលអ្នកស្រមៃចង់បាន"
+        ? "ធ្វើតេស្តវាស់សមត្ថភាព និងជ្រើសរើសផែនទីអាជីពឆ្ពោះទៅកាន់ការងារដែលអ្នកស្រមៃចង់បាន"
         : "Take competency assessment and establish milestone pathways to target jobs",
       badge: isKm ? "ណែនាំ" : "Recommended",
       badgeType: "accent",
       to: "/career",
-      actionText: isKm ? "បើក Career" : "Start Roadmap",
+      actionText: isKm ? "បើកផែនទីអាជីព" : "Start Roadmap",
     });
   }
 
@@ -327,7 +327,7 @@ const SmartActionCenter = ({ actions, isKm }) => {
             <FiCheckCircle />
           </span>
           <div>
-            <h3>{isKm ? "មជ្ឈមណ្ឌលសកម្មភាព (Smart Action Center)" : "Smart Action Center"}</h3>
+            <h3>{isKm ? "មជ្ឈមណ្ឌលសកម្មភាព" : "Smart Action Center"}</h3>
             <p>{isKm ? "កិច្ចការបន្ទាន់ដែលអ្នកត្រូវធ្វើបន្ទាប់" : "Tasks that require your immediate attention"}</p>
           </div>
         </div>
@@ -377,7 +377,9 @@ const SmartActionCenter = ({ actions, isKm }) => {
         </div>
       ) : (
         <div className="sc-action-empty-state">
-          <span className="sc-empty-sparkle">🎉</span>
+          <span className="sc-empty-sparkle">
+            <FiCheckCircle />
+          </span>
           <h4>{isKm ? "អ្នកបានបញ្ចប់រាល់កិច្ចការទាំងអស់ហើយ!" : "All caught up! No pending tasks right now."}</h4>
           <p>{isKm ? "មិនមានកិច្ចការបន្ទាន់ដែលរង់ចាំអ្នកនៅពេលនេះទេ។" : "Everything is on track. Explore new courses, mentors, or opportunities below."}</p>
         </div>
@@ -1313,7 +1315,7 @@ export default function Dashboard() {
                 <FiBookOpen /> {t("refresh.allCourses")} <FiArrowRight />
               </Link>
               <Link to="/cv-studio">
-                <FiFileText /> {isKm ? "បង្កើត CV ស្អាត (CV Studio)" : "CV Studio"} <FiArrowRight />
+                <FiFileText /> {isKm ? "បង្កើត PDF CV ស្អាត" : "CV Studio"} <FiArrowRight />
               </Link>
               <Link to="/mentorship">
                 {t("refresh.mentorTitle")} <FiArrowRight />

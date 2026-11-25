@@ -271,7 +271,7 @@
   letter-spacing: -0.01em;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1380px) {
   .icon-btn.nav-search-pill-btn {
     width: 36px;
     min-width: 36px;
@@ -803,20 +803,68 @@
   color: #ffffff;
 }
 
-/* Laptop & Intermediate Screens: Compact Spacing to Prevent Overflow */
+/* Laptop & Intermediate Screens: Compact Spacing to Prevent Overflow on 1024px–1380px Laptops */
 @media (max-width: 1380px) {
+  .nav-glass-header {
+    padding: 0 16px;
+    gap: 8px;
+  }
   .nav-item-link {
-    padding: 6px 8px;
-    font-size: 0.84rem;
+    padding: 6px 7px;
+    font-size: 0.82rem;
+    gap: 5px;
   }
   .nav-workspace-pill {
     padding: 0 10px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
+  }
+  .profile-inline-role {
+    display: none;
+  }
+  .profile-text strong {
+    max-width: 110px;
   }
 }
 
-/* Tablet & Compact Viewports: Clean Seamless Switch to Mobile/Tablet Drawer */
-@media (max-width: 1180px) {
+@media (max-width: 1220px) {
+  .nav-glass-header {
+    padding: 0 12px;
+    gap: 6px;
+  }
+  .nav-glass-logo {
+    font-size: 1rem;
+    gap: 8px;
+  }
+  .nav-logo-icon {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .nav-item-link {
+    padding: 5px 6px;
+    font-size: 0.79rem;
+    gap: 4px;
+  }
+  .nav-item-link .nav-item-icon {
+    display: none;
+  }
+  .nav-login-pill,
+  .nav-signin-cta {
+    padding: 0 12px;
+    font-size: 0.79rem;
+    height: 34px;
+  }
+  .icon-btn.lang-toggle-btn {
+    min-width: 54px;
+    padding: 0 9px;
+    font-size: 0.75rem;
+  }
+  .profile-text strong {
+    max-width: 86px;
+  }
+}
+
+/* Tablet & Compact Viewports (<1024px): Clean Seamless Switch to Mobile/Tablet Drawer */
+@media (max-width: 1023px) {
   .nav-glass-links {
     display: none !important;
   }
@@ -836,15 +884,16 @@
 
   .nav-glass-logo {
     gap: 8px;
+    min-width: 0;
   }
 
   .nav-logo-icon {
-    width: 36px !important;
-    height: 36px !important;
+    width: 34px !important;
+    height: 34px !important;
   }
 
   .nav-glass-logo span {
-    font-size: 0.94rem;
+    font-size: 0.92rem;
   }
 
   .nav-glass-actions {
@@ -852,10 +901,16 @@
     flex-shrink: 0;
   }
 
+  .nav-actions-divider {
+    display: none;
+  }
+
   .icon-btn {
-    width: 36px !important;
-    min-width: 36px !important;
-    height: 36px !important;
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
     padding: 0 !important;
     font-size: 0.88rem;
   }
@@ -875,8 +930,8 @@
 
   .profile-pill {
     padding: 2px !important;
-    height: 36px !important;
-    max-width: 36px !important;
+    height: 34px !important;
+    max-width: 34px !important;
     border-radius: 999px !important;
     border: none !important;
     background: transparent !important;
@@ -884,13 +939,13 @@
   }
 
   .profile-avatar {
-    --avatar-size: 32px !important;
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 32px !important;
-    max-width: 32px !important;
-    min-height: 32px !important;
-    max-height: 32px !important;
+    --avatar-size: 30px !important;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    max-width: 30px !important;
+    min-height: 30px !important;
+    max-height: 30px !important;
   }
 
   .profile-text,
@@ -902,9 +957,48 @@
     display: none !important;
   }
 
+  .nav-login-pill {
+    height: 34px;
+    padding: 0 11px;
+    font-size: 0.78rem;
+  }
+
   .nav-mobile-toggle-btn {
     display: inline-flex !important;
     flex-shrink: 0 !important;
+  }
+}
+
+/* Small Phone Models (iPhone SE 320px, Galaxy S 360px, iPhone Mini 375px) */
+@media (max-width: 380px) {
+  .nav-glass-header {
+    padding: 0 8px;
+    gap: 4px;
+  }
+  .nav-logo-icon {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  .nav-glass-logo {
+    gap: 6px;
+  }
+  .nav-glass-logo span {
+    font-size: 0.84rem;
+  }
+  .nav-glass-actions {
+    gap: 4px;
+  }
+  .nav-login-pill {
+    height: 32px;
+    padding: 0 9px;
+    font-size: 0.74rem;
+  }
+  .icon-btn {
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
   }
 }
 
@@ -1633,7 +1727,7 @@
   display: none !important;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1023px) {
   .nav-mobile-toggle-btn {
     display: inline-flex !important;
   }

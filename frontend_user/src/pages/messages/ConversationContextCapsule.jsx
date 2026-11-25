@@ -60,7 +60,7 @@ export default function ConversationContextCapsule({ conversation, user }) {
           <div className="context-capsule-text">
             <div className="context-capsule-headline">
               <span className="context-capsule-badge job">
-                💼 {isKm ? "ពាក្យសុំការងារ" : "Job Application"}
+                <IoBriefcaseOutline /> {isKm ? "ពាក្យសុំការងារ" : "Job Application"}
               </span>
               <strong>{context.jobTitle || conversation.displayName}</strong>
               {context.company && <span className="context-capsule-sub">· {context.company}</span>}
@@ -127,7 +127,7 @@ export default function ConversationContextCapsule({ conversation, user }) {
           <div className="context-capsule-text">
             <div className="context-capsule-headline">
               <span className="context-capsule-badge swap">
-                🤝 {isKm ? "ប្តូរជំនាញគ្នា" : "Skill Swap"}
+                <IoSwapHorizontalOutline /> {isKm ? "ប្តូរជំនាញគ្នា" : "Skill Swap"}
               </span>
               <strong>
                 {context.skillOffered || "Skill"} ⇄ {context.skillWanted || "Skill"}
@@ -184,7 +184,7 @@ export default function ConversationContextCapsule({ conversation, user }) {
           <div className="context-capsule-text">
             <div className="context-capsule-headline">
               <span className="context-capsule-badge mentor">
-                🎓 {isKm ? "ការប្រឹក្សាជំនាញ" : "Mentorship"}
+                <IoSchoolOutline /> {isKm ? "ការប្រឹក្សាជំនាញ" : "Mentorship"}
               </span>
               <strong>{context.topic || (isKm ? "ការណែនាំជំនាញ 1:1" : "1:1 Guidance")}</strong>
               {context.mentorName && <span className="context-capsule-sub">· {context.mentorName}</span>}
@@ -224,7 +224,7 @@ export default function ConversationContextCapsule({ conversation, user }) {
           <div className="context-capsule-text">
             <div className="context-capsule-headline">
               <span className="context-capsule-badge group">
-                👥 {isKm ? "ក្រុមពិភាក្សា" : "Community Group"}
+                <IoPeopleOutline /> {isKm ? "ក្រុមពិភាក្សា" : "Community Group"}
               </span>
               <strong>{conversation.displayName}</strong>
               <span className="context-capsule-sub">

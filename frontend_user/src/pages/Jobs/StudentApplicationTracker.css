@@ -8,6 +8,7 @@
   padding-bottom: 90px;
   background: var(--bg, #fafafa);
   color: var(--text, #0f172a);
+  overflow-x: clip;
 }
 
 .sc-tracker-hero {
@@ -506,6 +507,29 @@
 @media (max-width: 600px) {
   .sc-tracker-stats {
     grid-template-columns: 1fr;
+  }
+  .sc-tracker-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    border-radius: 18px;
+  }
+  .sc-tracker-tab {
+    flex: 1 1 auto;
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 0.82rem;
+  }
+  .sc-tracker-search {
+    min-width: 0;
+    width: 100%;
+  }
+  .sc-app-card {
+    padding: 18px 16px;
+    border-radius: 20px;
+  }
+  .sc-app-header {
+    flex-wrap: wrap;
   }
   .sc-interview-alert-card {
     flex-direction: column;

@@ -15,10 +15,14 @@ const profileRoutes = require("./routes/profileRoutes");
 const calendarRoutes = require("./routes/calendarRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const assistantRoutes = require("./routes/assistantRoutes");
+const { apiLimiter } = require("./middleware/rateLimits");
+const { securityHardening } = require("./middleware/security");
 const setupSockets = require("./sockets");
 const db = require("./config/db");
 
 const app = express();
+app.disable("x-powered-by");
+app.set("trust proxy", 1);
 const server = http.createServer(app);
 const io = setupSockets(server);
 
@@ -27,19 +31,30 @@ app.set("io", io);
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
+    frameguard: { action: "sameorigin" },
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
   }),
 );
 
 const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
   .split(",")
-  .map((origin) => origin.trim());
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+if (process.env.VERCEL_URL) {
+  const vercelOrigin = `https://${process.env.VERCEL_URL}`;
+  if (!allowedOrigins.includes(vercelOrigin)) {
+    allowedOrigins.push(vercelOrigin);
+  }
+}
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   const isLocalDevOrigin =
     process.env.NODE_ENV !== "production" &&
     origin &&
-    /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+    /^https?:\/\/(localhost|127\.0\.0\.1|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3})(:\d+)?$/.test(
+      origin,
+    );
   const allowedOrigin =
     allowedOrigins.includes("*") || !origin || allowedOrigins.includes(origin) || isLocalDevOrigin
       ? origin || allowedOrigins[0]
@@ -55,7 +70,24 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json({ limit: "1mb" }));
-app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
+app.use(express.urlencoded({ extended: false, limit: "1mb" }));
+app.use(securityHardening);
+
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader(
+      "Content-Security-Policy",
+      "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; sandbox",
+    );
+    if (!/\.(jpe?g|png|webp|pdf)$/i.test(req.path)) {
+      res.setHeader("Content-Disposition", "attachment");
+    }
+    next();
+  },
+  express.static(path.join(__dirname, "..", "uploads")),
+);
 
 app.get("/", (req, res) => {
   res.json({
@@ -83,6 +115,7 @@ app.get("/db-check", async (req, res) => {
   }
 });
 
+app.use("/api", apiLimiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/profile", profileRoutes);
@@ -103,7 +136,8 @@ app.use((err, req, res, next) => {
     err.name === "MulterError" ||
     err.message?.includes("images are allowed") ||
     err.message?.includes("PDF files are allowed") ||
-    err.message?.includes("Chat files must be")
+    err.message?.includes("Chat files must be") ||
+    err.message?.includes("declared file type")
   ) {
     return res.status(400).json({ error: err.message });
   }

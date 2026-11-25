@@ -38,6 +38,16 @@ import {
 } from "../../services/profileService";
 import "./CvStudioPage.css";
 
+// Sanitize external user-provided URLs to block javascript:/data: XSS schemes
+function safeExternalUrl(rawUrl) {
+  if (!rawUrl || typeof rawUrl !== "string") return "#";
+  const trimmed = rawUrl.trim();
+  if (!trimmed) return "#";
+  if (/^(javascript|data|vbscript|file):/i.test(trimmed)) return "#";
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 // Strip bilingual text like "Khmer (English)" or "English / Khmer" to ensure pure language output
 function stripBilingual(text, isKm) {
   if (!text || typeof text !== "string") return text || "";
@@ -3096,7 +3106,7 @@ export default function CvStudioPage() {
                   <div className="portfolio-social-row">
                     {basicInfo.portfolioUrl && (
                       <a
-                        href={basicInfo.portfolioUrl}
+                        href={safeExternalUrl(basicInfo.portfolioUrl)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-btn website"
@@ -3107,7 +3117,7 @@ export default function CvStudioPage() {
                     )}
                     {basicInfo.githubUrl && (
                       <a
-                        href={basicInfo.githubUrl}
+                        href={safeExternalUrl(basicInfo.githubUrl)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-btn github"
@@ -3117,7 +3127,7 @@ export default function CvStudioPage() {
                     )}
                     {basicInfo.linkedinUrl && (
                       <a
-                        href={basicInfo.linkedinUrl}
+                        href={safeExternalUrl(basicInfo.linkedinUrl)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="social-btn linkedin"
@@ -3168,7 +3178,7 @@ export default function CvStudioPage() {
                       <div className="proj-card-actions">
                         {proj.projectUrl && (
                           <a
-                            href={proj.projectUrl}
+                            href={safeExternalUrl(proj.projectUrl)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="proj-action-btn live"
@@ -3178,7 +3188,7 @@ export default function CvStudioPage() {
                         )}
                         {proj.githubUrl && (
                           <a
-                            href={proj.githubUrl}
+                            href={safeExternalUrl(proj.githubUrl)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="proj-action-btn code"

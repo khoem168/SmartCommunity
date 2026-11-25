@@ -1,10 +1,12 @@
 .forum-page,
-.forum-detail-page {
+.forum-detail-page,
+.social-community-page {
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
   position: relative;
   isolation: isolate;
+  overflow-x: clip;
 }
 
 .forum-hero {
@@ -2063,9 +2065,29 @@
   color: #64748b;
 }
 
-@media (max-width: 1120px) {
+.social-stat-inline,
+.trending-meta-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.trending-meta-inline > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+@media (max-width: 1320px) {
   .social-three-col-layout {
-    grid-template-columns: 240px minmax(0, 1fr);
+    grid-template-columns: 230px minmax(0, 1fr) 260px;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .social-three-col-layout {
+    grid-template-columns: 230px minmax(0, 1fr);
   }
   .social-right-sidebar {
     display: none;
@@ -2084,5 +2106,26 @@
   }
   .tech-reels-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .social-mini-kpis {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .social-kpi-pill {
+    min-width: 0;
+    padding: 10px 6px;
+  }
+  .social-kpi-pill span {
+    font-size: 0.72rem;
+    display: block;
+    line-height: 1.25;
+  }
+  .social-action-bar {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

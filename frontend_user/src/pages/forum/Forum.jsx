@@ -23,6 +23,8 @@ import {
   IoCodeSlashOutline,
   IoBulbOutline,
   IoRocketOutline,
+  IoFlashOutline,
+  IoRibbonOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
@@ -47,8 +49,9 @@ const initialForm = {
 const TECH_REELS_STORIES = [
   {
     id: "reel-1",
-    tagKm: "⚡ គន្លឹះ React 60s",
-    tagEn: "⚡ 60s React Tip",
+    Icon: IoFlashOutline,
+    tagKm: "គន្លឹះ React 60s",
+    tagEn: "60s React Tip",
     titleKm: "ប្រើប្រាស់ useMemo & useCallback ឱ្យត្រឹមត្រូវ",
     titleEn: "Master useMemo & useCallback in React",
     gradient: "linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%)",
@@ -56,8 +59,9 @@ const TECH_REELS_STORIES = [
   },
   {
     id: "reel-2",
-    tagKm: "🎯 អាជីព & CV",
-    tagEn: "🎯 Career & CV",
+    Icon: IoRibbonOutline,
+    tagKm: "អាជីព & CV",
+    tagEn: "Career & CV",
     titleKm: "៣ ចំណុចដែល HR មើលមុនគេលើ PDF CV របស់និស្សិត IT",
     titleEn: "3 Things Tech Recruiters Check First on Your CV",
     gradient: "linear-gradient(135deg, #047857 0%, #10b981 100%)",
@@ -65,8 +69,9 @@ const TECH_REELS_STORIES = [
   },
   {
     id: "reel-3",
-    tagKm: "🚀 គម្រោងនិស្សិត",
-    tagEn: "🚀 Project Reel",
+    Icon: IoRocketOutline,
+    tagKm: "គម្រោងនិស្សិត",
+    tagEn: "Project Reel",
     titleKm: "របៀបរៀបចំ Portfolio GitHub ឱ្យទាក់ទាញក្រុមហ៊ុន",
     titleEn: "How to Structure Your GitHub Portfolio for Internships",
     gradient: "linear-gradient(135deg, #4338ca 0%, #6366f1 100%)",
@@ -74,8 +79,9 @@ const TECH_REELS_STORIES = [
   },
   {
     id: "reel-4",
-    tagKm: "💡 UX/UI ទំនើប",
-    tagEn: "💡 UI/UX Shorts",
+    Icon: IoBulbOutline,
+    tagKm: "UX/UI ទំនើប",
+    tagEn: "UI/UX Shorts",
     titleKm: "គោលការណ៍រចនា Dark Mode និងពុម្ពអក្សរខ្មែរឱ្យស្អាត",
     titleEn: "Designing Clean Khmer Typography & Dark Mode UI",
     gradient: "linear-gradient(135deg, #be123c 0%, #f43f5e 100%)",
@@ -447,28 +453,32 @@ const Forum = () => {
               )}
             </div>
             <div className="tech-reels-grid">
-              {TECH_REELS_STORIES.map((reel) => (
-                <button
-                  key={reel.id}
-                  type="button"
-                  className="tech-reel-card"
-                  style={{ background: reel.gradient }}
-                  onClick={() => {
-                    setSearchInput(reel.searchKeyword);
-                    setSearch(reel.searchKeyword);
-                  }}
-                >
-                  <span className="reel-top-tag">
-                    {isKm ? reel.tagKm : reel.tagEn}
-                  </span>
-                  <strong className="reel-card-title">
-                    {isKm ? reel.titleKm : reel.titleEn}
-                  </strong>
-                  <div className="reel-card-footer">
-                    <span>{isKm ? "ចុចដើម្បីស្វែងរកប្រធានបទនេះ" : "Tap to search this topic"}</span>
-                  </div>
-                </button>
-              ))}
+              {TECH_REELS_STORIES.map((reel) => {
+                const ReelIcon = reel.Icon;
+                return (
+                  <button
+                    key={reel.id}
+                    type="button"
+                    className="tech-reel-card"
+                    style={{ background: reel.gradient }}
+                    onClick={() => {
+                      setSearchInput(reel.searchKeyword);
+                      setSearch(reel.searchKeyword);
+                    }}
+                  >
+                    <span className="reel-top-tag">
+                      {ReelIcon && <ReelIcon />}
+                      <span>{isKm ? reel.tagKm : reel.tagEn}</span>
+                    </span>
+                    <strong className="reel-card-title">
+                      {isKm ? reel.titleKm : reel.titleEn}
+                    </strong>
+                    <div className="reel-card-footer">
+                      <span>{isKm ? "ចុចដើម្បីស្វែងរកប្រធានបទនេះ" : "Tap to search this topic"}</span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -517,10 +527,11 @@ const Forum = () => {
                 </p>
                 <div className="mini-guest-btns">
                   <Link to="/login" className="btn primary btn-full">
-                    {isKm ? "ចូលគណនី (Sign In)" : "Sign In"}
+                    {isKm ? "ចូលគណនី" : "Sign In"}
                   </Link>
                   <Link to="/cv-studio" className="btn outline btn-full">
-                    📄 {isKm ? "សាកល្បងបង្កើត CV ឥតគិតថ្លៃ" : "Try Free CV Builder"}
+                    <IoDocumentTextOutline />{" "}
+                    <span>{isKm ? "សាកល្បងបង្កើត CV ឥតគិតថ្លៃ" : "Try Free CV Builder"}</span>
                   </Link>
                 </div>
               </div>
@@ -531,7 +542,7 @@ const Forum = () => {
           <div className="social-sidebar-card channels-card glass">
             <h3 className="sidebar-box-title">
               <IoPricetagsOutline />{" "}
-              {isKm ? "ប្រធានបទសហគមន៍ (Channels)" : "Topic Channels"}
+              {isKm ? "ប្រធានបទសហគមន៍" : "Topic Channels"}
             </h3>
             <div className="channel-nav-list">
               <button
@@ -546,7 +557,7 @@ const Forum = () => {
               >
                 <span className="channel-hash">#</span>
                 <span>
-                  {isKm ? "មើលទាំងអស់ (All Feed)" : "All Community Feed"}
+                  {isKm ? "មើលទាំងអស់" : "All Community Feed"}
                 </span>
               </button>
 
@@ -806,7 +817,7 @@ const Forum = () => {
                   setShowSavedOnly(false);
                 }}
               >
-                🔥 {isKm ? "ពេញនិយម" : "Trending"}
+                <IoFlameOutline /> {isKm ? "ពេញនិយម" : "Trending"}
               </button>
               <button
                 type="button"
@@ -819,7 +830,7 @@ const Forum = () => {
                   setShowSavedOnly(false);
                 }}
               >
-                ✨ {isKm ? "ថ្មីៗបំផុត" : "Latest"}
+                <IoSparklesOutline /> {isKm ? "ថ្មីៗបំផុត" : "Latest"}
               </button>
               <button
                 type="button"
@@ -831,7 +842,7 @@ const Forum = () => {
                   setShowSavedOnly(false);
                 }}
               >
-                ❓ {isKm ? "សំណួរកូដ" : "Questions"}
+                <IoHelpBuoyOutline /> {isKm ? "សំណួរកូដ" : "Questions"}
               </button>
               <button
                 type="button"
@@ -843,7 +854,7 @@ const Forum = () => {
                   setShowSavedOnly(false);
                 }}
               >
-                🆘 {isKm ? "រង់ចាំចម្លើយ" : "Unanswered"}
+                <IoChatbubbleEllipsesOutline /> {isKm ? "រង់ចាំចម្លើយ" : "Unanswered"}
               </button>
             </div>
           </div>
@@ -890,13 +901,17 @@ const Forum = () => {
                                 post.postType || "discussion"
                               }`}
                             >
-                              {post.postType === "question"
-                                ? isKm
-                                  ? "❓ សំណួរ"
-                                  : "❓ Question"
-                                : isKm
-                                  ? "💡 ចំណេះដឹង"
-                                  : "💡 Insight"}
+                              {post.postType === "question" ? (
+                                <>
+                                  <IoHelpBuoyOutline />{" "}
+                                  {isKm ? "សំណួរ" : "Question"}
+                                </>
+                              ) : (
+                                <>
+                                  <IoBulbOutline />{" "}
+                                  {isKm ? "ចំណេះដឹង" : "Insight"}
+                                </>
+                              )}
                             </span>
                             {post.isSolved && (
                               <span className="social-solved-badge">
@@ -966,8 +981,8 @@ const Forum = () => {
 
                     {/* 3. Engagement Stats Strip */}
                     <div className="social-stats-strip">
-                      <span>
-                        ❤️ {post.likesCount || 0}{" "}
+                      <span className="social-stat-inline">
+                        <IoHeart style={{ color: "#ef4444" }} /> {post.likesCount || 0}{" "}
                         {isKm ? "ចូលចិត្ត" : "Likes"}
                       </span>
                       <div className="stats-right-group">
@@ -976,10 +991,11 @@ const Forum = () => {
                           className="stats-link-btn"
                           onClick={() => handleToggleCommentDrawer(post.id)}
                         >
-                          💬 {(post.answersCount || 0) + (post.commentsCount || 0)}{" "}
+                          <IoChatbubbleEllipsesOutline />{" "}
+                          {(post.answersCount || 0) + (post.commentsCount || 0)}{" "}
                           {isKm ? "មតិយោបល់ & ចម្លើយ" : "Comments & Answers"}
                         </button>
-                        <span>
+                        <span className="social-stat-inline">
                           <IoEyeOutline /> {post.viewsCount || 0}{" "}
                           {isKm ? "បានមើល" : "Views"}
                         </span>
@@ -1151,7 +1167,7 @@ const Forum = () => {
           <div className="social-sidebar-card trending-card glass">
             <h3 className="sidebar-box-title">
               <IoFlameOutline style={{ color: "#f97316" }} />{" "}
-              {isKm ? "កំពុងពេញនិយម (Trending)" : "Trending Discussions"}
+              {isKm ? "កំពុងពេញនិយម" : "Trending Discussions"}
             </h3>
             <div className="trending-list">
               {trendingPosts.map((tp, idx) => (
@@ -1163,9 +1179,16 @@ const Forum = () => {
                   <span className="trend-rank">0{idx + 1}</span>
                   <div>
                     <strong>{tp.title}</strong>
-                    <small>
-                      ❤️ {tp.likesCount || 0} • 💬 {tp.answersCount || 0}{" "}
-                      {isKm ? "ចម្លើយ" : "replies"}
+                    <small className="trending-meta-inline">
+                      <span>
+                        <IoHeart style={{ color: "#ef4444", verticalAlign: "-2px" }} />{" "}
+                        {tp.likesCount || 0}
+                      </span>
+                      <span>•</span>
+                      <span>
+                        <IoChatbubbleEllipsesOutline style={{ verticalAlign: "-2px" }} />{" "}
+                        {tp.answersCount || 0} {isKm ? "ចម្លើយ" : "replies"}
+                      </span>
                     </small>
                   </div>
                 </Link>

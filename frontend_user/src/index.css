@@ -1642,6 +1642,43 @@ html:not([data-theme="dark"]) :where(
   margin-top: 6px;
 }
 
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  min-height: 0 !important;
+}
+
+@media (max-width: 700px) {
+  .auth-required-state {
+    padding: 28px 16px calc(96px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .auth-required-card {
+    padding: 24px 18px;
+    border-radius: 22px;
+  }
+
+  .auth-required-card h1 {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  .auth-required-actions {
+    width: 100%;
+  }
+
+  .auth-required-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 html[data-language="km"] .auth-required-card h1 {
   max-width: 17ch;
   line-height: 1.2;
@@ -2877,4 +2914,119 @@ html[data-language="km"]
 
 [data-theme="dark"] .ck-card-cta-full:hover {
   background: #2563eb !important;
+}
+
+/* ==========================================================================
+   GLOBAL VECTOR ICON ALIGNMENT, KHMER/ENGLISH TYPOGRAPHY & SMOOTH LAYOUT
+   ========================================================================== */
+:where(
+    .btn,
+    .home-btn,
+    .learning-button,
+    .eyebrow,
+    .forum-eyebrow,
+    .sc-dash-kicker,
+    .studio-pill-tag,
+    .cv-free-forever-pill,
+    .filter-pill-btn,
+    .feed-tab-pill,
+    .reel-top-tag,
+    .forum-type,
+    .convo-cat-tag,
+    .context-capsule-badge,
+    .context-interview-pill,
+    .context-btn,
+    .mini-Quick-link,
+    .channel-nav-item,
+    .composer-pill-btn,
+    .social-action-btn,
+    .social-stat-inline,
+    .stats-link-btn,
+    .profile-role-tag,
+    .verification-pill,
+    .profile-section-heading h2,
+    .sidebar-box-title
+  ) {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+:where(
+    button,
+    a,
+    span,
+    h1,
+    h2,
+    h3,
+    h4,
+    label,
+    strong
+  )
+  > svg {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+/* Protect Khmer script diacritics from uppercase transform, negative letter-spacing, or tight line-heights */
+html[lang="km"] :where(
+    .eyebrow,
+    .forum-eyebrow,
+    .sc-dash-kicker,
+    .sc-tracker-stat-info span,
+    .sc-app-chip,
+    .sc-kanban-header h3,
+    .context-capsule-badge,
+    .reel-top-tag,
+    .forum-type,
+    .convo-cat-tag,
+    .badge,
+    .btn-tag
+  ),
+html[data-language="km"] :where(
+    .eyebrow,
+    .forum-eyebrow,
+    .sc-dash-kicker,
+    .sc-tracker-stat-info span,
+    .sc-app-chip,
+    .sc-kanban-header h3,
+    .context-capsule-badge,
+    .reel-top-tag,
+    .forum-type,
+    .convo-cat-tag,
+    .badge,
+    .btn-tag
+  ) {
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  line-height: 1.45 !important;
+}
+
+html[lang="km"] :where(h1, h2, h3, h4),
+html[data-language="km"] :where(h1, h2, h3, h4) {
+  letter-spacing: -0.01em !important;
+  line-height: 1.36 !important;
+}
+
+/* Smooth modern card & button transitions across the platform */
+:where(
+    .social-post-card,
+    .social-sidebar-card,
+    .social-composer-box,
+    .social-feed-controls,
+    .sc-panel,
+    .sc-action-center,
+    .sc-action-item,
+    .profile-panel,
+    .profile-quick-actions-bar,
+    .sc-app-card,
+    .sc-tracker-stat-card,
+    .sc-kanban-col,
+    .sc-candidate-card
+  ) {
+  transition:
+    transform 0.22s cubic-bezier(0.2, 0.75, 0.25, 1),
+    box-shadow 0.22s cubic-bezier(0.2, 0.75, 0.25, 1),
+    border-color 0.22s cubic-bezier(0.2, 0.75, 0.25, 1),
+    background-color 0.22s ease;
 }

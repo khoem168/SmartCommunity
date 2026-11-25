@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const fs = require("fs/promises");
 const path = require("path");
 const { v2: cloudinary } = require("cloudinary");
+const { assertValidFileSignature } = require("../utils/fileSignature");
 
 const cloudinaryConfigured = () =>
   Boolean(
@@ -59,6 +60,7 @@ const uploadLocally = async (file, folder, publicId) => {
 };
 
 const uploadImage = (file, { folder, publicId }) => {
+  assertValidFileSignature(file, "Only valid JPG, PNG, and WebP images are allowed.");
   if (cloudinaryConfigured()) {
     return uploadToCloudinary(file, `smart-community/${folder}`, publicId);
   }
