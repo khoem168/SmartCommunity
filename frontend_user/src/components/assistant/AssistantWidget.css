@@ -283,16 +283,19 @@
   text-align: center;
 }
 
-/* Phones: sit above the bottom tab bar; the panel fills most of the screen. */
+/* Phones: compact chat FAB cleanly tucked above docked TabBar; hide extra scroll-up FAB to prevent clutter. */
 @media (max-width: 700px) {
   .assistant-fab {
-    bottom: calc(96px + env(safe-area-inset-bottom, 0px));
-    width: 52px;
-    height: 52px;
+    right: 14px;
+    bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+    width: 46px;
+    height: 46px;
+    font-size: 1.32rem;
+    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.34);
   }
 
   .scroll-up {
-    bottom: calc(158px + env(safe-area-inset-bottom, 0px));
+    display: none !important;
   }
 
   .assistant-panel {

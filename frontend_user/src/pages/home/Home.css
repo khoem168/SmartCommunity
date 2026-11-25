@@ -58,6 +58,10 @@
   margin-inline: auto;
 }
 
+.ck-section {
+  scroll-margin-top: 76px;
+}
+
 /* ============================================================================
    0. TOP TECH TOPIC STRIP (Sub-Nav Bar)
    ============================================================================ */
@@ -819,10 +823,9 @@ html[data-language="km"] .ck-hero-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 14px;
+  gap: 12px;
   margin-bottom: 28px;
-  padding: 12px 16px;
+  padding: 10px 12px;
   background: var(--bg-surface, #ffffff);
   border: 1px solid var(--border-subtle, #e2e8f0);
   border-radius: 18px;
@@ -836,7 +839,8 @@ html[data-language="km"] .ck-hero-title {
 
 .ck-inline-search {
   position: relative;
-  width: min(100%, 300px);
+  flex: 0 0 260px;
+  max-width: 100%;
 }
 
 .ck-inline-search-icon {
@@ -854,7 +858,7 @@ html[data-language="km"] .ck-hero-title {
   min-height: 40px !important;
   height: 40px;
   padding: 0 14px 0 40px;
-  border-radius: 999px;
+  border-radius: 12px;
   border: 1px solid #cbd5e1;
   background: #f8fafc;
   font-size: 0.88rem;
@@ -877,13 +881,22 @@ html[data-language="km"] .ck-hero-title {
 
 .ck-filter-pills {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   padding: 4px;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 999px;
+  border-radius: 13px;
+}
+
+.ck-filter-pills::-webkit-scrollbar {
+  display: none;
 }
 
 [data-theme="dark"] .ck-filter-pills {
@@ -892,14 +905,16 @@ html[data-language="km"] .ck-hero-title {
 }
 
 .ck-pill-btn {
-  min-height: 36px;
-  padding: 0 15px;
-  border-radius: 999px;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 9px;
   border: none;
   background: transparent;
   color: var(--text-secondary, #475569);
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
   cursor: pointer;
   transition: all 0.18s ease;
 }
@@ -1365,27 +1380,43 @@ html[data-language="km"] .ck-hero-title {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 36px;
+  gap: 8px;
+  max-width: 100%;
+  margin: 0 auto 32px;
+  padding: 6px;
+  width: fit-content;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+}
+
+[data-theme="dark"] .ck-roadmap-tabs {
+  background: #131c31;
+  border-color: #1e293b;
 }
 
 .ck-roadmap-tab {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 11px 20px;
-  border-radius: 999px;
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
-  color: #334155;
-  font-size: 0.9rem;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #475569;
+  font-size: 0.88rem;
   font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
   cursor: pointer;
   transition: all 0.18s ease;
 }
 
-.ck-roadmap-tab:hover {
-  border-color: #2563eb;
+.ck-roadmap-tab:hover:not(.active) {
+  background: #eff6ff;
   color: #2563eb;
 }
 
@@ -1393,13 +1424,18 @@ html[data-language="km"] .ck-hero-title {
   background: #2563eb;
   border-color: #2563eb;
   color: #ffffff;
-  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
 }
 
 [data-theme="dark"] .ck-roadmap-tab {
-  background: #1e293b;
-  border-color: #334155;
+  background: transparent;
+  border-color: transparent;
   color: #cbd5e1;
+}
+
+[data-theme="dark"] .ck-roadmap-tab:hover:not(.active) {
+  background: rgba(59, 130, 246, 0.14);
+  color: #93c5fd;
 }
 
 [data-theme="dark"] .ck-roadmap-tab.active {
@@ -1563,48 +1599,72 @@ html[data-language="km"] .ck-hero-title {
    ============================================================================ */
 
 .ck-segmented-tabs {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  width: fit-content;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  width: min(640px, 100%);
   margin: 0 auto 30px;
-  padding: 6px;
+  padding: 5px;
   border-radius: 16px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
 }
 
 [data-theme="dark"] .ck-segmented-tabs {
-  background: #1e293b;
-  border-color: #334155;
+  background: #131c31;
+  border-color: #1e293b;
 }
 
 .ck-segmented-tabs button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 12px;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 12px;
+  border-radius: 11px;
   border: none;
   background: transparent;
   color: var(--text-secondary, #475569);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 700;
+  white-space: nowrap;
   cursor: pointer;
   transition: all 0.18s ease;
+}
+
+.ck-segmented-tabs button:hover:not(.active) {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+[data-theme="dark"] .ck-segmented-tabs button {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .ck-segmented-tabs button:hover:not(.active) {
+  background: rgba(59, 130, 246, 0.14);
+  color: #93c5fd;
 }
 
 .ck-segmented-tabs button.active {
   background: #2563eb;
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28);
 }
 
 .ck-hub-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
+  align-items: stretch;
+}
+
+.ck-hub-card .ck-card-cta-full,
+.ck-job-card .ck-card-cta-full {
+  margin-top: auto;
 }
 
 .ck-hub-card,
@@ -1690,11 +1750,30 @@ html[data-language="km"] .ck-hero-title {
   flex-shrink: 0;
 }
 
-.ck-mentor-info p {
-  margin: 2px 0;
+.ck-mentor-info p,
+.ck-mentor-role {
+  margin: 3px 0 1px;
   font-size: 0.84rem;
   font-weight: 600;
+  line-height: 1.45;
   color: #2563eb;
+}
+
+[data-theme="dark"] .ck-mentor-info p,
+[data-theme="dark"] .ck-mentor-role {
+  color: #60a5fa;
+}
+
+.ck-mentor-org {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-muted, #64748b);
+}
+
+[data-theme="dark"] .ck-mentor-org {
+  color: #94a3b8;
 }
 
 .ck-mentor-info small,
@@ -1880,8 +1959,9 @@ html[data-language="km"] .ck-hero-title {
   border-top-color: #059669;
 }
 
-.ck-role-card.accent-indigo {
-  border-top-color: #4f46e5;
+.ck-role-card.accent-indigo,
+.ck-role-card.accent-purple {
+  border-top-color: #6366f1;
 }
 
 .ck-role-card h3 {
@@ -2347,10 +2427,29 @@ html[data-language="km"] .ck-hero-title {
   .ck-courses-toolbar {
     flex-direction: column;
     align-items: stretch;
+    gap: 10px;
+    padding: 10px;
   }
 
   .ck-inline-search {
-    max-width: 100%;
+    flex: none;
+    width: 100%;
+  }
+
+  .ck-roadmap-tabs {
+    width: 100%;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 5px;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+
+  .ck-roadmap-tabs::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -2397,26 +2496,47 @@ html[data-language="km"] .ck-hero-title {
 
   .ck-segmented-tabs {
     width: 100%;
-    flex-direction: column;
+    padding: 4px;
+    gap: 4px;
+    margin-bottom: 22px;
   }
 
   .ck-segmented-tabs button {
-    justify-content: center;
+    padding: 9px 6px;
+    font-size: 0.78rem;
+    gap: 5px;
+    min-height: 40px;
+  }
+
+  .ck-segmented-tabs button svg {
+    font-size: 0.88rem;
+    flex-shrink: 0;
+  }
+
+  .ck-roadmap-tab {
+    padding: 8px 13px;
+    font-size: 0.82rem;
+    min-height: 38px;
   }
 
   .ck-timeline-wrap {
-    padding-left: 28px;
+    padding-left: 34px;
+    gap: 18px;
   }
 
   .ck-timeline-wrap::before {
-    left: 13px;
+    left: 14px;
   }
 
   .ck-timeline-node {
-    left: -28px;
+    left: -34px;
     width: 30px;
     height: 30px;
     font-size: 0.82rem;
+  }
+
+  .ck-timeline-card {
+    padding: 18px;
   }
 }
 

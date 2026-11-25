@@ -108,7 +108,7 @@ const ROADMAP_TRACKS = [
   {
     id: "web",
     icon: FaCode,
-    labelKm: "អ្នកអភិវឌ្ឍន៍វេបសាយ (Web Developer)",
+    labelKm: "អភិវឌ្ឍន៍វេបសាយ",
     labelEn: "Web Developer",
     stages: [
       {
@@ -157,7 +157,7 @@ const ROADMAP_TRACKS = [
   {
     id: "uiux",
     icon: FaFigma,
-    labelKm: "អ្នករចនា UX/UI (UI/UX Designer)",
+    labelKm: "ការរចនា UX/UI",
     labelEn: "UX/UI Designer",
     stages: [
       {
@@ -204,8 +204,8 @@ const ROADMAP_TRACKS = [
   {
     id: "backend",
     icon: FaServer,
-    labelKm: "វិស្វករសូហ្វវែរ Backend & API",
-    labelEn: "Backend & API Engineer",
+    labelKm: "Backend & API",
+    labelEn: "Backend & API",
     stages: [
       {
         step: "1",
@@ -238,8 +238,8 @@ const ROADMAP_TRACKS = [
   {
     id: "cyber",
     icon: FaShieldAlt,
-    labelKm: "អ្នកជំនាញសន្តិសុខសាយប័រ (Cybersecurity)",
-    labelEn: "Cybersecurity Specialist",
+    labelKm: "សន្តិសុខសាយប័រ",
+    labelEn: "Cybersecurity",
     stages: [
       {
         step: "1",
@@ -259,7 +259,7 @@ const ROADMAP_TRACKS = [
   {
     id: "data",
     icon: FaChartBar,
-    labelKm: "អ្នកវិទ្យាសាស្ត្រទិន្នន័យ (Data Analyst)",
+    labelKm: "វិទ្យាសាស្ត្រទិន្នន័យ",
     labelEn: "Data Analyst",
     stages: [
       {
@@ -906,69 +906,74 @@ export default function Home() {
             </p>
           </header>
 
-          <div className="ck-roadmap-tabs" role="tablist">
+          <div className="ck-segmented-tabs" role="tablist" aria-label="Community hub sections">
             <button
               type="button"
               role="tab"
               aria-selected={activeHubTab === "mentors"}
-              className={`ck-roadmap-tab ${activeHubTab === "mentors" ? "active" : ""}`}
+              className={activeHubTab === "mentors" ? "active" : ""}
               onClick={() => setActiveHubTab("mentors")}
             >
-              <FiUserCheck />
-              <span>{isKm ? "អ្នកណែនាំ 1:1 (Mentors)" : "1:1 Mentors"}</span>
+              <FiUserCheck aria-hidden="true" />
+              <span>{isKm ? "អ្នកណែនាំ 1:1" : "1:1 Mentors"}</span>
             </button>
             <button
               type="button"
               role="tab"
               aria-selected={activeHubTab === "swaps"}
-              className={`ck-roadmap-tab ${activeHubTab === "swaps" ? "active" : ""}`}
+              className={activeHubTab === "swaps" ? "active" : ""}
               onClick={() => setActiveHubTab("swaps")}
             >
-              <FiRepeat />
-              <span>{isKm ? "ដោះដូរជំនាញ (Skill Swap)" : "Peer Skill Swap"}</span>
+              <FiRepeat aria-hidden="true" />
+              <span>{isKm ? "ដោះដូរជំនាញ" : "Skill Swap"}</span>
             </button>
             <button
               type="button"
               role="tab"
               aria-selected={activeHubTab === "jobs"}
-              className={`ck-roadmap-tab ${activeHubTab === "jobs" ? "active" : ""}`}
+              className={activeHubTab === "jobs" ? "active" : ""}
               onClick={() => setActiveHubTab("jobs")}
             >
-              <FiBriefcase />
-              <span>{isKm ? "ឱកាសកម្មសិក្សា (Internships)" : "Verified Internships"}</span>
+              <FiBriefcase aria-hidden="true" />
+              <span>{isKm ? "ឱកាសកម្មសិក្សា" : "Internships"}</span>
             </button>
           </div>
 
           {activeHubTab === "mentors" && (
             <div className="ck-hub-grid">
-              {resolvedTeamMentors.slice(0, 3).map((mentor) => (
-                <article key={mentor.slug} className="ck-hub-card">
-                  <div className="ck-mentor-top">
-                    <div className="ck-avatar-ring">
-                      <img src={mentor.avatar} alt={mentor.name} />
-                    </div>
-                    <div className="ck-mentor-info">
-                      <span className="ck-free-pill">
-                        ★ {mentor.rating} · {isKm ? "អ្នកណែនាំ 1:1" : "1:1 Mentor"}
-                      </span>
-                      <div className="ck-mentor-name-row">
-                        <h3>{mentor.name}</h3>
-                        <MdVerified className="ck-verified-icon" />
+              {resolvedTeamMentors.slice(0, 3).map((mentor) => {
+                const rawRole = isKm ? mentor.roleKm : mentor.roleEn;
+                const [primaryRole, orgLabel] = String(rawRole || "").split(" · ");
+                return (
+                  <article key={mentor.slug} className="ck-hub-card">
+                    <div className="ck-mentor-top">
+                      <div className="ck-avatar-ring">
+                        <img src={mentor.avatar} alt={mentor.name} />
                       </div>
-                      <p>{isKm ? mentor.roleKm : mentor.roleEn}</p>
+                      <div className="ck-mentor-info">
+                        <span className="ck-free-pill">
+                          ★ {mentor.rating} · {isKm ? "អ្នកណែនាំ 1:1" : "1:1 Mentor"}
+                        </span>
+                        <div className="ck-mentor-name-row">
+                          <h3>{mentor.name}</h3>
+                          <MdVerified className="ck-verified-icon" />
+                        </div>
+                        <p className="ck-mentor-role">{primaryRole}</p>
+                        {orgLabel && <small className="ck-mentor-org">{orgLabel}</small>}
+                      </div>
                     </div>
-                  </div>
 
-                  <p className="ck-card-desc">
-                    {isKm ? mentor.bioKm : mentor.bioEn}
-                  </p>
+                    <p className="ck-card-desc">
+                      {isKm ? mentor.bioKm : mentor.bioEn}
+                    </p>
 
-                  <Link to={mentor.mentorLink} className="ck-card-cta-full">
-                    <span>{isKm ? "ណាត់ជួបអ្នកណែនាំ" : "Book 1:1 Session"}</span>
-                    <FiArrowRight />
-                  </Link>
-                </article>
-              ))}
+                    <Link to={mentor.mentorLink} className="ck-card-cta-full">
+                      <span>{isKm ? "ណាត់ជួបអ្នកណែនាំ" : "Book 1:1 Session"}</span>
+                      <FiArrowRight />
+                    </Link>
+                  </article>
+                );
+              })}
             </div>
           )}
 
