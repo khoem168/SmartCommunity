@@ -105,7 +105,7 @@ const Footer = () => {
           <div>
             <span>{t("footer.closing")}</span>
             <a
-              href="https://github.com/khoem168/Smart_Community_Skill_Career_Development_Platform"
+              href="https://github.com/khoem168/SmartCommunity"
               target="_blank"
               rel="noreferrer"
               aria-label={t("footer.githubLabel")}

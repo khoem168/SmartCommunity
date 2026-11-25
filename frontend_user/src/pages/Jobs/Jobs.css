@@ -1093,11 +1093,9 @@ html[lang="km"] .jobs-hero-feature-copy small {
    the "remote only" checkbox invisible. Restore it and highlight the chip
    while the filter is on. */
 .internship-search-panel .remote-filter input[type="checkbox"] {
-  -webkit-appearance: checkbox !important;
-  appearance: auto !important;
   width: 18px !important;
   height: 18px !important;
-  min-height: 0 !important;
+  min-height: 18px !important;
   flex: 0 0 auto;
 }
 

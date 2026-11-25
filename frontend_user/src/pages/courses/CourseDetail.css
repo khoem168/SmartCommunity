@@ -1417,11 +1417,20 @@
 
 .gate-pill,
 .video-locked-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 5px 13px;
   border-radius: 999px;
   font-size: 0.76rem;
   font-weight: 800;
   backdrop-filter: blur(10px);
+}
+
+.access-pill {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
 }
 
 .gate-pill.free {

@@ -29,6 +29,7 @@ import {
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
 import UserAvatar from "../../components/ui/UserAvatar";
+import { SkeletonGrid } from "../../components/ui/LoadingStates";
 import {
   createForumPostRequest,
   fetchForumCategories,
@@ -862,11 +863,16 @@ const Forum = () => {
           {/* SOCIAL FEED STREAM */}
           <div className="social-posts-stream">
             {loading ? (
-              <div className="forum-empty">
-                {isKm
-                  ? "កំពុងទាញយកបណ្តាញសង្គមសហគមន៍..."
-                  : "Loading community social feed..."}
-              </div>
+              <SkeletonGrid
+                variant="community"
+                count={3}
+                className="forum-skeleton-stack"
+                label={
+                  isKm
+                    ? "កំពុងទាញយកបណ្តាញសង្គមសហគមន៍..."
+                    : "Loading community social feed..."
+                }
+              />
             ) : displayedPosts.length ? (
               displayedPosts.map((post) => {
                 const isLiked = Boolean(likedMap[post.id]);

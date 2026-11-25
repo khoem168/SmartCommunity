@@ -18,6 +18,7 @@ import {
   IoRibbonOutline,
   IoCloseCircleOutline,
   IoAddOutline,
+  IoLocationOutline,
 } from "react-icons/io5";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
@@ -594,7 +595,8 @@ export default function SkillExchangeHub({ initialTab = "match" }) {
                             {localizePeerHeadline(match.profession || match.role, isKm)}
                           </p>
                           <small className="hub-card-loc">
-                            📍 {isKm ? "ភ្នំពេញ, កម្ពុជា" : match.location || "Phnom Penh, Cambodia"}
+                            <IoLocationOutline />{" "}
+                            <span>{isKm ? "ភ្នំពេញ, កម្ពុជា" : match.location || "Phnom Penh, Cambodia"}</span>
                           </small>
                         </div>
                         <div className="hub-card-score">

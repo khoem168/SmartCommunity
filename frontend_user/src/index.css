@@ -75,6 +75,7 @@
   --radius-xl: 32px;
   --container: 1200px;
   --page-gutter: clamp(14px, 2.5vw, 20px);
+  color-scheme: light;
 }
 
 html[data-theme="dark"] {
@@ -816,9 +817,9 @@ textarea:focus {
 }
 
 [data-theme="dark"] .footer-logo {
-  border-color: rgba(255, 255, 255, 0.1);
-  background: rgba(30, 41, 59, 0.85);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.42);
 }
 
 .footer-logo:hover {
@@ -2742,7 +2743,7 @@ html[data-language="km"]
     .page-hero
   )
   :where(h1, h2) {
-  max-width: 28ch !important;
+  max-width: 34ch !important;
   font-size: clamp(1.68rem, 2.9vw, 2.32rem) !important;
   line-height: 1.38 !important;
   letter-spacing: 0;
@@ -3006,6 +3007,53 @@ html[lang="km"] :where(h1, h2, h3, h4),
 html[data-language="km"] :where(h1, h2, h3, h4) {
   letter-spacing: -0.01em !important;
   line-height: 1.36 !important;
+}
+
+/* Modern Custom Checkbox across Light & Dark Modes */
+input[type="checkbox"] {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  padding: 0 !important;
+  margin: 0;
+  border-radius: 6px !important;
+  border: 1.5px solid #cbd5e1 !important;
+  background-color: #ffffff !important;
+  display: inline-grid;
+  place-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+input[type="checkbox"]:hover {
+  border-color: #2563eb !important;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5L6.5 11.5L12.5 4.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+}
+
+[data-theme="dark"] input[type="checkbox"] {
+  background-color: rgba(30, 41, 59, 0.9) !important;
+  border-color: rgba(148, 163, 184, 0.42) !important;
+}
+
+[data-theme="dark"] input[type="checkbox"]:hover {
+  border-color: #60a5fa !important;
+}
+
+[data-theme="dark"] input[type="checkbox"]:checked {
+  background-color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
 }
 
 /* Smooth modern card & button transitions across the platform */

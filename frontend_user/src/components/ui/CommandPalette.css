@@ -94,14 +94,24 @@
 
 .cmd-input {
   flex: 1;
-  background: transparent;
-  border: 0;
-  outline: none;
+  width: 100%;
+  min-width: 0;
+  min-height: auto !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
   font-size: 1.05rem;
   color: #0f172a;
   font-family: inherit;
   font-weight: 500;
-  padding: 0;
+  padding: 4px 0 !important;
+}
+
+.cmd-input:focus {
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 [data-theme="dark"] .cmd-input {
@@ -383,4 +393,31 @@
   font-weight: 700;
   letter-spacing: 0.02em;
   color: #94a3b8;
+}
+
+@media (max-width: 600px) {
+  .cmd-backdrop {
+    padding: 44px 12px 16px;
+  }
+
+  .cmd-modal-card {
+    border-radius: 20px;
+    max-height: 82vh;
+  }
+
+  .cmd-search-bar {
+    padding: 13px 16px;
+  }
+
+  .cmd-input {
+    font-size: 0.96rem;
+  }
+
+  .cmd-footer-shortcuts {
+    display: none;
+  }
+
+  .cmd-footer {
+    justify-content: center;
+  }
 }

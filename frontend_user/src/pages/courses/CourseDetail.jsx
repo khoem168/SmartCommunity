@@ -5,6 +5,7 @@ import {
   FiArrowLeft,
   FiAward,
   FiBookOpen,
+  FiBriefcase,
   FiCheck,
   FiCheckCircle,
   FiClock,
@@ -15,6 +16,8 @@ import {
   FiPlay,
   FiRefreshCw,
   FiShield,
+  FiUnlock,
+  FiUser,
   FiUserPlus,
   FiVideo,
   FiX,
@@ -477,7 +480,7 @@ const CourseDetail = () => {
                   <FiAward /> {isKm ? "វិញ្ញាបនបត្រឌីជីថលផ្លូវការ" : "Digital Certificate of Completion"}
                 </span>
                 <span>
-                  🎓 {isKm ? `បង្រៀនដោយ ${course.instructor}` : `By ${course.instructor}`}
+                  <FiUser /> {isKm ? `បង្រៀនដោយ ${course.instructor}` : `By ${course.instructor}`}
                 </span>
               </div>
             </div>
@@ -524,10 +527,13 @@ const CourseDetail = () => {
                   >
                     {paymentState === "creating" ? (
                       <ButtonLoader>{isKm ? "កំពុងបង្កើត KHQR…" : "Creating KHQR…"}</ButtonLoader>
-                    ) : isKm ? (
-                      "🔓 ទិញវីដេអូមេរៀនពេញលេញ $12.00 (KHQR)"
                     ) : (
-                      "🔓 Unlock All Videos · $12.00 (KHQR)"
+                      <>
+                        <FiUnlock />{" "}
+                        {isKm
+                          ? "ទិញវីដេអូមេរៀនពេញលេញ $12.00 (KHQR)"
+                          : "Unlock All Videos · $12.00 (KHQR)"}
+                      </>
                     )}
                   </button>
                 ) : (
@@ -537,9 +543,11 @@ const CourseDetail = () => {
                       className="learning-button primary full"
                     >
                       <FiUserPlus />{" "}
-                      {isKm
-                        ? "ចុះឈ្មោះគណនីឥតគិតថ្លៃ (អាន PDF Free)"
-                        : "Register Free (Read PDFs Free)"}
+                      <span>
+                        {isKm
+                          ? "ចុះឈ្មោះឥតគិតថ្លៃ · អាន PDF"
+                          : "Register Free · Read PDFs"}
+                      </span>
                     </Link>
                     <Link
                       to={`/login?redirect=${encodeURIComponent(`/courses/${courseSlug}`)}`}
@@ -678,10 +686,10 @@ const CourseDetail = () => {
                   </span>
                   <div className="guest-gate-badges">
                     <span className="gate-pill free">
-                      📄 {isKm ? "ឯកសារមេរៀន PDF: ឥតគិតថ្លៃ" : "Lesson PDFs: FREE"}
+                      <FiFileText /> {isKm ? "ឯកសារមេរៀន PDF: ឥតគិតថ្លៃ" : "Lesson PDFs: FREE"}
                     </span>
                     <span className="gate-pill paid">
-                      🎬 {isKm ? "វីដេអូមេរៀនពេញលេញ: $12.00" : "Full Video Course: $12.00"}
+                      <FiVideo /> {isKm ? "វីដេអូមេរៀនពេញលេញ: $12.00" : "Full Video Course: $12.00"}
                     </span>
                   </div>
                   <h2>
@@ -745,10 +753,10 @@ const CourseDetail = () => {
                       </span>
                       <div className="guest-gate-badges">
                         <span className="gate-pill free">
-                          📄 {isKm ? "ឯកសារ PDF: បើកអានឥតគិតថ្លៃ" : "PDF Guide: Unlocked Free"}
+                          <FiFileText /> {isKm ? "ឯកសារ PDF: បើកអានឥតគិតថ្លៃ" : "PDF Guide: Unlocked Free"}
                         </span>
                         <span className="video-locked-pill">
-                          🎬 {isKm ? "វីដេអូមេរៀនពេញលេញ: $12.00" : "Full Video Course: $12.00"}
+                          <FiVideo /> {isKm ? "វីដេអូមេរៀនពេញលេញ: $12.00" : "Full Video Course: $12.00"}
                         </span>
                       </div>
                       <h3>{getLocalizedLessonTitle(lesson.title)}</h3>
@@ -899,7 +907,9 @@ const CourseDetail = () => {
         <section className="container course-career-bridge-section">
           <div className="course-career-bridge-card">
             <div className="bridge-card-header">
-              <div className="bridge-icon-pill">💼</div>
+              <div className="bridge-icon-pill">
+                <FiBriefcase />
+              </div>
               <div className="bridge-card-heading">
                 <p className="courses-kicker">
                   {isKm

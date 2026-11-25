@@ -540,6 +540,46 @@ export default function Home() {
 
   const cvStudioPath = "/cv-studio";
 
+  const trustMetrics = useMemo(() => {
+    const coursesCount = Math.max(20, apiCourses.length);
+    const mentorsCount = Math.max(5, apiMentors.length);
+    const internshipsCount = Math.max(10, apiInternships.length);
+    return [
+      {
+        id: "courses",
+        value: `${coursesCount}+`,
+        label: isKm ? "វគ្គសិក្សាបច្ចេកវិទ្យា" : "Tech Courses & Guides",
+        icon: FiBookOpen,
+        accent: "blue",
+        to: "/courses",
+      },
+      {
+        id: "cv",
+        value: "100%",
+        label: isKm ? "PDF CV ឥតគិតថ្លៃ" : "Free ATS PDF CV",
+        icon: FiFileText,
+        accent: "indigo",
+        to: "/cv-studio",
+      },
+      {
+        id: "mentors",
+        value: `${mentorsCount}+`,
+        label: isKm ? "អ្នកណែនាំ 1:1 ផ្ទៀងផ្ទាត់" : "Verified 1:1 Mentors",
+        icon: FiUserCheck,
+        accent: "emerald",
+        to: "/mentorship",
+      },
+      {
+        id: "jobs",
+        value: `${internshipsCount}+`,
+        label: isKm ? "ឱកាសកម្មសិក្សាពិត" : "Active Internships",
+        icon: FiBriefcase,
+        accent: "amber",
+        to: "/jobs",
+      },
+    ];
+  }, [apiCourses.length, apiMentors.length, apiInternships.length, isKm]);
+
   return (
     <div className="ck-home">
       {/* 1. CLEAN CENTERED HERO + 3 CORE PILLAR CARDS */}
@@ -590,6 +630,31 @@ export default function Home() {
               <IoSchoolOutline />
               <span>{isKm ? "បង្កើត PDF CV & រកការងារ" : "Build PDF CV & Find Jobs"}</span>
             </Link>
+          </div>
+
+          {/* Live Platform Trust & Metrics Strip */}
+          <div
+            className="ck-trust-metrics"
+            aria-label={isKm ? "សូចនាករវេទិកាសំខាន់ៗ" : "Platform highlights"}
+          >
+            {trustMetrics.map((metric) => {
+              const MetricIcon = metric.icon;
+              return (
+                <Link
+                  key={metric.id}
+                  to={metric.to}
+                  className="ck-trust-metric-item"
+                >
+                  <span className={`ck-trust-metric-icon ${metric.accent}`}>
+                    <MetricIcon aria-hidden="true" />
+                  </span>
+                  <div className="ck-trust-metric-copy">
+                    <strong className="ck-trust-metric-value">{metric.value}</strong>
+                    <span className="ck-trust-metric-label">{metric.label}</span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
 
           {/* 3 Core Pillar Cards */}
@@ -899,7 +964,8 @@ export default function Home() {
                   </p>
 
                   <Link to={mentor.mentorLink} className="ck-card-cta-full">
-                    <span>{isKm ? "👉 ណាត់ជួបអ្នកណែនាំ" : "👉 Book 1:1 Session"}</span>
+                    <span>{isKm ? "ណាត់ជួបអ្នកណែនាំ" : "Book 1:1 Session"}</span>
+                    <FiArrowRight />
                   </Link>
                 </article>
               ))}
@@ -926,7 +992,8 @@ export default function Home() {
                   </p>
 
                   <Link to="/skill-exchange" className="ck-card-cta-full">
-                    <span>{isKm ? "👉 ស្នើសុំប្តូរជំនាញ" : "👉 Request Skill Swap"}</span>
+                    <span>{isKm ? "ស្នើសុំប្តូរជំនាញ" : "Request Skill Swap"}</span>
+                    <FiArrowRight />
                   </Link>
                 </article>
               ))}
@@ -966,7 +1033,8 @@ export default function Home() {
                   </p>
 
                   <Link to="/jobs" className="ck-card-cta-full">
-                    <span>{isKm ? "👉 ដាក់ពាក្យជាមួយ PDF CV" : "👉 Apply with PDF CV"}</span>
+                    <span>{isKm ? "ដាក់ពាក្យជាមួយ PDF CV" : "Apply with PDF CV"}</span>
+                    <FiArrowRight />
                   </Link>
                 </article>
               ))}
@@ -1026,8 +1094,9 @@ export default function Home() {
 
                   <div className="ck-timeline-divider" />
 
-                  <div className="ck-timeline-links-label">
-                    {isKm ? "🔗 តំណភ្ជាប់សិក្សា" : "🔗 Learning Links"}
+                  <div className="ck-timeline-links-label" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <FiExternalLink />
+                    <span>{isKm ? "តំណភ្ជាប់សិក្សា" : "Learning Links"}</span>
                   </div>
 
                   <div className="ck-timeline-pills">

@@ -15,6 +15,7 @@ import {
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
 import UserAvatar from "../../components/ui/UserAvatar";
+import { CardSkeleton } from "../../components/ui/LoadingStates";
 import {
   createProfileItemRequest,
   deleteProfileItemRequest,
@@ -338,15 +339,36 @@ const Profile = () => {
 
   if (loading)
     return (
-      <main className="profile-page profile-loading">Loading profile...</main>
+      <main
+        className="profile-page profile-loading"
+        aria-busy="true"
+        aria-label={isKm ? "កំពុងទាញយកប្រវត្តិរូប..." : "Loading profile..."}
+      >
+        <div
+          className="container"
+          style={{
+            maxWidth: 960,
+            paddingBlock: 28,
+            display: "grid",
+            gap: 18,
+          }}
+        >
+          <CardSkeleton variant="detail" />
+          <CardSkeleton variant="mentor" />
+        </div>
+      </main>
     );
   if (!user) {
     return (
       <main className="profile-page">
         <section className="profile-empty container">
-          <h1>Create an account to build your professional profile.</h1>
+          <h1>
+            {isKm
+              ? "បង្កើតគណនីដើម្បីរៀបចំប្រវត្តិរូបវិជ្ជាជីវៈរបស់អ្នក"
+              : "Create an account to build your professional profile."}
+          </h1>
           <Link className="btn primary" to="/register">
-            Create account
+            {isKm ? "បង្កើតគណនី" : "Create account"}
           </Link>
         </section>
       </main>

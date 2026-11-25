@@ -6,6 +6,7 @@ import {
   IoCalendarOutline,
   IoCheckmarkCircleOutline,
   IoCloudUploadOutline,
+  IoDocumentTextOutline,
   IoLocationOutline,
   IoSearchOutline,
 } from "react-icons/io5";
@@ -224,7 +225,8 @@ const Jobs = () => {
             ) : (
               <>
                 <Link to="/cv-studio" className="btn primary jobs-hero-primary">
-                  {isKm ? "📄 បង្កើត PDF CV ឥតគិតថ្លៃ" : "📄 Build Free PDF CV"}
+                  <IoDocumentTextOutline />{" "}
+                  <span>{isKm ? "បង្កើត PDF CV ឥតគិតថ្លៃ" : "Build Free PDF CV"}</span>
                 </Link>
                 {user && (
                   <Link to="/my-applications" className="btn outline">

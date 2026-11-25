@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import {
   IoCheckmarkCircleOutline,
   IoClipboardOutline,
+  IoDocumentTextOutline,
   IoFlagOutline,
   IoTimeOutline,
   IoTrendingUpOutline,
@@ -209,7 +210,8 @@ const CareerDevelopment = () => {
           </div>
           <div className="career-hero-actions">
             <Link className="btn primary" to="/cv-studio">
-              {isKm ? "📄 បង្កើត PDF CV ឥតគិតថ្លៃ" : "📄 Free CV Builder (PDF)"}
+              <IoDocumentTextOutline />{" "}
+              <span>{isKm ? "បង្កើត PDF CV ឥតគិតថ្លៃ" : "Free CV Builder (PDF)"}</span>
             </Link>
             {user ? (
               <Link className="btn outline" to="/profile">

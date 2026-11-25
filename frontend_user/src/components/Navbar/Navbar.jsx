@@ -113,6 +113,24 @@ export default function Navbar() {
     };
   }, []);
 
+  // Live Browser Tab Notification Counter + Dynamic PWA Theme-Color Sync
+  useEffect(() => {
+    const baseTitle =
+      language === "km"
+        ? "Smart Community — វេទិកាសិក្សា និងអភិវឌ្ឍអាជីព"
+        : "Smart Community Skill & Career Platform";
+    const badgeCount = unreadNotifications > 99 ? "99+" : unreadNotifications;
+    document.title =
+      unreadNotifications > 0 ? `(${badgeCount}) ${baseTitle}` : baseTitle;
+  }, [unreadNotifications, language]);
+
+  useEffect(() => {
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeColorMeta) {
+      themeColorMeta.setAttribute("content", isDark ? "#0b1120" : "#ffffff");
+    }
+  }, [isDark]);
+
   const toggleLanguage = () => {
     const nextLang = language === "km" ? "en" : "km";
     setLanguage(nextLang);

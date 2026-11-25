@@ -338,8 +338,18 @@
 }
 
 .hub-card-loc {
-  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.76rem;
   color: var(--soft);
+  margin-top: 2px;
+}
+
+.hub-card-loc svg {
+  color: var(--blue);
+  font-size: 0.88rem;
+  flex-shrink: 0;
 }
 
 .hub-card-score {
@@ -347,12 +357,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 0.75rem;
-  background: rgba(59, 107, 255, 0.08);
-  border-radius: 16px;
-  border: 1px solid rgba(59, 107, 255, 0.15);
+  gap: 2px;
+  padding: 0.45rem 0.7rem;
+  background: rgba(59, 107, 255, 0.09);
+  border-radius: 14px;
+  border: 1px solid rgba(59, 107, 255, 0.18);
   color: var(--blue);
-  min-width: 60px;
+  min-width: 62px;
+  flex-shrink: 0;
 }
 
 .hub-card-score strong {
