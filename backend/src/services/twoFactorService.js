@@ -19,24 +19,90 @@ const JWT_ISSUER = process.env.JWT_ISSUER || "smart-community-api";
 // used as a login session.
 const CHALLENGE_AUDIENCE = `${process.env.JWT_AUDIENCE || "smart-community-web"}:2fa-challenge`;
 
+let tablesReadyPromise = null;
+
+const ensureTables = async () => {
+  if (!tablesReadyPromise) {
+    tablesReadyPromise = (async () => {
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS user_two_factor (
+          user_id int(11) NOT NULL,
+          secret_enc varchar(255) DEFAULT NULL,
+          pending_secret_enc varchar(255) DEFAULT NULL,
+          enabled_at datetime DEFAULT NULL,
+          last_used_step bigint DEFAULT NULL,
+          failed_attempts int(11) NOT NULL DEFAULT 0,
+          locked_until datetime DEFAULT NULL,
+          created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          PRIMARY KEY (user_id),
+          CONSTRAINT fk_two_factor_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+      `);
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS user_two_factor_recovery (
+          id int(11) NOT NULL AUTO_INCREMENT,
+          user_id int(11) NOT NULL,
+          code_hash char(64) NOT NULL,
+          used_at datetime DEFAULT NULL,
+          created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY (id),
+          KEY idx_recovery_user (user_id, code_hash),
+          CONSTRAINT fk_recovery_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+      `);
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS user_trusted_devices (
+          id int(11) NOT NULL AUTO_INCREMENT,
+          user_id int(11) NOT NULL,
+          token_hash char(64) NOT NULL,
+          user_agent varchar(255) DEFAULT NULL,
+          expires_at datetime NOT NULL,
+          created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY (id),
+          UNIQUE KEY uq_trusted_token (token_hash),
+          KEY idx_trusted_user (user_id),
+          CONSTRAINT fk_trusted_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+      `);
+    })().catch((err) => {
+      tablesReadyPromise = null;
+      throw err;
+    });
+  }
+  return tablesReadyPromise;
+};
+
 const getState = async (userId) => {
-  // The database compares the lock time itself: the app server and MySQL
-  // can run in different time zones.
-  const [rows] = await db.query(
-    "SELECT *, (locked_until IS NOT NULL AND locked_until > NOW()) AS is_locked FROM user_two_factor WHERE user_id = ?",
-    [userId],
-  );
-  return rows[0] || null;
+  try {
+    await ensureTables();
+    // The database compares the lock time itself: the app server and MySQL
+    // can run in different time zones.
+    const [rows] = await db.query(
+      "SELECT *, (locked_until IS NOT NULL AND locked_until > NOW()) AS is_locked FROM user_two_factor WHERE user_id = ?",
+      [userId],
+    );
+    return rows[0] || null;
+  } catch (err) {
+    if (err?.code === "ER_NO_SUCH_TABLE") return null;
+    throw err;
+  }
 };
 
 const isEnabled = async (userId) => Boolean((await getState(userId))?.enabled_at);
 
 const remainingRecoveryCodes = async (userId) => {
-  const [[row]] = await db.query(
-    "SELECT COUNT(*) AS n FROM user_two_factor_recovery WHERE user_id = ? AND used_at IS NULL",
-    [userId],
-  );
-  return Number(row.n);
+  try {
+    await ensureTables();
+    const [[row]] = await db.query(
+      "SELECT COUNT(*) AS n FROM user_two_factor_recovery WHERE user_id = ? AND used_at IS NULL",
+      [userId],
+    );
+    return Number(row.n);
+  } catch (err) {
+    if (err?.code === "ER_NO_SUCH_TABLE") return 0;
+    throw err;
+  }
 };
 
 const status = async (userId) => {
@@ -51,6 +117,7 @@ const status = async (userId) => {
 // Step 1 of setup: a new secret waits as "pending" until the user proves
 // their app shows the right code. An already-enabled secret is untouched.
 const startSetup = async (user) => {
+  await ensureTables();
   const secret = totp.generateSecret();
   await db.query(
     `INSERT INTO user_two_factor (user_id, pending_secret_enc)
@@ -62,6 +129,7 @@ const startSetup = async (user) => {
 };
 
 const replaceRecoveryCodes = async (userId) => {
+  await ensureTables();
   const codes = totp.generateRecoveryCodes();
   await db.query("DELETE FROM user_two_factor_recovery WHERE user_id = ?", [userId]);
   await db.query(
@@ -140,6 +208,7 @@ const verifySecondFactor = async (userId, { code, recoveryCode }) => {
 };
 
 const disable = async (userId) => {
+  await ensureTables();
   await db.query("DELETE FROM user_two_factor WHERE user_id = ?", [userId]);
   await db.query("DELETE FROM user_two_factor_recovery WHERE user_id = ?", [userId]);
   await db.query("DELETE FROM user_trusted_devices WHERE user_id = ?", [userId]);
@@ -147,6 +216,7 @@ const disable = async (userId) => {
 
 // Trusted devices: a random token kept by the browser; only its hash is stored.
 const createTrustedDevice = async (userId, userAgent) => {
+  await ensureTables();
   const token = crypto.randomBytes(32).toString("base64url");
   await db.query(
     `INSERT INTO user_trusted_devices (user_id, token_hash, user_agent, expires_at)
@@ -158,11 +228,17 @@ const createTrustedDevice = async (userId, userAgent) => {
 
 const isTrustedDevice = async (userId, token) => {
   if (typeof token !== "string" || token.length < 20 || token.length > 100) return false;
-  const [rows] = await db.query(
-    "SELECT id FROM user_trusted_devices WHERE user_id = ? AND token_hash = ? AND expires_at > NOW() LIMIT 1",
-    [userId, totp.hashToken(token)],
-  );
-  return rows.length > 0;
+  try {
+    await ensureTables();
+    const [rows] = await db.query(
+      "SELECT id FROM user_trusted_devices WHERE user_id = ? AND token_hash = ? AND expires_at > NOW() LIMIT 1",
+      [userId, totp.hashToken(token)],
+    );
+    return rows.length > 0;
+  } catch (err) {
+    if (err?.code === "ER_NO_SUCH_TABLE") return false;
+    throw err;
+  }
 };
 
 const signChallenge = (userId, rememberMe) =>

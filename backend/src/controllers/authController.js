@@ -374,7 +374,7 @@ const login = async (req, res, next) => {
       account.id,
     ]);
 
-    return finishLogin(req, res, account, Boolean(rememberMe));
+    return await finishLogin(req, res, account, Boolean(rememberMe));
   } catch (err) {
     return next(err);
   }
@@ -533,7 +533,7 @@ const googleLogin = async (req, res, next) => {
     }
 
     await db.query("UPDATE users SET last_login = NOW() WHERE id = ?", [account.id]);
-    return finishLogin(req, res, account, Boolean(req.body.rememberMe));
+    return await finishLogin(req, res, account, Boolean(req.body.rememberMe));
   } catch (err) {
     if (err.message?.toLowerCase().includes("token")) {
       return res.status(401).json({ error: "Google login token is invalid or expired." });
