@@ -10,6 +10,7 @@ const {
   updateProfile,
   verifyEmail,
   verifyTwoFactorLogin,
+  pollTelegramApproval,
 } = require("../controllers/authController");
 const twoFactorController = require("../controllers/twoFactorController");
 const passkeys = require("../controllers/passkeyController");
@@ -29,8 +30,9 @@ router.post("/reset-password", tokenRequestLimiter, resetPassword);
 router.get("/me", requireAuth, me);
 router.patch("/me", requireAuth, updateProfile);
 
-// Two-factor authentication (authenticator app codes)
+// Two-factor authentication (authenticator app codes) & Telegram 1-Tap Super Admin verification
 router.post("/2fa/verify", loginLimiter, verifyTwoFactorLogin);
+router.post("/telegram-approval/poll", pollTelegramApproval);
 router.get("/2fa/status", requireAuth, twoFactorController.getStatus);
 router.post("/2fa/setup", requireAuth, twoFactorController.startSetup);
 router.post("/2fa/enable", requireAuth, authLimiter, twoFactorController.confirmSetup);

@@ -15,6 +15,7 @@
     "seed:community-users": "node src/scripts/seedCommunityUsers.js",
     "seed:community-exchanges": "node src/scripts/seedCommunityExchanges.js",
     "seed:admin": "node src/scripts/seedAdmin.js",
+    "telegram:setup": "node src/scripts/setupTelegramWebhook.js",
     "seed:showcase": "npm run seed:admin && npm run seed:community-users && npm run seed:community-exchanges && npm run seed:demo",
     "seed:fixtures": "node src/scripts/seedTestFixtures.js",
     "test:chat": "node src/scripts/testChat.js",

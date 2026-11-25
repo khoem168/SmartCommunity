@@ -4,6 +4,7 @@ import {
   googleLoginRequest,
   loginRequest,
   verifyTwoFactorRequest,
+  pollTelegramApprovalRequest,
   passkeyLoginRequest,
   logoutRequest,
   registerRequest,
@@ -64,7 +65,7 @@ const GlobleContext = ({ children }) => {
   // account needs its authenticator code (see completeTwoFactor).
   const loginUser = async (credentials) => {
     const response = await loginRequest(credentials);
-    if (response.twoFactorRequired) return response;
+    if (response.twoFactorRequired || response.telegramApprovalRequired) return response;
     setUser(response.user);
     return response.user;
   };
@@ -81,6 +82,14 @@ const GlobleContext = ({ children }) => {
     return response;
   };
 
+  const pollTelegramApproval = async (details) => {
+    const response = await pollTelegramApprovalRequest(details);
+    if (response?.status === "approved" && response.user) {
+      setUser(response.user);
+    }
+    return response;
+  };
+
   const refreshUser = async () => {
     const response = await fetchCurrentUser();
     setUser(response.user);
@@ -89,7 +98,7 @@ const GlobleContext = ({ children }) => {
 
   const googleLogin = async (credentials) => {
     const response = await googleLoginRequest(credentials);
-    if (response.twoFactorRequired) return response;
+    if (response.twoFactorRequired || response.telegramApprovalRequired) return response;
     setUser(response.user);
     return response.user;
   };
@@ -125,6 +134,7 @@ const GlobleContext = ({ children }) => {
         isLoading,
         loginUser,
         completeTwoFactor,
+        pollTelegramApproval,
         loginWithPasskey,
         googleLogin,
         refreshUser,

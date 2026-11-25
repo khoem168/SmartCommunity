@@ -15,8 +15,12 @@ const profileRoutes = require("./routes/profileRoutes");
 const calendarRoutes = require("./routes/calendarRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const assistantRoutes = require("./routes/assistantRoutes");
+const telegramRoutes = require("./routes/telegramRoutes");
 const { apiLimiter } = require("./middleware/rateLimits");
-const { securityHardening } = require("./middleware/security");
+const {
+  ipBlockAndLockdownGuard,
+  securityHardening,
+} = require("./middleware/security");
 const setupSockets = require("./sockets");
 const db = require("./config/db");
 
@@ -72,6 +76,7 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: false, limit: "1mb" }));
 app.use(securityHardening);
+app.use(ipBlockAndLockdownGuard);
 
 app.use(
   "/uploads",
@@ -114,6 +119,9 @@ app.get("/db-check", async (req, res) => {
     res.status(500).json({ error: "Database connection failed." });
   }
 });
+
+// Telegram Webhook mounted before rate limiter so Telegram callbacks are never throttled
+app.use("/api/telegram", telegramRoutes);
 
 app.use("/api", apiLimiter);
 app.use("/api/auth", authRoutes);

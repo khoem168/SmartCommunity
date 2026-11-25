@@ -9,9 +9,9 @@ import {
   FiShield,
   FiAlertCircle,
 } from "react-icons/fi";
-import logo from "../../assets/logo/logo-mark.png";
 import GoogleLoginButton from "../../components/auth/GoogleLoginButton";
 import TwoFactorStep from "../../components/auth/TwoFactorStep";
+import TelegramApprovalStep from "../../components/auth/TelegramApprovalStep";
 import { passkeysSupported } from "../../services/authService";
 import { useGlobleContext } from "../../context/GlobleContext";
 import { useLanguage } from "../../context/LanguageContext";
@@ -27,29 +27,12 @@ const Login = () => {
   const [error, setError] = useState("");
   const [needsVerification, setNeedsVerification] = useState(false);
   const [loading, setLoading] = useState(false);
-  // Set when the account needs its authenticator code after the password.
-  // Register's Google button can also send the user here mid-sign-in.
   const [challenge, setChallenge] = useState(location.state?.twoFactorChallenge || null);
+  const [telegramApproval, setTelegramApproval] = useState(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { googleLogin, loginUser, loginWithPasskey } = useGlobleContext();
   const canUsePasskey = passkeysSupported();
-
-  const handlePasskey = async () => {
-    setError("");
-    setLoading(true);
-    try {
-      await loginWithPasskey({ rememberMe: remember });
-      navigate(redirectTo);
-    } catch (err) {
-      // Closing the fingerprint/face prompt is not an error worth showing.
-      if (err.name !== "NotAllowedError" && err.name !== "AbortError") {
-        setError(err.message || (isKm ? "មិនអាចចូលដោយ Passkey បានទេ។" : "Couldn't sign in with a passkey."));
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
   const { language, t } = useLanguage();
   const isKm = language === "km";
 
@@ -58,6 +41,21 @@ const Login = () => {
     requestedRedirect.startsWith("/") && !requestedRedirect.startsWith("//")
       ? requestedRedirect
       : "/dashboard";
+
+  const handlePasskey = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      await loginWithPasskey({ rememberMe: remember });
+      navigate(redirectTo);
+    } catch (err) {
+      if (err.name !== "NotAllowedError" && err.name !== "AbortError") {
+        setError(err.message || (isKm ? "មិនអាចចូលដោយ Passkey បានទេ។" : "Couldn't sign in with a passkey."));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (location.state?.registeredEmail) {
@@ -85,6 +83,11 @@ const Login = () => {
         password,
         rememberMe: remember,
       });
+      if (result?.telegramApprovalRequired) {
+        setTelegramApproval(result);
+        setPassword("");
+        return;
+      }
       if (result?.twoFactorRequired) {
         setChallenge(result);
         setPassword("");
@@ -104,6 +107,10 @@ const Login = () => {
     setLoading(true);
     try {
       const result = await googleLogin({ credential, rememberMe: remember });
+      if (result?.telegramApprovalRequired) {
+        setTelegramApproval(result);
+        return;
+      }
       if (result?.twoFactorRequired) {
         setChallenge(result);
         return;
@@ -133,121 +140,127 @@ const Login = () => {
               navigate(location.pathname + location.search, { replace: true, state: null });
             }}
           />
+        ) : telegramApproval ? (
+          <TelegramApprovalStep
+            approval={telegramApproval}
+            onSuccess={() => navigate(redirectTo)}
+            onCancel={() => setTelegramApproval(null)}
+          />
         ) : (
-        <form className="auth-form" onSubmit={handleSubmit} noValidate>
-          {error && (
-            <div className="auth-error ios-alert-glass" role="alert">
-              <FiAlertCircle className="error-icon" />
-              <span>{error}</span>
-            </div>
-          )}
-          {needsVerification && (
-            <Link
-              className="auth-dev-link"
-              to={`/verify-email?email=${encodeURIComponent(email.trim())}`}
-            >
-              {t("auth.resendVerification")}
-            </Link>
-          )}
-
-          <div className="ios-input-group">
-            <label htmlFor="login-email">{t("auth.email")}</label>
-            <div className="ios-field-wrap">
-              <FiMail className="ios-field-icon" aria-hidden="true" />
-              <input
-                id="login-email"
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder={t("auth.emailPlaceholder")}
-                autoComplete="email"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="ios-input-group">
-            <div className="ios-label-row">
-              <label htmlFor="login-password">{t("auth.password")}</label>
-              <Link className="auth-link-sm" to="/forgot-password">
-                {t("auth.forgotPassword")}
-              </Link>
-            </div>
-            <div className="ios-field-wrap">
-              <FiLock className="ios-field-icon" aria-hidden="true" />
-              <input
-                id="login-password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder={t("auth.enterPassword")}
-                autoComplete="current-password"
-                required
-              />
-              <button
-                type="button"
-                className="ios-field-eye"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? <FiEyeOff /> : <FiEye />}
-              </button>
-            </div>
-          </div>
-
-          <div className="auth-row">
-            <label className="auth-checkbox ios-checkbox-label">
-              <input
-                type="checkbox"
-                checked={remember}
-                onChange={(event) => setRemember(event.target.checked)}
-              />
-              <span className="ios-checkbox-custom" />
-              <span>{t("auth.rememberMe")}</span>
-            </label>
-          </div>
-
-          <button
-            type="submit"
-            className="btn btn-primary auth-submit ios-submit-btn"
-            disabled={loading}
-          >
-            {loading ? (
-              <ButtonLoader>{t("auth.signingIn")}</ButtonLoader>
-            ) : (
-              <>
-                <span>{t("auth.login")}</span>
-                <FiArrowRight className="submit-arrow" />
-              </>
+          <form className="auth-form" onSubmit={handleSubmit} noValidate>
+            {error && (
+              <div className="auth-error ios-alert-glass" role="alert">
+                <FiAlertCircle className="error-icon" />
+                <span>{error}</span>
+              </div>
             )}
-          </button>
-
-          <div className="auth-divider">
-            <span>{t("auth.continueWith")}</span>
-          </div>
-
-          {canUsePasskey && (
-            <button type="button" className="auth-passkey-btn" onClick={handlePasskey} disabled={loading}>
-              <FiShield /> {isKm ? "ចូលដោយ Passkey (ស្នាមម្រាមដៃ / មុខ)" : "Sign in with a passkey"}
-            </button>
-          )}
-
-          <div className="auth-google-wrapper">
-            <GoogleLoginButton
-              onCredential={handleGoogleCredential}
-              onError={setError}
-            />
-          </div>
-
-          <div className="auth-footer-box">
-            <p className="auth-footer">
-              {t("auth.noAccount")}{" "}
-              <Link to="/register" className="auth-create-link">
-                {t("auth.createOne")}
+            {needsVerification && (
+              <Link
+                className="auth-dev-link"
+                to={`/verify-email?email=${encodeURIComponent(email.trim())}`}
+              >
+                {t("auth.resendVerification")}
               </Link>
-            </p>
-          </div>
-        </form>
+            )}
+
+            <div className="ios-input-group">
+              <label htmlFor="login-email">{t("auth.email")}</label>
+              <div className="ios-field-wrap">
+                <FiMail className="ios-field-icon" aria-hidden="true" />
+                <input
+                  id="login-email"
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder={t("auth.emailPlaceholder")}
+                  autoComplete="email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="ios-input-group">
+              <div className="ios-label-row">
+                <label htmlFor="login-password">{t("auth.password")}</label>
+                <Link className="auth-link-sm" to="/forgot-password">
+                  {t("auth.forgotPassword")}
+                </Link>
+              </div>
+              <div className="ios-field-wrap">
+                <FiLock className="ios-field-icon" aria-hidden="true" />
+                <input
+                  id="login-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder={t("auth.enterPassword")}
+                  autoComplete="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="ios-field-eye"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
+            </div>
+
+            <div className="auth-row">
+              <label className="auth-checkbox ios-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={remember}
+                  onChange={(event) => setRemember(event.target.checked)}
+                />
+                <span className="ios-checkbox-custom" />
+                <span>{t("auth.rememberMe")}</span>
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary auth-submit ios-submit-btn"
+              disabled={loading}
+            >
+              {loading ? (
+                <ButtonLoader>{t("auth.signingIn")}</ButtonLoader>
+              ) : (
+                <>
+                  <span>{t("auth.login")}</span>
+                  <FiArrowRight className="submit-arrow" />
+                </>
+              )}
+            </button>
+
+            <div className="auth-divider">
+              <span>{t("auth.continueWith")}</span>
+            </div>
+
+            {canUsePasskey && (
+              <button type="button" className="auth-passkey-btn" onClick={handlePasskey} disabled={loading}>
+                <FiShield /> {isKm ? "ចូលដោយ Passkey (ស្នាមម្រាមដៃ / មុខ)" : "Sign in with a passkey"}
+              </button>
+            )}
+
+            <div className="auth-google-wrapper">
+              <GoogleLoginButton
+                onCredential={handleGoogleCredential}
+                onError={setError}
+              />
+            </div>
+
+            <div className="auth-footer-box">
+              <p className="auth-footer">
+                {t("auth.noAccount")}{" "}
+                <Link to="/register" className="auth-create-link">
+                  {t("auth.createOne")}
+                </Link>
+              </p>
+            </div>
+          </form>
         )}
       </section>
     </div>

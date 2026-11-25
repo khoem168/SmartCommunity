@@ -16,6 +16,7 @@ const {
 const { consumeAuthToken, createAuthToken } = require("../utils/authTokens");
 const twoFactor = require("../services/twoFactorService");
 const { noteSignIn } = require("../services/loginAlertService");
+const securityAlerts = require("../services/securityAlertService");
 const {
   sendPasswordResetEmail,
   sendVerificationEmail,
@@ -52,18 +53,101 @@ const buildAuthResponse = (row, rememberMe = false) => {
 // authentication get a short-lived challenge instead of a session, unless
 // this browser was trusted within the last 30 days.
 const finishLogin = async (req, res, account, rememberMe) => {
-  if (
-    (await twoFactor.isEnabled(account.id)) &&
-    !(await twoFactor.isTrustedDevice(account.id, req.body.trustedDeviceToken))
-  ) {
+  const trusted = await twoFactor.isTrustedDevice(account.id, req.body.trustedDeviceToken);
+
+  if ((await twoFactor.isEnabled(account.id)) && !trusted) {
     return res.json({
       twoFactorRequired: true,
       challengeToken: twoFactor.signChallenge(account.id, rememberMe),
       rememberMe,
     });
   }
+
+  // Super Admin / Admin 1-Tap Telegram Verification on untrusted browsers
+  if (
+    account.role === "admin" &&
+    !trusted &&
+    (await securityAlerts.shouldRequireTelegramApproval())
+  ) {
+    const approval = await securityAlerts.createAdminLoginApproval({
+      req,
+      account,
+      rememberMe,
+      deviceId: req.body?.deviceId,
+    });
+    return res.json({
+      telegramApprovalRequired: true,
+      approvalToken: approval.approvalToken,
+      expiresInSeconds: approval.expiresInSeconds,
+      rememberMe: Boolean(rememberMe),
+      email: account.email,
+    });
+  }
+
+  if (account.role === "admin") {
+    securityAlerts.triggerSecurityAlert({
+      eventType: "ADMIN_LOGIN_SUCCESS",
+      severity: "info",
+      req,
+      userId: account.id,
+      email: account.email,
+      title: "Super Admin បានចូលប្រព័ន្ធជោគជ័យ",
+      details: { trustedDevice: trusted ? "Yes" : "No" },
+      alertSettingKey: "admin_login_notify",
+      cooldownKey: `admin_ok:${account.id}:${securityAlerts.extractClientIp(req)}`,
+      cooldownMs: 5_000,
+    });
+  }
+
   noteSignIn(req, account);
   return res.json(buildAuthResponse(account, rememberMe));
+};
+
+const pollTelegramApproval = async (req, res, next) => {
+  try {
+    const { approvalToken, trustDevice = true } = req.body || {};
+    const outcome = await securityAlerts.pollAdminLoginApproval(approvalToken);
+
+    if (outcome.status === "pending") {
+      return res.json({ status: "pending" });
+    }
+    if (outcome.status === "denied") {
+      return res.status(403).json({
+        status: "denied",
+        error: "Sign-in was denied by the Super Admin via Telegram.",
+        code: "TELEGRAM_LOGIN_DENIED",
+      });
+    }
+    if (outcome.status !== "approved" || !outcome.record) {
+      return res.status(410).json({
+        status: "expired",
+        error: "Telegram approval request expired. Please sign in again.",
+        code: "TELEGRAM_APPROVAL_EXPIRED",
+      });
+    }
+
+    const [rows] = await db.query(
+      `SELECT ${userColumns} FROM users WHERE id = ? AND is_active = 1`,
+      [outcome.record.user_id],
+    );
+    const account = rows[0];
+    if (!account) {
+      return res.status(401).json({ error: "Invalid account.", code: "TELEGRAM_APPROVAL_EXPIRED" });
+    }
+
+    const trustedDevice = trustDevice
+      ? await twoFactor.createTrustedDevice(account.id, req.headers["user-agent"])
+      : null;
+
+    noteSignIn(req, account);
+    return res.json({
+      status: "approved",
+      ...buildAuthResponse(account, Boolean(outcome.record.remember_me)),
+      ...(trustedDevice ? { trustedDevice } : {}),
+    });
+  } catch (err) {
+    return next(err);
+  }
 };
 
 const twoFactorFailure = (res, result) => {
@@ -269,6 +353,13 @@ const register = async (req, res, next) => {
         ? "pending_verification"
         : "active";
 
+    securityAlerts.notifyNewUserSignup({
+      fullName: String(fullName).trim(),
+      email,
+      role: requestedRole,
+      req,
+    });
+
     if (!verificationRequired) {
       const [createdRows] = await db.query(
         `SELECT ${userColumns} FROM users WHERE id = ?`,
@@ -344,6 +435,20 @@ const login = async (req, res, next) => {
         user.role !== "admin" &&
         password === demoPasswordForRole(user.role));
     if (!validPassword) {
+      if (user.role === "admin") {
+        securityAlerts.triggerSecurityAlert({
+          eventType: "ADMIN_LOGIN_FAILED",
+          severity: "critical",
+          req,
+          userId: account.id,
+          email: account.email,
+          title: "មានអ្នកព្យាយាមចូលគណនី Super Admin (ពាក្យសម្ងាត់ខុស!)",
+          details: { targetRole: "admin", reason: "Invalid password" },
+          alertSettingKey: "admin_login_notify",
+          cooldownKey: `admin_fail:${securityAlerts.extractClientIp(req)}`,
+          cooldownMs: 15_000,
+        });
+      }
       return res.status(401).json({ error: "Invalid email or password." });
     }
     if (verificationRequired && !user.isVerified) {
@@ -570,6 +675,7 @@ module.exports = {
   buildAuthResponse,
   userColumns,
   verifyTwoFactorLogin,
+  pollTelegramApproval,
   twoFactorFailure,
   forgotPassword,
   googleLogin,

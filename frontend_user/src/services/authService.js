@@ -88,6 +88,19 @@ export const verifyTwoFactorRequest = async ({ challengeToken, code, recoveryCod
   return saveSession(response, response.rememberMe ?? rememberMe);
 };
 
+// Second step for Super Admin 1-Tap Telegram approval on untrusted devices.
+export const pollTelegramApprovalRequest = async ({ approvalToken, trustDevice = true }) => {
+  const response = await apiFetch("/auth/telegram-approval/poll", {
+    method: "POST",
+    body: JSON.stringify({ approvalToken, trustDevice: Boolean(trustDevice), deviceId: deviceId() }),
+  });
+  if (response?.status === "approved") {
+    if (response.trustedDevice?.token) saveTrustedDevice(response.trustedDevice.token);
+    return saveSession(response, Boolean(response.rememberMe));
+  }
+  return response;
+};
+
 // Passkeys: the browser and phone handle the fingerprint/face prompt.
 export const passkeysSupported = () => browserSupportsWebAuthn();
 

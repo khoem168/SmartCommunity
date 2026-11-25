@@ -359,6 +359,15 @@ const verifyCoursePayment = async (req, res, next) => {
     }
 
     if (newlyConfirmed) {
+      const securityAlerts = require("../services/securityAlertService");
+      securityAlerts.notifyPaymentSuccess({
+        userName: req.user.fullName || req.user.full_name,
+        userEmail: req.user.email,
+        courseTitle: payment.course_title || `Course #${payment.course_id}`,
+        amount: payment.amount,
+        currency: payment.currency || "USD",
+        orderId: payment.id,
+      });
       await createNotification(req, {
         userId: req.user.id,
         type: "system",

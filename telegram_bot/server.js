@@ -1,4 +1,5 @@
 const express = require("express");
+const crypto = require("crypto");
 const TelegramBot = require("node-telegram-bot-api");
 const dotenv = require("dotenv");
 
@@ -7,13 +8,27 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 4001;
 const token = process.env.TELEGRAM_BOT_TOKEN;
-const chatId = process.env.TELEGRAM_CHAT_ID;
+const chatId = process.env.TELEGRAM_ADMIN_CHAT_ID || process.env.TELEGRAM_CHAT_ID;
+const internalSecret = process.env.TELEGRAM_INTERNAL_SECRET || process.env.TELEGRAM_WEBHOOK_SECRET || "";
 
 // This internal service can start without credentials while it is unused.
 const bot = token && chatId ? new TelegramBot(token, { polling: false }) : null;
-app.use(express.json());
+app.use(express.json({ limit: "256kb" }));
 
-app.post("/alert/payment-success", async (req, res) => {
+const requireInternalSecret = (req, res, next) => {
+  if (!internalSecret) {
+    return res.status(503).json({ error: "TELEGRAM_INTERNAL_SECRET is not configured" });
+  }
+  const provided = String(req.headers["x-internal-secret"] || "");
+  const a = Buffer.from(provided, "utf8");
+  const b = Buffer.from(internalSecret, "utf8");
+  if (!a.length || a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+    return res.status(401).json({ error: "Unauthorized internal alert request" });
+  }
+  return next();
+};
+
+app.post("/alert/payment-success", requireInternalSecret, async (req, res) => {
   if (!bot) {
     return res.status(503).json({ error: "Telegram alerts are not configured" });
   }
